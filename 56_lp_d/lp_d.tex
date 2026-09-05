@@ -3,8 +3,11 @@
 %
 %--------------------------------------------------------
 
-\ifx\bookMode\undefined
-\input{../prefix}
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
 \fi
 
 \newcommand{\SolveLP}{{\AlgorithmI{SolveLP}}}

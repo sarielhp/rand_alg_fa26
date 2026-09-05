@@ -8,10 +8,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
 \ifx\bookMode\undefined%
-\input{../prefix}%
-%\setChapterCounter{11}
-\fi%
+    \input{prefix}%
+\fi
 
 
 

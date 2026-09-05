@@ -1,7 +1,12 @@
 % -------------------------------------------------------- Shanon's
 % theorem --------------------------------------------------------
 
-\ifx\bookMode\undefined \input{../prefix} \fi
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
 
 % \newcommand{\sign}{\mathrm{sign}}
 % \newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}

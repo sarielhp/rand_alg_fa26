@@ -5,8 +5,11 @@
 % iteration.  --------------------------------------------------------
 % \def\GenColorMath{1}
 
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
 \ifx\bookMode\undefined%
-\input{../prefix}%
+    \input{prefix}%
 \fi
 
 \ChapterNumPage{40}{300}

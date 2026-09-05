@@ -32,12 +32,12 @@ FIGURE_SOURCE_EXTENSIONS = %w[
 # Project-level infrastructure files to always preserve
 PROTECTED_PROJECT_FILES = Set.new(%w[
   book.tex prefix.tex bookit put_on_web
-  fixing_fragment.md test_all_chaps.rb
+  fixing_fragment.md numbering.md p.md test_all_chaps.rb
 ]).freeze
 
 # Directories containing project tools or assets to keep intact
 PROTECTED_ROOT_DIRS = Set.new(%w[
-  tools scripts shared .git
+  tools scripts styles .git
 ]).freeze
 
 class LatexCleaner
@@ -287,10 +287,8 @@ class LatexCleaner
           next
         end
 
-        # Emacs lock symlink (.#filename)
-        if base.start_with?(".#")
-          @removed_temp_files << rel
-          FileUtils.rm(entry) unless options[:dry_run]
+        # Preserved project symlinks (styles -> ../styles, tools symlinks, test_all_chaps)
+        if base == "styles" || target.include?("styles") || rel.start_with?("tools/") || rel == "test_all_chaps.rb"
           next
         end
       end

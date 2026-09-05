@@ -75,6 +75,6 @@ Thumbs.db
 # --- Generated Document PDFs (Keep Figures, Assets & References) ---
 *.pdf
 !**/figs/**
-!/shared/**
+!/styles/**
 !**/refs/**
 !**/refs/**/*.pdf

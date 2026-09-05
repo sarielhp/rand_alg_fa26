@@ -4,7 +4,12 @@
 % 09/27/2010 16:56:36 Finished a pass. Would benefit form another
 % iteration.  --------------------------------------------------------
 
-\ifx\bookMode\undefined \input{../prefix} \fi
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
 
 \ChapterNumPage{41}{315}
 

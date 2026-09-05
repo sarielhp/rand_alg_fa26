@@ -122,18 +122,12 @@
 \newlength{\CharHeight}
 \AtBeginDocument{\setlength{\CharHeight}{\fontcharht\font`X}}
 
-\IfFileExists{\RootDIR shared/qed_duck.pdf}{%
+\IfFileExists{styles/qed_duck.pdf}{%
    \providecommand{\myqedsymbol}{%
-      \reflectbox{\includegraphics[height=1.4\CharHeight]{\RootDIR shared/qed_duck.pdf}}%
+      \reflectbox{\includegraphics[height=1.4\CharHeight]{styles/qed_duck.pdf}}%
    }%
 }{%
-   \IfFileExists{shared/qed_duck.pdf}{%
-      \providecommand{\myqedsymbol}{%
-         \reflectbox{\includegraphics[height=1.4\CharHeight]{shared/qed_duck.pdf}}%
-      }%
-   }{%
-      \providecommand{\myqedsymbol}{$\blacksquare$}%
-   }%
+   \providecommand{\myqedsymbol}{$\blacksquare$}%
 }
 
 %-----------------------------------------------------------------------------
