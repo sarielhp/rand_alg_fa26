@@ -1,0 +1,331 @@
+
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+
+\Chapter{Coupon's Collector Problems II}
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{%
+   There is not much talking now. A silence falls upon them all. This
+   is no time to talk of hedges and fields, or the beauties of any
+   country. Sadness and fear and hate, how they well up in the heart
+   and mind, whenever one opens the pages of these messengers of
+   doom. Cry for the broken tribe, for the law and custom that is
+   gone. Aye, and cry aloud for the man who is dead, for the woman and
+   children bereaved. Cry, the beloved country, these things are not
+   yet at an end. The sun pours down on the earth, on the lovely land
+   that man cannot enjoy. He knows only the fear of his heart.%
+}%
+{Alan \si{Paton}}%
+{Cry, the beloved country}
+
+
+
+\section{The Coupon Collector's Problem Revisited}
+
+
+\subsection{Some technical lemmas}
+
+Unfortunately, in Randomized Algorithms, many of the calculations are
+awful\footnote{"In space travel," repeated \si{Slartibartfast}, "all
+   the numbers are awful." -- Life, the Universe, and Everything Else,
+   Douglas Adams.}. As such, one has to be dexterous in approximating
+such calculations. We present quickly a few of these estimates.
+
+\begin{lemma}
+    \lemlab{exponent:m:x}
+    %
+    For $x \geq 0$, we have $1-x \leq \exp\pth{-x}$ and $1+x \leq
+    e^{x}$.
+    %
+    Namely, for all $x$, we have $1+x \leq e^{x}$.    
+\end{lemma}
+\begin{proof}
+    For $x = 0$ we have equality. Next, computing the derivative on
+    both sides, we have that we need to prove that $-1 \leq
+    -\exp\pth{-x}$ $\iff$ $1 \geq \exp\pth{-x}$ $\iff$ $e^x \geq 1$,
+    which clearly holds for $x \geq 0$. 
+
+    A similar argument works for the second inequality.
+\end{proof}
+
+
+\begin{fragment}{\deflabel{exp_lower_bound}}
+    \begin{lemma}
+        \lemlab{exp:lower:bound}%
+        % 
+        For any $y \geq 1$, and $\cardin{x} \leq 1$, we have
+        \begin{math}
+            \,\pth[]{ 1-x^2}^y \geq 1 - yx^2.
+        \end{math}
+    \end{lemma}
+\end{fragment}
+\begin{proof}
+    Observe that the inequality holds with equality for $x=0$. So
+    compute the derivative of $x$ of both sides of the inequality. We
+    need to prove that
+    \begin{equation*}
+        y(-2x)\pth{1-x^2}^{y-1} \geq -2yx%
+        \iff%
+        \pth[]{1-x^2}^{y-1} \leq 1,        
+    \end{equation*}
+    which holds since $1-x^2 \leq 1$, and $y-1 \geq 0$.
+\end{proof}
+
+\begin{fragment}{\deflabel{exp_lower_bound_2}}
+    \begin{lemma}
+        \lemlab{exp:lower:bound:2}%
+        % 
+        For any $y \geq 1$, and $\cardin{x} \leq 1$, we have
+        \begin{math}
+            \displaystyle \pth[]{1-x^2y}e^{x y} \leq \pth[]{1+x}^{y}
+            \leq e^{x y}.
+        \end{math}        
+    \end{lemma}
+\end{fragment}
+
+\begin{proof}
+    The right side of the inequality is standard by now. As for the
+    left side. Observe that
+    \begin{equation*}
+        (1-x^2)\ts e^x \leq 1+x,        
+    \end{equation*}
+    since dividing both sides by $(1+x)e^x$, we get $1-x \leq e^{-x}$,
+    which we know holds for any $x$.  By \lemref{exp:lower:bound}, we
+    have
+    \begin{equation*}
+        \pth{1-x^2y}e^{x y}%
+        \leq%
+        \pth[]{1-x^2}^y e^{xy}%
+        =%
+        \pth[]{\pth[]{1-x^2} e^{x} }^y%
+        \leq%
+        \pth[]{\Bigl. 1+x}^{y}%
+        \leq%
+        e^{x y}.        
+    \end{equation*}
+\end{proof}
+
+
+\subsection{Back to the coupon collector's problem}
+
+There are $n$ types of coupons, and at each trial one coupon is picked
+in random. How many trials one has to perform before picking all
+coupons?  Let $m$ be the number of trials performed. We would like to
+bound the probability that $m$ exceeds a certain number, and we still
+did not pick all coupons.
+
+In the previous lecture, we showed that
+\begin{equation*}
+    \Prob{ \text{\# of trials} \geq n \log n + n + t \cdot n
+       \frac{\pi}{\sqrt{6}} } \leq \frac{1}{t^2},    
+\end{equation*}
+for any $t$.
+
+A stronger bound, follows from the following observation. Let
+$Z_i^{r}$ denote the event that the $i$\th coupon was not picked in
+the first $r$ trials. Clearly,
+\begin{equation*}
+    \Prob{\Bigl.\ts Z_i^r}%
+    =%
+    \pth[]{ 1-\frac{1}{n}}^{r}%
+    \leq%
+    \exp\pth{-\frac{r}{n}}.    
+\end{equation*}
+Thus, for $r= \beta n \log{n}$, we have
+\begin{math}
+    \ds%
+    \Prob{ Z_i^{r}}%
+    \leq%
+    \exp \Bigl( -\frac{\beta n \log{n}}{n}\Bigr)%
+    =%
+    n^{-\beta}.
+\end{math}
+Thus,
+\begin{equation*}
+    \Prob{\Big. X > \beta n \log{n}}%
+    \leq%
+    \Prob{\smash{ \bigcup_{i}} Z_i^{\beta n \log{n}} }%
+    \leq%
+    n \cdot \Prob{\bigl. Z_1}%
+    \leq%
+    n^{-\beta + 1}.    
+\end{equation*}
+
+
+\begin{lemma}
+    \lemlab{coupon}%
+    % 
+    Let the random variable $X$ denote the number of trials for
+    collecting each of the $n$ types of coupons. Then, we have
+    $\Prob{\bigl. X > n \ln n + c n } \leq e^{-c}$.
+\end{lemma}
+\begin{proof}
+    The probability we fail to pick the first type of coupon is
+    $\alpha = (1-1/n)^m \leq \exp\pth{ - \frac{n \ln n + c n}{n} } =
+    \exp( - c) /n$. As such, using the union bound, the probability we
+    fail to pick all $n$ types of coupons is bounded by $n \alpha =
+    \exp(-c)$, as claimed.
+\end{proof}
+
+In the following, we show a slightly stronger bound on the
+probability, which is $1- \exp\pth{-e^{-c}}$. To see that it is indeed
+stronger, observe that $\ds e^{-c} \geq 1- \exp\pth{-e^{-c}}$.
+
+
+\subsection{An asymptotically tight bound}
+
+
+\begin{lemma}
+    Let $c > 0$ be a constant, $m = n \ln n +c n$ for a positive
+    integer $n$. Then for any constant $k$, we have
+    \begin{math}%
+        \ds\,%
+        \lim_{n\rightarrow \infty} \binom{n}{k} \pth[]{ 1-
+           \frac{k}{n}}^m = \frac{\exp(-ck)}{k!}.
+    \end{math}
+    
+    \lemlab{bound}
+\end{lemma}
+\begin{proof}
+    By \lemref{exp:lower:bound:2}, we have
+    \begin{equation*}
+        \pth{ 1- \frac{k^2 m}{n^2}} \exp \pth[]{ -\frac{km}{n}}%
+        \leq%
+        \pth[]{ 1- \frac{k}{n}}^m%
+        \leq%
+        \exp \pth[]{ -\frac{km}{n}}.        
+    \end{equation*}
+    Observe also that
+    \begin{math}
+        \ds \lim_{n\rightarrow \infty} \pth[]{1-\frac{k^2m}{n^2}} = 1,
+    \end{math}
+    and 
+    \begin{math}
+        \ds \exp \pth[]{-\frac{km}{n}} = n^{-k}\exp \pth{-ck}.
+    \end{math}
+    Also,
+    \begin{equation*}
+        \lim_{n\rightarrow \infty} \binom{n}{k} \frac{k!}{n^k}%
+        =%
+        \lim_{n\rightarrow \infty} \frac{n(n-1)\cdots (n-k+1)}{n^k}%
+        =%
+        1.        
+    \end{equation*}
+    Thus,
+    \begin{math}
+        \ds \lim_{n\rightarrow \infty} {\binom{n}{k} } \pth[]{ 1-
+           \frac{k}{n} }^m%
+        =%
+        \lim_{n\rightarrow \infty} \frac{n^k}{k!}  \exp\pth[]{ -\frac{
+              km }{n} }%
+        = %
+        \lim_{n\rightarrow \infty} \frac{n^k}{k!}  n^{-k} \exp \pth{
+           -ck }%
+        =%
+        \frac{\exp(-ck)}{k!}.
+    \end{math}
+\end{proof}
+
+
+
+\begin{theorem}
+    \thmlab{coupon}%
+    %
+    Let the random variable $X$ denote the number of trials for
+    collecting each of the $n$ types of coupons. Then, for any
+    constant $c \in \Re$, and $m = n\ln n + c n$, we have
+    \begin{math}
+        \lim_{n\rightarrow \infty} \Prob{\bigl. X > m} = 1 -\exp
+        \pth{\bigl. -e^{-c}}.
+    \end{math}
+\end{theorem}
+
+
+Before dwelling into the proof, observe that $1 -\exp \pth{-e^{-c}}
+\approx 1 - \pth{1 -e^{-c}} = e^{-c}$. Namely, in the limit, the upper
+bound of \lemref{coupon} is tight.
+
+
+
+\begin{proof}
+    We have $\Prob{\bigl. X > m } = \Prob{ \cup_{i} Z_i^m}$. By
+    inclusion-exclusion, we have
+    \begin{equation*}        
+        \Prob{ \smash{\bigcup_{i} Z_i^m}\Bigr. }%
+        =%
+        \sum_{i=1}^{n} (-1)^{i+1} P_i^n,
+    \end{equation*}
+    where
+    \begin{math}
+        \ds%
+        P_j^n%
+        =%
+        \sum_{1 \leq i_1 < i_2 < \ldots < i_j \leq n} \Prob{
+           \smash{\cap_{v=1}^{j}} Z_{i_v}^m}.
+    \end{math}
+    Let $S_k^n = \sum_{i=1}^{k} (-1)^{i+1} P_i^n$. We know that
+    $S_{2k}^{n} \leq \Prob{\bigcup_{i} Z_i^m } \leq S_{2k+1}^{n}$.
+    
+    By symmetry,
+    \begin{equation*}
+        P_k^n%
+        =%
+        \binom{n}{k} \Prob{ \bigcap_{v=1}^{k} Z_{v}^m}%
+        =%
+        \binom{n}{k} \pth[]{1-\frac{k}{n}}^m,        
+    \end{equation*}
+    Thus, $P_k = \lim_{n\rightarrow \infty} P_k^n = \nfrac{\exp
+       \pth{-ck}}{k!}$, by \lemref{bound}.  Thus, we have
+    \begin{equation*}
+        S_k%
+        =%
+        \sum_{j=1}^{k} (-1)^{j+1} P_j%
+        =%
+        \sum_{j=1}^{k} (-1)^{j+1} \cdot \frac{\exp \pth{-c j}}{j!}.%        
+    \end{equation*}
+    Observe that $\lim_{k \rightarrow \infty} S_k = 1 - \exp(
+    -e^{-c})$ by the Taylor expansion of $\exp(x)$ (for $x =
+    -e^{-c}$).  Indeed,
+    \begin{equation*}
+        \exp\pth{ x}%
+        =%
+        \sum_{j=0}^{\infty} \frac{x^{j}}{j!}%
+        =%
+        \sum_{j=0}^{\infty} \frac{\pth{-e^{-c}}^{j}}{j!}%
+        =%
+        1 + \sum_{j=1}^{\infty} \frac{\pth{-1}^{j}{\exp \pth{-c
+                 j}}}{j!}.        
+    \end{equation*}
+    
+    Clearly, $\lim_{n \rightarrow \infty} S_k^{n} = S_k$ and $\lim_{k
+       \rightarrow \infty} S_k = 1- \exp \pth{-e^{-c}}$. Thus, (using
+    fluffy math), we have
+    \begin{equation*}
+        \lim_{n \rightarrow \infty} \Prob{\bigl. X > m}%
+        =%
+        \lim_{n \rightarrow \infty} \Prob{\bigl. \cup_{i=1}^{n}
+           Z_i^m}%
+        =%
+        \lim_{n \rightarrow \infty} \lim_{k \rightarrow \infty} S_k^n
+        =%
+        \lim_{k \rightarrow \infty} S_k = 1 - \exp \pth{ -e^{-c}}.        
+    \end{equation*}
+\end{proof}
+
+
+
+\section{Bibliographical notes}
+
+Are presentation follows, as usual, Motwani and Raghavan
+\cite{mr-ra-95}.
+
+
+
+
+
+
+
+\ChapterEnd{}
+

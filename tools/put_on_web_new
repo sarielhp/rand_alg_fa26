@@ -1,0 +1,79 @@
+#! /bin/bash
+
+DST_DIR=~/rand_alg/web/lecs/
+
+#-----------------------------------------------------------
+# Usage:
+#   $(change_filename_suffix  bogi.tex "pdf")
+#-----------------------------------------------------------
+function  change_filename_suffix() {
+    echo  "${1%.*}$2"
+}
+
+
+function  latex_it() {
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo "--------------------------------------------------------------"
+    echo $1
+    echo "--------------------------------------------------------------"
+    
+    pushd . >& /dev/null
+    cd $1
+    l $2
+    popd >& /dev/null
+
+    OUT=$(change_filename_suffix  "$1/$2" ".pdf")
+#    echo $OUT
+    cp $OUT $DST_DIR/$3
+
+#    echo "1": $1
+#    echo "2": $2
+#    echo "3": $3
+}
+
+
+FL=lectures_list.txt
+if [ ! -f $FL ]; then
+   echo Error: Unable to find "[$FL]"
+   exit -1
+fi
+
+bookit gen
+cp book.pdf $DST_DIR/
+
+
+input="/path/to/txt/file"
+while IFS= read -r line
+do
+    if  [[ "$line" == "" ]]; then
+        continue;
+    fi
+    if  [[ "${line:0:1}" == '#' ]]; then
+        continue;
+    fi
+    eval "array=($line)"
+    var0=${array[0]}
+    var1=${array[1]}
+    var2=${array[2]}
+
+    
+    if  [[ ! -f $var0/$var1 ]]; then
+        echo "Error: File [$var0/$var1] does not exist!"  
+        exit -1
+    fi
+
+    latex_it $var0 $var1 $var2
+    
+    #echo "[$line] $line[1]"
+    #echo "var0:" $var0
+    #echo "var1:" $var1
+    #echo "var2:" $var2
+    echo " "
+done < "$FL"
+
+chmod a+r $DST_DIR/*.pdf
+

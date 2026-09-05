@@ -1,0 +1,33 @@
+#! /bin/bash
+
+
+m574 >& /dev/null
+
+rm -r -f ~/574/web/lec/notes_2/ >& /dev/null
+mkdir -p /home/sariel/674/web/lec/notes/lec/ >& /dev/null
+
+./bookit web
+#cp book.pd
+
+
+cp book.pdf ~/html/teach/notes/algos/files/
+cp chapters/* ~/html/teach/notes/algos/files/
+cp book.pdf ~/html/teach/notes/algos/
+
+
+cd  ~/473/web/lec/notes_2/lec/
+mkdir ../hw  >& /dev/null
+mv *hw*.pdf ../hw/
+mv *.pdf ..
+
+cd  ~/473/web/lec/
+rm -r -f notes.old >& /dev/null
+mv notes notes.old
+mv notes_2/ notes/
+mv notes_2 notes
+
+
+#md hw/*.pdf ../hw/
+
+
+

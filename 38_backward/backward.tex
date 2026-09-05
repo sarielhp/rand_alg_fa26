@@ -1,0 +1,407 @@
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+\Chapter{Backwards analysis}
+
+\ChapterPrefix{}
+\ChapterGen{}
+\Version{1.0}
+
+
+The idea of \emphi{backwards analysis} (or backward analysis) is a
+technique to analyze randomized algorithms by imagining as if it was
+running backwards in time, from output to input. Most of the more
+interesting applications of backward analysis are in Computational
+Geometry, but nevertheless, there are some other applications that are
+interesting and we survey some of them here.
+
+
+\section{How many times can the minimum change?}
+\seclab{min:change}
+
+% \subsection{How many times can the minimum change?}
+
+Let $\Pi = \pi_1 \ldots \pi_n$ be a random permutation of
+$\brc{1, \ldots, n}$. Let $\Event_i$ be the event that $\pi_i$ is the
+minimum number seen so far as we read $\Pi$; that is, $\Event_i$ is
+the event that $\pi_i = \min_{k=1}^i \pi_k$. Let $X_i$ be the
+indicator variable that is one if $\Event_i$ happens. We already seen,
+and it is easy to verify, that $\Ex{X_i} = 1/i$. We are interested in
+how many times the minimum might change\footnote{The answer, my
+   friend, is blowing in the permutation.}; that is $Z=\sum_i X_i$,
+and how concentrated is the distribution of $Z$.  The following is
+maybe surprising.
+
+\begin{lemma}%
+    \lemlab{min:changes}%
+    % 
+    The events $\Event_1, \ldots, \Event_n$ are independent (as such,
+    variables $X_1, \ldots, X_n$ are independent).
+\end{lemma}
+
+\begin{proof}
+    The trick is to think about the sampling process in a different
+    way, and then the result readily follows. Indeed, we randomly pick
+    a permutation of the given numbers, and set the first number to be
+    $\pi_n$. We then, again, pick a random permutation of the
+    remaining numbers and set the first number as the penultimate
+    number (i.e., $\pi_{n-1}$) in the output permutation. We repeat
+    this process till we generate the whole permutation.
+    
+    Now, consider $1 \leq i_1 < i_2 < \ldots < i_k \leq n$, and
+    observe that
+    \begin{math}
+        \Prob{\Bigl. \Event_{i_1} \sep{ \Event_{i_2} \cap \ldots \cap
+              \Event_{i_{k}} }}%
+        = \Prob{\Event_{i_1}},%
+    \end{math}
+    since by our thought experiment, $\Event_{i_1}$ is determined
+    after all the other variables
+    $\Event_{i_{2}}, \ldots, \Event_{i_k}$. In particular, the
+    variable $\Event_{i_1}$ is inherently not effected by these events
+    happening or not. As such, we have
+    \begin{align*}
+        \Prob{\Bigl. \Event_{i_1} \cap \Event_{i_2} \cap \ldots \cap
+           \Event_{i_k} }%
+        &=%
+        \Prob{\Bigl. \Event_{i_1} \sep{ \Event_{i_2} \cap \ldots \cap
+              \Event_{i_{k}} }} \Prob{ \Event_{i_2} \cap \ldots \cap
+           \Event_{i_{k}} }%
+        \\&%
+        =%
+        \Prob{\Bigl. \Event_{i_1}} \Prob{\Bigl. \Event_{i_2} \cap
+           \Event_{i_2} \cap \ldots \cap \Event_{i_{k}} }%
+        =%
+        \prod_{j=1}^k \Prob{\Event_{i_j}} = \prod_{j=1}^k
+        \frac{1}{i_j},
+    \end{align*}
+    by induction.
+\end{proof}
+
+% Now, we have that
+
+\begin{theorem}
+    \thmlab{min:change}%
+    %
+    Let $\Pi=\pi_1 \ldots \pi_n$ be a random permutation of
+    $1, \ldots, n$, and let $Z$ be the number of times, that $\pi_i$
+    is the smallest number among $\pi_1, \ldots, \pi_i$, for
+    $i=1,\ldots, n$. Then, we have that for $t \geq 2e$ that
+    $\Prob{ \bigl. Z > t \ln n} \leq 1/ n^{t \ln 2}$, and for
+    $t \in \pbrc[]{1, 2e}$, we have that
+    $\Prob{\bigl. Z > t \ln n} \leq 1/ n^{(t-1)^2/4}$.
+\end{theorem}
+
+\begin{proof}
+    Follows readily from Chernoff's inequality, as $Z=\sum_i X_i$ is a
+    sum of independent indicator variables, and, since by linearity of
+    expectations, we have
+    \begin{align*}
+        \mu%
+        =%
+        \Ex{\Bigl. Z}%
+        =%
+        \sum_i \Ex{\Big. X_i}%
+        =%
+        \sum_{i=1}^n \frac{1}{i}%
+        \geq%
+        \int_{x=1}^{n+1} \frac{1}{x} \mathrm{d}x%
+        =%
+        \ln (n+1)%
+        \geq%
+        \ln n.
+    \end{align*}
+    Next, we set $\delta = t-1$, and use Chernoff inequality.
+\end{proof}
+
+
+%\newcommand{\PntSetA}{\mathsf{Q}}
+
+\section{Computing a good ordering of the vertices %
+   of a graph}
+\seclab{c:g:ordering}
+
+We are given a $\Graph = (\Vertices, \Edges)$ be an edge-weighted
+graph with $n$ vertices and $m$ edges. The task is to compute an
+ordering $\pi = \permut{\pi_1, \ldots, \pi_n}$ of the vertices, and
+for every vertex $v \in \Vertices$, the list of vertices $L_v$, such
+that $\pi_i \in \L_v$, if $\pi_i$ is the closet vertex to $v$ in the
+$i$\th prefix $\permut{\pi_1,\ldots, \pi_i}$.  
+
+This situation can arise for example in a streaming scenario, where we
+install servers in a network. In the $i$\th stage there $i$ servers
+installed, and every client in the network wants to know its closest
+server. As we install more and more servers (ultimately, every node is
+going to be server), each client needs to maintain its current closest
+server.
+
+The purpose is to minimize the total size of these lists
+$\mathcal{L} = \sum_{v \in \Vertices} \cardin{L_v}$.
+
+
+\subsection{The algorithm}
+
+Take a random permutation $\pi_1,\ldots, \pi_n$ of the vertices
+$\Vertices$ of $\Graph$.  Initially, we set $\delta(v) = +\infty$, for
+all $v \in \Vertices$.
+
+In the $i$\th iteration, set $\delta(\pi_i)$ to $0$, and start
+Dijkstra from the $i$\th vertex $\pi_i$.  The Dijkstra propagates only
+if it improves the current distance associated with a
+vertex. Specifically, in the $i$\th iteration, we update $\delta(u)$
+to $\distG{\pi_i}{u}$ if and only if $\distG{\pi_i}{u} < \delta(u)$
+before this iteration started. If $\delta(u)$ is updated, then we add
+$\pi_i$ to $L_u$. Note, that this Dijkstra propagation process might
+visit only small portions of the graph in some iterations -- since it
+improves the current distance only for few vertices.
+
+\subsection{Analysis}
+
+\begin{lemma}
+    The above algorithm computes a permutation $\pi$, such that
+    $\Ex{\Bigl.\cardin{\mathcal{L}}} = O(n \log n)$, and the expected
+    running time of the algorithm is
+    $O\pth{\Bigl. (n\log n + m) \log n}$, where
+    $n = \cardin{\VerticesX{\Graph}}$ and
+    $m =\cardin{\EdgesX{\Graph}}$.  Note, that both bounds also hold
+    with high probability.
+\end{lemma}
+
+\begin{proof}
+    Fix a vertex $v \in \Vertices = \brc{v_1,\ldots, v_n}$.  Consider
+    the set of $n$ numbers $\brc{\distG{v}{v_1}, \ldots,
+       \distG{v}{v_n}}$. Clearly, $\distG{v}{\pi_1}, \ldots,
+    \distG{v}{\pi_n}$ is a random permutation of this set, and 
+    by \lemref{min:changes} the random permutation $\pi$ changes this
+    minimum $O(\log n)$ time in expectations (and also with high
+    probability). This readily implies that $\cardin{L_v} = O(\log n)$
+    both in expectations and high probability.
+    
+    The more interesting claim is the running time. Consider an edge
+    $uv \in \EdgesX{\Graph}$, and observe that $\delta(u)$ or
+    $\delta(v)$ changes $O( \log n)$ times. As such, an edge gets
+    visited $O( \log n)$ times, which implies overall running time of
+    $O( n \log^2 n + m \log n)$, as desired. 
+
+    Indeed, overall there are $O(n \log n)$ changes in the value of
+    $\delta(\cdot)$. Each such change might require one
+    \Algorithm{delete-min} operation from the queue, which takes
+    $O(\log n)$ time operation. Every edge, by the above, might
+    trigger $O( \log n)$ \Algorithm{decrease-key} operations. Using
+    Fibonacci heaps, each such operation takes $O(1)$ time.
+\end{proof}
+
+
+\section{Computing nets}
+
+\subsection{Basic definitions}
+
+%\subsubsection{Metric spaces}
+%\seclab{m:s:clustering}
+
+\begin{defn}
+    \deflab{metric:space}%
+    % 
+    A \emphi{metric space} is a pair $(\FMS, \DistChar)$ where $\FMS$
+    is a set and $\DistChar: \FMS \times \FMS \rightarrow [0, \infty)$
+    is a \emphi{metric} satisfying the following axioms: (i)
+    $\DistMtr{x}{y} = 0$ if and only if $x =y$, (ii)
+    $\DistMtr{x}{y}=\DistMtr{y}{x}$, and (iii)
+    $\DistMtr{x}{y} + \DistMtr{y}{z} \geq \DistMtr{x}{ z}$ (triangle
+    inequality).
+\end{defn}
+
+For example, $\Re^2$ with the regular Euclidean distance is a metric
+space. In the following, we assume that we are given \emphi{black-box
+   access} to $\DistMtrCharX{\MTR}$. Namely, given two points
+$\pnt, \pntA \in \FMS$, we assume that $\DistMtr{\pnt}{ \pntA}$ can be
+computed in constant time.
+
+Another standard example for a finite metric space is a graph $\Graph$
+with non-negative weights $\WeightX{\cdot}$ defined on its edges.  Let
+$\distG{x}{y}$ denote the shortest path (under the given weights)
+between any $x,y \in \VerticesX{\Graph}$. It is easy to verify that
+$\distG{\cdot}{\cdot}$ is a metric.  In fact, any \emphi{finite
+   metric} (i.e., a metric defined over a finite set) can be
+represented by such a weighted graph.
+
+\subsubsection{Nets}
+
+\begin{definition}%
+    \deflab{net}%
+    % 
+    For a point set $\PntSet$ in a metric space with a metric
+    $\DistChar$, and a parameter $r>0$, an $r$-\emphi{net} of
+    $\PntSet$ is a subset $\cset \subseteq \PntSet$, such that
+    \begin{compactenumi}
+        \item for every $\pnt, \pntA \in \cset$, $\pnt \neq \pntA$, we
+        have that $\DistMtr{\pnt}{\pntA} \geq r$, and
+        \item for all $\pnt\in \PntSet$, we have that
+        $\min_{\pntA\in \cset} \DistMtr{\pnt}{\pntA} < r$.
+    \end{compactenumi}
+\end{definition}
+
+Intuitively, an $r$-net represents $\PntSet$ in resolution $r$.
+
+
+\subsection{Computing an $r$-net in a sparse graph}
+\seclab{net:sparse:graph}
+
+Given a $\Graph = (\Vertices, \Edges)$ be an edge-weighted graph with
+$n$ vertices and $m$ edges, and let $r >0$ be a parameter. We are
+interested in the problem of computing an $r$-net for $\Graph$. That
+is, a set of vertices of $\Graph$ that complies with \defrefpage{net}.
+
+\subsubsection{The algorithm}
+We compute an $r$-net in a sparse graph using a variant of Dijkstra's
+algorithm with the sequence of starting vertices chosen in a random
+permutation.
+% ; however, using this method for our problem involves a more
+% complicated analysis.
+
+Let $\pi_i$ be the $i$\th vertex in a random permutation $\pi$ of
+$\Vertices$. For each vertex $v$ we initialize $\delta(v)$
+to~$+\infty$. In the $i$\th iteration, we test whether
+$\delta(\pi_i) \geq r$, and if so we do the following steps:
+\smallskip
+\begin{compactenumA}
+    \item Add $\pi_i$ to the resulting net $\net$.
+    \item Set $\delta(\pi_i)$ to zero.
+    \item Perform Dijkstra's algorithm starting from $\pi_i$, modified
+    to avoid adding a vertex $u$ to the priority queue unless its
+    tentative distance is smaller than the current value of
+    $\delta(u)$. When such a vertex $u$ is expanded, we set
+    $\delta(u)$ to be its computed distance from $\pi_i$, and relax
+    the edges adjacent to $u$ in the graph.
+\end{compactenumA}
+% \smallskip
+
+
+
+
+\subsubsection{Analysis}
+
+While the analysis here does not directly uses backward analysis, it
+is inspired to a large extent by such an analysis as in
+\secrefpage{c:g:ordering}.
+
+
+
+
+
+\begin{lemma}
+    The set $\net$ is an $r$-net in $\Graph$.
+\end{lemma}
+
+\begin{proof}
+    By the end of the algorithm, each $v \in \Vertices$ has
+    $\delta(v) <r$, for $\delta(v)$ is monotonically decreasing, and
+    if it were larger than $r$ when $v$ was visited then $v$ would
+    have been added to the net.
+    
+    An induction shows that if $\ell = \delta(v)$, for some vertex
+    $v$, then the distance of $v$ to the set $\net$ is at most $\ell$.
+    Indeed, for the sake of contradiction, let $j$ be the (end of) the
+    first iteration where this claim is false. It must be that
+    $\pi_j \in \net$, and it is the nearest vertex in $\net$ to
+    $v$. But then, consider the shortest path between $\pi_j$ and
+    $v$. The modified Dijkstra must have visited all the vertices on
+    this path, thus computing $\delta(v)$ correctly at this iteration,
+    which is a contradiction.
+    
+    Finally, observe that every two points in $\net$ have distance
+    $\geq r$. Indeed, when the algorithm handles vertex $v\in \net$,
+    its distance from all the vertices currently in $\net$ is
+    $\geq r$, implying the claim.
+\end{proof}
+
+\begin{lemma}%
+    \lemlab{update:delta}%
+    % 
+    Consider an execution of the algorithm, and any vertex
+    $v \in \Vertices$. The expected number of times the algorithm
+    updates the value of $\delta(v)$ during its execution is
+    $O( \log n )$, and more strongly the number of updates is
+    $O(\log n)$ with high probability.
+\end{lemma}
+
+\begin{proof}
+    For simplicity of exposition, assume all distances in $\Graph$ are
+    distinct.  Let $S_i$ be the set of all the vertices
+    $x \in \Vertices$, such that the following two properties both
+    hold: \medskip %
+    \begin{compactenumA}
+        \item $\distG{x}{v} < \distG{v}{\Pi_i}$, where
+        $\Pi_i = \brc{\pi_1,\ldots, \pi_i}$.
+        \smallskip%
+        \item If $\pi_{i+1}=x$ then $\delta(v)$ would change in the
+        $(i+1)$\th iteration.
+    \end{compactenumA}
+    \medskip%
+    Let $s_i = \cardin{S_i}$.  Observe that
+    $S_1 \supseteq S_2 \supseteq \cdots \supseteq S_n$, and
+    $\cardin{S_n} = 0$.
+    
+    In particular, let $\Event_{i+1}$ be the event that $\delta(v)$
+    changed in iteration $(i+1)$ -- we will refer to such an iteration
+    as being \emphi{active}. If iteration $(i+1)$ is active then one
+    of the points of $S_i$ is $\pi_{i+1}$. However, $\pi_{i+1}$ has a
+    uniform distribution over the vertices of $S_{i}$, and in
+    particular, if $\Event_{i+1}$ happens then $s_{i+1} \leq s_i/2$,
+    with probability at least half, and we will refer to such an
+    iteration as being \emphi{lucky}. (It is possible that
+    $s_{i+1} < s_i$ even if $\Event_{i+1}$ does not happen, but this
+    is only to our benefit.)  After $O( \log n)$ lucky iterations the
+    set $S_i$ is empty, and we are done. Clearly, if both the $i$\th
+    and $j$\th iteration are active, the events that they are each
+    lucky are independent of each other. By the Chernoff inequality,
+    after $c \log n$ active iterations, at least $\ceil{ \log_2 n }$
+    iterations were lucky with high probability, implying the
+    claim. Here $c$ is a sufficiently large constant.
+\end{proof}
+
+Interestingly, in the above proof, all we used was the monotonicity of
+the sets $S_1, \ldots, S_n$, and that if $\delta(v)$ changes in an
+iteration then the size of the set $S_i$ shrinks by a constant factor
+with good probability in this iteration. This implies that there is
+some flexibility in deciding whether or not to initiate Dijkstra's
+algorithm from each vertex of the permutation, without damaging the
+number of times of the values of $\delta(v)$ are updated.
+% We will use
+%this flexibility later on. %
+
+\begin{theorem}%
+    \thmlab{net:alg}%
+    %% 
+    Given a graph $\Graph = (\Vertices, \Edges)$, with $n$ vertices
+    and $m$ edges, the above algorithm computes an $r$-net of $\Graph$
+    in $O( (n\log n+m)\log n)$ expected time.
+\end{theorem}
+
+\begin{proof}
+    By \lemref{update:delta}, the two $\delta$ values associated with
+    the endpoints of an edge get updated $O( \log n)$ times, in
+    expectation, during the algorithm's execution. As such, a single
+    edge creates $O(\log n)$ decrease-key operations in the heap
+    maintained by the algorithm. Each such operation takes constant
+    time if we use Fibonacci heaps to implement the algorithm.
+\end{proof}%
+
+\section{Bibliographical notes}
+
+Backwards analysis was invented/discovered by Raimund Seidel, and the
+\QuickSort example is taken from Seidel \cite{s-barga-93}.  The number
+of changes of the minimum result of \secref{min:change} is by now
+folklore.
+
+The good ordering of \secref{c:g:ordering} is probably also folklore,
+although a similar idea was used by Mendel and Schwob
+\cite{ms-fckrp-09} for a different problem.
+
+Computing a net in a sparse graph, \secref{net:sparse:graph}, is from
+\cite{ehs-ogpcd-14}. While backwards analysis fails to hold in this
+case, it provide a good intuition for the analysis, which is slightly
+more complicated and indirect.
+
+
+\ChapterEnd{}
+% \end{document}

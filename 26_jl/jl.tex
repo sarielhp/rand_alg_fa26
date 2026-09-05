@@ -1,0 +1,791 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\ifx\bookMode\undefined%
+\input{../prefix}%
+%\setChapterCounter{11}
+\fi%
+
+
+
+\Chapter{Dimension Reduction}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction to dimension reduction}
+
+Given a set $\PS$ of $n$ points in $\Re^\hdim$, we need $n\hdim$
+numbers to describe them. In many scenarios, $\hdim$ might be quite
+large, or even larger than $n$ (in some applications, where the access
+to the points is given only through dot-product, it is useful to think
+about the dimension as being unbounded). If we care only about the
+distances between any pairs of points, then all we need to store are
+the pairwise distances between the points. This would require roughly
+$n^2$ numbers, if we just write down the distance matrix.
+
+But can we do better? (I.e., use less space.) A natural idea is to
+reduce the dimension of the points. Namely, replace the $i$\th point
+$\pnt_i \in \PS$, by a point $\pntA_i \in \Re^k$, where $k \ll \hdim$
+and $k \ll n$. We would like $k$ to be small. If we can do that, then
+we compress the data from size $dn$ to size $kn$, which might be a
+large compression.
+
+Of course, one can do such compression of information without losing
+some information. In particular, we are willing to let the distances
+to be a bit off. Formally, we would like to have the property that
+\begin{math}
+    (1-\eps)\|{\pnt_i - \pnt_j}\|%
+    \leq%
+    \|{\pntA_i - \pntA_j}\|%
+    \leq%
+    (1+\eps)\|{\pnt_i - \pnt_j}\|,
+\end{math}
+for all $i,j$, where $\pntA_i$ is the image of $\pnt_i \in \PS$ after
+the dimension reduction.
+
+To this end, we generate a random matrix $\Matrix$ of dimensions
+$\hdim \times k$, where $k = \Theta(\eps^{-2} \log n)$ (the exact
+details of how to generate this matrix are below, but informally every
+entry is going to be picked from a normal distribution and scaled
+appropriately).  We then set $\pntA_i = \Matrix \pnt_i$, for all
+$\pnt_i \in \PS$.
+
+Before dwelling on the details, we need to better understand the
+normal distribution.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Normal distribution}
+\index{distribution!normal} \index{normal distribution}
+
+The \emphi{standard normal distribution} has
+\begin{equation}
+    f(x)
+    =
+    \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}
+    \eqlab{std:normal:density}
+\end{equation}
+as its density function. We denote that $X$ is distributed according
+to such distribution, using $X \sim \NormalY{0}{1}$. It is depicted in
+\figref{normal:d}.
+
+\begin{figure}[h]
+    \centerline{\includegraphics{\File{figs/normal}}}%
+    \caption{}
+    \figlab{normal:d}
+\end{figure}
+
+Somewhat strangely, it would be convenient to consider two such
+independent variables $X$ and $Y$ together. Their probability space
+$(X,Y)$ is the plane, and it defines a two dimensional density
+function
+\begin{equation}
+    g(x,y) = f(x)f(y) = 
+    \frac{1}{2\pi} \exp \pth{ -(x^2+y^2)/2}.
+    \eqlab{normal:2d}
+\end{equation}
+The key property of this function is that $g(x,y)=g(x',y')$ $\iff$
+$\norm{(x,y)}^2 = x^2 + y^2 = \norm{ (x',y') }^2$. Namely, $g(x,y)$ is
+symmetric around the origin (i.e., all the points in the same distance
+from the origin have the same density).  We next use this property in
+verifying that $f(\cdot)$ it is indeed a valid density function.
+
+\begin{lemma}
+    We have $I = \int_{-\infty}^\infty f(x) \diffX{x} = 1$, where
+    $f(x) = \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}$.
+\end{lemma}
+\begin{proof}
+    Observe that 
+    \begin{align*}
+      I^2
+      &=%
+        \Bigl(\int_{x=-\infty}^\infty f(x)\, \diffX{x} \Bigr)^2%
+        =%
+        \Bigl( \int_{x=-\infty}^\infty f(x)\, \diffX{x} \Bigr)
+        \Bigl( \int_{y=-\infty}^\infty f(y)\, \diffX{y} \Bigr)
+        =%
+        \int_{x=-\infty}^\infty
+        \int_{y=-\infty}^\infty f(x) f(y)\, dx \, dy
+      \\&%
+      =%
+      \int_{x=-\infty}^\infty
+      \int_{y=-\infty}^\infty g(x, y) \diffX{x} \diffX{y}.
+    \end{align*}
+    Change the variables to $x=r \cos \alpha$, $y = r\sin \alpha$, and
+    observe that the determinant of the Jacobian is
+    \[
+    J = 
+    \det \cardin{\begin{matrix}
+           \frac{\partial x}{\partial r} 
+           &
+           \frac{\partial x}{\partial \alpha}\\[0.1cm]
+           \frac{\partial y}{\partial r} 
+           &
+           \frac{\partial y}{\partial \alpha} 
+       \end{matrix}}
+    % 
+    =%
+    \det \cardin{\begin{matrix}%
+           \cos \alpha &
+           -r \sin \alpha  \\[0.1cm]
+           \sin \alpha & r \cos \alpha
+       \end{matrix}}
+    = r \pth[]{\cos^2 \alpha + \sin^2 \alpha } = r.
+    \]
+    As such, 
+    \begin{align*}
+      I^2 &=%
+            \frac{1}{2\pi} \int_{r=0}^\infty \int_{\alpha=0}^{2\pi} \exp
+            \Bigl( -\frac{r^2}{2} \Bigr) \cardin{J} \, d\alpha \, dr%
+            =%
+            \frac{1}{2\pi} \int_{r=0}^\infty \int_{\alpha=0}^{2\pi} \exp
+            \Bigl({ -\frac{r^2}{2}}\Bigr) r \, d\alpha \, dr
+      \\
+          &=%
+            \int_{r=0}^\infty
+            \exp \Bigl( -\frac{r^2}{2} \Bigr) r \, dr
+            =%
+            \Bigl[ - \exp\Bigl( -\frac{r^2}{2} \Bigr) \Bigr]_{r=0}^{r=\infty}
+            = - \exp( -\infty) - (-\exp( 0 ) ) = 1.
+    \end{align*}
+\end{proof}
+
+\begin{lemma}
+    For $X \sim \NormalY{0}{1}$, we have that $\Ex{X} = 0$ and
+    $\Var{X} = 1$.
+\end{lemma}
+\begin{proof}
+    The density function of $X$, see \Eqref{normal:2d} is symmetric
+    around $0$, which implies that $\Ex{X} =0$. As for the variance,
+    we have
+    \begin{equation*}
+        \Var{X}%
+        =%
+        \Ex{X^2} - \pth{\Ex{X}}^2%
+        =%
+        \Ex{X^2}%
+        =%
+        \int_{x=-\infty}^\infty x^2 \Prob{X =x}
+        \diffX{x}
+        =
+        \frac{1}{\sqrt{2\pi}}\int_{x=-\infty}^\infty x^2\exp(-x^2/2)
+        \diffX{x}.        
+    \end{equation*}
+    Observing that
+    \begin{equation*}
+        x^2 \exp\bigl( -x^2/2 \bigr)%/2)
+        =% 
+        \Bigl( - x \exp(-x^2/2)\Bigr)'
+        %
+        + \exp\bigl(-x^2/2\bigr), 
+    \end{equation*}
+    implies (using integration by guessing) that
+    \begin{equation*}
+        \Var{X} =
+        \frac{1}{\sqrt{2\pi}}
+        \Bigl[ -x \exp(-x^2/2) \Bigr]_{x=-\infty}^{\infty} +
+        \frac{1}{\sqrt{2\pi}}
+        \int_{-\infty}^\infty \exp(-x^2/2) \diffX{x} %
+        =%
+        0+1
+        =%
+        1.
+    \end{equation*}
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The standard multi-dimensional normal %
+   distribution}
+
+The \emphi{multi-dimensional normal distribution}, denoted by
+$\NormalDistX{\hdim}$, is the distribution in $\Re^\hdim$ that assigns
+a point $\pnt = ( \pnt_1, \ldots, \pnt_\hdim)$ the density
+    \begin{math}
+        \displaystyle g \pth{\pnt}%
+        =%
+        \frac{1}{\pth{2\pi}^{\hdim/2} } \exp \Bigl( - \frac{1}{2}
+        \sum_{i=1}^\hdim \pnt_i^2 \Bigr).
+    \end{math}
+\index{normal distribution!multi-dimensional}
+\index{distribution!normal!multi-dimensional}%
+%Such a random variable is generated by picking $d$ variables
+%$X_1, \ldots, X_d \sim \NormalY{0}{1}$, and setting
+%$\pnt = (X_1, \ldots, X_d)$.
+
+\medskip
+
+It is easy to verify, using the above, that $\int_{\Re^\hdim} g(\pnt)
+d\pnt = 1$. Furthermore, we have the following useful but easy
+properties.\footnote{The normal distribution has such useful
+   properties that it seems that the only thing normal about it is its
+   name.}
+
+\begin{fragment}{\deflabel{normal_distribution}}
+\begin{lemma}    
+    \lemlab{normal:distribution}%
+    %
+    We have the following properties:
+    \begin{compactenumA}
+
+        \smallskip%
+        \item Consider $\hdim$ independent variables
+        $X_1, \ldots, X_\hdim \sim \NormalY{0}{1}$, the point
+        $\pntA = (X_1, \ldots, X_\hdim)$ has the multi-dimensional
+        normal distribution $\NormalDistX{\hdim}$.
+
+        \smallskip%
+        \item The multi-dimensional normal distribution is
+        symmetric. For any two points $\pnt, \pntA \in \Re^\hdim$ such
+        that $\norm{ \pnt} = \norm{\pntA}$, we have that
+        $g(\pnt) = g(\pntA)$, where $g(\cdot)$ is the density function
+        of the multi-dimensional normal distribution
+        $\NormalDistX{\hdim}$.
+
+        \smallskip%
+        \item The projection of the normal distribution on any
+        direction (i.e., any vector of length $1$) is a
+        one-dimensional normal distribution.
+    \end{compactenumA}
+\end{lemma} 
+\end{fragment}
+\begin{proof}
+    (A) Let $f(\cdot)$ denote the density function of
+    $\NormalY{0}{1}$, and observe that the density function of $\pntA$ is
+    \begin{math}
+        f(X_1) f(X_2) \cdots f(X_\hdim),
+        = %
+        \frac{1}{\mysqrt{2\pi}} \exp \pth{ -X_1^2/2}
+        \cdots
+        \frac{1}{\mysqrt{2\pi}} \exp \pth{ -X_\hdim^2/2},
+    \end{math}
+    which readily implies the claim.
+
+    
+    (B) Readily follows from observing that
+    $g(\pnt)=\frac{1}{\pth{2\pi}^{\hdim/2} } \exp\bigl( -
+    \norm{\pnt}^2/2\bigr)$. 
+
+    (C) Let $\pnt = (X_1, \ldots, X_d)$, where
+    $X_1,\ldots, X_d \sim \NormalY{0}{1}$.  Let $v$ be any unit vector
+    in $\Re^d$, and observe that by the symmetry of the density
+    function, we can (rigidly) rotate the space around the origin in
+    any way we want, and the measure of sets does not change. In
+    particular rotate space so that $v$ becomes the unit vector
+    $(1,0,\ldots, 0)$. We have that
+    \begin{equation*}
+        \Prob{ \DotProd{v}{\pnt} \leq \alpha}%
+        =%
+        \Prob{ \DotProd{(1, 0, \ldots, 0)}{\pnt} \leq \alpha}%
+        =%
+        \Prob{ X_1 \leq \alpha},
+    \end{equation*}
+    which implies that
+    $\DotProd{v}{\pnt} \sim X_1 \sim \NormalY{0}{1}$. 
+\end{proof}
+
+The generalized multi-dimensional distribution is a
+\emphi{Gaussian}. Fortunately, we only need the simpler notion.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dimension reduction}
+
+\subsection{The construction}
+
+The input is a set $\PS \subseteq \Re^\hdim$ of $n$ points (where
+$\hdim$ is potentially very large), and let $\eps >0$ be an
+approximation parameter. For
+\begin{equation}
+    k = \ceil{24\eps^{-2} \ln n}
+    \eqlab{k:val:j:l}%
+\end{equation}
+we pick $k$ vectors $u_1, \ldots, u_k$ independently from the
+$\hdim$-dimensional normal distribution $\NormalDistX{\hdim}$. Given a
+point $\pnt \in \Re^d$, its image is
+\begin{equation*}
+    h(v)%
+    =%
+    \frac{1}{\sqrt{k}} \Bigl( \DotProd{u_1}{\pnt}, \cdots,
+    \DotProd{u_k}{\pnt} \Bigr).     
+\end{equation*}
+
+In matrix notation, let
+\begin{equation*}
+    \Matrix = \frac{1}{\sqrt{k}} 
+    \begin{pmatrix} u_1\\ u_2\\ \vdots\\ u_k
+        \end{pmatrix}.    
+\end{equation*}
+
+For every point $\pnt_i \in \PS$, we set
+$\pntA_i = h(\pnt_i) = \Matrix \pnt_i$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Analysis}
+
+\subsubsection{A single unit vector is preserved}
+
+
+
+
+Consider a vector $v$ of length one in $\Re^\hdim$. The natural
+question is what is the value of $k$ needed, so that the length of
+$h(v)$ is a good approximation to $v$.  Since
+$\DotProd{u_i}{v} \sim \NormalY{0}{1}$, by
+\lemref{normal:distribution}, this question can boil down to the
+following: Given $k$ variables $X_1, \ldots, X_k \sim \NormalY{0}{1}$,
+sampled independently, how concentrated is the random variable
+\begin{equation*}
+    Y%
+    =%
+    \norm{(X_1, \ldots, X_k)}^2%
+    =%
+    \sum_{i=1}^k X_i^2.
+\end{equation*}
+We have that $\Ex{Y} = k \Ex{X_i^2} = k \Var{X_i} = k$, since
+$X_i \sim \NormalY{0}{1}$, for any $i$. The distribution of $Y$ is
+known as the \emphi{chi-square distribution with $k$ degrees of
+   freedom}.
+
+\begin{lemma}
+    Let $\BadProb \in (0,1)$, and $\eps \in (0,1/2)$ be parameters,
+    and let
+    $k \geq \ceil{\smash{\frac{16}{\eps^2} \ln
+          \frac{2}{\BadProb}}\bigr.}\Bigr.$ be an integer. Then, for
+    $k$ independent random variables
+    $X_1, \ldots, X_k \sim \NormalY{0}{1}$, we have that
+    $Z = \sum_i X_i^2/k$ is strongly concentrated. Formally, we have
+    that $\Prob{ Z \leq 1+\eps} \geq 1 - \BadProb$.
+\end{lemma}
+\begin{proof}
+    Arguing as in the proof of Chernoff's inequality, using
+    $t=\eps/4<1/2$, we have
+    \begin{equation*}
+        \Prob{Z \geq 1+\eps}%
+        \leq%
+        \Prob{\exp(tkZ) \geq \exp\bigl( tk(1+\eps)\bigr)}
+        \leq
+        \frac{\Ex{\exp(tkZ)}}
+        {{\exp\bigl( tk(1+\eps)\bigr)}}
+        =%
+        \prod_{i=1}^k \frac{\Ex{\exp( tX_i^2) }}
+        {\exp\bigl( t(1+\eps)\bigr)}.
+    \end{equation*}
+    Using the substitution $x= \frac{y}{\sqrt{1-2t}}$ and
+    $\diffX{x} = \frac{1}{\sqrt{1-2t}} \diffX{y}$, we have
+    \begin{align*}
+      \Ex{\exp( tX_i^2) }%
+      &=%
+        \int_{x=-\infty}^\infty \frac{\exp(tx^2)}{\mysqrt{2\pi}} \exp
+        \pth{ -\frac{x^2}{2}} \diffX{x}%
+        % \\&%
+      =%
+      \frac{1}{\sqrt{2\pi}}
+      \int_{x=-\infty}^\infty \exp
+      \pth{ -(1-2t)\frac{x^2}{2}} \diffX{x}%
+      \\&%
+      =
+      \frac{1}{\sqrt{2\pi}}
+      \int_{y=-\infty}^{\infty}  \exp
+      \pth{ -\frac{1-2t}{2}\pth{\frac{y}{\sqrt{1-2t}}}^2}
+      \frac{1}{\sqrt{1-2t}}
+      \diffX{y}%
+      % \\&
+      =
+      \frac{1}{\sqrt{1-2t}}
+      \cdot
+      \frac{1}{\sqrt{2\pi}}
+      \int_{y=-\infty}^{\infty}  \exp
+      \pth{ -\frac{y^2}{2} }
+      \diffX{y}%
+      \\&
+      =%
+      \frac{1}{\sqrt{1-2t}}.
+    \end{align*}
+
+    We have that $\frac{1}{1-z} = \sum_{i=0}^\infty z^i$, for
+    $0 \leq z < 1$, and thus
+    \begin{equation*}
+        \tfrac{1}{{1-\eps/2}} %
+        =%
+        \sum_i \pth{\frac{\eps}{2}}^i%
+        \leq%
+        \Bigl[{1 + \frac{1}{2}\sum_{i=1}^\infty
+           \pth{\frac{\eps}{2}}^{i}}\,\Bigr]^2%
+        \leq%
+        \exp\Bigl[{\frac{1}{2}\sum_{i=1}^\infty
+           \pth{\frac{\eps}{2}}^{i}}\,\Bigr]^2.
+    \end{equation*}
+    Since $t=\eps/4$, we have
+    \begin{align*}
+      \Ex{\exp( tX_i^2) }%
+      &=%
+        \frac{1}{\sqrt{1-2t}}%
+        =%
+        \frac{1}{\sqrt{1-\eps/2}}
+      % \leq 1+ \frac{\eps}{4} + \frac{\eps^2}{4}
+      \leq
+      \exp\pth{\frac{1}{2}\sum_{i=1}^\infty
+      \pth{\frac{\eps}{2}}^{i}}.%
+    \end{align*}
+    As such, we have
+    \begin{equation*}
+        \Prob{Z \geq 1+\eps}%
+        \leq%
+        \exp\pth{\frac{1}{2}\sum_{i=1}^\infty
+           \pth{\frac{\eps}{2}}^{i}
+           -
+           \frac{\eps}{4} \pth{1+\eps} }^k
+        =%
+        \exp\pth{
+           -\frac{\eps^2}{8} + 
+           \frac{1}{2}\sum_{i=3}^\infty
+           \pth{\frac{\eps}{2}}^{i}
+        }^k
+        \leq%
+        \exp\pth{-\frac{k \eps^2}{16}}
+        \leq %
+        \frac{\BadProb}{2},
+    \end{equation*}
+    since, for $\eps < 1/2$, we have
+    $\frac{1}{2}\sum_{i=3}^\infty (\eps/ 2)^{i}\leq (\eps/2)^3 \leq
+    {\eps^2}/{16}$. The last step in the above inequality follows by
+    substituting in the lower bound on the value of $k$.
+%    The other probability (i.e., $\Prob{Z \leq 1-\eps}$) is bounded in
+%    a similar fashion, and we omit the tedious details.
+\end{proof}
+
+The other direction we need follows in a similar fashion. We state the
+needed result without proof \cite[Lemma 1]{lm-aeqfm-00} (which also
+yields better constants):
+
+\begin{lemma}
+    Let $Y_1, \ldots, Y_k$ be $k$ independent random variables with
+    $Y_i \sim \NormalY{0}{1}$. Let $Z = \sum_{i=1}^k Y_i^2/k$. For any
+    $x >0$, we have that
+    \begin{equation*}
+        \Prob{Z  \leq 1 -2 \sqrt{ x/k}} \leq \exp(-x)%
+        \qquad\text{and}\qquad 
+        \Prob{Z  \geq 1 + 2 \sqrt{ x/k} + 2x/k} \leq \exp(-x).%
+    \end{equation*}   
+\end{lemma}
+
+For our purposes, we require that $\exp(-x) \leq \BadProb/2$, which
+implies $x = \ln( 2/\BadProb)$. We further require that
+$2 \sqrt{ x/k} \leq \eps$ and $2 \sqrt{ x/k} + 2x/k \leq \eps$, which
+hold for $k = 8\eps^{-2} \ln \frac{2}{\BadProb}$, for $\eps \leq 1$.
+We thus get the following result.
+
+\begin{corollary}
+    \corlab{j:l:z}%
+    %
+    Let $\BadProb \in (0,1)$, and $\eps \in (0,1/2)$ be parameters,
+    and let
+    $k \geq \bigl\lceil{\frac{8}{\eps^2} \ln
+       \frac{2}{\BadProb}}\bigr\rceil$ be an integer. Then, for $k$
+    independent random variables
+    $X_1, \ldots, X_k \sim \NormalY{0}{1}$, we have for
+    $Z = \sum_i X_i^2/k$ that that
+    $\Prob{ 1-\eps \leq Z \leq 1+\eps} \geq 1 - \BadProb$.
+\end{corollary}
+
+
+\begin{remark}
+    The result of \corref{j:l:z} is surprising. It says that if we
+    pick a point according to the $k$-dimensional normal distribution,
+    then its distance to the origin is strongly concentrated around
+    $\sqrt{k}$. Namely, the normal distribution ``converges'' to a
+    sphere, as the dimension increases. The mind boggles.
+\end{remark}
+
+
+\begin{lemma}
+    \lemlab{j:l:single:v}%
+    %
+    Let $v$ be a unit vector in $\Re^d$, then
+    \begin{equation*}
+        \Prob{ 1-\eps \leq  \norm{\Matrix v } \leq 1+\eps \bigr.}%
+        \geq
+        1- \frac{1}{n^2}. 
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Observe that if for a number $x$, if
+    $1-\eps \leq x^2 \leq 1+\eps$, then $1-\eps \leq x \leq
+    1+\eps$. As such, the claim holds if
+    $1-\eps \leq \norm{\Matrix v }^2 \leq 1+\eps$.  By \corref{j:l:z},
+    setting $\BadProb = 1/n^2$, we need
+    \begin{equation*}
+        k%
+        \geq%
+        8\eps^{-2}\ln (2/\BadProb)
+        =
+        8 \eps^{-2} \ln (2n^2)%
+        =%
+        24 \eps^{-2} \ln n,
+    \end{equation*}
+    which holds for the value picked for $k$ in 
+    \Eqref{k:val:j:l}.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{All pairwise distances are preserved}
+
+\begin{lemma}
+    With probability at least half, for all points $\pnt, \pnt' \in
+    \PS$, we have that
+    \begin{equation*}
+        (1-\eps) \distY{\pnt}{\pnt'}%
+        \leq%
+        \distY{ \Matrix \pnt}{\Matrix \pntA }%
+        \leq%
+        (1+\eps) \distY{\pnt}{\pntA}.%
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    The key observation is that $\Matrix$ is a linear operator. As
+    such, let $v = (\pnt - \pnt') / \norm{\pnt - \pnt'}$ be a unit
+    vector, and observe that
+    \begin{align*}
+      &(1-\eps) \distY{\pnt}{\pnt'}%
+        \leq%
+        \distY{ \Matrix \pnt}{\Matrix \pnt' }%
+        =%
+        \norm{ \Matrix( \pnt- \pnt') }%
+        \leq%
+        (1+\eps) \distY{\pnt}{\pnt'}
+      \\&%
+      \qquad \iff \qquad%
+      1-\eps %
+      \leq%
+%        \distY{ \Matrix \pnt}{\Matrix \pnt' }%
+%        =%
+        \norm{ \Matrix\frac{ \pnt- \pnt'}{\distY{\pnt}{\pnt'}} }%
+        \leq%
+      1+\eps
+      \\&%
+      \qquad \iff \qquad%
+      (1-\eps) \norm{v}%
+      \leq%
+      \norm{ \Matrix v  }%
+      \leq%
+      (1+\eps) \norm{v}.        
+    \end{align*}
+    The probability the later condition does not hold is at most
+    $1/n^2$, by \lemref{j:l:single:v}. As such, for all possible pairs
+    of points, the probability of failure is
+    $\binom{n}{2} \cdot \frac{1}{n^2} \leq 1/2$, as claimed.
+\end{proof}
+
+We thus got the famous J{}L-Lemma.
+
+\begin{theorem}[The Johnson-Lindenstrauss Lemma]
+    Given a set $\PS$ of $n$ points in $\Re^\hdim$, and a parameter
+    $\eps$, one can reduce the dimension of $\PS$ to
+    $k = O(\eps^{-2} \log n)$ dimensions, such that all pairwise
+    distances are $1\pm \eps$ preserved.
+\end{theorem}
+
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+\section{Even more on the normal distribution}
+
+The following is not used anywhere in the above, and is provided as
+additional information about the normal distribution.
+
+\begin{lemma}
+    Let $X \sim \NormalY{0}{1}$, and let $\sigma > 0$ and $\mu$ be two
+    real numbers. The random variable $Y = \sigma X + \mu$ has the
+    density function
+    \begin{equation}
+        f_{\mu,\sigma}(x) = \frac{1}{\mysqrt{2\pi} \sigma} \exp\pth{
+           -\frac{(x-\mu)^2}{2\sigma^2}}.
+        \eqlab{normal:density:g}
+    \end{equation}
+    The variable $Y$ has the \emphi{normal distribution} with variance
+    $\sigma^2$, and expectation $\mu$, denoted by
+    $Y \sim \NormalY{\mu}{\sigma^2}$.
+\end{lemma}
+\begin{proof}
+    We have
+    \begin{math}
+        \Prob{Y \leq \alpha}%
+        =%
+        \Prob{\sigma X + \mu \leq \alpha}%
+        =%
+        \Prob{ X \leq \frac{\alpha-\mu}{\sigma}}%
+        =%
+        \int_{y=-\infty}^{(\alpha-\mu)/{\sigma}} f(y) \diffX{y},
+    \end{math}
+    where $f(x) = \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}$.
+    Substituting $y= (x - \mu)/\sigma$, and observing that
+    $\diffX{y}/\diffX{x} = 1/\sigma$, we have
+    \begin{equation*}
+        \Prob{Y \leq \alpha}%
+        =%
+        \int_{x=-\infty}^{\alpha} f\Bigl( \frac{x-\mu}{\sigma} \Bigr)
+        \frac{1}{\sigma} \diffX{x}%
+        =%
+        \frac{1}{\mysqrt{2\pi} \sigma}
+        \int_{x=-\infty}^{\alpha} 
+        \exp \pth{ -\frac{(x-\mu)^2}{2\sigma^2}} \diffX{x},
+    \end{equation*}
+    as claimed.
+
+    As for the second part, observe that
+    $\Ex{Y} = \Ex{\sigma X + \mu } = \sigma\Ex{X} + \mu = \mu$ and
+    $\Var{Y} = \Var{\sigma X + \mu } = \Var{\sigma X } = \sigma^2
+    \Var{X} = \sigma^2$.
+\end{proof}
+
+
+
+\begin{lemma}
+    \lemlab{sum:normal:special}%
+    %
+    Consider two independent variables $X \sim \NormalY{0}{1}$ and
+    $Y \sim \NormalY{0}{1}$. For $\alpha,\beta > 0$, we have
+    \begin{math}
+        Z = \alpha X+\beta Y \sim \NormalY{ 0}{ \sigma^2},
+    \end{math}
+    where $\sigma = \sqrt{\alpha^2 + \beta^2}$.
+\end{lemma}
+\begin{proof}
+    Consider the region in the plane
+    $H^- = \Set{ (x,y)\in\Re^2}{ \alpha x + \beta y \leq z}$ -- this
+    is a halfspace bounded by the line
+    $\ell \equiv \alpha x + \beta y = z $. This line is orthogonal to
+    the vector $(-\beta,\alpha)$. We have that
+    $\ell \equiv \frac{\alpha}{\sigma} x + \frac{\beta}{\sigma} y =
+    \frac{z}{\sigma} $. Observe that
+    $\bigl\|\bigl( \frac{\alpha}{\sigma}, \frac{\beta}{\sigma}
+    \bigr)\bigr\|=1$, which implies that the distance of $\ell$ from
+    the origin is $d = z/\sigma$.
+
+    Now, we have
+    \begin{equation*}
+        \Prob{Z \leq z}%
+        =%
+        \Prob{\alpha X + \beta Y \leq z}
+        =%
+        \Prob{H^-}%
+        =%
+        \int_{p=(x,y)\in H^-} g(x,y) \diffX{p},
+    \end{equation*}
+    see \Eqref{normal:2d}.  Since, the two dimensional density
+    function $g$ is symmetric around the origin. any halfspace
+    containing the origin, which its boundary is in distance $d$ from
+    the origin, has the same probability. In particular, consider the
+    halfspace $T=\Set{ (x,y)\in\Re^2}{ x \leq d}$. We have that
+    \begin{align*}
+      \Prob{Z \leq z}%
+      &=%
+        \Prob{H^-}%
+        =%
+        \Prob{T}%
+        =%
+        \Prob{X \leq d} %
+        =%
+        \frac{1}{\sqrt{2\pi}}\int_{-\infty}^d \exp\pth{-\frac{x^2}{2}} \diffX{x}
+        % \\&%
+      =%
+      \frac{1}{\sqrt{2\pi } }\int_{y=-\infty}^z
+      \exp\pth{-\frac{y^2}{2\sigma^2}} \frac{\diffX{x}}{ \diffX{y}} \diffX{y},
+      \\&%
+      =%
+      \frac{1}{\sqrt{2\pi } \sigma}\int_{y=-\infty}^z
+      \exp\pth{-\frac{y^2}{2\sigma^2}}  \diffX{y},
+    \end{align*}
+    by change of variables $x = y/\sigma$, and observing that
+    $\diffX{x} / \diffX{y} = 1/\sigma$. By \Eqref{normal:density:g},
+    the above integral is the probability of a variable distributed
+    $\NormalY{0}{\sigma^2}$ to be smaller than $z$, establishing the
+    claim.
+\end{proof}
+
+\begin{lemma}
+    Consider two independent variables
+    $X \sim \NormalY{\mu_1}{\sigma_1^2}$ and
+    $Y \sim \NormalY{\mu_2}{\sigma_2^2}$. We 
+    have
+    \begin{math}
+        Z = X+ Y \sim \NormalY{ \mu_1 + \mu_2 }{ \sigma_1^2 +
+           \sigma_2^2},
+    \end{math}
+\end{lemma}
+\begin{proof}
+    Let
+    $\widehat{X} \sim \NormalY{0}{1}$
+    and $\widehat{Y} \sim \NormalY{0}{1}$, and observe that we can
+    write $X = \sigma_1 \widehat{X} + \mu_1$ and
+    $Y = \sigma_2 \widehat{Y} + \mu_2$. As such, we have
+    \begin{equation*}
+        Z%
+        =%
+        X+Y%
+        =%        
+        \sigma_1 \widehat{X}  + \sigma_2 \widehat{Y} + \mu_1 + \mu_2.
+    \end{equation*}
+    The variable
+    $W = \sigma_1 \widehat{X} + \sigma_2 \widehat{Y} \sim
+    \NormalY{0}{\sigma_1^2 + \sigma_2^2}$, by
+    \lemref{sum:normal:special}. Adding $\mu_1 + \mu_2$ to $W$, just
+    shifts its expectation, implying the claim.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% \section{Some calculations}
+
+% Let $X \sim \NormalY{0}{1}$. Then
+% \begin{equation*}
+%     \Prob{X^2 \leq \alpha}%
+%     =%
+%     \int_{x=-\sqrt{\alpha}}^{\sqrt{\alpha}} f(x) \diffX{x}
+%     =%
+%     \int_{x=0}^{\sqrt{\alpha}} 2f(x) \diffX{x}
+%     =%
+%     \int_{y=0}^{\alpha} \frac{1}{2\sqrt{y}} 2f(\sqrt{y})\diffX{y}
+%     =%
+%     \int_{y=0}^{\alpha} \frac{1}{\sqrt{2\pi y}} \exp( -y/2) \diffX{y}
+% \end{equation*}
+
+
+\section{Bibliographical notes} 
+
+The original result is due to Johnson and Lindenstrauss
+\cite{jl-elmih-84}. By now there are many proofs of this lemma. Our
+proof follows class notes of Anupam Gupta, which in turn follows Indyk
+and Motwani \cite{im-anntr-98},
+
+
+%\StandAloneMode{
+%   \section{From previous lectures}
+
+   % \IncFragment{\deflabel{normal:distribution}}
+   % \IncFragment{\deflabel{A:N:N:PLEB:Euclidean}}
+   % \IncFragment{\deflabel{A:N:N:PLEB:slow}}
+   % \IncFragment{\deflabel{H:S:T:Euclidean}}
+%}
+
+\ChapterEnd{}
+
+%--------------------------------------------------------
+%
+% end of file
+%--------------------------------------------------------

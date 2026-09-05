@@ -1,0 +1,401 @@
+\ifx\bookMode\undefined%
+\input{../prefix}%
+\fi%
+
+\Chapter{The Probabilistic Method II}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+
+\QuotePExt{%
+   ``Today I know that everything watches, that nothing goes unseen,
+   and that even wallpaper has a better memory than ours. It isn't God
+   in His heaven that sees all. A kitchen chair, a coat-hanger a
+   half-filled ash tray, or the wood replica of a woman name Niobe,
+   can perfectly well serve as an unforgetting witness to every one of
+   our acts.''}{Gunter Grass}{The tin drum}
+
+
+
+\section{Expanding Graphs}
+
+In this lecture, we are going to discuss {\em expanding graphs}.
+
+\begin{defn}
+    An $(n,d,\alpha, c)$ \emphi{OR-concentrator} is a bipartite
+    multigraph $\Graph(L, R, E)$, with the independent sets of
+    vertices $L$ and $R$ each of cardinality $n$, such that
+    \begin{compactenumi}
+        \item Every vertex in $L$ has degree at most $d$.
+        
+        \item Any subset $S$ of vertices of $L$, with $\cardin{S} \leq
+        \alpha n$ has at least $c \cardin{S}$ neighbors in $R$.
+    \end{compactenumi}
+\end{defn}
+
+A good $(n,d,\alpha, c)$ OR-concentrator should have $d$ as small as
+possible\footnote{Or smaller!}, and $c$ as large as possible.
+
+
+\begin{theorem}
+    \thmlab{expander:1}%
+    %
+    There is an integer $n_0$, such that for all $n \geq n_0$, there
+    is an $(n,18, 1/3, 2)$ OR-concentrator.
+\end{theorem}
+\begin{proof}
+    Let every vertex of $L$ choose neighbors by sampling (with
+    replacement) $d$ vertices independently and uniformly from $R$.
+    We discard multiple parallel edges in the resulting graph.
+    
+    Let $\Event_s$ be the event that a subset of $s$ vertices of $L$
+    has fewer than $cs$ neighbors in $R$. Clearly,
+    \begin{equation*}
+        \Prob{\bigl.\Event_s}%
+        \leq%
+        \mybinom{n}{s} \, \mybinom{n}{cs} \pth{ \frac{cs}{n}}^{ds}%
+        \leq%
+        \pth{\frac{ne}{s}}^s \pth{\frac{ne}{cs}}^{cs} \pth{
+           \frac{cs}{n}}^{ds}%
+        =%
+        \Bigl[ \pth{\frac{s}{n}}^{d-c-1} \exp\pth{\bigl. 1+c}\,
+        c^{d-c} \Bigr]^s,
+    \end{equation*}
+    since $\binom{n}{k} \leq \pth{\frac{ne}{k}}^k$. Setting
+    $\alpha = 1/3$ using $s\leq \alpha n$, and $c=2$, we have
+    \begin{align*}
+      \Prob{\bigl. \Event_s}%
+      &\leq%
+        \brk{ \Bigl. \smash{ \pth{\Bigl.\smash{\frac{1}{3}}}^{d-c-1} e^{1+c} c^{d-c} }}^s%
+        \leq %
+        \brk{ \Bigl. \smash{\Bigl(\frac{1}{3} \Bigr)^{d}}3^{1+c} e^{1+c} c^{d-c}}^s%
+        \leq %
+        \brk{ \Bigl( \frac{1}{3} \Bigr)^{d}3^{1+c}
+        e^{1+c} c^{d}}^s  \\
+      &\leq%
+        \brk{ \pth{\frac{c}{3}}^{d}\pth{3e}^{1+c} }^s%
+        \leq%
+        \Bigl[ \Bigl(\frac{2}{3} \Bigr)^{18}\pth{3e}^{1+2} \Bigr]^s%
+        \leq%
+        \pth{\bigl.0.4}^s,
+    \end{align*}
+    as $c=2$ and $d=18$. Thus,
+    \begin{align*}
+      \sum_{s \geq 1} \Prob{ \bigl. \Event_s}%
+      \leq%
+      \sum_{s\geq 1} (0.4)^s%
+      <%
+      1.
+    \end{align*}
+    It thus follows that the random graph we generated has the
+    required properties with positive probability.
+\end{proof}
+
+
+\subsection{An alternative construction}
+
+
+\begin{theorem}
+    \thmlab{expander:2}
+    Consider a bipartite graph over left and right sets $L$ and $R$,
+    such that $n = |L|=|R|$. Consider a random graph $\G$ formed by
+    the union of $d = 18$ random perfect matchings between $L$ and
+    $R$.  Let $\G$ be the resulting graph. Then, for $d \geq 18$, the
+    resulting graph is $(n,18, 1/3, 2)$ OR-concentrator. Furthermore,
+    $\G$ has maximum degree $d$.
+\end{theorem}
+\begin{proof}
+    Let $\Event_s$ be the event that a subset of $s$ vertices of $L$
+    has fewer than $cs$ neighbors in $R$.  For a choice of such a set
+    $S \subseteq L$, and a set $T$ of size $cs$ in $R$, we have that
+    number of ways to chose a matching such that all the vertices of
+    $S$ has neighbors in $T$ is $cs \cdot (cs-1) \cdots (cs -s+1)$ --
+    indeed, we fix an ordering of the items in $S$, and assign them
+    their match in $T$ one by one. As such, we have
+    \begin{equation*}
+        \Xi%
+        =%
+        \Prob{\bigl.\Event_s}%
+        \leq%
+        \mybinom{n}{s} \, \mybinom{n}{cs}
+        \pth{ \frac{cs (cs-1) \cdots ( cs-s+1)}{n (n-1) \cdots (n-s+1)}}^{d}.%
+    \end{equation*}
+    Using
+    \begin{math}
+        % { \frac{\binom{cs}{s}}{\binom{n}{s}}}
+        \frac{cs}{n} \cdot \frac{cs-1}{n-1} \cdots \cdot
+        \frac{cs-s+1}{n-s+1} \leq \pth{\frac{cs}{n}}^s,
+    \end{math}
+    we have
+    \begin{equation*}            
+        \Xi%
+        \leq%
+        \pth{\frac{ne}{s}}^s \pth{\frac{ne}{cs}}^{cs} \pth{
+           \frac{cs}{n}}^{ds}.
+    \end{equation*}
+    The quantity in the right, in the above inequality, is the same
+    quantity bounded in the proof of \thmref{expander:1}, and the
+    result follows by the same argumentation.
+\end{proof}
+
+
+\subsection{An expander}
+
+\begin{defn}
+    An \emphi{$(n,d, c)$-expander} is a graph $\G=(\Vertices,\Edges)$
+    over $n$ vertices, $n$, such that
+    \begin{compactenumi}
+        \item Every vertex in $\G$ has degree at most $d$.
+        
+        \item Any subset $S$ of vertices of $\Vertices$, with
+        $\cardin{S} \leq n/3$ has at least $c \cardin{S}$ neighbors.
+    \end{compactenumi}
+\end{defn}
+
+
+\begin{theorem}
+    One can construct a $(n,36,2)$-expander 
+\end{theorem}
+\begin{proof}
+    Let $\G$ be a graph with the set of vertices being $\IRX{n}$.
+    Construction the graph of \thmref{expander:2}, and let $\G'$ be
+    this graph. For every edge $v_i u_j$ in $\G'$ create an edge $ ij$
+    in $\G$. Clearly, $\G$ has the desired properties.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{Probability Amplification}
+
+Let \Alg be an algorithm in $\CClass{RP}$, such that given $x$, \Alg
+picks a random number $r$ from the range $\ZZ_n =\brc{0,\ldots, n-1}$,
+for a suitable choice of a prime $n$, and computes a binary value
+$\Alg(x,r)$ with the following properties:
+\begin{compactenumA}
+    \item If $x \in L$, then $\Alg(x,r)=1$ for at least half the
+    possible values of $r$.
+    
+    \item If $x \notin L$, then $\Alg(x,r) = 0$ for all possible
+    choices of $r$.
+\end{compactenumA}
+
+\medskip
+
+Next, we show that using $\lg^2 n$ bits\footnote{Everybody knows that
+   $\lg n =\log_2 n$. Everybody knows that the captain lied.}  one can
+achieve $1/n^{\lg n}$ confidence, compared with the naive $1/n$, and
+the $1/t$ confidence achieved by $t$ (dependent) executions of the
+algorithm using two-point sampling.
+
+\begin{theorem}%
+    \thmlab{expand}%
+    %
+    For $n$ large enough, there exists a bipartite graph
+    $\Graph(V,R,E)$ with $|V|=n$, $|R|= 2^{\lg^2 n}$ such that:
+    \begin{compactenumi}
+        \item Every subset of $n/2$ vertices of $V$ has at least
+        $\,{2^{\lg^2 n} -n}\,$ neighbors in $R$.
+        
+        \item No vertex of $R$ has more than $12 \lg^2 n$ neighbors.
+    \end{compactenumi}
+\end{theorem}
+
+\begin{proof}
+    Each vertex of $V$ chooses
+    $\displaystyle d= 2^{\lg^2n} ( 4 \lg^2 n)/n$ neighbors
+    independently in $R$. We show that the resulting graph violate the
+    required properties with probability less than
+    half.\footnote{Here, we keep parallel edges if they happen --
+       which is unlikely. The reader can ignore this minor
+       technicality, on her way to ignore this whole write-up.}
+    
+    The probability for a set of $n/2$ vertices on the left to fail to
+    have enough neighbors, is
+    \begin{align*}
+      \tau%
+      & \leq %
+        \mybinom{n}{n/2} \, \mybinom{2^{\lg^2 n}}{n} \pth{ 1 -
+        \frac{n}{2^{\lg^2 n}}}^{dn/2}%
+        \leq %
+        2^n \pth{\frac{2^{\lg^2 n}e}{n}}^n \exp \pth{ -
+        \frac{dn}{2} \frac{n}{2^{\lg^2 n}}}%
+      \\&%
+      \leq%
+      2^n \underbrace{\pth{\frac{2^{\lg^2 n}e}{n}}^n}_{*}%
+      \exp \Bigl({ - \frac{ {2^{\lg^2n} ( 4 \lg^2 n)/n}}{2}
+      \frac{n^2}{2^{\lg^2 n}}}\Bigr)%
+      \leq%
+      \exp \pth{\Bigl. n +
+      \smash{\underbrace{n \ln {\frac{2^{\lg^2 n}e}{n}}}_{*}}
+      - 2n \lg^2 n },
+    \end{align*}
+    since $\binom{n}{n/2} \leq 2^n$ and
+    $\binom{2^{\lg^2 n}}{2^{\lg^2 n} - n} = \binom{2^{\lg^2 n}}{n}$,
+    and $\binom{x}{y} \leq \bigl(\frac{xe}{y}\bigr)^y$\footnote{The
+       reader might want to verify that one can use significantly
+       weaker upper bounds and the result still follows -- we are
+       using the tighter bounds here for educational reasons, and
+       because we can.}. %
+    Now, we have
+    \begin{equation*}
+      \rho%
+      =%
+      n \ln {\frac{2^{\lg^2 n}e}{n}}%
+      =%
+      n \pth{ \ln 2^{\lg^2 n} + \ln e - \ln n}%
+      \leq
+      (\ln 2 ) n \lg^2 n%
+      \leq
+      0.7 n \lg^2 n,        
+  \end{equation*}
+    for $n \geq 3$. As such, we have
+    \begin{math}
+        \tau \leq \exp \pth{ n + (0.7-2) n \lg^2 n}%
+        \ll 1/4.
+    \end{math}
+
+    As for the second property, note that the expected number of
+    neighbors of a vertex $v \in R$ is $4 \lg^2 n$.  Indeed, the
+    probability of a vertex on $R$ to become adjacent to a random edge
+    is $\rho = 1 / |R|$, and this ``experiment'' is repeated
+    independently $d n$ times. As such, the expected degree of a
+    vertex is $\mu \Ex{\bigl. Y} = dn/|R| = 4 \lg^2 n$. The Chernoff bound
+    (\thmrefpage{Chernoff:simplified}) implies that
+    \begin{align*}
+        \alpha%
+        = %
+        \Prob{\Bigl. Y > 12 \lg^2 n }%
+        = %
+        \Prob{\Bigl. Y > (1 + 2) \mu }%
+        <%
+        \exp\pth{ - \mu 2^2 / 4 }%
+        =%
+        \exp\pth{ -4 \lg^2 n}.
+    \end{align*}
+    Since there are $ 2^{\lg^2 n}$ vertices in $R$, we have that the
+    probability that any vertex in $R$ has a degree that exceeds $12
+    \lg^2 n$, is, by the union bound, at most
+    \begin{math}
+        \ds \cardin{R} \alpha \leq 2^{\lg^2 n} \exp\pth{ -4 \lg^2 n}
+        \leq \exp\pth{ -3 \lg^2 n} \ll 1/4,
+    \end{math}
+    concluding our tedious calculations%
+    \footnote{Once again, our verbosity in applying the Chernoff
+       inequality is for educational reasons -- usually such
+       calculations would be swept under the rag. No wonder than that
+       everybody is afraid to look under the rag.}.
+    
+    Thus, with constant positive probability, the random graph has the
+    required property, as the union of the two bad events has
+    probability $\ll 1/2$.
+\end{proof}
+
+
+
+
+
+We assume that given a vertex (of the above graph) we can compute its
+neighbors, without computing the whole graph.
+
+So, we are given an input $x$.  Use $\lg^2{n}$ bits to pick a vertex
+$v \in R$. We next identify the neighbors of $v$ in $V$: $r_1, \ldots,
+r_k$. We then compute $\Alg\pth{ x, r_i}$, for $i=1,\ldots k$. Note
+that $k = O\pth{\lg^2 n }$. If all $k$ calls return $0$, then we
+return that \Alg is not in the language. Otherwise, we return that $x$
+belongs to $V$.
+
+If $x$ is in the language, then consider the subset $U\subseteq V$,
+such that running \Alg on any of the strings of $U$ returns \TRUE. We
+know that $\cardin{U} \geq n/2$. The set $U$ is connected to all the
+vertices of $R$ except for at most $\cardin{R} - \pth{2^{\lg^2 n} -n}
+= n$ of them. As such, the probability of a failure in this case, is
+\begin{align*}
+    \Prob{\Bigl. x \in L \text{ but } r_1, r_2, \ldots, r_k \notin U
+    }%
+    =%
+    \Prob{\Bigl. v \text{ not connected to } U } \leq
+    \frac{n}{\cardin{R}}%
+    \leq%
+    \frac{n}{2^{\lg^2 n }}.
+\end{align*}
+
+We summarize the result.
+\begin{lemma}
+    \lemlab{derand:expander}%
+    %
+    Given an algorithm \Alg in $\CClass{RP}$ that uses $\lg n$ random
+    bits, and an access explicit access to the graph of
+    \thmref{expand}, one can decide if an input word is in the
+    language of $\Alg$ using $\lg^2n$ bits, and the probability of f
+    failure is at most $\Bigl.{n}/{2^{\lg^2 n }}$.
+\end{lemma}
+
+Let us compare the various results we now have about running an
+algorithm in $\CClass{RP}$ using $\lg^2 n$ bits. We have three
+options:
+\begin{compactenumA}
+    \item Randomly run the algorithm $\lg n$ times independently. The
+    probability of failure is at most $1/2^{\lg n} = 1/n$.
+
+    \item \lemref{derand:expander}, which as probability of failure at
+    most $1/2^{\lg n} = 1/n$.
+
+    \item The third option is to use pairwise independent sampling
+    (see \lemrefpage{pairwise}). While it is not directly comparable
+    to the above two options, it is clearly inferior, and is thus less
+    useful.
+
+\end{compactenumA}
+\bigskip
+
+
+Unfortunately, there is no explicit construction of the expanders used
+here. However, there are alternative techniques that achieve a similar
+result.
+
+
+
+\section{Oblivious routing revisited}
+
+\begin{theorem}
+    Consider any randomized oblivious algorithm for permutation
+    routing on the hypercube with $N=2^n$ nodes. If this algorithm
+    uses $k$ random bits, then its expected running time is $\Omega
+    \pth{ 2^{-k} \sqrt{N/n} }$.
+\end{theorem}
+
+\begin{corollary}
+    Any randomized oblivious algorithm for permutation routing on the
+    hypercube with $N=2^n$ nodes must use $\Omega(n)$ random bits in
+    order to achieve expected running time $O(n)$.
+\end{corollary}
+
+\begin{theorem}
+    For every $n$, there exists a randomized oblivious scheme for
+    permutation routing on a hypercube with $n=2^n$ nodes that uses
+    $3n$ random bits and runs in expected time at most $15n$.
+\end{theorem}
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   
+   \IncFragment{\deflabel{Chernoff_simplified}}%
+   \IncFragment{\deflabel{pairwise_a_l_g}}%
+
+   \section{Bibliographical notes}
+
+   As usual, we are following here \cite{mr-ra-95}.%
+}
+
+
+% \bibliographystyle{alpha}%
+% \bibliography{shortcuts,geometry}
+
+
+% \end{document}%
+
+\ChapterEnd{}
+

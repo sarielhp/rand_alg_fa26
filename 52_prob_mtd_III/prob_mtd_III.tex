@@ -1,0 +1,541 @@
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+\Chapter{The Probabilistic Method IV}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+\QuotePExt{%
+   Once I sat on the steps by a gate of David's Tower, I placed my two
+   heavy baskets at my side. A group of tourists was standing around
+   their guide and I became their target marker. ``You see that man
+   with the baskets? Just right of his head there's an arch from the
+   Roman period. Just right of his head.'' ``But he's moving, he's
+   moving!'' I said to myself: redemption will come only if their
+   guide tells them, ``You see that arch from the Roman period?  It's
+   not important: but next to it, left and down a bit, there sits a
+   man who's bought fruit and vegetables for his family.''%
+}%
+{Yehuda Amichai}%
+{Tourists}
+
+\section{The Method of Conditional Probabilities}
+
+In previous lectures, we encountered the following problem.
+
+\begin{problem}[Set Balancing/Discrepancy]
+    Given a binary matrix $\Matrix$ of size $n \times n$, find a
+    vector $\vecA \in \brc{-1,+1}^n$, such that
+    $\dist{\Matrix \vecA}_\infty$ is minimized.
+\end{problem}
+
+Using random assignment and the Chernoff inequality, we showed that
+there exists $\vecA$, such that
+$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$. Can we
+derandomize this algorithm?  Namely, can we come up with an efficient
+\emph{deterministic} algorithm that has low discrepancy?
+
+To derandomize our algorithm, construct a computation tree of depth
+$n$, where in the $i$\th level we expose the $i$\th coordinate of
+$\vecA$.  This tree $T$ has depth $n$. The root represents all
+possible random choices, while a node at depth $i$, represents all
+computations when the first $i$ bits are fixed. For a node $v \in T$,
+let $P(v)$ be the probability that a random computation starting from
+$v$ succeeds -- here randomly assigning the remaining bits can be
+interpreted as a random walk down the tree to a leaf.
+
+Formally, the algorithm is \emphi{successful} if ends up with a vector
+$\vecA$, such that
+$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$.
+
+Let $v_l$ and $v_r$ be the two children of $v$.
+Clearly, $P(v) = (P(v_l) + P(v_r))/2$. In particular, $\max( P(v_l),
+P(v_r)) \geq P(v)$. Thus, if we could compute $P(\cdot)$ quickly (and
+deterministically), then we could derandomize the algorithm.
+
+
+Let $C_\ind^+$ be the bad event that
+$\row_\ind \cdot \vecA > 4 \sqrt{n \log n}$, where $\row_\ind$ is the
+$\ind$\th row of $\Matrix$.  Similarly, $C_\ind^-$ is the bad event
+that $\row_\ind \cdot \vecA < -4 \sqrt{n \log{n}}$, and let
+$C_\ind = C_\ind^+ \cup C_\ind^-$.  Consider the probability,
+$\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first
+$k$ coordinates of $\vecA$ are specified).  Let
+$\row_\ind = (\rowc_1,\ldots, \rowc_n)$.  We have that
+\begin{equation*}
+    \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}%
+    =
+    \Prob{\sum_{i=k+1}^{n} \vecA_i \rowc_i > 4 \sqrt{n \log{n}} -
+       \sum_{i=1}^{k} \vecA_i \rowc_i }%
+    =%
+    \Prob{\sum_{i \geq k+1, \rowc_i \ne 0 } \vecA_i \rowc_i >
+       L}%
+    =%
+    \Prob{\sum_{i \geq k+1, \rowc_i = 1 } \vecA_i > L},
+\end{equation*}
+where
+\begin{math}
+    L = 4 \sqrt{n \log{n}} - \sum_{i=1}^{k} \vecA_i \rowc_i
+\end{math}
+is a known quantity (since $\vecA_1, \ldots, \vecA_k$ are known). Let
+$V = \sum_{i \geq k+1, \rowc_i =1 } 1$. We have,
+\begin{align*}
+  \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} 
+  &=%
+    \Prob{\sum_{\substack{i \geq k+1\\ \alpha_i = 1}}\pth{ \vecA_i +
+  1} > L + V}%
+  =%
+  \Prob{\sum_{\substack{i \geq k+1\\ \alpha_i = 1} }\frac{{ \vecA_i +
+  1}}{2} > \frac{L + V}{2}},
+\end{align*}
+The last quantity is the probability that in $V$ flips of a fair $0/1$
+coin one gets more than $(L+V)/2$ heads. Thus,
+\begin{align*}
+  P_\ind^+ = \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} &=%
+                                                              \sum_{i = \ceil{(L+V)/2}}^{\Vertices} \binom{\Vertices}{i}
+                                                              \frac{1}{2^n}%
+                                                              =%
+                                                              \frac{1}{2^n} { \sum_{i = \ceil{(L+V)/2}}^{\Vertices}
+                                                              \binom{\Vertices}{i}}.
+\end{align*}
+This implies, that we can compute $P_\ind^+$ in polynomial
+time!  Indeed, we are adding $V \leq n$ numbers, each one of
+them is a binomial coefficient that has polynomial size
+representation in $n$, and can be computed in polynomial
+time (why?).  One can define in similar fashion $P_\ind^-$, and
+let $P_\ind = P_\ind^+ + P_\ind^-$. Clearly, $P_\ind$ can be computed in
+polynomial time, by applying a similar argument to the
+computation of $P_\ind^- = \Prob{C_\ind^- \sep{\vecA_1, \ldots,
+      \vecA_k}}$.
+
+
+For a node $v \in T$, let $\vecA_v$ denote the portion of $\vecA\,$
+that was fixed when traversing from the root of $T$ to $v$.  Let
+$P(v) = \sum_{\ind=1}^{n} \Prob{C_\ind \sep{\vecA_v}}$.  By the above
+discussion $P(v)$ can be computed in polynomial time.  Furthermore, we
+know, by the previous result on discrepancy that $P(r) < 1$ (that was
+the bound used to show that there exist a good assignment).
+
+As before, for any $v \in T$, we have $P(v) \geq \min(P(v_l),
+P(v_r))$. Thus, we have a polynomial \emph{deterministic} algorithm
+for computing a set balancing with discrepancy smaller than $4\sqrt{n
+   \log{n}}$. Indeed, set $v = root(T)$. And start traversing down the
+tree. At each stage, compute $P(v_l)$ and $P(v_r)$ (in polynomial
+time), and set $v$ to the child with lower value of
+$P(\cdot)$. Clearly, after $n$ steps, we reach a leaf, that
+corresponds to a vector $\vecA'$ such that $\dist{A \vecA'}_{\infty}
+\leq 4 \sqrt{n \log{n}}$.
+
+\begin{theorem}
+    Using the method of conditional probabilities, one can compute in
+    polynomial time in $n$, a vector $\vecA \in \brc{-1,1}^n$, such
+    that $\dist{A \vecA}_\infty \leq 4 \sqrt{n \log{n}}$.
+\end{theorem}
+
+Note, that this method might fail to find the best
+assignment. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+
+
+\section{Independent set in a graph}
+
+\begin{theorem}
+    Consider a graph $\Graph = (\IRX{n}, \Edges)$, with $n$ vertices
+    an $m$ edges. Then $\Graph$ contains an independent set of size
+    \begin{equation*}
+        \geq f(n,m) = n/(2m/n +1).
+    \end{equation*}
+    In particular, a randomized algorithm can compute an independent
+    set of expected size $\Omega( f(n,m))$.    
+\end{theorem}
+\begin{proof}
+    Consider a random permutation of the vertices, and in the $i$\th
+    iteration add the vertex $\pi_i$ to the independent set if none of
+    its neighbors are in the independent set. Let $I$ be the resulting
+    independent set. We have for a vertex $v \in \IRX{n}$ that
+    \begin{equation*}
+        \Prob{v \in I} \geq \frac{1}{d(i) + 1}.
+    \end{equation*}
+    As such, the expected size of the computed independent set is
+    \begin{equation*}
+        \Gamma%
+        =%
+        \sum_{i=1}^n \Prob{i \in I}%
+        \geq%
+        \sum_{i=1}^n
+        \frac{1}{d(i) + 1}.
+    \end{equation*}
+    
+    Observe that for $x >0$, and $\alpha\geq x$, we have that
+    \begin{equation*}
+        1/(1+x) +1/(1+\alpha-x)%
+        =%
+        \frac{ \alpha}{(1+x)(1+\alpha - x)}.
+    \end{equation*}
+    achieves its minimum when $x=\alpha/2$.
+
+    As such, $\sum_{i=1}^n \frac{1}{d(i) + 1}$ is minimized when all
+    the $d(\cdot)$ are equal. Which means that
+    \begin{equation*}
+        \Gamma%
+        \geq%
+        \sum_{i=1}^n
+        \frac{1}{d(i) + 1}.
+        \geq%
+         \sum_{i=1}^n
+        \frac{1}{(2m/n) + 1}.
+        = 
+        \frac{n}{(2m/n) + 1},
+    \end{equation*}
+    as claimed.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+
+
+
+
+\section{A Short Excursion into Combinatorics %
+   via the Probabilistic Method}
+
+In this section, we provide some additional examples of the
+Probabilistic Method to prove some results in combinatorics and
+discrete geometry. While the results are not directly related to our
+main course, their beauty, hopefully, will speak for itself.
+
+
+\subsection{High Girth and High Chromatic Number}
+
+\begin{defn}
+    For a graph $\Graph$, let $\alpha(\Graph)$ be the cardinality of
+    the largest independent set in $\Graph$, $\chi(\Graph)$ denote the
+    chromatic number of $\Graph$, and let $\girth(\Graph)$ denote the
+    length of the shortest circle in $\Graph$.
+\end{defn}
+
+\begin{theorem}
+    For all $K, L$ there exists a graph $\Graph$ with $\girth(\Graph)
+    > L$ and $\chi(\Graph) > K$.
+\end{theorem}
+
+\begin{proof}
+    Fix $\mu < 1/L$, and let $\Graph \approx \Graph(n,p)$ with
+    $p=n^{\mu-1}$; namely, $\Graph$ is a random graph on $n$ vertices
+    chosen by picking each pair of vertices to be an edge in $\Graph$,
+    randomly and independently with probability $p$. Let $X$ be the
+    number of cycles of size at most $L$. Then
+    \begin{align*}
+    \Ex{X} = \sum_{i=3}^{L}  \frac{n!}{(n-i)!} \cdot
+    \frac{1}{2i} \cdot p^{i} \leq \sum_{i=3}^L
+    \frac{n^i}{2i} \cdot \pth{n^{\mu -1}}^{i} 
+    \leq \sum_{i=3}^{L} \frac{n^{\mu i}}{2i} = o(n),
+    \end{align*}
+    as $\mu L < 1$, and since the number of different
+    sequence of $i$ vertices is $\frac{n!}{(n-i)!}$, and
+    every cycle is being counted in this sequence $2i$
+    times. 
+
+    In particular, 
+    $\Prob{X \geq n/2} = o(1)$.
+    
+    Let $x = \ceil{\tfrac{3}{p} \ln n} + 1$. We remind the reader that
+    $\alpha(\Graph)$ denotes the size of the largest independent set in
+    $\Graph$. We have that
+    \begin{align*}
+        \Prob{\Bigl.\alpha(\Graph) \geq x }%
+        \leq%
+        \binom{n}{x} \pth{1-p}^{\binom{x}{2}}%
+        <%
+        \pth[]{ n \exp \pth{ -\frac{p (x-1)}{2}}}^x%
+        <%
+        \pth[]{ n \exp \pth{ -\frac{3}{2} \ln n}}^x%
+        <%
+        \pth[]{ \Bigl.o(1) }^x = o(1).
+    \end{align*}
+    Let $n$ be sufficiently large so that both these events have
+    probability less than $1/2$. Then there is a specific $\Graph$ with
+    less than $n/2$ cycles of length at most $L$ and with $\alpha(\Graph) <
+    3 n^{1- \mu} \ln n + 1$.
+    
+    Remove from $\Graph$ a vertex from each cycle of length at most
+    $L$. This gives a graph $\Graph^*$ with at least $n/2$
+    vertices. $\Graph^*$ has girth greater than $L$ and $\alpha(G^*)
+    \leq \alpha(\Graph)$ (any independent set in $\Graph^*$ is also an
+    independent set in $\Graph$). Thus
+    \begin{align*}
+        \chi(G^*)%
+        \geq%
+        \frac{\cardin{V(G^*)}}{\alpha(G^*)}%
+        \geq%
+        \frac{n/2}{3n^{1-\mu} \ln n }%
+        \geq%
+        \frac{n^{\mu}}{12 \ln n}.
+    \end{align*}
+
+    To complete the proof, let $n$ be sufficiently large so
+    that this is greater than $K$. 
+\end{proof}
+
+\subsection{Crossing Numbers and Incidences}
+
+The following problem has a long and very painful
+history. It is truly amazing that it can be solved by such a
+short and elegant proof. 
+
+And \emphi{embedding} of a graph $\Graph = (\Vertices, \Edges)$ in the
+plane is a planar representation of it, where each vertex is
+represented by a point in the plane, and each edge $u v$ is
+represented by a curve connecting the points corresponding to the
+vertices $u$ and $v$. The \emphi{crossing number} of such an embedding
+is the number of pairs of intersecting curves that correspond to pairs
+of edges with no common endpoints. The \emphi{crossing number}
+$\CR(\Graph)$ of $\Graph$ is the minimum possible crossing number in
+an embedding of it in the plane.
+
+\begin{theorem}
+    \thmlab{crossing}%
+    %
+    The crossing number of any simple graph $\Graph = (\Vertices,
+    \Edges)$ with $\cardin{\Edges} \geq 4 \cardin{\Vertices}$ is
+    \begin{math}\ds
+        \geq \frac{\cardin{\Edges}^3}{64\cardin{\Vertices}^2}.
+    \end{math}
+\end{theorem}
+ 
+\begin{proof}
+    By Euler's formula any simple planar graph with $n$ vertices has
+    at most $3n - 6$ edges. (Indeed, $f-e+v =2$ in the case with
+    maximum number of edges, we have that every face, has $3$ edges
+    around it. Namely, $3f=2e$.  Thus, $(2/3)e - e + v = 2$ in this
+    case. Namely, $e = 3v - 6$.) This implies that the crossing number
+    of any simple graph with $n$ vertices and $m$ edges is at least $m
+    - 3n + 6 > m -3n$.  Let $\Graph = (\Vertices, \Edges)$ be a graph
+    with $\cardin{\Edges} \geq 4\cardin{\Vertices}$ embedded in the plane with
+    $t = \CR(\Graph)$ crossings.  Let $H$ be the random induced
+    subgraph of $\Graph$ obtained by picking each vertex of $\Graph$
+    randomly and independently, to be a vertex of $H$ with
+    probabilistic $p$ (where $P$ will be specified shortly).  The
+    expected number of vertices of $H$ is $p \cardin{\Vertices}$, the expected
+    number of its edges is $p^2 \cardin{\Edges}$, and the expected
+    number of crossings in the given embedding is $p^4 t$, implying
+    that the expected value of its crossing number is at most $p^4 t$.
+    Therefore, we have $p^4 t \geq p^2 \cardin{\Edges} -3p
+    \cardin{\Vertices}$, implying that
+    \begin{align*}
+    \CR(\Graph) \geq \frac{\cardin{\Edges}}{p^2} - \frac{3\cardin{\Vertices}}{p^3},
+    \end{align*}
+    let $p = 4\cardin{\Vertices} / \cardin{\Edges} < 1$, and we have
+    \begin{math}
+        \CR(\Graph)%
+        \geq%
+        (1/16 - 3/64)\cardin{\Edges}^3/\cardin{\Vertices}^2%
+        =%
+        \cardin{\Edges}^3 / (64\cardin{\Vertices}^2 ).
+    \end{math}
+\end{proof}
+
+\begin{theorem}
+    \thmlab{incidences}%
+    %
+    Let $P$ be a set of $n$ distinct points in the plane, and let $L$
+    be a set of $m$ distinct lines. Then, the number of incidences
+    between the points of $P$ and the lines of $L$ (that is, the
+    number of pairs $(p, \ell)$ with $p \in P$, $\ell \in L$, and $p
+    \in \ell$) is at most 
+    \begin{math}
+        \Bigl. c\pth[]{m^{2/3} n^{2/3} + m + n},
+    \end{math}
+    for some absolute constant $c$.
+\end{theorem}
+
+\begin{proof}
+    Let $I$ denote the number of such incidences. Let $\Graph =
+    (\Vertices, \Edges)$ be the graph whose vertices are all the
+    points of $P$, where two are adjacent if and only if they are
+    consecutive points of $P$ on some line in $L$. Clearly $\cardin{\Vertices}
+    = n$, and $\cardin{\Edges} = I -m$.  Note that $\Graph$ is already
+    given embedded in the plane, where the edges are presented by
+    segments of the corresponding lines of $L$.
+    
+    Either, we can not apply \thmref{crossing}, implying that $I - m
+    = \cardin{\Edges} < 4 \cardin{\Vertices} = 4n$. Namely, $I \leq m
+    + 4n$. Or alliteratively,
+    \begin{align*}
+        \frac{\cardin{\Edges}^3}{64\cardin{\Vertices}^2}%
+        =%
+        \frac{(I-m)^3}{64n^2}%
+        \leq%
+        \CR(\Graph)%
+        \leq%
+        \binom{m}{2}%
+        \leq%
+        \frac{m^2}{2}.
+    \end{align*}
+    Implying that 
+    $I \leq (32)^{1/3} m^{2/3} n^{2/3} + m$. In both cases,
+    $I \leq 4 ( m^{2/3} n^{2/3} + m + n)$.
+\end{proof}
+
+This technique has interesting and surprising results, as
+the following theorem shows.
+
+\begin{theorem}
+    For any three sets $A, B$ and $C$ of $s$ real numbers each, we
+    have
+    \begin{align*}
+        \cardin{A \cdot B + C } = \cardin{\brc{ab+c \sep{ a \in A, b
+                 \in B,m c \in C}}} \geq \Omega\pth{s^{3/2}}.
+    \end{align*}
+\end{theorem}
+
+\begin{proof}
+    Let $R = A \cdot B + C$, $\cardin{R} = r$ and define $P = \brc{
+       (a,t) \sep{ a \in A, t \in R}}$, and $L = \brc{y = bx + c \sep{
+          b \in B, c \in C}}$.
+
+    Clearly $n = \cardin{P} = s r$, and $m =\cardin{L} =
+    s^2$. Furthermore, a line $y=bx+c$ of $L$ is incident with $s$
+    points of $R$, namely with $\brc{(a,t)\sep{a \in A, t = ab +
+          c}}$. Thus, the overall number of incidences is at least
+    $s^3$. By \thmref{incidences}, we have
+    \begin{align*}
+        s^3%
+        \leq%
+        4 \pth[]{ m^{2/3} n^{2/3} + m + n}%
+        =%
+        4 \pth[]{ \pth{s^2}^{2/3} \pth{s r }^{2/3} + s^2 + s r}%
+        =%
+        4 \pth[]{ s^2 r^{2/3} + s^2 + s r}.
+    \end{align*}
+    For $r < s^{3}$, we have that $s r \leq s^{2} r^{2/3}$.  Thus, for
+    $r < s^3$, we have $s^3 \leq 12 s^2 r^{2/3}$, implying that
+    $s^{3/2} \leq 12r$. Namely, $\cardin{R}= \Omega(s^{3/2})$, as
+    claimed.
+\end{proof}
+
+Among other things, the crossing number technique implies a better
+bounds for $k$-sets in the plane than what was previously known. The
+$k$-set problem had attracted a lot of research, and remains till this
+day one of the major open problems in discrete geometry.
+
+\subsection{Bounding the at most $k$-level}
+
+Let $\LineSet$ be a set of $n$ lines in the plane. Assume, without
+loss of generality, that no three lines of $\LineSet$ pass through a
+common point, and none of them is vertical. The complement of union of
+lines $\LineSet$ break the plane into regions known as
+\emphi{faces}. An intersection of two lines, is a \emphi{vertex}, and
+the maximum interval on a line between two vertices is am
+\emphi{edge}. The whole structure of vertices, edges and faces induced
+by $\LineSet$ is known as \emphi{arrangement} of $\LineSet$, denoted
+by $\ArrX{\LineSet}$.
+
+
+Let $\LineSet$ be a set of $n$ lines in the plane. A point $\pnt \in
+\bigcup_{\Line \in \LineSet} \Line$ is of \emphi{level} $k$ if there
+are $k$ lines of $\LineSet$ strictly below it. The
+\emphic{$k$-level}{level!k@$k$-level} is the closure of the set of
+points of level $k$. Namely, the $k$-level is an $x$-monotone curve
+along the lines of $\LineSet$ (see \figref{levels}).
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/levels}}
+    \caption{Levels in an arrangement of lines.}
+    \figlab{levels}
+\end{figure}
+
+The $0$-level is the boundary of the ``bottom'' face of the
+arrangement of $\LineSet$ (i.e., the face containing the negative
+$y$-axis). It is easy to verify that the $0$-level has at most $n-1$
+vertices, as each line might contribute at most one segment to the
+$0$-level (which is an unbounded convex polygon).
+
+It is natural to ask what the number of vertices at the $k$-level is
+(i.e., what the combinatorial complexity of the polygonal chain
+forming the $k$-level is). This is a surprisingly hard question, but
+the same question on the complexity of the at most $k$-level is
+considerably easier.
+%So, let $N_{\leq k}$ be the total number of
+%vertices of level at most $k$ in the arrangement $\Arr(\LineSet)$.
+
+
+\begin{theorem}
+    The number of vertices of level at most $k$ in an arrangement of
+    $n$ lines in the plane is $O(n k)$.
+
+    \thmlab{at:most:k:level}
+\end{theorem}
+
+\begin{proof}
+    Pick a random sample \index{random sample} $\Sample$ of
+    $\LineSet$, by picking each line to be in the sample with
+    probability $1/k$. Observe that
+    \[
+        \Ex{\cardin{\Sample}} = \frac{n}{k}.
+    \]
+
+    Let $\AtMostKLevelChar = \AtMostKLevel{\LineSet}$ be the set of
+    all vertices of $\Arr(\LineSet)$ of level at most $k$, for $k >
+    1$.  For a vertex $\pnt \in \AtMostKLevelChar$, let $X_\pnt$ be an
+    indicator variable which is $1$ if $\pnt$ is a vertex of the
+    $0$-level of $\Arr(\Sample)$.  The probability that $\pnt$ is in
+    the $0$-level of $\Arr(\Sample)$ is the probability that none of
+    the $j$ lines below it are picked to be in the sample, and the two
+    lines that define it do get selected to be in the sample. Namely,
+    \[
+    \Prob{ X_\pnt = 1 }%
+    =%
+    \pth[]{ 1- \frac{1}{k}}^j \pth{\frac{1}{k}}^2%
+    \geq%
+    \pth[]{ 1- \frac{1}{k}}^k \frac{1}{k^2}%
+    \geq%
+    \exp \pth{ - 2\frac{k}{k}} \frac{1}{k^2}%
+    =%
+    \frac{1}{e^2 k^2}
+    \]
+    since $j \leq k$ and $1- x \geq e^{-2x}$, for $0 < x \leq 1/2$.
+
+    On the other hand, the number of vertices on the $0$-level of
+    $\Sample$ is at most $\cardin{\Sample} -1$. As such,
+    \[
+    \sum_{\pnt \in \AtMostKLevelChar} X_\pnt \leq
+    \cardin{\Sample} -1.
+    \]
+    Moreover this, of course, also holds in expectation, implying
+    \[
+    \Ex{ \sum_{\pnt \in \AtMostKLevelChar} X_\pnt }%
+    \leq%
+    \Ex{\Bigl.  \cardin{\Sample} -1 }%
+    \leq%
+    \frac{n}{k}.
+    \]
+    On the other hand, by linearity of expectation, we have
+    \[
+    \Ex{ \sum_{\pnt \in \AtMostKLevelChar} X_\pnt } = \sum_{\pnt \in
+       \AtMostKLevelChar} \Ex{ X_\pnt } \geq
+    \frac{\cardin{\AtMostKLevelChar} }{e^2 k^2}.
+    \]
+    Putting these two inequalities together, we get that
+    $\displaystyle   \frac{\cardin{\AtMostKLevelChar} }{e^2 k^2} \leq
+    \frac{n}{k}$.
+    Namely, $\cardin{\AtMostKLevelChar} \leq e^2 n k$.
+\end{proof}
+
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

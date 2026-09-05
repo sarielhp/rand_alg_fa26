@@ -1,0 +1,583 @@
+
+\ifx\bookMode\undefined \input{../prefix}
+% \setChapterCounter{11}
+\fi
+
+
+\Chapter{Streaming and the Multipass Model}
+
+\QuotePExt{I don't know why it should be, I am sure; but the sight of
+   another man asleep in bed when I am up, maddens me.  It seems to me
+   so shocking to see the precious hours of a man's life - the
+   priceless moments that will never come back to him again - being
+   wasted in mere brutish sleep.  }%
+{Jerome K. Jerome}{Three men in a boat}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+~
+
+% \bigskip%
+
+\bigskip%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{The secretary problem}
+
+Assume that we are seeing $n$ applications: $\alpha_1, \ldots,
+\alpha_n$, where the quality of each one of them is an independent
+random event. We would like to hire the best one, but we have to make
+an immediate decision -- we see candidate $\alpha_i$, we either hire
+them (and then we are stuck with them), or we let them go and see the
+next candidate. We win the game if we hire the best candidate out of
+the $n$ candidate.
+
+The question is what is the natural strategy to win the game?  Let
+$P(r)$ be the probability that we win, when the strategy is to see the
+first $r-1$ candidates, and then hire the first candidate we see in
+$\alpha_r, \ldots, \alpha_n$ that is better than all the candidates
+seen in $\alpha_1, \ldots, \alpha_{r-1}$.  We have that
+\begin{align*}
+  P(r)&=\sum_{i=1}^{n} \Prob{\bigl. \text{applicant $i$  is selected}
+        \cap
+        \text{applicant $i$ is
+        the best}}
+  \\&%
+  =%
+  \sum_{i=1}^{n}\ProbCond{\text{applicant  $i$  is
+  selected}}{\text{applicant  $i$  is the
+  best}}
+  \cdot \Prob{\text{applicant $i$  is the best}}
+  \\&%
+  =%
+  \left[\sum
+  _{i=1}^{r-1}0+\sum
+  _{i=r}^{n}P\left(\left.{\begin{array}{l}{\text{the
+                            best of the first
+                            }}i-1{\text{
+                            applicants}}\\{\text{is in
+                            the first }}r-1{\text{
+                            applicants}}\end{array}}\right|{\text{applicant
+  $i$  is the best}}\right)\right]\cdot {\frac
+  {1}{n}}\\&=\left[\sum _{i=r}^{n}{\frac
+  {r-1}{i-1}}\right]\cdot {\frac {1}{n}}\\&={\frac
+  {r-1}{n}}\sum _{i=r}^{n}{\frac
+  {1}{i-1}}.
+\end{align*}
+Observe that 
+\begin{equation*}
+    \sum _{i=r}^{n}\frac{1}{i-1}
+    \leq%
+    \int_{x=r-2}^{n-1} \frac{1}{x} \diffX{x}
+    =%
+    \ln (n-2) - \ln (r-2)
+    \approx
+    \ln \frac{n}{r}.
+\end{equation*}
+For $r= n/e$, we have that
+$P(r) \approx \frac{r}{n} \ln \frac{n}{r} = \frac{1}{e} \ln e =1/e$.
+
+     
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{Reservoir sampling: Fishing a sample from a stream}
+\seclab{reservoir:sampling}
+
+Imagine that you are given a stream of elements $s_1, s_2, \ldots$,
+and you need to sample $k$ numbers from this stream (say, without
+repetition) -- assume that you do not know the length of the stream in
+advance, and furthermore, you have only $O(k)$ space available for
+you. How to do that efficiently?
+
+There are two natural schemes:
+\medskip
+\begin{compactenumA}
+    \item Whenever an element arrives, generate a random number for it
+    in the range $[0,1]$. Maintain a heap with the $k$ elements with
+    the lowest priority. Implemented naively this requires
+    $O( \log k)$ comparisons after each insertion, but it is not
+    difficult to improve this to $O(1)$ comparisons in the amortized
+    sense per insertion. Clearly, the resulting set is the desired
+    random sample
+    
+    \medskip
+    \item \itemlab{rand:s:sample} %
+    Let $S_t$ be the random sample maintained in the $t$\th iteration.
+    When the $i$\th element arrives, the algorithm flip a coin that is
+    heads with probability $\min(1,k/i)$. If the coin is heads then it
+    inserts $s_i$ to $S_{i-1}$ to get $S_i$. If $S_{i-1}$ already have
+    $k$ elements, then first randomly delete one of the elements.
+\end{compactenumA}
+% \medskip
+
+
+\begin{theorem}
+    \thmlab{stream:sample}%
+    %
+    Given a stream of elements, one can uniformly sample $k$ elements
+    (without repetition), from the stream using $O(k)$ space, where
+    $O(1)$ time is spent for handling each incoming element.
+\end{theorem}
+\begin{proof}
+    We implement the scheme  \itemref{rand:s:sample} above. We only
+    need to argue that this is a uniform random sample. The claim
+    trivially hold for $i=k$. So assume the claim holds for $i <t$,
+    and we need to prove that the set after getting $t$\th element is
+    still a uniform random sample.
+
+    So, consider a specific set $K \subseteq \brc{s_1,\ldots, s_t}$ of
+    $k$ elements.  The probability of $K$ to be a random sample of
+    size $k$ from a set of $t$ elements is $1/\binom{t}{k}$. We need
+    to argue that this probability remains the same for this scheme.
+    
+    So, if $s_t \notin K$, then we have
+    \begin{equation*}
+        \Prob{K = S_t}%
+        =%
+        \Prob{K = S_{t-1} \text{ and } s_t \text{ was not inserted}}%
+        =%
+        \frac{1}{\binom{t-1}{k}} \pth{ 1-\frac{k}{t}}
+        =%
+        \frac{k! (t-1-k)! ( t-k)}{(t-1)! t}
+        =%
+        \frac{1}{\binom{t}{k}}.        
+    \end{equation*}
+    
+    If $s_t \in K$, then
+    \begin{equation*}
+        \Prob{\bigl. K = S_t}%
+        =%
+        \Prob{
+           \begin{array}{c}
+             K \setminus \brc{s_t} \subseteq S_{t-1},\\
+             s_t \text{ was inserted}\\
+             \text{and } S_{t-1}\setminus K \text{ thrown out of } S_{t-1}
+           \end{array}
+        }%
+        =%
+        \frac{t-1-(k-1)}{\binom{t-1}{k}}%
+        \frac{\bcancel{k}}{t}
+        \frac{1}{\bcancel{k}}
+        =%
+        \frac{(t-k) k! (t-1-k)! }{(t-1)! t}        
+        =%
+        \frac{1}{\binom{t}{k}},
+    \end{equation*}
+    as desired. Indeed, there are $t-1-(k-1)$ subsets of size $k$ of
+    $\brc{s_1, \ldots, s_{t-1}}$ that contains
+    $ K \setminus \brc{s_t}$ -- since we fix $k-1$ of the $t-1$
+    elements.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Sampling and median selection revisited}
+
+Let $B[1,\ldots, n]$ be a set of $n$ numbers. We would like to
+estimate the median, without computing it outright. A natural idea,
+would be to pick $k$ elements $e_1, \ldots, e_k$ randomly from $B$,
+and return their median as the guess for the median of $B$.
+
+\providecommand{\rankY}[2]{{R^{}_{#1}}\pth{#2}}%
+
+In the following, let $\rankY{B}{t}$ be the $t$\th smallest number in
+the array $B$.
+
+\begin{observation}
+    For any $\eps \in (0,1)$, we have that
+    \begin{math}
+        \frac{1}{1-\eps} \geq 1+\eps.
+    \end{math}
+\end{observation}
+
+\begin{lemma}
+    Let $\eps \in (0,1/2)$ be a fixed parameter, and let $B$ be a set
+    of $n$ numbers. Let $Z$ be the median of the random sample (with
+    replacement) of $B$ of size $k$.  We have that
+    \begin{equation*}
+        \Prob{\Bigl. \rankY{B}{ \smash{\frac{1-\eps}{2}{n}}
+           }
+           \leq%
+           Z%
+           \leq%
+           \rankY{B}{ \smash{\frac{1+\eps}{2} n}}%
+        }
+        \geq%
+        1-\delta,
+        \qquad\text{where}\qquad%
+        k\geq \ceil{\frac{12}{ \eps^2} \ln \frac{2}{\delta}}.
+    \end{equation*}
+    Namely, with probability at least $1-\delta$, the returned value
+    $Z$ is $(\eps/2)n$ positions away from the true median.
+\end{lemma}
+\begin{proof}
+    Let $L = \rankY{B}{(1-\eps)n/2}$, and let $e_i$ be the $i$\th
+    sample number, for $i=1,\ldots, k$.  Let $X_i=1$ if and only if
+    $e_i \leq L$. We have that
+    \begin{equation*}
+        \Prob{X_i =1 } = \frac{ (1-\eps)n/2}{n} = \frac{1-\eps}{2}.        
+    \end{equation*}
+    As such, setting $Y = \sum_{i=1}^k X_i$, we have
+    \begin{equation*}
+        \mu = \Ex{Y} = \frac{1-\eps}{2}  k%
+        \geq%
+        \frac{k}{4} \geq
+        \frac{3}{\eps^2} \ln \frac{2}{\delta} .
+    \end{equation*}
+
+    One case of failure of the algorithm is if $Y \geq k/2$. Since
+    $\tfrac{1}{1-\eps} \geq 1+\eps$, we have that
+    \begin{equation*}
+        \Prob{Y \geq k/2}%
+        = %
+        \Prob{Y \geq \frac{1/2}{(1-\eps)/2} \cdot \frac{1-\eps}{2} k}%        
+        \leq%
+        \Prob{Y \geq (1+\eps) \mu}%        
+        \leq %
+        \exp\pth{ - \frac{\eps^2 \mu}{3}}
+        \leq %
+        \exp\pth{ - \frac{\eps^2}{3} \cdot         \frac{3}{\eps^2} \ln \frac{2}{\delta} 
+        }
+        \leq%
+        \frac{\delta}{2}.
+    \end{equation*}
+    by Chernoff's inequality (see \lemref{chernoff:small:delta:1}).
+
+    This implies that
+    $\Prob{\bigl. \rankY{B}{(1-\eps)n/2} > Z } \leq \delta/2$.  The
+    claim now follows by realizing that by symmetry (i.e., revering
+    the order), we have that
+    \begin{equation*}
+        \Prob{ Z > \rankY{B}{(1+\eps)n/2} } \leq \delta/2,
+    \end{equation*}
+    and putting these two inequalities together.
+\end{proof}
+
+The above already implies that we can get a good estimate for the
+median. We need something somewhat stronger -- we state it without
+proof since it follows by similarly mucking around with Chernoff's
+inequality.
+
+\begin{lemma}
+    \lemlab{stronger:median}%
+    %
+    Let $\eps \in (0,1/2)$, $B$ an array of $n$ elements, and let
+    $S = \brc{e_1, \ldots, e_k}$ be a set of $k$ samples picked
+    uniformly and randomly from $B$. Then, for some absolute constant
+    $c$, and an integer $k$, such that
+    $k\geq \ceil{\frac{c}{\eps^2} \ln \frac{1}{\delta}} $, we have
+    that
+    \begin{equation*}
+        \Prob{%
+           \rankY{S}{k_- }
+           \leq
+           \rankY{B}{n/2}
+           \leq
+           \rankY{S}{k^+} }
+        \geq 1-\delta.
+    \end{equation*}
+    for $k_- = \floor{(1-\eps)k/2}$, and $k^+ = \floor{(1+\eps)k/2}$.
+
+    One can prove even a stronger statement:
+    \begin{equation*}
+        \Prob{%
+           \rankY{B}{(1-2\eps)n/2}
+           \leq %
+           \rankY{S}{(1-\eps)k/2 }
+           \leq
+           \rankY{B}{n/2}
+           \leq
+           \rankY{S}{(1+\eps)k/2}
+           \leq%
+           \rankY{B}{(1+2\eps)n/2}
+        }
+      %\\&
+      \geq 1-\delta        
+    \end{equation*}
+    (the constant $c$ would have to be slightly bigger).
+\end{lemma}
+
+
+\subsection{A median selection with few comparisons}
+
+
+The above suggests a natural algorithm for computing the median (i.e.,
+the element of rank $n/2$ in $B$). Pick a random sample $S$ of
+$k = O(n^{2/3} \log n)$ elements. Next, sort $S$, and pick the
+elements $L$ and $R$ of ranks $(1-\eps)k$ and $(1+\eps)k$ in $S$,
+respectively. Next, scan the elements, and compare them to $L$ and
+$R$, and keep only the elements that are between. In the end of this
+process, we have computed:
+\begin{compactenumA}
+    \smallskip%
+    \item $\alpha$: The rank of the number $L$ in the set $B$.
+    \smallskip%
+    \item $T = \Set{ x \in B}{L \leq x \leq H}$.
+\end{compactenumA}
+\smallskip%
+Compute, by brute force (i.e., sorting) the element of rank
+$n/2 - \alpha$ in $T$. Return it as the desired median. If
+$n/2 - \alpha$ is negative, then the algorithm failed, and it tries
+again.
+
+
+\begin{lemma}
+    The above algorithm performs $2n +O(n^{2/3} \log n)$ comparisons,
+    and reports the median. This holds with high probability.
+\end{lemma}
+\begin{proof}
+    Set $\eps = 1/n^{1/3}$, and $\delta = 1/n^{O(1)}$, and observe
+    that \lemref{stronger:median} implies that with probability
+    $\geq 1-1/\delta$, we have that the desired median is between $L$
+    and $H$. In addition, \lemref{stronger:median} also implies that
+    $\cardin{T} \leq 4\eps n \leq 4n^{2/3}$, which readily implies the
+    correctness of the algorithm.
+
+    As for the bound on the number of comparisons, we have, with high
+    probability, that the number of comparisons is
+    \begin{equation*}
+        O\pth{ \cardin{S} \log \cardin{S}
+           +
+           \cardin{T} \log \cardin{T}}
+        +2n
+        =%
+        O\pth{\sqrt{n} \log^2 n + n^{2/3} \log n } + 2n,
+    \end{equation*}
+    since deciding if an element is between $L$ and $H$ requires two
+    comparisons.        
+\end{proof}
+
+
+\begin{lemma}
+    The above algorithm can be modified to perform
+    $(3/2)n +O(n^{2/3} \log n)$ comparisons, and reports the median
+    correctly. This holds with high probability.
+\end{lemma}
+
+\begin{proof}
+    The trick is to randomly compare each element either first to $L$
+    or first to $H$ with equal probability. For elements that are
+    either smaller than $L$ or bigger than $H$, this requires $(3/2)n$
+    comparisons in expectation. Thus improving the bound from $2n$ to $(3/2)n$.
+\end{proof}
+
+
+\begin{lemma}
+    Consider a stream $B$ of $n$ numbers, and assume we can make two
+    passes over the data. Then, one can compute exactly the median of
+    $B$ using:
+    \begin{compactenumI}
+        \item $O(n^{2/3})$ space.
+        \item $1.5n + O(n^{2/3} \log n)$ comparisons.
+    \end{compactenumI}
+    The algorithm reports the median correctly, and it succeeds with
+    high probability.
+\end{lemma}
+\begin{proof}
+    Implement the above algorithm, using the random sampling from
+    \thmref{stream:sample}.
+\end{proof}
+
+
+\begin{remark}
+    Interestingly, one can do better if one is more careful. The basic
+    idea is to do thinning -- given two sorted sequence of sizes $s$,
+    consider merging the sets, and then picking all the even rank
+    elements into a new sequence. Clearly, the element of rank $i$ in
+    the output sequence, has rank $2i$ in the union of the two
+    original sequences. A sequence that is the result of $i$ such
+    rounds of thinning is of \emphi{level} $i$. We maintain
+    $O( \log n)$ such sequences as we read the stream. At any time, we
+    have two buffers of size $s$, that we fill up from the
+    stream. Whenever the two buffers fill up completely, we perform
+    the thinning operation on them, creating a sequence of level $1$.
+
+    If during this process we have two sequences of the same level, we
+    merge them and perform thinning on them. As such, we maintain
+    $O( \log n)$ buffers sequences each of size $s$. Assume that our
+    stream has size $n$, and $n$ is a power for $2$. Then in the end
+    of process, we would have only a single sequence of level
+    $h = \log_2(n/s)$. By induction, it is easy to prove that an
+    element of rank $r$ in this sequence, has rank between $2^h (r-1)$
+    and $2^hr$ in the original stream.
+
+    Thus, setting $s=\sqrt{n}$, we get that after a single pass, using
+    $O( \sqrt{n} \log n)$ space, we have a sorted sequence, where the
+    rank of the elements is roughly $\sqrt{n}$ approximation to the
+    true rank. We pick the two consecutive elements (or more
+    carefully, the predecessor, and successor), and filter the stream
+    again, keeping only the elements in between these two elements. It
+    is to show that $O( \sqrt{n})$ would be kept, and we can extract
+    the median using $O( \sqrt{n} \log n)$ time.
+
+    We thus got that one can compute the median in two passes using
+    $O(\sqrt{n} \log n)$ space. It is not hard to extend this
+    algorithm to $\alpha$-passes, where the space required becomes
+    $O(n^{1/\alpha} \log n)$.
+
+    This elegant algorithm goes back to 1980, and it is by Munro and
+    Paterson \cite{mp-ssls-80}.
+\end{remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Big data and the streaming model}
+
+Here, we are interested in doing some computational tasks when the
+amount of data we have to handle is quite large (think terabytes or
+larger).  The main challenge in many of these cases is that even
+reading the data once is expensive. Running times of $O(n \log n)$
+might not be acceptable. Furthermore, in many cases, we can \emph{not}
+load all the data into memory.
+
+In the \emphi{streaming} model, one reads the data as it comes in, but
+one can not afford to keep all the data. A natural example would be a
+internet router, which has gazillion of packets going through it every
+minute. We might still be interested in natural questions about these
+packets, but we want to do this without storing all the packets.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Heavy hitters}
+
+\paragraph*{The problem.}
+Imagine a stream $s_1,\ldots$, where elements might repeat, and we
+would like to maintain a list of elements that appear at least
+$\eps n$ times, where $\eps \in (0,1)$ is some parameter. The purpose
+here is to do this using as little space as possible.
+
+\subsection{A randomized algorithm}
+
+Am easy randomized algorithm, would maintain a random sample of size
+$m = \ceil{(1/\eps) \ln( 1/\BadProb)}$, using \secrefY{reservoir
+   sampling}{reservoir:sampling}. The probability the sample fails to
+contain a heavy hitter after $t$ insertions is
+\begin{equation*}
+    (1-\eps)^m
+    \leq
+    \exp(-\eps m )%
+    \leq%
+    \exp\pth{-\eps \ceil{\frac{1}{\eps} \ln \frac{1}{\BadProb}} }%
+    \leq 
+    \exp\pth{- \ln \frac{1}{\BadProb}}%
+    = 
+    \exp\pth{ \BadProb }%
+    =
+    \BadProb.
+\end{equation*}
+
+
+
+\subsection{A deterministic algorithm}
+Disclaimer: The following is a deterministic algorithm, but it is too
+elegant to hold this against it, and we will present it anyway.
+
+
+\paragraph*{The algorithm.}
+To this end, let
+\begin{equation*}
+    k = \ceil{1/\eps}. 
+\end{equation*}
+At each point in time, we maintain a set $S$ of $k$ elements, with a
+counter for each element. Let $S_t$ be the version of $S$ after $t$
+were inserted. When $s_{t+1}$ arrives, we increase its counter if it
+is already in $S_t$. If $\cardin{S_t} < k$, then we just insert
+$s_{t+1}$ to the set, and set its counter to $1$. Otherwise, $|S_t|=k$
+and $s_{t+1} \notin S_t$. We then decrease all the $k$ counters of
+elements in $S_t$ by $1$. If a counter of an element in $S_{t+1}$ is
+zero, then we delete it from the set.
+
+
+\paragraph*{Correctness.}
+
+\begin{lemma}
+    The above algorithm, after the insertion of $t$ elements, the set
+    $S_{t+1}$ would contain all the elements in the stream that
+    appears at least $\eps t$ times. 
+\end{lemma}
+\begin{proof}
+    Conceptually, imagine that the algorithm keeps counters for all
+    the distinct elements seen in the stream. Whenever a decrease of
+    the counters happens -- the algorithm decrease not $k$ counters --
+    but $k+1$ counters -- the additional counter being a counter of
+    the new element, which has value one, and goes down to zero.
+    Clearly, the number of distinct remaining elements in any point in
+    time is at most $k$ -- that is, the number of counters that have a
+    non-zero value.  Consider an element $e$ that appears
+    $u \geq \eps t$ times in the stream. The counter for $e$ is going
+    to be increased $u$ times, and decreased at most $\alpha$ time,
+    where
+    \begin{math}
+        \alpha (k+1) \leq t.
+    \end{math}
+    We have that the counter for $u$ in the end of the stream must
+    have value at least
+    \begin{equation*}
+        u - \frac{t}{k+1}%
+        \geq%
+        \eps t - \frac{t}{k+1}
+        = 
+        \eps t - \frac{t}{\ceil{1/\eps}+1}
+        \geq%
+        t \frac{\ceil{1/\eps}\eps +\eps - 1}{\ceil{1/\eps}+1}
+        \geq%
+        t \frac{\eps}{\ceil{1/\eps}+1} > 0.
+    \end{equation*}
+    This implies that the counter of $u$ is strictly larger than $0$,
+    which implies that $u$ appears in $S_{t+1}$.
+\end{proof}
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{\deflabel{chernoff_small_delta_1}}
+   % \IncFragment{\deflabel{normal:distribution}}
+   % \IncFragment{\deflabel{A:N:N:PLEB:Euclidean}}
+   % \IncFragment{\deflabel{A:N:N:PLEB:slow}}
+   % \IncFragment{\deflabel{H:S:T:Euclidean}}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{mr-ra-95}
+
+\ChapterEnd{}
+
+% -----------

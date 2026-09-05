@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70010" creator="ipetoipe 7.0.10">
+<info created="D:20041029110511" modified="D:20110103204052"/>
+<ipestyle name="ipe6">
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path>
+</symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group>
+<path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+<path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path>
+</group>
+</symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+</path>
+</symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group>
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+0 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+<path fill="sym-fill">
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</group>
+</symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group>
+<path fill="sym-stroke">
+-0.43 -0.57 m
+0.57 0.43 l
+0.43 0.57 l
+-0.57 -0.43 l
+h
+</path>
+<path fill="sym-stroke">
+-0.43 0.57 m
+0.57 -0.43 l
+0.43 -0.57 l
+-0.57 0.43 l
+h
+</path>
+</group>
+</symbol>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<symbolsize name="large" value="5"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<arrowsize name="large" value="10"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<textsize name="large" value="\large"/>
+<textsize name="small" value="\small"/>
+<textsize name="tiny" value="\tiny"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textstyle name="center" begin="\begin{center}" end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}" end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}" end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="VIEWBBOX"/>
+<view layers="alpha VIEWBBOX" active="alpha"/>
+<path layer="alpha" stroke="black">
+48.4495 0 0 48.4495 99.6064 534.787 e
+</path>
+<path stroke="black">
+100.97 0 0 100.97 191.521 478.106 e
+</path>
+<path stroke="black">
+69.7063 0 0 69.7063 474.926 363.979 e
+</path>
+<path stroke="black">
+63.8461 0 0 63.8461 258.926 238.362 e
+</path>
+<path stroke="black">
+142.947 0 0 142.947 366.16 298.872 e
+</path>
+<path stroke="black">
+149.583 0 0 149.583 368.457 396.915 e
+</path>
+<path stroke="black">
+117.081 0 0 117.081 229.819 341.766 e
+</path>
+<path matrix="1.11588 0 0 1.11588 -19.7487 -47.6041" stroke="black">
+165.861 0 0 165.861 343.947 342.532 e
+</path>
+<use name="mark/disk(sx)" pos="258.172 249.525" size="large" stroke="black"/>
+<use name="mark/disk(sx)" pos="241.648 427.164" size="large" stroke="black"/>
+<use name="mark/disk(sx)" pos="469.451 365.197" size="large" stroke="black"/>
+<text matrix="1 0 0 1 -1.53443 -15.3443" pos="238.077 417.043" stroke="black" type="label" valign="bottom" size="Huge">$1$</text>
+<text matrix="1 0 0 1 -19.1804 4.60329" pos="270.3 252.092" stroke="black" type="label" valign="bottom" size="Huge">$2$</text>
+<text matrix="1 0 0 1 -2.30164 -8.43936" pos="467.474 349.528" stroke="black" type="label" valign="bottom" size="Huge">$3$</text>
+<path stroke="black" arrow="normal/normal">
+139.811 266.889 m
+87.6569 173.425
+67.6569 192.425 s
+</path>
+<text matrix="1 0 0 1 -217.534 -209.344" pos="238.077 417.043" stroke="black" type="label" valign="bottom" size="Huge">$\{1.2\}$</text>
+</page>
+</ipe>

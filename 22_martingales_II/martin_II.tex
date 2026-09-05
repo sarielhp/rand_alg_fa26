@@ -1,0 +1,470 @@
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+\Chapter{Martingales II}
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{%
+   ``The Electric Monk was a labor-saving device, like a dishwasher or
+   a video recorder. Dishwashers washed tedious dishes for you, thus
+   saving you the bother of washing them yourself, video recorders
+   watched tedious television for you, thus saving you the bother of
+   looking at it yourself; Electric Monks believed things for you,
+   thus saving you what was becoming an increasingly onerous task,
+   that of believing all the things the world expected you to
+   believe.''}%
+{Dirk Gently's Holistic Detective Agency}%
+{Douglas Adams}
+
+
+\section{Filters and Martingales}
+
+% \section{Even more probability}
+
+\begin{defn}
+    A \emphi{$\sigma$-field} $(\Omega, \Family)$ consists of a
+    sample space $\Omega$ (i.e., the atomic events) and a
+    collection of subsets $\Family$ satisfying the following
+    conditions:
+    \begin{compactenumA}
+        \item $\emptyset \in \Family$.
+        \item $C \in \Family \Rightarrow \overline{C} \in \Family$.
+        \item $C_1, C_2, \ldots \in \Family \Rightarrow C_1 \cup
+        C_2 \ldots \in \Family$.
+    \end{compactenumA}
+\end{defn}
+
+\begin{defn}
+    Given a $\sigma$-field $(\Omega, \Family)$, a \emphi{probability
+       measure} $\ProbLTR: \Family \rightarrow \Re^+$ is a function
+    that satisfies the following conditions.
+    \begin{compactenumA}
+        \item $\forall A \in \Family$, $0\leq \Prob{A} \leq 1$.
+        \item $\Prob{\bigl. \Omega} = 1$.
+        \item For mutually disjoint events $C_1, C_2, \ldots,$ we have
+        $\Prob{\bigl. \cup_i C_i} = \sum_i \Prob{\bigl. C_i}$.
+    \end{compactenumA}
+\end{defn}
+
+\begin{defn}
+    A \emphi{probability space} $(\Omega, \Family, \ProbLTR)$ consists
+    of a $\sigma$-field $(\Omega,\Family)$ with a probability measure
+    $\ProbLTR$ defined on it.
+\end{defn}
+
+
+\begin{defn}
+    Given a $\sigma$-field $(\Omega, \Family)$ with $\Family=2^{\Omega}$, a
+    \emphi{filter} (also \emphi{filtration}) is a nested sequence $\Family_0
+    \subseteq \Family_1 \subseteq \cdots \subseteq \Family_n$ of subsets of
+    $2^{\Omega}$, such that:
+    \begin{compactenumA}
+        \item $\Family_0 = \brc{\emptyset, \Omega}$.
+        \item $\Family_n = 2^{\Omega}$.
+        \item For $0\leq i \leq n$, $(\Omega, \Family_i)$ is a
+        $\sigma$-field.
+    \end{compactenumA}
+\end{defn}
+
+
+\begin{defn}
+    An \emphi{elementary event} or \emphi{atomic event} is a subset of
+    a sample space that contains only one element of $\Omega$.
+\end{defn}
+
+Intuitively, when we consider a probability space, we usually consider
+a random variable $X$. The value of $X$ is a function of the
+elementary event that happens in the probability space. Formally, a
+random variable is a mapping $X:\Omega \rightarrow \Re$.  Thus, each
+$\Family_i$ defines a partition of $\Omega$ into \emph{atomic
+   events}. This partition is getting more and more refined as we
+progress down the filter.
+
+%\newcommand{\Alg}{\Algorithm{A{l}g}\xspace}
+\begin{example}
+    \exmlab{first}%
+    %
+    Consider an algorithm \Alg that uses $n$ random bits. As such, the
+    underlying sample space is
+    $\Omega = \Set{ b_1b_2 \ldots b_n }{ b_1, \ldots, b_n \in
+       \brc{0,1}\bigr.}$. That is, the set of all binary strings of
+    length $n$.  Next, let $\Family_i$ be the $\sigma$-field generated
+    by the partition of $\Omega$ into the atomic events $B_w$, where
+    $w \in \brc{0,1}^{i}$; here $w$ is the string encoding the first
+    $i$ random bits used by the algorithm. Specifically,
+    \begin{equation*}
+        B_w = \Set{ wx \in \Omega }{ x\in \brc{0,1}^{n-i}},
+    \end{equation*}
+    and the set of atomic events in $\Family_i$ is
+    $\mathcal{A}_i = \Set{ B_w }{ w \in \brc{0,1}^i}$. The set
+    $\Family_i$ is the \emph{closure} of this set of atomic events
+    under \underline{complement} and \underline{union}. In particular,
+    we conclude that $\Family_0, \Family_1, \ldots, \Family_n$ form a
+    filter.
+
+    As a concrete example, for $i=3$, the set $\mathcal{A}_3$ contains
+    $2^3=8$ sets, and the set $\Family_3$ would contain all sets
+    formed by finite unions of these sets (including the empty
+    union). As such, the set $\Family_3$ would have $2^{2^3} = 256$
+    sets.
+    
+\end{example}
+
+\begin{defn}
+    A random variable $X$ is said to be \emphi{$\Family_i$-measurable}
+    if for each $x \in \Re$, the event $X \leq x$ is in $\Family_i$;
+    that is, the set
+    \begin{math}
+        \Set{ \omega \in \Omega }{ \bigl. X(\omega) \leq x}
+    \end{math}
+    is in $\Family_i$.
+\end{defn}
+
+\begin{example}
+    Let $\Family_0, \ldots, \Family_n$ be the filter defined in
+    \exmref{first}. Let $X$ be the parity of the $n$ bits.  Clearly,
+    $X=1$ is a valid event only in $\Family_n$ (why?).  Namely, it is
+    only measurable in $\Family_n$, but not in $\Family_i$, for $i <
+    n$.
+\end{example}
+
+As such, a random variable $X$ is $\Family_i$-measurable, only if it
+is a constant on the elementary events of $\Family_i$.  This gives us
+a new interpretation of what a filter is -- its a sequence of
+refinements of the underlying probability space, that is achieved by
+splitting the atomic events of $\Family_i$ into smaller atomic events
+in $\Family_{i+1}$.  Putting it explicitly, an atomic event $\Event$
+of $\Family_i$, is a subset of $2^{\Sigma}$. As we move to
+$\Family_{i+1}$ the event $\Event$ might now be split into several
+atomic (and disjoint events) $\Event_1, \ldots, \Event_k$. Now,
+naturally, the atomic event that really happens is an atomic event of
+$\Family_n$. As we progress down the filter, we ``zoom'' into this
+event.
+
+
+
+\begin{defn}[Conditional expectation in a filter]
+    Let $(\Omega, \Family)$ be any $\sigma$-field, and $Y$ any random
+    variable that takes on distinct values on the elementary events in
+    $\Family$. Then $\ExCond{ X }{ \Family } = \ExCond{ X }{ Y }$.
+\end{defn}
+
+
+\section{Martingales}
+
+
+\begin{defn}
+    A sequence of random variables $Y_1, Y_2, \ldots,$ is a
+    \emphi{martingale difference} sequence if for all $i \geq 0$, we
+    have
+    \begin{math}
+        \biggl.\Ex{ Y_i \sepw{ \bigl. Y_1,\ldots, Y_{i-1}}} = 0.
+    \end{math}
+\end{defn}
+
+Clearly, $X_1, \ldots,$ is a martingale sequence if and only if $Y_1,
+Y_2, \ldots,$ is a martingale difference sequence where $Y_i = X_i -
+X_{i-1}$.
+
+\begin{defn}
+    A sequence of random variables $Y_1, Y_2, \ldots,$ is
+    \begin{align*}
+        \text{ a \emphi{super martingale} sequence if} \qquad &
+        \forall i \quad%
+        \Ex{ Y_i \sep{ Y_1,\ldots, Y_{i-1}}} \leq Y_{i-1},\\
+        \text{and a \emphi{sub martingale} sequence if \qquad} &%
+        \forall i \quad%
+        \Ex{ Y_i \sep{ Y_1,\ldots, Y_{i-1}}} \geq Y_{i-1}.
+    \end{align*}
+\end{defn}
+
+
+\subsection{Martingales -- an alternative definition}
+
+\begin{defn}
+    Let $(\Omega, \Family, \ProbLTR)$ be a probability space with a
+    filter $\Family_0, \Family_1$, \ldots. Suppose that $X_0, X_1,
+    \ldots$, are random variables such that, for all $i \geq 0$, $X_i$
+    is $\Family_i$-measurable. The sequence $X_0,\ldots, X_n$ is a
+    \emphi{martingale} provided that, for all $i \geq 0$, we have
+    \begin{math}
+        \Ex{ \bigl. X_{i+1} \sepw{\,\Family_i}} = X_i.
+    \end{math}
+\end{defn}
+
+\begin{lemma}
+    \lemlab{strange}%
+    %
+    Let $(\Omega, \Family)$ and $(\Omega, \FamilyB)$ be two
+    $\sigma$-fields such that $\Family \subseteq \FamilyB$. Then, for
+    any random variable $X$, we have
+    \begin{math}
+        \ExCond{ \ExCond{X}{ \FamilyB}}{ \Family \bigr. } %
+        =%
+        \ExCond{ X}{ \Family }.
+    \end{math}
+\end{lemma}
+
+\begin{proof}
+    $\displaystyle \Ex{ \Ex{X \sep{ \FamilyB}} \sep{ \Family }} =  \Ex{ \Ex{X
+          \sep{ G = g}} \sep{ F = f }}$
+    \begin{align*}
+      &=%
+        \Ex{ \frac{\sum_{x} x \Prob{X =x \cap G = g}}{\Prob{G=g}}
+        \sep{F =f }}%
+        =%
+        \sum_{g \in G} \frac{\frac{\sum_x {x} \ProbLTR [X =x \cap G =
+        g]}{\Prob{G=g}} \cdot \Prob{ G = g \cap F = f
+        }}{\Prob{F = f}} \\%
+      &=%
+        \sum_{g \in \FamilyB, g \subseteq f} \frac{\frac{\sum_x x
+        \Prob{X =x \cap G = g}}{\Prob{G=g}} \cdot \Prob{ G = g
+        \cap F = f }}{\Prob{F = f}} %
+        =%
+        \sum_{g \in \FamilyB, g \subseteq f} \frac{\frac{\sum_x x
+        \Prob{X =x \cap G = g}}{\Prob{G=g}} \cdot \Prob{ G = g
+        }}{\Prob{F = f}} \\%
+      &=%
+        \sum_{g \in \FamilyB, g \subseteq f} \frac{\sum_x x \Prob{X =x
+        \cap G = g}}{\Prob{F = f}} =%
+        \frac{\sum_x x \pth{ \sum_{g \in \FamilyB, g \subseteq f}
+        \Prob{X =x \cap G = g}}}{\Prob{F = f}} \\
+      &=%
+        \frac{\sum_x x \Prob{ X =x \cap F =f }}{\Prob{F = f}} =%
+        \Ex{ X \sep{ \Family}}.
+    \end{align*}
+\end{proof}
+
+
+\begin{theorem}
+    \thmlab{martingale}%
+    %
+    Let $(\Omega, \Family, \ProbLTR)$ be a probability space, and let
+    $\Family_0, \ldots, \Family_n$ be a filter with respect to it. Let
+    $X$ be any random variable over this probability space and define
+    $X_i = \Ex{X \sep{ \Family_i}}$ then, the sequence $X_0, \ldots,
+    X_n$ is a martingale.
+\end{theorem}
+
+\begin{proof}
+    We need to show that $\Ex{X_{i+1} \sep{ \Family_i }} =
+    X_i$. Namely,
+    \begin{align*}
+      \ExCond{X_{i+1} }{ \Family_i }%
+      =%
+      \Ex{ \Ex{ X \sepw{\bigl. \Family_{i+1}}} \sep{ \Family_i}}%
+      =%
+      \Ex{ X \sep{ \Family_i}}%
+      =%
+      X_i,
+    \end{align*}
+    by \lemref{strange} and by definition of $X_i$.
+\end{proof}
+
+\begin{defn}
+    Let $f:\Domain_1 \times \cdots \times \Domain_n \rightarrow \Re$
+    be a real-valued function with a arguments from possibly distinct
+    domains. The function $f$ is said to satisfy the \emphi{Lipschitz
+       condition} if for any
+    $x_1 \in \Domain_1, \ldots, x_n \in \Domain_n$, and
+    $i \in \brc{1,\ldots,n}$ and any $y_i \in \Domain_i$, we have
+    \begin{equation*}
+        \cardin{\big.\, f(x_1,\ldots, x_{i-1}, x_i, x_{i+1}, \ldots,
+           x_n) - f (x_1, \ldots, x_{i-1}, y_i, x_{i+1},\ldots, x_n)%
+           \, } \leq 1.
+    \end{equation*}
+    Specifically, a function is \emphi{$c$-Lipschitz}, if the
+    inequality holds with a constant $c$ (instead of $1$).
+\end{defn}
+
+\begin{defn}
+    Let $X_1, \ldots, X_n$ be a sequence of \emph{independent} random
+    variables, and a function $f = f( X_1,\ldots, X_n )$ defined over
+    them, such that $f$ satisfies the Lipschitz condition. The
+    \emphi{Doob martingale} sequence $Y_0, \ldots, Y_m$ is defined by
+    $Y_0 = \Ex{\bigl. f(X_1, \ldots, X_n)}\,$ and
+    \begin{equation*}
+        \Bigl.  Y_i = \ExCond{f(X_1,\ldots, X_n) }{\bigl. X_1, \ldots,
+           X_i},
+        \qquad\text{for}\quad i=1,\ldots, n.
+    \end{equation*}
+\end{defn}
+
+Clearly, a Doob martingale $Y_0, \ldots, Y_n$ is a martingale, by
+\thmref{martingale}.  Furthermore, if $\cardin{X_i - X_{i-1}} \leq 1$,
+for $i=1,\ldots, n$, then $\cardin{Y_i - Y_{i-1}} \leq 1$. and we can
+use Azuma's inequality on such a sequence.
+
+
+
+\section{Occupancy Revisited}
+
+We have $m$ balls thrown independently and uniformly into $n$ bins.
+Let $Z$ denote the number of bins that remains empty in the end of the
+process.  Let $X_i$ be the bin chosen in the $i$\th trial, and let
+$Z = F(X_1,\ldots, X_m)$, where $F$ returns the number of empty bins
+given that $m$ balls had thrown into bins $X_1, \ldots,X_m$.  , By
+Azuma's inequality we have that
+$\Bigl. \Prob{ \cardin{\bigl. Z - \Ex{Z} } > \lambda \sqrt{m}} \leq
+2\exp\pth{-\lambda^2/2}$.
+
+The following is an extension of Azuma's inequality shown in class. We
+do not provide a proof but it is similar to what we saw.
+
+\begin{fragment}{\deflabel{Azuma_stronger}}
+\begin{theorem}[Azuma's Inequality - Stronger Form]
+    \thmlab{azuma:ineq:s:f}%
+    %
+    Let $X_0, X_1, \ldots,$ be a martingale sequence such
+    that for each $k$,
+    \begin{math}
+        \bigl.  \cardin{X_k - X_{k-1}} \leq c_k,
+    \end{math}
+    where $c_k$ may depend on $k$. Then, for all $t \geq 0$, and any
+    $\lambda>0$, we have
+    \begin{equation*}
+        \Prob{\bigl. \cardin{X_t - X_0} \geq \lambda }%
+        \leq%
+        2
+        \exp\biggl( - \frac{\lambda^2}{2\sum_{k=1}^{t} c_k^2} \biggr).
+    \end{equation*}
+\end{theorem}
+\end{fragment}
+
+% \smallskip
+
+\begin{theorem}
+    \thmlab{empty:bins:strong}%
+    %
+    Let $r= m/n$, and $Z_{\textrm{end}}$ be the number of empty bins when
+    $m$ balls are thrown randomly into $n$ bins. Then
+    \begin{math}
+        \mu = \Ex{\bigl. Z_{\textrm{end}}} = n \pth[]{1-\frac{1}{n}}^m
+        \approx n \exp(-r),
+    \end{math}
+    and for any $\lambda > 0$, we have
+    \begin{equation*}
+        \Prob{ \Bigl. \cardin{\bigl. Z_{\textrm{end}} -
+              \mu} \geq \lambda } \leq 2 \exp \pth{ -
+           \frac{\lambda^2(n-1/2)}{n^2 - \mu^2}}.        
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Let $z(Y,t)$ be the expected number of empty bins in the end, if
+    there are $Y$ empty bins in time $t$. The probability of an empty
+    bin to remain empty is $(1-1/n)^{m-t}$, and as such
+    \begin{align*}
+      z(Y,t) = Y  \Bigl( 1-\frac{1}{n} \Bigr)^{m-t}.
+    \end{align*}
+    In particular, $\mu = z(n, 0) = n \pth[]{1-\nfrac{1}{n}}^m$.
+
+    \smallskip
+
+    Let $\Family_t$ be the $\sigma$-field generated by the bins chosen
+    in the first $t$ steps. Let $Z_{\textrm{end}}$ be the number of
+    empty bins at time $m$, and let $Z_t = \Ex{Z_{\textrm{end}}
+       \sep{\Family_t}}$. Namely, $Z_t$ is the expected number of
+    empty bins after we know where the first $t$ balls had been
+    placed.  The random variables $Z_0, Z_1, \ldots, Z_m$ form a
+    martingale.  Let $Y_t$ be the number of empty bins after $t$ balls
+    where thrown. We have $Z_{t-1} = z(Y_{t-1},t-1)$.  Consider the
+    ball thrown in the $t$-step. Clearly:
+    \smallskip%
+    \begin{compactenumA}
+        \item With probability $1 - Y_{t-1}/n$ the ball falls
+        into a non-empty bin. Then $Y_t= Y_{t-1}$, and $Z_t
+        = z(Y_{t-1},t)$. Thus,
+        \begin{align*}
+          \Delta_t%
+          &=%
+            Z_t - Z_{t-1} = z(Y_{t-1},t) - z(Y_{t-1},t-1)%
+            =%
+            Y_{t-1} \pth[]{ \pth{1-\frac{1}{n}}^{m-t}\!\!\!\! -
+            \pth[]{1-\frac{1}{n}}^{m-t+1}}%
+          \\&%
+          =%
+          \frac{Y_{t-1}}{n}\pth{1-\frac{1}{n}}^{m-t}%
+          \leq%
+          \pth{1-\frac{1}{n}}^{m-t} \!\!\!.
+        \end{align*}
+
+        \item Otherwise, with probability $Y_{t-1}/n$ the ball falls
+        into an empty bin, and $Y_t = Y_{t-1}-1$.  Namely,
+        $Z_t=z(Y_{t} - 1, t)$. And we have that
+        \begin{align*}
+            \Delta_t%
+            &=%
+            Z_t - Z_{t-1} = z(Y_{t-1}-1,t) - z(Y_{t-1},t-1)%
+            =%
+            \pth[]{Y_{t-1}-1} \pth[]{1-\frac{1}{n}}^{m-t} -
+            Y_{t-1}\pth{1-\frac{1}{n}}^{m-t+1}%
+            \displaybreak[0]\\&%
+            =%
+            \pth[]{1-\frac{1}{n}}^{m-t}\pth{ {Y_{t-1}-1} -
+               Y_{t-1}\pth{1-\frac{1}{n}}}
+            % \displaybreak[0]&\\
+            =%
+            \pth[]{1-\frac{1}{n}}^{m-t}\pth{ -1 + \frac{ Y_{t-1}}{n}}
+            = - \pth[]{1-\frac{1}{n}}^{m-t}\pth{ 1 -
+               \frac{ Y_{t-1}}{n}}\\
+            &\geq%
+            -\pth[]{1-\frac{1}{n}}^{m-t}.
+        \end{align*}
+    \end{compactenumA}
+
+    Thus, $Z_0, \ldots, Z_m$ is a martingale sequence, where
+    $\cardin{Z_t - Z_{t-1}} \leq \cardin{\Delta_t} \leq c_t$, where
+    $c_t=\pth{1-\frac{1}{n}}^{m-t}$. We have
+    \begin{equation*}
+        \sum_{t=1}^{m} c_t^2%
+        =%
+        \sum_{t=1}^{m} \pth{1-\frac{1}{n}}^{2(m-t)}%
+        =%
+        \sum_{t=0}^{m-1} \pth{1-\frac{1}{n}}^{2t}%
+        =%
+        \frac{1 - (1-1/n)^{2m}}{1 - (1-1/n)^2}%
+        =%
+        \frac{n^2\pth{ 1 - (1-1/n)^{2m}}}{2n - 1}%
+        =%
+        \frac{n^2 - \mu^2}{2n - 1}.        
+    \end{equation*}
+    Now, deploying Azuma's inequality, yield the result.
+\end{proof}%
+
+
+\subsection{Lets verify this is indeed an improvement}
+
+Consider the case where $m = n \ln n$. Then,
+\begin{math}
+    \mu = n \pth[]{1-\frac{1}{n}}^m \leq 1.
+\end{math}
+And using the ``weak'' Azuma's inequality implies that
+\begin{align*}
+  \Prob{ \Bigl. \cardin{\bigl. Z_{\textrm{end}} - \mu}
+  \geq  \lambda \sqrt{n} }%
+  =%
+  \Prob{ \biggl. \cardin{\bigl. Z_{\textrm{end}} - \mu} \geq \lambda
+  \sqrt{\frac{n}{m}} \sqrt{m} }%
+  \leq%
+  2 \exp \pth{ - \frac{\lambda^2n}{2m}}%
+  =%
+  2 \exp \pth{ - \frac{\lambda^2}{2\ln n}},%
+\end{align*}
+which is interesting only if $\lambda > \sqrt{ 2 \ln n}$. On the other
+hand, \thmref{empty:bins:strong} implies that
+\begin{align*}
+  \Prob{ \bigl. \cardin{ Z_{\textrm{end}} - \mu} \geq \lambda
+  \sqrt{n} }%
+  \leq%
+  2 \exp \pth{ - \frac{\lambda^2 n (n-1/2)}{n^2 -
+  \mu^2}} %
+  \leq%
+  2 \exp \pth{ - \lambda^2 },
+\end{align*}
+which is interesting for any $\lambda \geq 1$ (say).
+
+
+\ChapterEnd{}
+
+%\end{document}%

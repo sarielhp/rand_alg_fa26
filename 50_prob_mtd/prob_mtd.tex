@@ -1,0 +1,297 @@
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+\Chapter{The Probabilistic Method}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+\QuotePExt{%
+``Shortly after the celebration of the
+   four thousandth anniversary of the opening of space,
+   Angary J. Gustible discovered Gustible's planet. The
+   discovery turned out to be a tragic mistake.
+ 
+   Gustible's planet was inhabited by highly intelligent life
+   forms. They had moderate telepathic powers. They immediately
+   mind-read Angary J. Gustible's entire mind and life history, and
+   embarrassed him very deeply by making up an opera concerning his
+   recent divorce.''}%
+{Gustible's Planet}%
+{Cordwainer Smith}
+
+
+
+\section{Introduction}
+
+The probabilistic method is a combinatorial technique to use
+probabilistic algorithms to create objects having desirable
+properties, and furthermore, prove that such objects exist. The basic
+technique is based on two basic observations:
+\begin{enumerate}
+    \item If $\Ex{X} = \mu$, then there exists a value $x$ of $X$,
+    such that $x \geq \Ex{X}$.
+
+    \item If the probability of event $\Event$ is larger than zero, then
+    $\Event$ exists and it is not empty.
+\end{enumerate}
+The surprising thing is that despite the elementary nature of those
+two observations, they lead to a powerful technique that leads to
+numerous nice and strong results. Including some elementary proofs of
+theorems that previously had very complicated and involved proofs.
+
+The main proponent of the probabilistic method, was Paul
+\Erdos{}. An excellent text on the topic is the book by Noga
+Alon and Joel Spencer \cite{as-pm-00}. 
+
+This topic is worthy of its own course. The interested
+student is refereed to the course ``Math 475 --- The
+Probabilistic Method''.
+
+\subsection{Examples}
+
+\subsubsection{Max cut}
+
+Computing the \emphi{maximum cut} (i.e., \emphi{max cut}) in a graph
+is a \NPComplete problem, which is \APXHard (i.e., no better than a
+constant approximation is possible if $\POLYT \neq \NP$). We present
+later on a better approximation algorithm, but the following simple
+algorithm already gives a pretty good approximation.
+
+\begin{theorem}
+    For any undirected graph $\Graph =(\Vertices,\Edges)$ with $n$
+    vertices and $m$ edges, there is a partition of the vertex set $V$
+    into two sets $\SetA$ and $\SetB$, such that
+    \begin{math}
+        \ds%
+        \cardin{(\SetA,\SetB)}%
+        =%
+        \cardin{\Set{ u v \in \Edges}{ u \in \SetA \text{ and } v \in
+              \SetB }} \geq%
+        \frac{m}{2}.
+    \end{math}
+    One can compute a partition, in $O(n)$ time, such that
+    $\Ex{\bigl.\cardin{(\SetA,\SetB)}} =m/2$.
+\end{theorem}
+
+\begin{proof}
+    Consider the following experiment: randomly assign each
+    vertex to $\SetA$ or $\SetB$, independently and equal
+    probability.
+
+    For an edge $e=u v$, the probability that one endpoint is in
+    $\SetA$, and the other in $\SetB$ is $1/2$, and let $X_e$ be the
+    indicator variable with value $1$ if this happens. Clearly,
+    \begin{equation*}
+        \Ex{ \cardin{\Set{ u v \in \Edges }{ (u,v) \in %
+                 \SetA \times \SetB \cup \SetB \times \SetA
+                 \bigr. }}\Bigr.}
+        % 
+        =%
+        \sum_{e \in E(G)} \Ex{ X_e } =%
+        \sum_{e \in E(G)} \frac{1}{2} = \frac{m}{2}.
+    \end{equation*}
+    Thus, there must be an execution of the algorithm that computes a
+    cut that is at least as large as the expectation -- namely, a
+    partition of $\Vertices$ that satisfies the realizes a cut with
+    $\geq m/2$ edges.
+\end{proof}
+
+\section{Maximum Satisfiability}
+
+In the \ProblemC{MAX-SAT} problem, we are given a binary formula $F$
+in \emphi{C{}N{}F} (Conjunctive normal form), and we would like to
+find an assignment that satisfies as many clauses as possible of $F$,
+for example $F = (x\vee y) \wedge (\overline{x} \vee z)$. Of course,
+an assignment satisfying all the clauses of the formula, and thus $F$
+itself, would be even better -- but this problem is of course \NPC. As
+such, we are looking for how well can be we do when we relax the
+problem to maximizing the number of clauses to be satisfied..
+
+\begin{theorem}
+    For any set of $m$ clauses, there is a truth assignment
+    of variables that satisfies at least $m/2$ clauses.
+
+    \thmlab{a:max:sat}
+\end{theorem}
+
+\begin{proof}
+    Assign every variable a random value. Clearly, a clause with $k$
+    variables, has probability $1-2^{-k}$ to be satisfied. Using
+    linearity of expectation, and the fact that every clause has at
+    least one variable, it follows, that $\Ex{X} = m/2$, where $X$ is
+    the random variable counting the number of clauses being
+    satisfied.  In particular, there exists an assignment for which $X
+    \geq m/2$.
+\end{proof}
+
+
+
+For an instant $I$, let $\mopt(I)$, denote the maximum number of
+clauses that can be satisfied by the ``best'' assignment. For an
+algorithm \Alg, let $m_\Alg(I)$ denote the number of clauses satisfied
+computed by the algorithm \Alg.  The \emphi{approximation factor} of
+\Alg, is $m_\Alg(I)/\mopt(I)$.  Clearly, the algorithm of
+\thmref{a:max:sat} provides us with $1/2$-approximation algorithm.
+
+For every clause, $C_j$ in the given instance, let $z_j \in \brc{0,1}$
+be a variable indicating whether $C_j$ is satisfied or not. Similarly,
+let $x_i=1$ if the $i$\th variable is being assigned the value
+\textsc{TRUE}. Let $C_j^+$ be indices of the variables that appear in
+$C_j$ in the positive, and $C_j^-$ the indices of the variables that
+appear in the negative. Clearly, to solve \ProblemC{MAX-SAT}, we need
+to solve:
+
+\envFrame{
+   \begin{align*}
+     \max \qquad
+     &%
+       \sum_{j=1}^{m} z_j\\     
+     %-------------------------------------------------------------
+     \text{ subject to}\qquad
+     %
+     & \sum_{i \in C_j^+} x_i + 
+       \sum_{i \in C_j^-} (1 - x_i) \geq z_j
+     & \text{ for all } j\\
+     & x_i, z_j \in \brc{0,1} &\text{ for all } i,j\\
+   \end{align*}}
+
+We relax this into the following linear program:
+\envFrame{
+   \begin{eqnarray*}
+     \max & \;  & \sum_{j=1}^{m} z_j\\
+     subject\; \; to\; \;  & \;  & 0\leq y_i, z_j \leq 1
+                                   \text{ for all } i,j\\
+     \;  & \;  & \sum_{i \in C_j^+} y_i + 
+                 \sum_{i \in C_j^-} (1 - y_i) \geq z_j
+                 \text{ for all } j.
+   \end{eqnarray*}}
+Which can be solved in polynomial time. Let
+$\widehat{t}$ denote the values assigned to the
+variable $t$ by the linear-programming solution. Clearly,
+$\sum_{j=1}^{m} \widehat{z_j}$ is an upper bound on the
+number of clauses of $I$ that can be satisfied.
+
+We set the variable $y_i$ to $1$ with probability
+$\widehat{y_i}$. This is an instance \emphi{randomized rounding}.
+
+\begin{lemma}
+    \lemlab{r:r}%
+    %
+    Let $C_j$ be a clause with $k$ literals. The probability
+    that it is satisfied by randomized rounding is at least
+    $\beta_k \widehat{z_j} \geq (1-1/e)\widehat{z_j}$, where
+    \begin{equation*}
+        \beta_k = 1- \pth{1-\frac{1}{k}}^k \approx 1-\frac{1}{e}.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    Assume $C_j = y_1 \lor v_2 \ldots \lor v_k$. By the L{}P, we have
+    $\widehat{y_1} + \cdots + \widehat{y_k} \geq
+    \widehat{z_j}$. Furthermore, the probability that $C_j$ is not
+    satisfied is $\prod_{i=1}^{k} \pth{ 1- \widehat{y_i}}$. Note that
+    $1 - \prod_{i=1}^{k} \pth{ 1- \widehat{y_i}}$ is minimized when
+    all the $\widehat{y_i}$'s are equal (by symmetry). Namely, when
+    $\widehat{y_i} = \widehat{z_j}/k$. Consider the function $f(x) = 1
+    - (1-x/k)^k$. This  function is larger than
+    $g(x) = \beta_k x$, for all $0 \leq x \leq 1$, as can be easily
+    verified (see \tedref{f:g:smaller}).
+
+    
+    Thus,
+    \begin{align*}
+    \Prob{C_j \text{ is satisfied} } = 1 - \prod_{i=1}^{k}
+    \pth{ 1- \widehat{y_i}} \geq f\pth{\widehat{z_j}} \geq
+    \beta_k \widehat{z_j}.
+    \end{align*}
+    
+    The second part of the inequality, follows from the fact that
+    $\beta_k \geq 1-1/e$, for all $k\geq 0$.  Indeed, for $k=1,2$ the
+    claim trivially holds.  Furthermore,
+    \begin{align*}
+    1 - \pth{1-\frac{1}{k}}^k \geq 1 - \frac{1}{e}
+    \;\; \Leftrightarrow \;\; \pth{1-\frac{1}{k}}^k \leq \frac{1}{e},
+    \end{align*}
+    but this holds since $1-x \leq e^{-x}$ implies that
+    $1-\frac{1}{k} \leq e^{-1/k}$, and as such $\,\pth[]{1-\frac{1}{k}}^k
+    \leq e^{-k/k} = 1/e$.
+\end{proof}
+
+    \begin{tedium}
+        \tedlab{f:g:smaller}%
+        %
+        Consider the two functions
+        \begin{equation*}
+            f(x) = 1 - (1-x/k)^k
+            \qquad \text{ and }\qquad%
+            g(x) = \pth{1- \pth{1-\frac{1}{k}}^k} x.
+        \end{equation*}
+        We have $f'(x) = (1-x/k)^{k-1}$ and
+        $f''(x) = -\frac{k-1}{k}(1-x/k)^{k-2}$. That is
+        $f''(x) \leq 0$, for $x \in [0,1]$. As such $f$ is a concave
+        function.
+
+        Observe that $f(0) =0 =g(0)$ and
+        $f(1) = \pth{1- \pth{1-\frac{1}{k}}^k} = g(1)$. Since $f$ is
+        concave, and $g$ is linear, it follows that $f(x) \geq g(x)$,
+        for all $x \in [0,1]$.
+    \end{tedium}
+
+\begin{theorem}
+    Given an instance $I$ of \ProblemC{MAX-SAT}, the expected number
+    of clauses satisfied by linear programming and randomized rounding
+    is at least $(1-1/e)\approx 0.632\mopt(I)$, where $\mopt(I)$ is
+    the maximum number of clauses that can be satisfied on that
+    instance.
+\end{theorem}
+
+\begin{theorem}
+    Given an instance $I$ of \ProblemC{MAX-SAT}, let $n_1$ be the
+    expected number of clauses satisfied by randomized assignment, and
+    let $n_2$ be the expected number of clauses satisfied by linear
+    programming followed by randomized rounding. Then, $\max(n_1, n_2)
+    \geq (3/4) \sum_j \widehat{z_j} \geq (3/4)\mopt(I)$.
+\end{theorem}
+
+\begin{proof}
+    It is enough to show that $(n_1 + n_2)/2 \geq
+    \frac{3}{4} \sum_j \widehat{z_j}$. Let $S_k$ denote the
+    set of clauses that contain $k$ literals. We know that
+    \begin{align*}
+    n_1 = \sum_k \sum_{C_j \in S_k} \pth{1-2^{-k}} \geq \sum_k
+    \sum_{C_j \in S_k} \pth{1 - 2^{-k}} \widehat{z_j}.
+    \end{align*}
+    By \lemref{r:r} we have $n_2 \geq \sum_k \sum_{C_j \in
+       S_k} \beta_k \widehat{z_j}$.  Thus,
+    \begin{align*}
+    \frac{n_1 + n_2}{2} \geq \sum_k \sum_{C_j \in S_k}
+    \frac{1 - 2^{-k} + \beta_k}{2} \widehat{z_j}.
+    \end{align*}
+    One can verify that $\pth{1-2^{-k}} + \beta_k \geq 3/2$, for all
+    $k$. \footnote{Indeed, by the proof of \lemref{r:r}, we have that
+       $\beta_k \geq 1-1/e$. Thus, $\pth[]{1-2^{-k}} + \beta_k \geq
+       2-1/e - 2^{-k} \geq 3/2$ for $k\geq 3$. Thus, we only need to
+       check the inequality for $k=1$ and $k=2$, which can be done
+       directly.}  Thus, we have
+    \begin{align*}
+        \frac{n_1 + n_2}{2} \geq \frac{3}{4} \sum_k \sum_{C_j \in S_k}
+        \widehat{z_j} = \frac{3}{4} \sum_j \widehat{z_j}.
+    \end{align*}
+\end{proof}
+
+%\bibliographystyle{alpha} \bibliography{shortcuts,geometry}
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   
+   \IncFragment{\deflabel{c_special}}
+
+}
+
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

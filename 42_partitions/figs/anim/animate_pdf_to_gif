@@ -1,0 +1,40 @@
+#! /bin/bash
+
+
+
+if [ "$#" -ne 2 ]; then
+   echo  "animage_pdf_to_gif  [pdf file]  [out gif file]"
+   exit
+fi
+
+FL=$1
+FLGIF=$2
+
+
+PAGES=$(pdftk $1 dump_data | grep NumberOfPages | awk '{print $2}')
+#PAGES=19
+
+echo Converting:  $FL"[1-"$PAGES"]" "->"  $FLGIF
+echo          $FL"[1-"$PAGES"]" $FLGIF 
+
+convert \
+         -alpha remove \
+         -density 400 \
+         -layers TrimBounds \
+         -dispose 2  \
+         -delay 100 \
+         -trim \
+         $FL"[1-"$PAGES"]" $FLGIF 
+#         -fill "#ffffff" \
+#         -transparent-color white \
+#         -opaque  white \
+#         -bordercolor white  \
+#    -background white  \
+#---------------------------------------------
+#         +repage \
+
+echo "Done!"
+echo " "
+if [ ! -e $FLGIF ]; then
+    echo "$FLGIF does not exist. Script failed?"
+fi

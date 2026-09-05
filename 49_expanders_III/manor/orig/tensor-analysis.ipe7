@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20081001063922" modified="D:20081004223538"/>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<layer name="delta"/>
+<layer name="omicron"/>
+<layer name="epsilon"/>
+<layer name="zeta"/>
+<layer name="eta"/>
+<layer name="theta"/>
+<layer name="iota"/>
+<layer name="kappa"/>
+<layer name="lambda"/>
+<layer name="mu"/>
+<layer name="nu"/>
+<layer name="xi"/>
+<layer name="pi"/>
+<view layers="alpha gamma" active="alpha"/>
+<view layers="alpha beta delta" active="delta"/>
+<view layers="alpha omicron" active="omicron"/>
+<view layers="alpha epsilon" active="epsilon"/>
+<view layers="alpha epsilon zeta eta" active="zeta"/>
+<view layers="alpha epsilon eta" active="eta"/>
+<view layers="alpha theta" active="theta"/>
+<view layers="alpha theta iota kappa" active="iota"/>
+<view layers="alpha theta kappa" active="kappa"/>
+<view layers="alpha beta delta lambda" active="lambda"/>
+<view layers="alpha mu nu" active="nu"/>
+<view layers="alpha nu xi" active="xi"/>
+<view layers="alpha delta xi pi" active="pi"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 -16 -80">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 -16 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 -16 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 -16 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 -16 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 -16 -80" size="normal" stroke="black"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 48 -16">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 48 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 48 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 48 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 48 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 48 -16" size="normal" stroke="black"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 144 -16">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 144 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 144 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 144 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 144 -16" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 144 -16" size="normal" stroke="black"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 208 -80">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 208 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 208 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 208 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 208 -80" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 208 -80" size="normal" stroke="black"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 144 -144">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 144 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 144 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 144 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 144 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 144 -144" size="normal" stroke="black"/>
+<path layer="beta" stroke="blue" pen="normal" matrix="1 0 0 1 48 -144">
+16 0 0 16 48 800 e
+</path>
+<use name="mark/disk(sx)" pos="48.191 784.001" layer="alpha" matrix="1 0 0 1 48 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="62.87 794.094" matrix="1 0 0 1 48 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="58.9976 811.621" matrix="1 0 0 1 49 -145" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="38.6651 812.995" matrix="1 0 0 1 48 -144" size="normal" stroke="black"/>
+<use name="mark/disk(sx)" pos="33.2502 793.8" matrix="1 0 0 1 48 -144" size="normal" stroke="black"/>
+<use name="mark/cross(sx)" pos="0 832" matrix="1 0 0 1 1 -24" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="0 592" matrix="1 0 0 1 2 33" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="288 592" matrix="1 0 0 1 0 34" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="288 832" matrix="1 0 0 1 0 -23" size="tiny" stroke="black"/>
+<text layer="gamma" stroke="black" matrix="1 0 0 1 -8 -13" pos="111 731" type="label" transformations="translations" valign="baseline" size="Large">$V_K=V_G \times V_H$</text>
+<path layer="delta" stroke="red" pen="normal">
+192 784 m
+256 720 l
+192 656 l
+96 656 l
+32 720 l
+96 784 l
+192 784 l
+</path>
+<path stroke="red" pen="normal">
+192 784 m
+96 656 l
+</path>
+<path stroke="red" pen="normal">
+96 784 m
+192 656 l
+</path>
+<path stroke="red" pen="normal">
+256 720 m
+32 720 l
+</path>
+<text layer="omicron" stroke="black" matrix="1 0 0 1 -48 -2" pos="106 719" type="label" transformations="translations" valign="baseline" size="large">Complete bipartite graph $K_{30,30}$</text>
+<use name="mark/disk(sx)" pos="96.191 768.001" layer="epsilon" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="192.191 768.001" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 14.941 -9.799" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="182.665 668.995" matrix="1 0 0 1 9.526 -28.994" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 -10.807 -27.62" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="46.87 714.094" matrix="1 0 0 1 -14.679 -10.093" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="110.87 778.094" layer="theta" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="177.25 777.8" matrix="1 0 0 1 29.62 0.294" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="86.6651 668.995" matrix="1 0 0 1 24.2049 -18.901" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="202.998 667.621" matrix="1 0 0 1 3.872 -17.527" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 -160 -64" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="46.87 714.094" size="large" stroke="red"/>
+<path layer="lambda" stroke="red" dash="dashed" pen="normal">
+106.998 795.621 m
+140 784
+182.665 796.995 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+96.191 768.001 m
+141 776
+192.191 768.001 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+96.191 768.001 m
+68 756
+46.87 714.094 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+86.6651 796.995 m
+58 758
+22.6651 732.995 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+110.87 778.094 m
+145 720
+202.998 667.621 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+81.2502 777.8 m
+142 717
+177.25 649.8 s
+</path>
+<path layer="mu" stroke="red" dash="dashed" pen="normal">
+81.2502 777.8 m
+142 717
+177.25 649.8 s
+</path>
+<path stroke="red" dash="dashed" pen="normal">
+110.87 778.094 m
+145 720
+202.998 667.621 s
+</path>
+<path stroke="red" pen="normal">
+96 784 m
+192 656 l
+</path>
+<path layer="nu" stroke="blue" pen="normal" matrix="1 0 0 1 48 -16">
+16 0 0 16 48 800 e
+</path>
+<path stroke="blue" pen="normal" matrix="1 0 0 1 144 -144">
+16 0 0 16 48 800 e
+</path>
+<path layer="xi" stroke="black" pen="normal">
+106.998 795.621 m
+146 755
+182.665 668.995 s
+</path>
+<path stroke="black" pen="normal">
+106.998 795.621 m
+214 686
+206.87 650.094 s
+</path>
+<path stroke="black" pen="normal">
+110.87 778.094 m
+202.998 667.621
+202.998 667.621 s
+</path>
+<path stroke="black" pen="normal">
+110.87 778.094 m
+218 701
+244 636
+211 619
+192.191 640.001 s
+</path>
+<path stroke="black" pen="normal">
+96.191 768.001 m
+202.998 667.621 s
+</path>
+<path stroke="black" pen="normal">
+96.191 768.001 m
+177.25 649.8 s
+</path>
+<path stroke="black" pen="normal">
+81.2502 777.8 m
+115 710
+182.665 668.995 s
+</path>
+<path stroke="black" pen="normal">
+81.2502 777.8 m
+144 638
+192.191 640.001 s
+</path>
+<path stroke="black" pen="normal">
+86.6651 796.995 m
+65 786
+68 748
+135 649
+177.25 649.8 s
+</path>
+<path stroke="black" pen="normal">
+86.6651 796.995 m
+121 808
+197 732
+202.998 667.621 s
+</path>
+<path layer="pi" stroke="red" pen="ultrafat">
+96 784 m
+192 656 l
+</path>
+<use name="mark/disk(sx)" pos="106.998 667.621" layer="epsilon" matrix="1 0 0 1 95.9996 128" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 0 128" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 160 64" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 95.9996 0" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 0.9996 -1" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="106.998 667.621" matrix="1 0 0 1 -64.0004 64" size="large" stroke="blue"/>
+<path layer="eta" stroke="black" pen="normal">
+96.191 768.001 m
+42.9976 731.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+96.191 768.001 m
+106.998 795.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+96.191 768.001 m
+202.998 795.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+96.191 768.001 m
+266.998 731.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+96.191 768.001 m
+202.998 667.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+96.191 768.001 m
+106.998 667.621 s
+</path>
+<path stroke="black" pen="normal">
+192.191 768.001 m
+202.998 795.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+192.191 768.001 m
+106.998 795.621 s
+</path>
+<path stroke="black" pen="normal">
+192.191 768.001 m
+266.998 731.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+192.191 768.001 m
+202.998 667.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+192.191 768.001 m
+106.998 667.621
+106.998 667.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+192.191 768.001 m
+42.9976 731.621 s
+</path>
+<path stroke="black" pen="normal">
+256.191 704.001 m
+266.998 731.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+256.191 704.001 m
+202.998 795.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+256.191 704.001 m
+106.998 795.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+256.191 704.001 m
+202.998 667.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+256.191 704.001 m
+106.998 667.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+256.191 704.001 m
+42.9976 731.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+192.191 640.001 m
+202.998 667.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+192.191 640.001 m
+262.029 668.538
+282.739 709.366
+283.922 723.567
+266.998 731.621 s
+</path>
+<path stroke="black" pen="normal">
+192.191 640.001 m
+158.48 640.728
+107.998 666.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+192.191 640.001 m
+144.279 653.745
+42.9976 731.621 s
+</path>
+<path stroke="black" pen="normal">
+96.191 640.001 m
+107.998 666.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+96.191 640.001 m
+202.998 667.621 s
+</path>
+<path stroke="black" pen="normal">
+96.191 640.001 m
+42.9976 731.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+96.191 640.001 m
+193.982 627.118
+253.745 635.994
+266.998 731.621 s
+</path>
+<path stroke="black" pen="normal">
+96.191 640.001 m
+106.998 795.621 s
+</path>
+<path stroke="black" pen="normal">
+32.191 704.001 m
+42.9976 731.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+32.191 704.001 m
+91.0246 683.331
+106.998 667.621 s
+</path>
+<path stroke="black" pen="normal">
+32.191 704.001 m
+35.9955 759.661
+63.2142 786.288
+106.998 795.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+32.191 704.001 m
+150.787 739.543
+202.998 795.621 s
+</path>
+<path stroke="black" pen="normal">
+32.191 704.001 m
+152.563 685.106
+202.998 667.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+32.191 704.001 m
+266.998 731.621 s
+</path>
+<use name="mark/disk(sx)" pos="177.25 777.8" layer="theta" matrix="1 0 0 1 29.62 0.294" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 29.62 0.294" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 -224 0" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 -64 -64" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 -64 64" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="241.25 713.8" matrix="1 0 0 1 -160 64" size="large" stroke="blue"/>
+<path layer="kappa" stroke="black" pen="normal">
+241.25 713.8 m
+206.87 778.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+241.25 713.8 m
+270.87 714.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+241.25 713.8 m
+206.87 650.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+241.25 713.8 m
+110.87 650.094
+110.87 650.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+241.25 713.8 m
+46.87 714.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+177.25 649.8 m
+206.87 650.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 649.8 m
+110.87 650.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+177.25 649.8 m
+46.87 714.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 649.8 m
+110.87 778.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+177.25 649.8 m
+168.539 700.49
+206.87 778.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 649.8 m
+185.107 625.935
+267.946 629.485
+270.87 714.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+81.2502 649.8 m
+110.87 650.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+81.2502 649.8 m
+46.87 714.094 s
+</path>
+<path stroke="black" pen="normal">
+81.2502 649.8 m
+88.6578 630.668
+192.799 624.751
+206.87 650.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+81.2502 649.8 m
+69.1313 689.248
+110.87 778.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+81.2502 649.8 m
+79.7821 686.289
+206.87 778.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+81.2502 649.8 m
+82.7407 634.81
+146.054 624.16
+275.638 627.118
+280.964 680.964
+270.87 714.094 s
+</path>
+<path stroke="black" pen="normal">
+17.2502 713.8 m
+46.87 714.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+17.2502 713.8 m
+67.9479 728.301
+110.87 778.094 s
+</path>
+<path stroke="black" pen="normal">
+17.2502 713.8 m
+62.0308 720.609
+135.403 722.384
+227.71 722.384
+256 720
+270.87 714.094 s
+</path>
+<path stroke="black" pen="normal">
+17.2502 713.8 m
+58.4805 666.763
+110.87 650.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+17.2502 713.8 m
+46.0546 684.514
+145.462 668.538
+206.87 650.094 s
+</path>
+<path stroke="black" pen="normal">
+17.2502 713.8 m
+147.237 744.869
+181.556 749.602
+206.87 778.094 s
+</path>
+<path stroke="black" pen="normal">
+81.2502 777.8 m
+110.87 778.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+81.2502 777.8 m
+46.87 714.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+81.2502 777.8 m
+96.9417 665.579
+110.87 650.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+81.2502 777.8 m
+117.652 700.49
+180.965 661.437
+206.87 650.094 s
+</path>
+<path stroke="black" pen="normal">
+81.2502 777.8 m
+108.184 786.88
+187.474 787.472
+206.87 778.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+81.2502 777.8 m
+124.752 791.614
+215.876 789.839
+243.094 776.821
+270.87 714.094 s
+</path>
+<path stroke="black" pen="normal">
+177.25 777.8 m
+206.87 778.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 777.8 m
+110.87 778.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+177.25 777.8 m
+46.87 714.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 777.8 m
+110.87 650.094 s
+</path>
+<path layer="iota" stroke="black" pen="normal">
+177.25 777.8 m
+167.947 685.698
+206.87 650.094 s
+</path>
+<path layer="kappa" stroke="black" pen="normal">
+177.25 777.8 m
+222.976 731.259
+270.87 714.094 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+192.191 640.001 m
+106.998 795.621 s
+</path>
+<path layer="zeta" stroke="black" pen="normal">
+192.191 640.001 m
+202.998 795.621 s
+</path>
+<path layer="eta" stroke="black" pen="normal">
+96.191 640.001 m
+202.998 795.621 s
+</path>
+</page>
+</ipe>

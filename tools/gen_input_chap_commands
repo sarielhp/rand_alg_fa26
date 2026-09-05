@@ -1,0 +1,29 @@
+#! /bin/bash
+
+TDIR=/tmp/sariel/input_chap/
+mkdir -p $TDIR >& /dev/null
+
+FL=$TDIR/files.txt
+
+find . -maxdepth 1 -type d -iname "[0-9]*_*" -printf '%P\n' | sort -n  > $FL
+
+#cat $FL
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    pushd . >& /dev/null
+    cd $line
+    L=$(find . -maxdepth 1 -type f -iname "*.tex" -printf '%P\n' | wc -l)
+    L=${L% *}
+    if  (( $L > 1 )); then
+        echo Error: $line has more than one later file???
+        exit
+    fi
+    if  (( $L == 0 )); then
+        echo Error: $line has NO latex files???
+        exit
+    fi
+    FILENAME=$(find . -maxdepth 1 -type f -iname "*.tex" -printf '%P\n')
+    popd  >& /dev/null
+
+    printf "%-30s %-30s\n"  "\\InputChap{"$line"}"   "{"$FILENAME"}"
+done < "$FL"
+

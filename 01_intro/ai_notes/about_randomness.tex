@@ -1,0 +1,340 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{enumitem}
+
+% Color palette for styling
+\definecolor{primary}{RGB}{20, 50, 90}
+\definecolor{secondary}{RGB}{40, 90, 140}
+\definecolor{codebg}{RGB}{245, 247, 250}
+\definecolor{textdark}{RGB}{30, 30, 30}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=secondary,
+    urlcolor=secondary,
+    citecolor=primary
+}
+
+% Page headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textcolor{gray}{A Comprehensive Survey of Randomness in Algorithms \& Systems}}
+\lfoot{\small\textcolor{gray}{Computational Theory, Online Systems, and Cryptography}}
+\rfoot{\small\textcolor{gray}{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Section styling
+\titleformat{\section}{\Large\bfseries\color{primary}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{secondary}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{textdark}}{\thesubsubsection}{1em}{}
+
+\setlist[itemize]{leftmargin=1.5em, itemsep=0.3em}
+\setlist[enumerate]{leftmargin=1.5em, itemsep=0.3em}
+
+\title{\textbf{\LARGE The Power of Randomness in Computation, Algorithms, and System Security}\\[0.4em]
+\large A Synthesized Reference on Symmetry Breaking, Online Decision Making, and Cryptographic Architectures}
+\author{\textbf{System Reference Document}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Randomness plays a foundational role across theoretical computer science, distributed architectures, online decision models, and cryptographic security. While randomized algorithms are frequently introduced as heuristics for runtime optimization (such as Quicksort), their most profound value lies in breaking deterministic impossibility barriers, neutralizing adversarial foresight, drastically simplifying hardware state complexity, and hardening authentication frameworks. This document compiles and synthesizes the mathematical principles, competitive bounds, practical systems, and low-level security implementations where randomness delivers strictly superior guarantees over deterministic approaches.
+\end{abstract}
+
+\tableofcontents
+\vspace{1.5em}
+\hrule
+\vspace{1.5em}
+
+\section{Introduction: Beyond Runtime Acceleration}
+In classical algorithm design, randomized algorithms are often taught as probabilistic accelerators. However, the fundamental utility of randomness extends far beyond mere acceleration:
+\begin{enumerate}
+    \item \textbf{Symmetry Breaking:} When identical agents run identical deterministic transition functions from identical states, deadlock is inevitable. Randomness acts as an uncoordinated, decentralized tie-breaker.
+    \item \textbf{Adversarial Neutralization:} In online optimization, an adversary with knowledge of an algorithm's deterministic code can engineer worst-case inputs. Randomness conceals internal states from an \textit{oblivious adversary}.
+    \item \textbf{Sublinear Resource Scaling:} Probabilistic data structures trade an infinitesimal, mathematically bounded error margin for orders-of-magnitude reductions in memory and hardware gates.
+    \item \textbf{Cryptographic Indistinguishability:} Injecting entropy prevents statistical deduction, precomputed rainbow table exploitation, and physical side-channel leakages.
+\end{enumerate}
+
+\section{Symmetry Breaking and Theoretical Impossibility Results}
+
+\subsection{Leader Election in Anonymous Networks}
+Consider an anonymous distributed network of $n$ identical processors organized in a symmetric ring topology lacking unique hardware identifiers (e.g., MAC or IP addresses).
+
+\begin{quote}
+\textbf{Angluin's Impossibility Theorem (1980):} There is no deterministic algorithm that guarantees leader election in an anonymous, symmetric network. If any node transitions to a ``leader'' state, all nodes must execute the exact same state transition simultaneously due to topological symmetry.
+\end{quote}
+
+\paragraph{The Randomized Resolution:}
+Nodes execute synchronous rounds of independent coin tossing. In each round, active nodes choose $c_i \in \{0, 1\}$ uniformly at random. Nodes flipping $0$ (tails) demote themselves to subordinate status, while nodes flipping $1$ (heads) continue to the next round. The expected number of rounds to isolate a single unique leader is $O(\log n)$, breaking topological symmetry with probability $1$.
+
+\subsection{Distributed Contention and Exponential Backoff}
+In shared-medium physical networks (e.g., CSMA/CD in Ethernet IEEE 802.3, CSMA/CA in Wi-Fi IEEE 802.11), multiple transceivers simultaneously detecting an idle medium transmit packets at the same clock tick, causing a collision.
+\begin{itemize}
+    \item \textbf{Deterministic Failure:} If colliding nodes wait for a deterministic timeout $\Delta t$, they will retransmit simultaneously in perpetuity.
+    \item \textbf{Truncated Binary Exponential Backoff:} Following the $c$-th consecutive collision, each transceiver samples an integer slot delay uniformly at random:
+    \begin{equation}
+    k \sim \mathcal{U}\left(0, \, 2^{\min(c, \, c_{\max})} - 1\right)
+    \end{equation}
+    The node defers retransmission by $k \cdot \text{slot\_duration}$. The probability that two colliding nodes select the same slot drops exponentially as $2^{-c}$, resolving medium congestion.
+\end{itemize}
+
+\subsection{Valiant's Randomized Routing Scheme}
+In parallel computing topologies (e.g., $d$-dimensional hypercubes with $N = 2^d$ processors), deterministic oblivious routing rules (such as bit-fixing or dimension-order routing) suffer from catastrophic bottleneck congestion on adversary-tailored permutation traffic.
+
+\begin{itemize}
+    \item \textbf{Kaklamanis et al. Bound:} Any deterministic, oblivious routing protocol on a degree-$d$ network incurs an $\Omega(\sqrt{N/d})$ worst-case delivery delay.
+    \item \textbf{Valiant's Randomized Scheme (1982):} To route a packet from source $S$ to destination $D$:
+    \begin{enumerate}
+        \item Sample an intermediate node $X \in \{0, 1\}^d$ uniformly at random.
+        \item Route from $S \to X$ using standard dimension-order routing.
+        \item Route from $X \to D$ using standard dimension-order routing.
+    \end{enumerate}
+    \item \textbf{Result:} By transforming any arbitrary, pathological permutation into two independent, random traffic instances, the maximum edge congestion is bounded with high probability, achieving optimal $O(d) = O(\log N)$ routing time.
+\end{itemize}
+
+\subsection{Asynchronous Consensus (The FLP Impossibility)}
+\begin{quote}
+\textbf{Fischer-Lynch-Paterson (FLP) Theorem (1985):} In an asynchronous network, no deterministic consensus protocol can guarantee both safety and liveness in the presence of even a single unannounced fail-stop process crash.
+\end{quote}
+\textbf{Randomized Consensus (Ben-Or, 1983):} When nodes detect an ambiguous vote split, they cast a randomized vote $v \in \{0, 1\}$ with probability $1/2$. This stochastic perturbation breaks bivalent deadlock cycles, allowing the network to converge to consensus in expected polynomial time with probability $1$.
+
+\subsection{Zero-Knowledge Interactive Proofs (ZKPs)}
+In cryptographic verification, a prover $P$ seeks to prove knowledge of a witness $w$ for an NP-statement to a verifier $V$ without leaking any information regarding $w$.
+\begin{itemize}
+    \item \textbf{Deterministic Limitation:} A deterministic verifier can only ask static queries, allowing a dishonest prover to prepare fixed forged answers or forcing the prover to reveal the secret itself.
+    \item \textbf{Randomized Interactive Challenges:} The verifier sends unpredictable, random challenge queries $r \in_R \mathcal{R}$. The prover can only answer consistently across all challenge rounds if they possess the true witness, establishing zero-knowledge soundness.
+\end{itemize}
+
+\section{Unpredictability in Game Theory, Optimization, and Biology}
+
+\subsection{Strategic Randomization and Security Games}
+In non-cooperative games, deterministic action plans are easily modeled and exploited:
+\begin{itemize}
+    \item \textbf{Stackelberg Security Games:} Security forces patrolling infrastructure (e.g., airport checkpoints, transit networks) face adversaries who observe routine schedules. Deterministic patrols expose static vulnerability windows. Sampling patrol routes pseudo-randomly from an optimal Stackelberg mixed-strategy distribution deprives adversaries of exploitable temporal gaps.
+    \item \textbf{Mixed-Strategy Nash Equilibria in Poker:} Deterministic betting rules allow opponents to deduce private hands. Game-theoretic equilibrium requires mixed strategies---bluffing on weak hands with probability $p \in (0, 1)$---rendering opponents indifferent between calling and folding.
+\end{itemize}
+
+\subsection{Optimization: Escaping Suboptimal Valleys}
+Deterministic gradient descent updates parameters along the negative loss gradient:
+\begin{equation}
+\theta_{t+1} = \theta_t - \eta \nabla_\theta \mathcal{L}(\theta_t)
+\end{equation}
+On non-convex error surfaces, deterministic trajectories inevitably stall at the nearest local minimum or saddle point.
+\begin{itemize}
+    \item \textbf{Stochastic Gradient Descent (SGD):} Evaluates gradients over small, randomly sampled minibatches $\mathcal{B}_t$:
+    \begin{equation}
+    g_t(\theta) = \frac{1}{|\mathcal{B}_t|} \sum_{i \in \mathcal{B}_t} \nabla_\theta \ell_i(\theta) = \nabla_\theta \mathcal{L}(\theta) + \xi_t
+    \end{equation}
+    The injected gradient noise $\xi_t$ acts as Brownian motion, providing the kinetic energy needed to hop out of narrow, poorly generalizing local minima.
+    \item \textbf{Simulated Annealing:} Permits uphill exploratory steps with probability $P(\Delta E) = \exp(-\Delta E / k_B T)$, facilitating global configuration exploration.
+\end{itemize}
+
+\subsection{Biological Defense: Somatic V(D)J Recombination}
+The human immune system cannot foresee evolutionary pathogen mutations. Rather than encoding static antibodies, the immune system executes somatic V(D)J recombination---stochastically slicing and rearranging Variable (V), Diversity (D), and Joining (J) genetic cassettes. This combinatorial randomness produces over $10^{12}$ distinct antibody binding paratopes, guaranteeing a high statistical likelihood of recognizing novel foreign antigens.
+
+\section{Online Algorithms and Adversarial Models}
+
+\subsection{The Competitive Analysis Paradigm}
+An online algorithm receives an input sequence $\sigma = \langle r_1, r_2, \dots, r_m \rangle$ step-by-step and must make irrevocable decisions at step $t$ without inspecting future requests $r_{t+1}, \dots, r_m$.
+
+Performance is evaluated via the \textbf{Competitive Ratio} against an optimal offline algorithm ($\text{OPT}$) that has complete foreknowledge of the entire input sequence:
+\begin{equation}
+\text{CR} = \sup_\sigma \frac{\text{Cost}_{\text{ALG}}(\sigma)}{\text{Cost}_{\text{OPT}}(\sigma)}
+\end{equation}
+
+\subsection{Adversary Models}
+\begin{itemize}
+    \item \textbf{Adaptive Adversary:} Observes the online algorithm's randomized transitions in real time and crafts future input elements dynamically based on current memory states.
+    \item \textbf{Oblivious Adversary:} Must construct the entire input sequence $\sigma$ \textit{prior} to execution, without visibility into the algorithm's runtime coin flips.
+\end{itemize}
+
+\subsection{The Paging / Cache Eviction Problem}
+Consider a fast cache capable of storing $k$ pages operating over a database of $N > k$ total pages.
+\begin{itemize}
+    \item \textbf{Deterministic Lower Bound (Sleator \& Tarjan, 1985):} For any deterministic paging algorithm (such as LRU, FIFO, or LFU), an adversary can force a cache miss on every step by requesting the page that was just evicted, establishing:
+    \begin{equation}
+    \text{CR}_{\text{det}} = k
+    \end{equation}
+    \item \textbf{The Randomized Marking Algorithm (Fiat et al., 1991):} Requests are grouped into phases. Pages are marked when accessed. Upon a cache miss, an unmarked page is selected \textbf{uniformly at random} for eviction. When all $k$ slots are marked, marks are reset.
+    \item \textbf{Randomized Bound:} Against an oblivious adversary, the expected competitive ratio is:
+    \begin{equation}
+    \text{CR}_{\text{rand}} = 2 H_k = 2 \sum_{i=1}^k \frac{1}{i} = O(\log k)
+    \end{equation}
+    For a cache size $k = 1024$, the deterministic worst-case competitive ratio is $1024$, whereas the randomized ratio is $\approx 15$, an exponential performance improvement.
+\end{itemize}
+
+\subsection{The Ski Rental Problem}
+A user must choose daily whether to rent skis at cost $\$1/\text{day}$ or purchase them permanently at cost $\$B$.
+\begin{itemize}
+    \item \textbf{Deterministic Strategy:} Rent for $B-1$ days; purchase on day $B$. If the season aborts on day $B$, the incurred cost is $(B-1) + B = 2B - 1$, whereas $\text{OPT} = B$:
+    \begin{equation}
+    \text{CR}_{\text{det}} = \frac{2B - 1}{B} \approx 2
+    \end{equation}
+    \item \textbf{Randomized Strategy (Karlin et al.):} The algorithm draws a continuous purchase threshold day $T \in [1, B]$ from the distribution:
+    \begin{equation}
+    p(t) = \frac{e^{t/B}}{B(e - 1)}
+    \end{equation}
+    \item \textbf{Result:} Randomizing the threshold neutralizes the adversary's timing, lowering the competitive ratio to:
+    \begin{equation}
+    \text{CR}_{\text{rand}} = \frac{e}{e - 1} \approx 1.5819 < 2
+    \end{equation}
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Online Problem} & \textbf{Deterministic Ratio} & \textbf{Randomized Ratio (Oblivious)} \\ \midrule
+Paging / Cache Eviction & $k$ & $O(\log k)$ \\
+Ski Rental & $2 - \frac{1}{B} \to 2$ & $\frac{e}{e-1} \approx 1.582$ \\
+$k$-Server (Metric Spaces) & $k$ (Conjectured) & $O(\log^2 k \log^3 n)$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of Competitive Ratios under Online Adversarial Models.}
+\end{table}
+
+\section{Randomness in Real-World Infrastructure and Systems}
+
+\subsection{Hardware and Distributed Caches}
+\begin{itemize}
+    \item \textbf{CPU Hardware Caches (Random Replacement):} True LRU requires expensive tracking bits and high gate counts on ultra-fast L1/L2 caches. Modern CPU architectures (e.g., ARM, embedded cores) deploy pseudo-random eviction via simple clock counters, trading a minor hit-rate delta for significant silicon area and power savings.
+    \item \textbf{Distributed Caching (Redis Sampling):} Rather than maintaining global doubly-linked lists across millions of keys, Redis samples a small random subset of keys (e.g., 5 keys) and evicts the oldest among that sample, approximating global LRU performance with near-zero memory overhead.
+    \item \textbf{Cache-Timing Side-Channel Defense:} Deterministic cache layouts enable timing attacks (Spectre/Meltdown). Modern secure architectures deploy randomized line placement and deliberate random jitter to decorrelate access latency from memory addresses.
+\end{itemize}
+
+\subsection{Computer Vision: RANSAC}
+In geometric feature matching and panorama stitching, correspondence sets from SIFT/ORB feature extractors are heavily contaminated by outliers ($>80\%$).
+\begin{itemize}
+    \item Deterministic least-squares fitting is easily distorted by outliers.
+    \item \textbf{RANSAC (Random Sample Consensus):} Iteratively draws minimal random candidate subsets, fits a homography model, and tallies inliers.
+    \item \textbf{Iteration Bound:} To achieve confidence $p$ with outlier proportion $\epsilon$ and sample size $s$, the required iterations $N$ satisfy:
+    \begin{equation}
+    N = \frac{\ln(1 - p)}{\ln(1 - (1 - \epsilon)^s)}
+    \end{equation}
+\end{itemize}
+
+\subsection{Streaming Big Data: Bloom Filters and HyperLogLog}
+\begin{itemize}
+    \item \textbf{Bloom Filters:} An array of $m$ bits with $k$ independent random hash functions. It provides $O(k)$ membership queries with zero false negatives and a false positive rate of $p \approx (1 - e^{-kn/m})^k$, saving immense disk I/O in Google Chrome, Cassandra, and Bitcoin nodes.
+    \item \textbf{HyperLogLog (Flajolet et al., 2007):} Estimates the unique cardinality of data streams with billions of items. By tracking the maximum count of leading zeros across $m = 2^b$ hash registers, HyperLogLog achieves a standard error of $\sigma = 1.04/\sqrt{m}$ using only $1.5\text{ KB}$ of RAM in Redis and BigQuery.
+\end{itemize}
+
+\subsection{Cloud Load Balancing: The Power of Two Random Choices}
+When allocating $n$ incoming tasks among $n$ distributed servers:
+\begin{itemize}
+    \item Selecting a single random server per request yields a maximum server load of:
+    \begin{equation}
+    \text{Load}_{\max} = \frac{\ln n}{\ln \ln n} \cdot (1 + o(1))
+    \end{equation}
+    \item \textbf{The Two Choices Paradigm (Azar et al., 1999):} Sample \textbf{two} candidate servers uniformly at random and assign the job to the one with fewer active connections. The maximum load drops exponentially to:
+    \begin{equation}
+    \text{Load}_{\max} = \frac{\ln \ln n}{\ln 2} + \Theta(1)
+    \end{equation}
+    This simple randomized design is deployed globally in NGINX, Envoy, and AWS load balancers.
+\end{itemize}
+
+\subsection{Miller-Rabin Primality Testing}
+Public-key cryptographic infrastructure (RSA, Diffie-Hellman) relies on generating large random primes (e.g., 2048-bit).
+\begin{itemize}
+    \item For an odd integer $n - 1 = 2^s d$, Miller-Rabin tests random bases $a \in [2, n-2]$.
+    \item If $n$ is composite, at least $3/4$ of all candidate bases $a$ act as witnesses to compositeness.
+    \item Across $k$ independent random bases, the failure probability is bounded by:
+    \begin{equation}
+    P(\text{Composite passes } k \text{ rounds}) \le 4^{-k}
+    \end{equation}
+    Setting $k = 40$ yields an error bound $< 10^{-24}$, vastly exceeding physical hardware reliability limits.
+\end{itemize}
+
+\section{Cryptographic Architectures, Hashing, and Unix Security}
+
+\subsection{Deterministic Primitives vs. Probabilistic Wrappers}
+Cryptographic hash primitives $H: \{0, 1\}^* \to \{0, 1\}^n$ (such as SHA-256 and SHA-3) must be strictly deterministic to enable signature and data integrity verification.
+
+To prevent pattern recognition and dictionary vulnerabilities, randomness is wrapped around these deterministic functions:
+\begin{itemize}
+    \item \textbf{HMAC:} Incorporates random cryptographic keys: $H((K \oplus \text{opad}) \mathbin{\Vert} H((K \oplus \text{ipad}) \mathbin{\Vert} M))$.
+    \item \textbf{RSASSA-PSS:} Probabilistically salts messages prior to exponentiation, eliminating algebraic signature malleability.
+    \item \textbf{NIST SP 800-106 (Randomized Hashing):} Developed as a defense against collisions in MD5/SHA-1 by mixing random buffers into message blocks. The industry subsequently transitioned directly to collision-resistant SHA-256 and SHA-3.
+\end{itemize}
+
+\subsection{Linux Authentication: The \texttt{/etc/shadow} Architecture}
+In Unix-like systems, user account metadata is stored in \texttt{/etc/passwd}, while salted cryptographic password hashes are restricted to \texttt{/etc/shadow} (permissions \texttt{0600}/\texttt{0640}, owned by \texttt{root}).
+
+\subsubsection{Shadow Record Format}
+A shadow entry consists of 9 colon-delimited fields:
+\begin{center}
+\texttt{username : \$id\$salt\$hash : last\_changed : min : max : warn : inactive : expire : reserved}
+\end{center}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{@{}llp{8.5cm}@{}}
+\toprule
+\textbf{Sub-field} & \textbf{Component} & \textbf{Cryptographic Purpose} \\ \midrule
+\texttt{\$id\$} & Algorithm ID & Specifies the hash scheme (\texttt{\$1\$}=MD5, \texttt{\$5\$}=SHA-256, \texttt{\$6\$}=SHA-512, \texttt{\$y\$}=yescrypt). \\
+\texttt{\$salt\$} & Unique Random Salt & A cryptographically random string generated per-user upon password creation. \\
+\texttt{\$hash} & Stretched Hash Output & Base64-encoded output from thousands of rounds of key-stretching. \\
+\bottomrule
+\end{tabular}
+\caption{Anatomy of the cryptographic authentication field in \texttt{/etc/shadow}.}
+\end{table}
+
+\subsection{The Security Role of Per-User Salts}
+If two users choose identical passwords $P_1 = P_2 = \text{``Password123''}$, independent salts $S_1 \neq S_2$ guarantee distinct outputs:
+\begin{equation}
+H(S_1 \mathbin{\Vert} P_1) \neq H(S_2 \mathbin{\Vert} P_2)
+\end{equation}
+\begin{itemize}
+    \item \textbf{Eliminating Rainbow Tables:} Precomputing inverted hash tables across salt spaces ($2^{|P| + |S|}$) is computationally infeasible.
+    \item \textbf{Eliminating Batch Cracking:} An adversary with a shadow file containing $M$ users cannot test a single password guess against all $M$ accounts simultaneously; they must execute $M$ independent cracking operations.
+\end{itemize}
+
+\subsection{Why Salts Are Stored in Cleartext (Not Asymmetrically Encrypted)}
+\begin{enumerate}
+    \item \textbf{Salts Are Not Secrets:} The security invariant of a salt is \textbf{uniqueness}, not \textbf{confidentiality}. Salts enforce distinct search domains; they do not conceal plaintext.
+    \item \textbf{The Key Storage Paradox:} For local authentication daemons (\texttt{pam\_unix}, \texttt{sshd}) to verify passwords, the decryption key must reside on the host. An attacker achieving root privileges to exfiltrate \texttt{/etc/shadow} would identically capture the decryption key.
+    \item \textbf{Performance Bottlenecks:} Asymmetric operations (such as 4096-bit RSA exponentiation) are computationally heavy, creating denial-of-service vulnerabilities on login daemons without improving security against weak passwords.
+    \item \textbf{Peppers vs. Salts:} When secret keying is required, architectures deploy a \textbf{pepper}---a secret string stored externally in a dedicated Hardware Security Module (HSM) or Key Management Service (KMS).
+\end{enumerate}
+
+\subsection{Offline Compromise Dynamics and Memory-Hard KDFs}
+An exfiltrated \texttt{/etc/shadow} file shifts the attack to the adversary's hardware:
+\begin{itemize}
+    \item \textbf{One-Way Resistance:} Cryptographic hashes cannot be inverted; the attacker must perform dictionary or brute-force candidate searches.
+    \item \textbf{Memory-Hard Functions:} Modern Linux distributions deploy \textbf{yescrypt} or \textbf{Argon2id}, requiring large memory footprints (e.g., 32--64 MB RAM per guess) and serialized execution paths, neutralizing GPU and ASIC cracking arrays.
+    \item \textbf{High-Entropy Security:} Passwords with $>70$ bits of entropy remain practically uncrackable over multi-decade horizons under modern memory-hard hashing schemes.
+\end{itemize}
+
+\section{Summary Synthesis}
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Domain} & \textbf{Role of Randomness} & \textbf{Key Breakthrough} \\ \midrule
+\textbf{Distributed Systems} & Symmetry breaking \& tie-breaking & Circumvents Angluin and FLP limits \\
+\textbf{Online Algorithms} & Conceals state from adversaries & $O(\log k)$ paging, breaks ratio-2 ski rental \\
+\textbf{Big Data \& Caching} & Space \& gate minimization & HyperLogLog ($1.5\text{ KB}$), Power of 2 Choices \\
+\textbf{Computer Vision} & Robust outlier rejection & RANSAC geometric consensus \\
+\textbf{Cryptography} & Uniqueness \& side-channel defense & Defeats rainbow tables, key malleability \\
+\bottomrule
+\end{tabular}
+\caption{Systematic Summary of the Roles of Computational Randomness.}
+\end{table}
+
+\end{document}

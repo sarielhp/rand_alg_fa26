@@ -1,0 +1,76 @@
+\def\UseBibLatex{TRUE}%$
+\errorcontextlines 10000
+
+\ifx\ShowFrame\undefined
+\documentclass[12pt,oneside]{memoir}
+\else
+\documentclass[12pt,draft,oneside]{book}
+\usepackage{showframe}
+\fi
+
+\usepackage[framemethod=default]{mdframed}
+%\usepackage{xcolor}
+
+\newmdenv[
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftline=true,
+  linecolor=gray!80,
+  linewidth=3pt,
+  backgroundcolor=gray!10,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=1pt,
+  innerbottommargin=10pt,
+  skipabove=0pt,
+  skipbelow=2\baselineskip
+  ]{shadedquote}
+
+
+%\documentclass[12pt]{book}
+
+
+\newcommand{\UsePackage}[1]{%
+  \IfFileExists{styles/#1.sty}{%
+      \usepackage{styles/#1}%
+   }{%
+      \IfFileExists{../styles/#1.sty}{%
+         \usepackage{../styles/#1}%
+      }{%
+         \usepackage{#1}%
+      }%
+   }%
+}
+
+\UsePackage{sbook}
+%\usepackage{rand_extra}%
+
+% \renewcommand\bmmax{400}
+%\usepackage{bm}
+
+\ifx\bookMode\undefined
+%   \documentclass[12pt]{article}
+   %\renewcommand{\RootFile}
+\input{../notations.sty}
+\IfFileExists{junk/num.tex}{\input{junk/num.tex}}{}
+%\input{junk/num.tex}
+%\input{\File{junk/page_number.txt}}
+\else
+\input{notations.sty} 
+\fi
+
+\IpeModeRemove{
+   \BibLatexMode{%
+         \bibliography{shortcuts,geometry} %
+   }%
+   \makeindex
+   \begin{document}
+}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

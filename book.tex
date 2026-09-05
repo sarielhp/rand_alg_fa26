@@ -1,0 +1,166 @@
+%--------------------------------------------------------
+% book.tex
+%
+%--------------------------------------------------------
+
+
+\def\bookMode{TRUE}%
+
+\input{prefix}
+%\renewcommand{\Chapter}[1]{\chapter{#1}}
+\renewcommand{\ChapterPrefix}{
+   \vspace{-1cm}
+   \subsection*{\small
+      {598 - Class notes for Randomized Algorithms}\\
+      {Sariel Har-Peled}\\
+      {\today}}}
+\renewcommand{\ChapterGen}{}
+%\renewcommand{\ChapterEnd}{}
+
+\renewcommand{\StandAloneMode}[1]{}
+\renewcommand{\BookMode}[1]{#1}
+
+
+
+\pagestyle{plain}
+\frontmatter
+
+\title{Class notes for Randomized Algorithms}
+
+\author{Sariel Har-Peled}
+
+\date{\today}
+
+\maketitle
+
+\QuoteOpen{}
+
+%\pagenumbering{roman}
+\tableofcontents
+\mainmatter
+%\cleardoublepage
+%\pagenumbering{arabic}
+
+
+% space setting
+%\setlength{\baselineskip}{1.1cm}
+%\setlength{\baselineskip}{0.66cm}
+%\pagestyle{fancyplain}
+
+%\newcommand{\InputChap}[2]{
+%        \def\Dir{#1}
+%        \input{#1/#2}}
+
+
+
+
+%\renewcommand{\File}[1]{02_min_disk/#1}
+
+\renewcommand{\File}[1]{\Dir/#1}
+\renewcommand{\RootFile}[1]{#1}
+
+%%% INPUT CHAPTERS BEGIN
+\InputChap{01_intro}           {intro.tex}
+\InputChap{02_alias_method}   {alias_method.tex}
+\InputChap{03_expectation}     {expectations.tex}
+\InputChap{04_quick_sort}      {quick_sort.tex}
+\InputChap{05_chebychev}       {chebychev.tex}
+\InputChap{06_verify}          {verify.tex}
+\InputChap{07_occupancy}       {occupancy.tex}
+\InputChap{08_k_wise}          {k_wise.tex}
+\InputChap{09_higher_moments}  {higher_moments.tex}
+\InputChap{10_hashing}         {hashing.tex}
+\InputChap{11_closest_pair}    {closest_pair.tex}
+\InputChap{12_occupancy_II}    {occupancy_II.tex}
+\InputChap{13_cond_exp}        {cond_exp.tex}
+\InputChap{14_treaps}          {treaps.tex}
+\InputChap{15_chernoff}        {chernoff.tex}
+\InputChap{16_chernoff_app}    {chernoff_app.tex}
+\InputChap{17_min_cut}         {mincut.tex}
+\InputChap{18_discrepancy}     {discrepancy.tex}
+\InputChap{19_turan}           {turan.tex}
+\InputChap{20_max_3sat_derand} {3sat_derand.tex}
+\InputChap{21_martingales}     {martingales.tex}
+\InputChap{22_martingales_II}  {martin_II.tex}
+\InputChap{23_two_choices}     {two_choices.tex}
+\InputChap{24_and_or}          {and_or_tree.tex}
+\InputChap{25_expanding_graphs} {expanding_graphs.tex}
+\InputChap{26_jl}              {jl.tex}
+\InputChap{27_streaming}       {streaming.tex}
+\InputChap{28_frequence_est}   {frequency_est.tex}
+\InputChap{29_freq_est_2}      {freq_est_2.tex}
+\InputChap{30_lsh}             {lsh.tex}
+\InputChap{31_rwalk}           {rwalk.tex}
+\InputChap{32_rwalk_II}        {rwalk_II.tex}
+\InputChap{33_rwalk_III}       {rwalk_III.tex}
+\InputChap{34_rwalk_IV}        {rwalk_IV.tex}
+\InputChap{35_graph_algebra}   {graph_algebra.tex}
+\InputChap{36_rwalk_V}         {rwalk_V.tex}
+\InputChap{37_complexity_classes} {complexity.tex}
+\InputChap{38_backward}        {backward.tex}
+\InputChap{39_mwu}             {mwu.tex}
+\InputChap{40_vc}              {vc_dim.tex}
+\InputChap{41_double_sampling} {double_sampling.tex}
+\InputChap{42_partitions}      {partitions.tex}
+\InputChap{43_entropy}         {entropy.tex}
+\InputChap{44_entropy_II}      {entropy_II.tex}
+\InputChap{45_entropy_III}     {entropy_III.tex}
+\InputChap{46_max_cut}         {max_cut.tex}
+\InputChap{47_expanders}       {expanders.tex}
+\InputChap{48_expanders_II}    {expanders_II.tex}
+\InputChap{49_expanders_III}   {expanders_III.tex}
+\InputChap{50_prob_mtd}        {prob_mtd.tex}
+\InputChap{51_prob_mtd_II}     {lll.tex}
+\InputChap{52_prob_mtd_III}     {prob_mtd_III.tex}
+\InputChap{53_cg_moments}      {moments.tex}
+\InputChap{54_primality}       {primality.tex}
+\InputChap{55_talagrand}       {talagrand.tex}
+\InputChap{56_lp_d}            {lp_d.tex}
+\InputChap{57_alg_lll}         {alg_lll.tex}
+\InputChap{58_prereq}          {prereq.tex}
+%%% INPUT CHAPTERS END
+
+
+%\newcommand{\undefcommand}[1]{\let#1=\undefined}
+
+
+%\newcommand{\CCin}{bogi}
+%$\CCin$
+
+%-------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\typeout{}
+\typeout{PROCESSING FILE: BIBLIOGRAPHY}
+
+\printbibliography
+
+
+
+\flushbottom
+%\bibliographystyle{alpha}
+%\bibliography{shortcuts,geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX - some addional index commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Index
+\printindex
+
+\QuoteClose{}
+
+\end{document}
+
+
+%--------------------------------------------------------
+%
+% book.tex - end of file
+%--------------------------------------------------------
+
+%%% Local Variables:
+%%% mode: plain-tex
+%%% TeX-master: "book.tex"
+%%% End:

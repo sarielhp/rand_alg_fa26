@@ -1,0 +1,80 @@
+# =============================================================================
+# Comprehensive LaTeX, Biber, and Indexing .gitignore
+# =============================================================================
+
+# --- Core LaTeX Engine & Build Artifacts ---
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.dvi
+*.xdv
+*.ps
+*.eps
+
+# --- BibTeX, BibLaTeX & Biber Outputs ---
+*.bbl
+*.bbl.bak
+*.bbl-SAVE-ERROR
+*.blg
+*.bcf
+*.bcf-SAVE-ERROR
+*.run.xml
+
+# --- Indexing, Glossaries & Nomenclature ---
+*.idx
+*.ind
+*.ilg
+*.ist
+*.glo
+*.gls
+*.glg
+*.nlo
+*.nls
+*.nlg
+
+# --- Theorem, Proof, Beamer & Document Notes ---
+*.thm
+*.nav
+*.snm
+*.vrb
+*.ent
+*.vpe
+
+# --- Project-Specific Junk, Caches & Probes ---
+junk/
+auto/
+.auctex-auto/
+.bws/
+frag_probe.tmp
+*.tmp
+log.txt
+err_*
+*tex}{}
+
+# --- Editor Caches, Lock Files & Backups ---
+*~
+*.bak
+*.swp
+*.swo
+.#*
+.DS_Store
+Thumbs.db
+.latex_color
+.plmath_history
+.lst
+.renumber_log.json
+
+# --- Generated Document PDFs (Keep Figures, Assets & References) ---
+*.pdf
+!**/figs/**
+!/shared/**
+!**/refs/**
+!**/refs/**/*.pdf

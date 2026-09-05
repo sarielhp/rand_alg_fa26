@@ -1,0 +1,559 @@
+\documentclass[11pt]{article}
+\usepackage{373,handout,url,graphicx}
+%\usepackage{myconcrete,euler}
+%\hidesolutions
+
+% ======================================================================
+\begin{document}
+
+%\thispagestyle{empty}
+
+\headers{CS 373}{Homework 4}{Spring 2003}
+\begin{center}
+{\LARGE\bf      CS 373:  Algorithms, Spring 2003}
+\\[1ex]
+{\Large\bf      Homework 4}
+\\[0.25in]
+\LARGE
+\end{center}
+
+%----------------------------------------------------------------------
+
+\fbox{
+\begin{minipage}{0.9\linewidth}
+    ``At the sight of the still intact city, he remembered
+    his great international precursors and set the whole
+    place on fire with his artillery in order that those who
+    came after him might work off their excess energies in
+    rebuilding.''
+    \\
+    \hspace*{2cm} -- The tin drum, Gunter Grass
+\end{minipage}
+}
+
+
+\section{Required Problems}
+
+
+\begin{enumerate}    
+    \item \textsc{Some number theory.}\\
+    \points{10} 
+    \begin{enumerate}
+        \item \points{5} Prove that if $\gcd(m,n)=1$, then
+        $m^{\phi(n)} + n^{\phi(m)} \equiv 1 (\bmod m n)$.
+        \begin{proof}
+            From $gcd(m,n) = 1$ and Euler's Theorem,
+            \begin{eqnarray*}
+                m^{\phi(n)} &\equiv& 1\ (mod\ n)\\
+                n^{\phi(m)} &\equiv& 1\ (mod\ m)
+            \end{eqnarray*}
+            holds, and $m^{\phi(n)}$ and $n^{\phi(m)}$ are
+            represented as $(0, 1)$ and $(1, 0)$ in
+            $\Z_m\times \Z_n$, respectively. Therefore, we
+            have
+            \begin{eqnarray*}
+                m^{\phi(n)} + n^{\phi(m)} = (0, 1) + (1, 0) = (1, 1)
+            \end{eqnarray*}
+            in $\Z_m\times \Z_n$. On the other hand, from Chinese
+            Remainder Theorem, 1 in $\Z_{mn}$ corresponds to $(1, 1)$ in
+            $\Z_m\times\Z_n$. Thus 
+            \begin{eqnarray*}
+                m^{\phi(n)} + n^{\phi(m)} \equiv 1\ (mod\ m n)
+            \end{eqnarray*}
+        \end{proof}
+        \item \points{5} Give two distinct proofs that there
+        are an infinite number of prime numbers.
+        \begin{itemize}
+            \item
+            \begin{proof}               
+                Assuming there are finite number of
+                prime numbers, and let us denote the
+                $i_{th}$ prime number as $p_i$. Let
+                the (product of all the primes - 1)
+                be $P = \Prod{p_i} + 1$. Clearly, $P
+                \mod p_i \ne 0$. Namely, $P$ is not
+                dividable by any prime number.
+                Namely, it is prime. A
+                contradiction.
+            \end{proof}  
+       
+            \item
+            \begin{proof}
+                First we will show that the Fermat numbers $F_n =
+                2^{2^n} + 1$ are pairwise relatively prime. From
+                induction, it is easy to prove that
+                \begin{eqnarray*}
+                    F_m - 2 = F_0 \times F_1 \cdots F_{m-1}.
+                \end{eqnarray*}
+                This implies that if $d$ divides both $F_n$ and
+                $F_m$, $(n < m)$, then d also divides $F_m - 2$,
+                that is, d divides 2. But every Fermat number is
+                odd, thus d has to be 1. Therefore, any Fermat
+                numbers are relatively prime.
+                
+                Here, choose a prime divisor $p_n$ of each Fermat
+                number $F_n$. However, from the property of Fermat
+                numbers given above, those primes are all
+                distinct. Therefore there are infinite number of
+                primes.
+            \end{proof}
+        \end{itemize}
+    \end{enumerate}
+    
+    \item \textsc{Even More Number Theory}\\
+    \points{10}
+    
+    Prove that $\cardin{P(n)} =\Omega(n^2)$, where $P(n) =
+    \brc{(a,b)\sep{ a,b \in \ZZ}, 0<a < b \leq n,
+       \gcd(a,b)=1}$.
+    
+    \begin{proof}
+        Let $Q(n, b) = \brc{(a, b) \sep{ a \in \Z, 0 < a < b
+              \le n, \gcd(a, b) = 1}}$. Clearly,
+        $\cardin{Q(n,b)}=\phi(b)$, and $|P(n)| =
+        \Sum_{i=2}^n Q(n, i)= \Sum_{i=2}^n \phi(i)$.
+        Namely, we want to prove that $\Sum_{i=2}^{n}
+        \phi(i) = \Omega(n^2)$.
+        
+        \begin{figure}[t]
+            \begin{center}
+                \includegraphics[width=5cm]{figs/grid}
+            \end{center}
+            \caption{Grids and a line from the origin.}
+            \figlab{grid}
+        \end{figure}
+
+        
+        Consider the following set of pairs $R(n) =
+        \brc{(a,b)|a,b\in \Z, 0<a<b\le n}$.  Clearly,
+        $\cardin{R(n)} = \frac{n(n-1)}2$. Pairs in $R(n)$
+        can be represented as points in 2D space, and we can
+        draw straight lines from an origin $(0,0)$ to every
+        point in $R(n)$. One observation is that, starting
+        from an origin, a node $(a, b)$ that every straight
+        line meets for the first time is in $P(n)$. It is
+        simply because all the points on one straight line
+        is written down as $(a\cdot c, b\cdot c)$, while $a$
+        and $b$ are relatively prime and $c$ is a positive
+        integer.
+        
+        Therefore, total number of points on this straight
+        line, defined by a pair $(a,b)$, is 
+        $\floor{n/b}$. Thus,
+        \begin{eqnarray*}
+            \Sum_{b=2}^n \pth{\floor{n/b}\cdot |Q(n, b)| \MakeBig} 
+            = \Sum_{b=2}^n \pth{\floor{n/b}\cdot
+               \phi(b)\MakeBig} 
+            = \frac{n(n-1)}2.
+        \end{eqnarray*}
+        We overestimate $\floor{n/b}$ as $n/b$, and remove
+        $n$ from both sides, then we have $\frac{n(n-1)}2
+        \le \Sum_{b=2}^n \pth{n/b\cdot \phi(b)}$. Namely,
+        \begin{eqnarray*}
+            \frac{n-1}2 &\le& \Sum_{b=2}^n \frac{\phi(b)}b
+            = \Sum_{b=2}^{\floor{n/4}} \frac{\phi(b)}b 
+            + \Sum_{b=\floor{n/4}+1}^n \frac{\phi(b)}b
+            \le \frac{n}4 + \Sum_{b=\floor{n/4}+1}^n
+            \frac{\phi(b)}b\\
+            &\le& \frac{n}4 + \Sum_{b=\floor{n/4}+1}^n \frac{\phi(b)}{n/4}
+            \le \frac{n}4 + \Sum_{b=2}^n \frac{\phi(b)}{n/4},
+        \end{eqnarray*}
+        since $\phi(n) < n)$.  Thus, $\frac{n-2}4 \le
+        \Sum_{b=2}^n \frac{\phi(b)}{n/4}$, which implies
+        that
+        $\frac{n(n-2)}{16} \le \Sum_{b=2}^n \phi(b) = |P(n)|$.
+        Namely, $|P(n)| = \Omega(n^2)$.
+    \end{proof}
+    
+    
+    \item \textsc{Yet Another Number Theory Question}\\
+    \points{20}
+    
+    \begin{enumerate}
+        \item \points{2} Prove that the product of all
+        primes $p$, for $m <p \leq 2m$ is at most
+        $\binom{2m}{m}$.
+        
+        \begin{proof}
+            Let us denote all the primes between $m$ and $2m$ as $p_i$, and
+            all the other numbers as $n_i$. Then the following holds
+            \begin{eqnarray*}
+                {2m\choose{m}} &=& \frac{2m\cdot(2m -
+                   1)\cdots(m + 2)
+                   \cdot(m + 1)}{m\cdot(m - 1)\cdots{2}\cdot{1}}
+                = \frac{\Prod{p_i}\cdot\Prod{n_i}}{m\cdot(m
+                - 1)\cdots{2}
+                \cdot{1}}.
+            \end{eqnarray*}
+            Since none of the numbers between $2$ and $m$
+            divides any of the prime $p_i$, it must be that
+            the number $\frac{\Prod{n_i}}{m\cdot(m -
+               1)\cdots{2}\cdot{1}}$ is an integer number,
+            as ${2m\choose{m}}$ is an integer. Therefore, by
+            using a positive integer $c$, we have
+            ${2m\choose{m}} = c\cdot \Prod{p_i}$   , that is,
+            product of all the primes between $m+1$ and $2m$
+            is at most ${2m}\choose{m}$.
+        \end{proof}
+        
+        \item \points{4} \textbf{Using (a)}, prove that the
+        number of all primes between $m$ and $2m$ is
+        $O(m/\ln m)$.
+        \begin{proof}
+            Let us denote all primes between $m$ and $2m$ as
+            $p_1 < p_2 < \cdots< p_k$.  Since $p_1 \geq m$,
+            it follows by (a) that $m^k \le \Prod_{i=1}^{k}
+            {p_i} \le {2m\choose{m}}\leq 2^{2m}$.
+            Now, taking log of both sides, we have
+            $k \lg{m} \leq 2m$. Namely, $k \leq 2m/\lg m$.
+        \end{proof}
+
+        \item \points{3} \textbf{Using (b)}, prove that the
+        number of primes smaller than $n$ is $O(n/\ln n)$.
+        \begin{proof}
+            Let the number of primes less than n be
+            $\Pi(n)$, then from (b) there exist some
+            positive constant $C$, such that for all
+            $\forall n \ge N$, we have $\Pi(2n) - \Pi(n) \ge
+            C\cdot n/\ln{n}$. Namely, $\Pi(2n) \geq C\cdot
+            n/\ln{n}+ \Pi(n)$. Thus,
+            \[
+            \Pi(2n) \geq \sum_{i=0}^{\ceil{\lg n} } C\cdot
+            \frac{n/2^i}{\ln \pth{n/2^i}} = \Omega\pth{\frac{n}{\ln{n}}},
+            \]
+            by observing that the summation behaves like a
+            decreasing geometric series (verify this!).
+        \end{proof}
+        
+        \item \points{2} Prove that if $2^k$ divides
+        $\binom{2m}{m}$ then $2^k \leq 2m$.
+
+        \noindent{\bf Solution}:
+            Refer to (e)
+
+        \item \points{5} (Hard) Prove that for a prime $p$, if $p^k$
+        divides $\binom{2m}{m}$ then $p^k \leq 2m$.
+        
+        \begin{proof}
+            The proof is by induction.  Base case: When $m =
+            1$, we have
+            \begin{eqnarray*}
+                p^k | {2m\choose{m}} &\rightarrow& p^k | {2\choose{1}} = 2\\
+                &\rightarrow& p = 2 \ and\ k = 1\\
+                &\rightarrow& p^k = 2 \le 2m = 2
+            \end{eqnarray*}
+            
+            {\bf Inductive step:} Any $m$ can be described
+            as $m=p\beta+\alpha\ (0 \le \alpha < p)$.
+            Consider a situation where $p^k|{2m\choose{m}}$.
+            \begin{eqnarray*}
+                {2m\choose{m}}&=&\frac{2m(2m-1)\cdots 
+                   (m+2)(m+1)}{m(m-1)\cdots 2\cdot 1}\\
+                &=&\frac{(2p\beta + 2\alpha)(2\beta +
+                   2\alpha - 1)
+                   \cdots (p\beta+\alpha +2)(p\beta + \alpha+1)}
+                {(p\beta+\alpha)(p\beta+\alpha-1)\cdots 2\cdot 1}.
+            \end{eqnarray*}
+            Since only a factor of $p$ matters in this division, we rewrite
+            $2m\choose{m}$ by leaving only multiples of
+            $p$. Formally, let 
+            \[
+            B(m,p) =
+            \pth{\Prod_{i=m+1, p | i}^{2m} i}
+            / \pth{\Prod_{i=1, p | i}^{m} i}.
+            \]
+            Assume for the time being that $B(m,p)$ is an
+            integer number, and observe that if $p^k |
+            \binom{2m}{m}$ then it divides also $B(m,p)$,
+            and $B(m,p) | \binom{2m}{m}$.  
+
+            So, what is $B(m,p)$? Well, first consider
+            the case when $\alpha < p/2$:
+            \begin{eqnarray*}
+                B(m,p) = \frac{(p\cdot 2\beta) \cdot (p\cdot
+                   (2\beta-1)) \cdots (p\cdot(\beta + 1))}
+                {(p\cdot\beta)\cdot (p\cdot(\beta-1))
+                   \cdots (p\cdot 2) \cdot (p \cdot 1)}
+                =\binom{2\beta}{\beta},
+            \end{eqnarray*}
+            which proves that $B(m,p)$ is an integer number
+            in this case, and also that $p^k |
+            \binom{2\beta}{\beta}$. By induction, since
+            $\beta < m$, we have that $p^k \leq 2\beta \leq
+            2m$, which establish the claim.
+            
+            For $\alpha \geq p/2$, we have
+            \begin{eqnarray*}
+                B(m,p) = 
+                \frac{p\cdot (2\beta + 1)\cdot
+                   p\cdot 2\beta\cdots p\cdot(\beta
+                   + 1)}
+                {p\cdot\beta\cdot
+                   p\cdot(\beta-1)\cdots p\cdot 2
+                   \cdot p} = p(2\beta + 1 ) \binom{2\beta}{\beta},
+            \end{eqnarray*}
+            which proves that $B(m,p)$ is an integer
+            number. Now, if $p$ does not divide $2\beta +
+            1$, then $p^{k-1}$ must divide $B(m,p)$, as such
+            $p^{k-1} \leq 2\beta$. And $p^k \leq 2 \beta p
+            \leq 2m$, establishing the claim.
+            
+            So, we are left with the case that $p$ divides
+            $2\beta+1$ (which implies that $p>2$). But then,
+            $p$ can not possibly divide $\beta+1$ and
+            $2(\beta+1)$, and furthermore, we know that $p^k
+            | B(m,p)$. Thus,
+            \[
+            \beta = 2B(m,p) = \frac{2p(\beta+1)}{p(\beta+1)}
+            B(m,p) = p(\beta+1) \binom{2(\beta+1)}{\beta+1}.
+            \]
+            Now, we know that $p^k | \beta$, which implies
+            by induction that $p^k \leq 2 (\beta+1)p$. Which
+            is not good enough, as this is larger than the
+            bound we require.
+            
+            Well, just a little bit more patience. If $k=1$,
+            the claim trivially hold (as one can easily
+            verify). So, we can assume that $k >1$. But then
+            we are dealing with the case that $p |
+            2\beta+1$. Thus, $p^k \leq (2\beta+1)p + p$.
+            However, $p^2$ divides the left side of this
+            inequality, but not the right side of this
+            inequality ($p^2 | p^k$ since $k>1$ and $p^2 |
+            (2\beta+1)p$ since $p | 2\beta+1$). It follows
+            that $p^k < (2\beta+1)p + p$. Namely, $p^k \leq
+            (2\beta +1)p \leq 2m$.
+  
+            And we are FINALLY done. (I am sure BTW that
+            there is a much shorter solution. This is a
+            solution I could come up with.)
+        \end{proof}
+        
+        \item \points{4} \textbf{Using (e)}, prove that that
+        the number of primes between $1$ and $n$ is
+        $\Omega(n /\ln n)$.  (Hint: use the fact that
+        $\binom{2m}{m} \geq 2^{2m}/(2m)$.)
+        \begin{proof}
+            Assume $2m\choose{m}$ have $k$ prime factors,
+            and thus can be written down as
+            \begin{eqnarray*}
+                {2m\choose{m}} = \Prod_{i=1}^k{p_i^{n_i}},
+            \end{eqnarray*}
+            where $n_i$ is the number of factors of $p_i$ in
+            $2m\choose{m}$. From (e), we know that $p_i^{n_i} \le
+            2m$. Therefore, the following is derived:
+            \begin{eqnarray*}
+                \frac{2^{2m}}{2m} \le {2m\choose{m}} \le 
+                \Prod_{i=1}^k{2m} = (2m)^k.
+            \end{eqnarray*}
+            By taking $\lg$ of both sides, we have
+            \begin{eqnarray*}
+                \frac{2m - \lg(2m)}{\lg(2m)} \leq k.
+            \end{eqnarray*}
+            Since $k$ is \emph{less} than the number of
+            primes between $1$ and $2m$, the number of
+            primes small than $2m+1$ is
+            $\Omega(m/\ln{m})$.
+        \end{proof}
+    \end{enumerate}
+    
+    \item \textsc{And now for something completely
+       different.}\\
+    \points{10}
+    
+    Prove that the following problems are NPC or provide a
+    polynomial time algorithm to solve them:
+    \begin{enumerate}
+        \item Given a directed graph $G$, and two vertices
+        $u,v \in V(G)$, find the maximum number of edge
+        disjoint paths between $u$ and $v$.
+        
+        {\bf Solution:}
+        
+        This problem has a polynomial time algorithm. The
+        maximum number of edge disjoint paths between $u$
+        and $v$ is exactly equal to the value of maximum
+        flow, where every edge is assigned weight one. Thus,
+        we can use Edmonds-Karp algorithm, which running
+        time is $O(|V||E|^2)$.
+        
+        \begin{center}
+            \begin{algorithm}
+                \textsc{Edge Disjoint Path($G(V,E),u,v$)}\+\\
+                Run Edmonds-Karp($G(V,E),u,v$)
+            \end{algorithm}         
+        \end{center}
+        
+        \item Given a directed graph $G$, and two vertices
+        $u,v \in V(G)$, find the maximum number of
+        \emph{vertex} disjoint paths between $u$ and $v$
+        (the paths are disjoint in their vertices, except of
+        course, for the vertices $u$ and $v$).
+        
+        {\bf Solution:}
+        
+        This problem has a polynomial time algorithm. We
+        will convert an input graph at each vertex as is
+        shown in a figure, again, assigning each edge
+        capacity 1. Then in the newly created graph, no 2
+        edge-disjoint paths can share an edge that
+        corresponds to a vertex in the original graph. It is
+        because every vertex (except sink and source) has
+        either only one incoming edge or one out-going edge,
+        which allows only one flow to pass that vertex.
+        Therefore, edge-disjoint paths correspond to
+        vertex-disjoint paths in the original graph,
+        respectively, and vice versa.  Here we can use
+        Edmonds-Karp algorithm again.
+        
+        To convert a graph, it takes $O(|E|+|V|)$ time,
+        because we have to look at every vertex and every
+        edge. Let us denote the number of edges and vertices
+        of the new graph as $|E^\prime|$ and $|V^\prime|$,
+        respectively. Then the followings hold, because we
+        add $|V|-2$ new edges and vertices:
+        \begin{eqnarray*}
+            |E^\prime| &=& |E| + |V| - 2\\
+            |V^\prime| &=& |V| + |V| - 2.
+        \end{eqnarray*}
+        Edmonds-Karp algorithm takes
+        \begin{eqnarray*}
+            O(|V^\prime||{E^\prime}|^2) = O((2|V| - 2)(|E|+|V|-2)^2) = O(|V|(|E|+|V|)^2)
+        \end{eqnarray*}
+        
+        \begin{center}
+            \begin{algorithm}
+                \textsc{Vertex Disjoint Path (G(V,E), u, v)}\+\\
+                For all $v\in V\setminus \brc{u,v}$\+\\
+                Add a new edge as in the figure\-\\
+                Let us call this new graph as $G^\prime(V^\prime, E^\prime)$\\
+                Run Edmonds-Karp($G^\prime(V^\prime,E^\prime),u,v$)
+            \end{algorithm}
+        \end{center}             
+        \begin{figure}[htbp]
+            \begin{center}
+                \includegraphics{figs/vertex-disjoint}
+                \caption{How to add a edge to a vertex}
+            \end{center}
+        \end{figure}            
+    \end{enumerate}
+    
+    \item \textsc{Minimum Cut}\\
+    \points{10}
+    
+    Present a \emph{deterministic} algorithm, such that
+    given an undirected graph $G$, it computes the minimum
+    cut in $G$. How fast is your algorithm? How does your
+    algorithm compares with the randomized algorithm shown
+    in class?
+    
+    {\bf Solution:}
+    
+    The deterministic algorithm consists of picking any pair
+    of vertices $(s,t)$, and computing the minimum cut that
+    have $s$ on one side, and $t$ on the other. Here, we
+    take every edge and replicate it twice, in both
+    directions, and assign every edge weight one. We next
+    compute the maximum flow between $s$ and $t$. Clearly,
+    by the min-cut max flow, one of the cut we would compute
+    is the minimum cut in the graph. 
+
+    The running time of this algorithm is not exciting. In
+    the worst case, it would take $O(m^2n \cdot n^2) =
+    O(n^8)$ time. This is much worse than the randomized
+    algorithm, that takes roughly $O(n^2 \log^3 n )$ time.
+    
+
+    \item \textsc{Independence Matrix}\\
+    \points{10}
+    
+    Consider a $0-1$ matrix $H$ with $n_1$ rows and $n_2$
+    columns. We refer to a row or a column of the matrix $H$
+    as a line. We say that a set of $1$'s in the matrix $H$
+    is \emph{independent} if no two of them appear in the
+    same line. We also say that a set of lines in the matrix
+    is a \emph{cover} of $H$ if they include (i.e.,
+    ``cover'') all the $1$'s in the matrix. Using the
+    max-flow min-cut theorem on an appropriately defined
+    network, show that the maximum number of independent
+    $1$'s equals the minimum number of lines in the cover.
+    
+    {\bf Solution:}
+    
+    Given a $n_1\times n_2$ matrix $M$, we build a directed
+    bipartite graph as follows.
+    \begin{itemize}
+        \item [1] Make bipartite graph with $n_1$ nodes on
+        the left $\brc{l_i}$ and $n_2$ nodes on the right
+        $\brc{r_i}$.
+        \item [2] Draw an edge from $l_i$ to $r_j$ if
+        $M(i,j) = 1$
+        \item [3] Put source node and draw edges to every
+        $l_i$
+        \item [4] Put sink node and draw edges from every
+        $r_i$
+    \end{itemize}
+    From how we build a graph, we know that an edge in a
+    bipartite graph corresponds to $1$ in a matrix $M$. When
+    the given matrix is as follows, a bipartite graph looks
+    like the one in the figure.
+    \begin{eqnarray*}
+        \left(
+            \begin{tabular}[tb]{cccc}
+                0 & 1 & 0 & 0 \\
+                0 & 0 & 1 & 0 \\
+                0 & 1 & 0 & 0 \\
+                1 & 0 & 0 & 1 \\
+            \end{tabular}
+        \right)
+    \end{eqnarray*}
+    \begin{figure}[htbp]
+        \begin{center}
+            \includegraphics{figs/bipartite}
+            \caption{Generated bipartite graph.}
+        \end{center}
+    \end{figure}
+    
+    We will show that flow corresponds to independent 1's and cut
+    corresponds to a cover, in the following.
+    \begin{itemize}
+        \item Since there is only one path from source to
+        each $l_i$ and from each $r_j$ to sink, a node in
+        the bipartite graph can be shared by only one path.
+        This implies that all the $1$s that correspond to
+        flow must be independent. On the other hand, given
+        independent $1$s, we can actually make flows by
+        using all the edges that correspond to the $1$s.
+        Therefore, flow is equivalent with independent $1$s.
+        \item From the way how we build a graph, $i_{th}$ row
+        corresponds to $l_i$ and $j_{th}$ column corresponds to
+        $r_j$. The following is a relation between a cover and
+        a cut $C=(S,T)$:
+        \begin{itemize}
+            \item $l_i$ belongs to $S$ if and only if $l_i$
+            is not in a cover. This implies $l_i$ belongs to
+            $T$ if and only if $l_i$ is in a cover.
+            \item $r_j$ belongs to $S$ if and only if $r_j$
+            is in a cover. This implies $r_j$ belongs to $T$
+            if and only if $r_j$ is not in a cover.
+        \end{itemize}
+        In fact, the size of a cover is equal to the size of
+        a cut. It is because all the edges inside of the
+        bipartite graph are either coming out of $T$, going
+        into $S$, or both. That is, no edges in the
+        bipartite graph are coming from $S$ and going into
+        $T$. Therefore, the size of a cut is (the number of
+        $l_i$ in $T$) $+$ (the number of $r_j$ in $S$),
+        which is equal to the size of a cover.
+    \end{itemize}
+    From max-flow min-cut theorem and these equivalences, we know
+    that the maximum number of independent $1$ is equal to the
+    minimum number of lines in the cover.
+    
+\end{enumerate} 
+\end{document}
+
+
+
+
+                                %-----------------------------------------------------------------------

@@ -1,0 +1,31 @@
+graph G {
+    nodesep=0.8;
+    ranksep=0.5;
+
+    {node[style=invis,label=""]; cx_30;
+    }
+
+    {rank=same; a; }
+    {rank=same; a0; a1; cx_30}
+    {rank=same; a00; a01; a10; a11}
+
+    a [label="and (1)"];
+    a0 [label="or (1)"];
+    a1 [label="or (1)"];
+
+    a00 [label="0"];
+    a01 [label="1"];
+    a10 [label="1"];
+    a11 [label="1"];
+
+    a -- a0;
+    a -- a1;
+    
+    a0 -- a00;
+    a0 -- a01;
+
+    a1 -- a10;
+    a1 -- a11;
+    
+
+}

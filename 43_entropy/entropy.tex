@@ -1,0 +1,535 @@
+% -------------------------------------------------------- entropy
+%
+%--------------------------------------------------------
+
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+%\newcommand{\sign}{\mathrm{sign}}
+\newcommand{\ExtractFunc}{\mathtt{E{x}t}}
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Entropy, Randomness, and Information}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{``If only once - only once - no matter where, no matter
+   before what audience - I could better the record of the great
+   Rastelli and juggle with thirteen balls, instead of my usual
+   twelve, I would feel that I had truly accomplished something for my
+   country. But I am not getting any younger, and although I am still
+   at the peak of my powers there are moments - why deny it? - when I
+   begin to doubt - and there is a time limit on all of us.''}{Romain
+   Gary}{The talent scout}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The entropy function}
+
+\begin{defn}
+    The \emphi{entropy} in bits of a discrete random variable $X$ is
+    given by 
+    \begin{equation*}
+        \Entropy{X} = - \sum_{x} \Prob{X = x} \lg \Prob{X=x},
+    \end{equation*}
+    where $\lg x$ is the logarithm base $2$ of $x$.  Equivalently,
+    $\Entropy{X} = \Ex{ \lg \frac{1}{\Prob{X}} }$.
+    
+    The \emphic{binary entropy}{entropy!binary} function
+    $\Entropy{p}$ for a random binary variable that is $1$ with
+    probability $p$, is
+    \begin{equation*}
+        \Entropy{p} = - p \lg p - (1-p)\lg (1-p).        
+    \end{equation*}
+    We define $\Entropy{0} = \Entropy{1} = 0$.
+\end{defn}
+
+
+\begin{figure}[h]
+    \centerline{\IncludeGraphics{\File{figs/entropy}}}
+    \caption{The binary entropy function.}
+\end{figure}
+
+The function $\Entropy{p}$ is a concave symmetric around $1/2$ on the
+interval $[0,1]$ and achieves its maximum at $1/2$. For a concrete
+example, consider $\Entropy{3/4} \approx 0.8113$ and $\Entropy{7/8}
+\approx 0.5436$. Namely, a coin that has $3/4$ probably to be heads
+have higher amount of ``randomness'' in it than a coin that has
+probability $7/8$ for heads.
+
+Writing $\lg n = (\ln n)/\ln 2$, we have that
+\begin{align*}
+  \Entropy{p} &=  \frac{1}{\ln
+                2}\pth{\bigl.
+                - p \ln p - (1-p)\ln (1-p) }\\
+%
+  \text{ and ~ }\EntropyChar'\pth{p} &=%
+                                       \frac{1}{\ln 2}\pth{\MakeSBig - \ln p -\frac{p}{p} - (-1) \ln(1-p)
+                                       - \frac{1-p}{1-p}(-1) } = \lg \frac{1-p}{p}.
+\end{align*}
+
+Deploying our amazing ability to compute derivative of simple
+functions once more, we get that
+\begin{equation*}
+    \EntropyChar''\pth{p}%
+    = %
+    \frac{1}{\ln 2} \frac{p}{1-p} \pth{ \frac{p(-1) -(1-p)}{p^2}}
+    = - \frac{1}{p (1-p) \ln 2}.
+\end{equation*}
+Since $\ln 2 \approx 0.693$, we have that $\EntropyChar''(p) \leq 0$,
+for all $p \in (0,1)$, and the $\Entropy{\cdot}$ is concave in this
+range. Also, $\EntropyChar'(1/2) =0$, which implies that $\Entropy{1/2} =
+1$ is a maximum of the binary entropy. Namely, a balanced coin has the
+largest amount of randomness in it.
+
+\begin{example}
+    \exmlab{n:results}%
+    %
+    A random variable $X$ that has probability $1/n$ to be $i$, for
+    $i=1,\ldots, n$, has entropy $\Entropy{X} = -\sum_{i=1}^n
+    \frac{1}{n} \lg \frac{1}{n} = \lg n$.
+\end{example}
+
+Note, that the entropy is oblivious to the exact values that the
+random variable can have, and it is sensitive only to the probability
+distribution. Thus, a random variables that accepts $-1,+1$ with equal
+probability has the same entropy (i.e., $1$) as a fair coin.
+
+\begin{lemma}
+    \lemlab{entropy:independent}
+    % 
+    Let $X$ and $Y$ be two independent random variables, and let $Z$
+    be the random variable $(X,Y)$. Then
+    $\Entropy{Z} = \Entropy{X} + \Entropy{Y}$.
+\end{lemma}
+
+\begin{proof}
+    In the following, summation are over all possible values that the
+    variables can have. By the independence of $X$ and $Y$ we have
+    \begin{eqnarray*}
+        \Entropy{Z} &=& \sum_{x,y} \Prob{ (X,Y) = (x,y)} \lg 
+        \frac{1}{\Prob{ (X,Y) = (x,y)}} \\
+        &= &
+        \sum_{x,y} \Prob{ X = x} \Prob{Y = y} \lg 
+        \frac{1}{\Prob{ X = x} \Prob{ Y = y } } \\
+        &= &
+        \sum_x \sum_{y} \Prob{ X = x} \Prob{Y = y} \lg 
+        \frac{1}{\Prob{ X = x}  } 
+        \\
+        && + \sum_{y} \sum_x \Prob{ X = x} \Prob{Y = y} \lg 
+        \frac{1}{\Prob{ Y = y } } \\
+        &=& 
+        \sum_x \Prob{ X = x} \lg 
+        \frac{1}{\Prob{ X = x}  } 
+        + \sum_{y}  \Prob{Y = y} \lg 
+        \frac{1}{\Prob{ Y = y } }  = \Entropy{X} + \Entropy{Y}.
+    \end{eqnarray*}
+\end{proof}
+
+\begin{lemma}
+    Suppose that $nq$ is integer in the range $[0,n]$. Then
+    $\displaystyle \frac{2^{n\EntropyX{q}}}{n+1} \leq \binom{n}{nq}
+    \leq 2^{n \EntropyX{q}}$.
+
+    \lemlab{q:values}
+\end{lemma}
+
+\begin{proof}
+    This trivially holds if $q=0$ or $q=1$, so assume $0 <q <1$. We
+    know that
+    \begin{align*}
+      &\binom{n}{nq}
+      q^{nq} (1-q)^{n-nq} \leq (q + (1-q))^n
+        =1
+        % \qquad
+      \\
+      \implies
+      \qquad        
+      &
+        \binom{n}{nq}
+        \leq 
+        q^{-nq} (1-q)^{-n(1-q)} = 2^{n \,\pth{-q \lg q - (1-q) \lg (1-q)
+        }} = 2^{n \Entropy{q}}.
+    \end{align*}
+    
+    As for the other direction, let
+    \begin{equation*}
+        \mu(k) = \binom{n}{k} q^{k} (1-q)^{n-k}.
+    \end{equation*}    
+    The claim is that $\mu(nq)$ is the largest term in
+    $\sum_{k=0}^{n} \mu(k) = 1$, where
+    $\mu(k ) = \binom{n}{k} q^k (1-q)^{n-k}$. Indeed,
+    \begin{equation*}
+        \Delta_k = \mu(k) - \mu(k+1) = \binom{n}{k}q^k (1-q)^{n-k}
+        \pth{ 1 - \frac{n-k}{k+1} \frac{q}{1-q}},
+    \end{equation*}
+    and the sign of this quantity is the sign of
+    $(k+1)(1-q) -(n-k)q = k +1 -kq -q -nq +kq = 1 + k -q -
+    nq$. Namely, $\Delta_k \geq 0$ when $k\geq nq + q -1$, and
+    $\Delta_k < 0$ otherwise. Namely, $\mu(k) < \mu(k+1)$, for
+    $k < nq$, and $\mu(k) \geq \mu(k+1)$ for $k \geq nq$. Namely,
+    $\mu(nq)$ is the largest term in $\sum_{k=0}^{n} \mu(k) = 1$, and
+    as such it is larger than the average. We have
+    $\mu(nq) = \binom{n}{nq} q^{nq} (1-q)^{n-nq} \geq \frac{1}{n+1}$,
+    which implies
+    \begin{equation*}
+        \binom{n}{nq} \geq \frac{1}{n+1} q^{-nq} (1-q)^{-(n-nq)} =
+        \frac{1}{n+1}2^{n \Entropy{q}}.
+    \end{equation*}
+\end{proof}
+
+\lemref{q:values} can be extended to handle non-integer values of
+$q$. This is straightforward, and we omit the easy details.
+\begin{corollary}
+    \corlab{q:integer:values}%
+    % 
+    We have:
+
+    \noindent%
+    \begin{minipage}{0.45\linewidth}
+        \begin{compactenumi}[series=my_list]
+            \item $q \in [0, 1/2]$ $\Rightarrow$
+            $\ds\binom{n}{\floor{nq}} \leq 2^{n \Entropy{q}}$.
+            
+            \smallskip%
+            \item $q \in [1/2,1]$ $\Rightarrow$
+            $\ds \binom{n}{\ceil{nq}} \leq 2^{n \Entropy{q}}$.
+            
+        \end{compactenumi}
+    \end{minipage}
+    \begin{minipage}{0.45\linewidth}
+        \begin{compactenumi}[resume*=my_list]
+            \item $q \in [1/2,1]$
+            $\Rightarrow \ds \frac{2^{n \Entropy{q}}}{n+1} \leq
+            \binom{n}{\floor{nq}}$.
+            
+            \smallskip%
+            \item $q \in [0,1/2]$ $\Rightarrow$
+            $\ds \frac{2^{n \Entropy{q}}}{n+1} \leq
+            \binom{n}{\ceil{nq}}$.
+        \end{compactenumi}
+    \end{minipage}
+\end{corollary}
+
+The bounds of \lemref{q:values} and \corref{q:integer:values} are
+loose but sufficient for our purposes. As a sanity check, consider the
+case when we generate a sequence of $n$ bits using a coin with
+probability $q$ for head, then by the Chernoff inequality, we will get
+roughly $nq$ heads in this sequence. As such, the generated sequence
+$Y$ belongs to $\binom{n}{nq} \approx 2^{n \Entropy{q}}$ possible
+sequences that have similar probability. As such,
+$\Entropy{Y} \approx \lg \binom{n}{nq} = n \Entropy{q}$, by
+\exmref{n:results}, this also readily follows from
+\lemref{entropy:independent}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Extracting randomness}
+
+\paragraph*{The problem.}
+We are given a random variable $X$ that is chosen uniformly at random
+from $\IRY{0}{m-1}=\brc{0,\ldots, m-1}$. Our purpose is built an
+algorithm that given $X$ output a binary string, such that the bits in
+the binary string can be interpreted as the coin flips of a fair
+balanced coin. That is, the probability of the $i$\th bit of the
+output (if it exists) to be $0$ (or $1$) is exactly half, and the
+different bits of the output are independent.
+
+\paragraph*{Idea.}
+We break the $\IRY{0}{m-1}$ into consecutive blocks that are powers of
+two. Given the value of $X$, we find which block contains it, and we
+output a binary representation of the location of $X$ in the block
+containing it, where if a block is length $2^k$, then we output $k$
+bits.
+
+\begin{figure}[h]
+    \centerline{%
+       \begin{tabular}{*{3}{c}}
+         \IncludeGraphics[page=1]{\File{figs/extraction_block}}
+         &
+           \IncludeGraphics[page=2]{\File{figs/extraction_block}}
+         &
+           \IncludeGraphics[page=3]{\File{figs/extraction_block}}
+         \\
+         (A) 
+         &
+           (B)
+         &
+           (C)
+       \end{tabular}       
+    }
+    \caption{(A) $m=15$. %
+       (B) The block decomposition. %
+       (C) If $X=10$, then the extraction output is $2$ in base $2$,
+       using $2$ bits -- that is \texttt{10}.}
+\end{figure}
+
+\bigskip%
+Entropy can be interpreted as the amount of unbiased random coin flips
+can be extracted from a random variable.
+\begin{defn}
+    \deflab{extract}%
+    %
+    An \emphi{extraction function} $\ExtractFunc$ takes as input the
+    value of a random variable $X$ and outputs a sequence of bits $y$,
+    such that
+    \begin{math}
+        \ProbCond{\ExtractFunc(X) =y}{\bigl.|y| = k }%
+        =%
+        {1}/{2^k}.
+    \end{math}    
+    whenever $\Prob{\bigl. |y| = k} \geq 0$, where $\cardin{y}$
+    denotes the length of $y$.
+\end{defn}
+
+As a concrete (easy) example, consider $X$ to be a uniform random
+integer variable out of $0,\ldots, 7$. All that $\ExtractFunc(x)$ has
+to do in this case, is just to compute the binary representation of
+$x$.
+
+The definition of the extraction function has two subtleties:
+\begin{compactenumA}
+    \item It requires that all extracted sequences of the same length
+    (say $k$), have the same probability to be output (i.e., $1/2^k$).
+
+    \item If the extraction function can output a sequence of length
+    $k$, then it needs to be able to output \emph{all} $2^k$ such
+    binary sequences.
+\end{compactenumA}
+\smallskip%
+
+Thus, for $X$ a uniform random integer variable in the range
+$0,\ldots, 11$, the function $\ExtractFunc(x)$ can output the binary
+representation for $x$ if $0 \leq x \leq 7$. However, what do we do if
+$x$ is between $8$ and $11$? The idea is to output the binary
+representation of $x -8$ as a two bit number. Clearly,
+\defref{extract} holds for this extraction function, since
+\begin{math}
+    \Prob{\ExtractFunc(X) = 00 \sep{ \cardin{\ExtractFunc(X)} = 2}} =
+    {1}/{4}.
+\end{math}
+as required. This scheme can be of course extended for any range.
+
+\begin{tedium}
+    \tedlab{silly:534}%
+    %
+    For $x \leq y$ positive integers, and any positive integer
+    $\Delta$, we have that
+    \begin{equation*}
+        \frac{x}{y}
+        \leq%
+        \frac{x + \Delta}{y+\Delta}
+        \iff
+        x( y+ \Delta) \leq y(x+\Delta)
+        \iff
+        x \Delta \leq y\Delta
+        \iff
+        x \leq y.
+    \end{equation*}
+\end{tedium}
+
+\begin{theorem}
+    \thmlab{extract}%
+    %
+    Suppose that the value of a random variable $X$ is chosen
+    uniformly at random from the integers $\brc{0,\ldots, m-1}$. Then
+    there is an extraction function for $X$ that outputs on average
+    (i.e., in expectation) at least $\floor{ \lg m} -1 =
+    \floor{\Entropy{X}} -1$ independent and unbiased bits.
+\end{theorem}
+\begin{proof}
+    We represent $m$ as a sum of unique powers of $2$, namely
+    $m = \sum_i a_i 2^{i}$, where $a_i \in \brc{0,1}$. Thus, we
+    decomposed $\brc{0,\ldots, m-1}$ into a disjoint union of blocks
+    that have sizes which are distinct powers of $2$. If a number
+    falls inside such a block, we output its relative location in the
+    block, using binary representation of the appropriate length
+    (i.e., $k$ if the block is of size $2^k$).  It is not difficult to
+    verify that this function fulfills the conditions of
+    \defref{extract}, and it is thus an extraction function.
+
+    Now, observe that the claim holds if $m$ is a power of two, by
+    \exmref{n:results} (i.e., if $m=2^k$, then $\EntropyX{X}=k$).
+    Thus, if $m$ is not a power of $2$, then in the decomposition if
+    there is a block of size $2^k$, and the $X$ falls inside this
+    block, then the entropy is $k$.
+
+    The remainder of the proof is by induction -- assume the claim
+    holds if the range used by the random variable is strictly smaller
+    than $m$. In particular, let $K = 2^k$ be the largest power of $2$
+    that is smaller than $m$, and let $U =2^u$ be the largest power of
+    two such that $U \leq m-K \leq 2U$.
+
+    If the random number $X \in \IRY{0}{K-1}$, then the scheme outputs
+    $k$ bits. Otherwise, we can think about the extraction function as
+    being recursive and extracting randomness from a random variable
+    $X' = X - K$ that is uniformly distributed in $\IRY{0}{m - K}$.
+
+    
+    
+    % For the inductive proof,
+    % assume that are looking at the largest block in the decomposition,
+    % that is $m <2^{k+1}$, and let $u = \floor{ \lg (m-2^k)} < k$.  It
+    % is easy to verify that, for any integer $\alpha > 2^k$, we have
+    % $\frac{\alpha - 2^k}{\alpha} \leq \frac{\alpha+1 -
+    %    2^k}{\alpha+1}$. Furthermore, $m \leq 2^{u+1} +2^k$. As such,
+    % $\frac{m-2^k}{m} \leq \frac{2^{u+1}}{2^{u+1}+2^k}$. %
+
+    By \tedref{silly:534}, we have that
+    \begin{equation*}
+        \frac{m-K}{m}%
+        \leq 
+        \frac{m-K + (2U + K -m)}{m+ (2U + K -m)}%
+        =%
+        \frac{2U}{2U + K}
+    \end{equation*}
+
+
+    \smallskip%
+    Let $Y$ be the random variable which is the number of random bits
+    extracted. We have that
+    \begin{align*}
+      \Ex{Y}%
+      &\geq
+        \frac{K}{m} k + \frac{m-K}{m}\pth{ \floor{
+        \lg (m-K)} -1}
+        =
+        k - \frac{m - K}{m} k + \frac{m-K}{m}\pth{ u -1}
+        =
+        k + \frac{m-K}{m} (\overbrace{u -k-1}^{<0} )\\
+      &\geq 
+        k - \frac{2U}{2U + K}\pth{ u -k-1}
+        = 
+        k - \frac{2U}{2U+ K}\pth{ 1 + k - u}.
+    \end{align*}
+   If $u = k-1$, then $\Entropy{X} \geq k - \frac{1}{2} \cdot 2 = k-1$,
+   as required. If $u = k-2$ then $\Entropy{X} \geq k - \frac{1}{3}
+   \cdot 3 = k - 1$. Finally, if $u < k-2$ then
+   \begin{equation*}
+       \Ex{Y}
+       \geq
+       k - \frac{2U}{2U+ K}\pth{ 1 + k - u}
+       \geq k - \frac{2U}{K}\pth{ 1 + k - u}%
+       =%
+       k - \frac{k - u+1}{2^{(k-u+1) - 2}}%
+       \geq%
+       k-1,
+   \end{equation*}
+   since $k-u+1 \geq 4$ and $ {i}/{2^{i-2}} \leq 1$ for $i \geq 4$.
+\end{proof}
+
+\begin{theorem}
+    Consider a coin that comes up heads with probability $p >1/2$. For
+    any constant $\delta >0$ and for $n$ sufficiently large:
+    \begin{compactenumA}
+        \item One can extract, from an input of a sequence of $n$
+        flips, an output sequence of $(1-\delta)n\Entropy{p}$
+        (unbiased) independent random bits.
+
+        \smallskip%
+        \item One can not extract more than $n \Entropy{p}$ bits from
+        such a sequence.
+    \end{compactenumA}
+\end{theorem}
+
+\begin{proof}
+    There are $\binom{n}{j}$ input sequences with exactly $j$ heads,
+    and each has probability $p^{j}(1-p)^{n-j}$. We map this sequence
+    to the corresponding number in the set $\brc{0,\ldots,
+       \binom{n}{j}-1}$. Note, that this, conditional distribution on
+    $j$, is uniform on this set, and we can apply the extraction
+    algorithm of \thmref{extract}. Let $Z$ be the random variables
+    which is the number of heads in the input, and let $B$ be the
+    number of random bits extracted. We have
+    \begin{equation*}
+        \Ex{B} = \sum_{k=0}^n \Prob{Z = k } \Ex{B \sep{ Z = k }},
+    \end{equation*}
+    and by \thmref{extract}, we have $\displaystyle \Ex{B \sep{Z = k
+       }} \geq \floor{ \lg \binom{n}{k}} -1 $. Let $\eps < p-1/2$ be a
+    constant to be determined shortly. For $n(p-\eps) \leq k \leq n (p
+    +\eps)$, we have
+    \[
+    \binom{n}{k} \geq \binom{n}{\floor{ n(p+\eps)} } \geq \frac{2^{n
+          \Entropy{p+\eps} }}{n+1},
+    \]
+    by \corref{q:integer:values} (iii). We have
+    \begin{eqnarray*}
+        \Ex{B} &\geq &
+        \sum_{k=\floor{n(p-\eps)}}^{\ceil{n(p-\eps)}}
+        \Prob{Z = k } \Ex{B \sep{ Z = k }} 
+        \geq 
+        \sum_{k=\floor{n(p-\eps)}}^{\ceil{n(p-\eps)}}
+        \Prob{Z = k } \pth{\floor{ \lg \binom{n}{k}} -1 }\\
+        &\geq &
+        \sum_{k=\floor{n(p-\eps)}}^{\ceil{n(p-\eps)}}
+        \Prob{Z = k } \pth{\lg \frac{2^{n
+                 \Entropy{p+\eps} }}{n+1} -2 }\\
+        &= &
+        \pth{ n  \Entropy{p+\eps} - \lg(n+1) } \Prob{ \cardin{Z - np}
+           \leq \eps n } \\
+        &\geq &
+        \pth{ n  \Entropy{p+\eps} - \lg (n+1) }
+        \pth{1 - 2\exp \pth{
+           -\frac{n\eps^2}{4p} }},
+    \end{eqnarray*}
+    since $\mu = \Ex{Z} = np$ and $\Prob{ \cardin{Z - np} \geq
+       \frac{\eps}{p} p n } \leq 2\exp \pth{ -\frac{np}{4}
+       \pth{\frac{\eps}{p}}^2 } = 2\exp \pth{ -\frac{n\eps^2}{4p} } $,
+    by the Chernoff inequality. In particular, fix $\eps > 0 $, such
+    that $\Entropy{p+\eps} > (1-\delta/4) \Entropy{p}$, and since $p$
+    is fixed $n \Entropy{p} = \Omega(n)$, in particular, for $n$
+    sufficiently large, we have $- \lg\pth{n+1}\geq -
+    \frac{\delta}{10}n \Entropy{p}$. Also, for $n$ sufficiently large,
+    we have $2\exp \pth{ -\frac{n\eps^2}{4p} } \leq
+    \frac{\delta}{10}$. Putting it together, we have that for $n$
+    large enough, we have
+    \begin{eqnarray*}
+        \Ex{B} &\geq &
+        \pth{ 1-\frac{\delta}{4}  - \frac{\delta}{10} } n   \Entropy{p}
+        \pth{1 - \frac{\delta}{10} } \geq \pth{ 1- \delta} n \Entropy{p},
+    \end{eqnarray*}
+    as claimed.
+
+    As for the upper bound, observe that if an input sequence $x$ has
+    probability $q$, then the output sequence $y = \ExtractFunc(x)$ has
+    probability to be generated which is at least $q$.  Now, all
+    sequences of length $\cardin{y}$ have equal probability to be
+    generated.  Thus, we have the following (trivial) inequality
+    $2^{\cardin{\ExtractFunc(x)}} q \leq 2^{\cardin{\ExtractFunc(x)}}
+    \Prob{y = \ExtractFunc(X)} \leq 1$, implying that
+    $\cardin{\ExtractFunc(x)} \leq \lg(1/q)$. Thus,
+    \begin{equation*}
+        \Ex{B}%
+        =%
+        \sum_{x} \Prob{X = x} \cardin{\ExtractFunc(x)}%
+        \leq%
+        \sum_{x} \Prob{X = x} \lg \frac{1}{\Prob{X=x}}%
+        =%
+        \Entropy{X}.
+    \end{equation*}
+\end{proof}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Bibliographical Notes}
+
+The presentation here follows \cite[Sec. 9.1-Sec 9.3]{mu-pcrap-05}.
+
+
+\ChapterEnd{}
+
+%--------------------------------------------------------
+%
+% entropy - end of file
+%--------------------------------------------------------

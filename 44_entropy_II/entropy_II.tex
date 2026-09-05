@@ -1,0 +1,516 @@
+%--------------------------------------------------------
+% 22_entropy.tex
+%
+%--------------------------------------------------------
+
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+%\newcommand{\sign}{\mathrm{sign}}
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\newcommand{\costX}[1]{\mathrm{cost}\pth{#1}}
+\newcommand{\codeX}[1]{\mathrm{code}\pth{#1}}
+\newcommand{\lengthX}[1]{\mathrm{l{}e{}n}\pth{#1}}
+
+\Chapter{Entropy II}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{The memory of my father is wrapped up in white paper, like
+   sandwiches taken for a day at work.  Just as a magician takes
+   towers and rabbits out of his hat, he drew love from his small
+   body, and the rivers of his hands overflowed with good
+   deeds.}{Yehuda Amichai}{My Father}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Huffman coding}
+
+A \emphi{binary code} assigns a string of $0$s and $1$s to each
+character in the alphabet. A code assigns for each symbol in the input
+a codeword over some other alphabet. Such a coding is necessary, for
+example, for transmitting messages over a wire, were you can send only
+0 or 1 on the wire (i.e., for example, consider the good old telegraph
+and Morse code). The receiver gets a binary stream of bits and needs
+to decode the message sent. A prefix code, is a code where one can
+decipher the message, a character by character, by reading a prefix of
+the input binary string, matching it to a code word (i.e., string),
+and continuing to decipher the rest of the stream. Such a code is a
+\emphi{prefix code}.
+
+A binary code (or a prefix code) is \emphi{prefix-free} if no code is
+a prefix of any other.  ASCII and Unicode's U{}T{}F-$8$ are both
+prefix-free binary codes. Morse code is a binary code (and also a
+prefix code), but it is not prefix-free; for example, the code for
+\texttt{S} ($\cdots$) includes the code for \texttt{E} ($\cdot$) as a
+prefix. (Hopefully the receiver knows that when it gets $\cdots$ that
+it is extremely unlikely that this should be interpreted as
+\texttt{E{}E{}E}, but rather \texttt{S}.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/prefix_code}}
+    \caption{A prefix tree representing a prefix-free code.}
+    \figlab{prefix:code}
+\end{figure}
+
+Any prefix-free binary code can be visualized as a binary tree with
+the encoded characters stored at the leaves. The code word for any
+symbol is given by the path from the root to the corresponding leaf;
+$0$ for left, $1$ for right. The {length} of a codeword for a symbol
+is the depth of the corresponding leaf. Such trees are usually
+referred to as \emphic{prefix trees}{tree!prefix tree} or \emphic{code
+   trees}{tree!code trees}.
+
+
+
+The beauty of prefix trees (and thus of prefix odes) is that decoding
+is easy.  As a concrete example, consider the tree depicted in
+\figref{prefix:code}. Given
+a string '010100', we can traverse down the tree from the root, going
+left if get a '0' and right if we get '1'. Whenever we get to a leaf,
+we output the character output in the leaf, and we jump back to the
+root for the next character we are about to read. For the example
+'010100', after reading '010' our traversal in the tree leads us to
+the leaf marked with 'b', we jump back to the root and read the next
+input digit, which is '1', and this leads us to the leaf marked with
+'d', which we output, and jump back to the root. Finally, '00' leads
+us to the leaf marked by 'a', which the algorithm output. Thus, the
+binary string '010100' encodes the string \texttt{``b{}d{}a''}.
+
+%\newcommand{\Tree}{\mathcal{T}}%
+
+Suppose we want to encode messages in an $n$-character alphabet so
+that the encoded message is as short as possible. Specifically, given
+an array frequency counts $f[1 \ldots n]$, we want to compute a
+prefix-free binary code that minimizes the total encoded length of the
+message. That is we would like to compute a tree $\Tree$ that
+minimizes
+\begin{align}
+    \costX{\Tree} = 
+    \sum_{i=1}^n f[i] * \lengthX{ \codeX{i}}, %
+    %
+    \eqlab{compressor}
+\end{align}
+where $\codeX{i}$ is the binary string encoding the $i$\th character
+and $\lengthX{s}$ is the length (in bits) of the binary string $s$.
+
+
+A nice property of this problem is that given two trees for some parts
+of the alphabet, we can easily put them together into a larger tree by
+just creating a new node and hanging the trees from this common
+node. For example, putting two characters together, we have the following.
+\begin{center}
+    \fbox{M} \fbox{U} 
+    ~~~~$\Rightarrow$~~~~
+    \tree{
+       \fbox{M}}{ \fbox{U} }
+\end{center}
+Similarly, we can put together two subtrees.
+\begin{center}
+    ~~~~~~~~~~~~~~~~~~~~~~
+    \TreePKGtriangle[A]{1cm}{1cm}    
+    \TreePKGtriangle[B]{1cm}{1cm}    
+    ~~~~$\Rightarrow$~~~~
+    \tree{\TreePKGtriangle[A]{1cm}{1cm}    }{
+    \TreePKGtriangle[B]{1cm}{1cm}    }
+\end{center}
+
+\subsection{The algorithm to build Hoffman's code}
+
+This suggests a simple algorithm that takes the two least frequent
+characters in the current frequency table, merge them into a tree, and
+put the merged tree back into the table (instead of the two old
+trees). The algorithm stops when there is a single tree. The intuition
+is that infrequent characters would participate in a large number of
+merges, and as such would be low in the tree -- they would be assigned
+a long code word. 
+
+This algorithm is due to David Huffman, who developed it in
+1952. Shockingly, this code is the best one can do. Namely, the
+resulting code is \emph{asymptotically} gives the best possible
+compression of the data (of course, one can do better compression in
+practice using additional properties of the data and careful
+hacking). This \emphi{Huffman coding} is used widely and is the basic
+building block used by numerous other compression algorithms.
+
+% To see how such a resulting tree (and the associated code) looks
+% like, see \figref{codes} and \figref{the:Huffman:tree}.
+
+
+\subsection{Analysis}
+
+\begin{lemma}
+    \lemlab{easy:optimal:compressor}%
+    %
+    Let $\Tree$ be an optimal code tree. Then $\Tree$ is a full binary
+    tree (i.e., every node of $\Tree$ has either $0$ or $2$ children).
+    In particular, if the height of $\Tree$ is $d$, then there are
+    leafs nodes of height $d$ that are sibling.
+\end{lemma}
+
+\begin{proof}
+    If there is an internal node in $\Tree$ that has one child, we can
+    remove this node from $\Tree$, by connecting its only child directly
+    with its parent. The resulting code tree is clearly a better
+    compressor, in the sense of \Eqref{compressor}.
+
+    As for the second claim, consider a leaf $u$ with maximum depth
+    $d$ in $\Tree$, and consider it parent $v = \parentX{u}$. The node
+    $v$ has two children, and they are both leafs (otherwise $u$ would
+    not be the deepest node in the tree), as claimed.
+\end{proof}
+
+\begin{lemma}
+    Let $x$ and $y$ be the two least frequent characters (breaking
+    ties between equally frequent characters arbitrarily). There is an
+    optimal code tree in which $x$ and $y$ are siblings.
+\end{lemma}
+
+\begin{proof}
+    More precisely, there is an optimal code in which $x$ and $y$ are
+    siblings and have the largest depth of any leaf.  Indeed, let
+    $\Tree$ be an optimal code tree with depth $d$. The tree $\Tree$
+    has at least two leaves at depth $d$ that are siblings, by
+    \lemref{easy:optimal:compressor}.
+
+    Now, suppose those two leaves are not $x$ and $y$, but some other
+    characters $\alpha$ and $\beta$.  Let $\TreeA$ be the code tree
+    obtained by swapping $x$ and $\alpha$. The depth of $x$ increases
+    by some amount $\Delta$, and the depth of $\alpha$ decreases by
+    the same amount. Thus,
+    \begin{equation*}
+    \costX{\TreeA} = \costX{\Tree} - \pth{\MakeSBig f[\alpha ] - f[ x
+       ]}\Delta.
+    \end{equation*}
+    By assumption, $x$ is one of the two least frequent characters,
+    but $\alpha$ is not, which implies that $f[\alpha] > f[x]$. Thus,
+    swapping $x$ and $\alpha$ does not increase the total cost of the
+    code. Since $\Tree$ was an optimal code tree, swapping $x$ and
+    $\alpha$ does not decrease the cost, either. Thus, $\TreeA$ is
+    also an optimal code tree (and incidentally, $f[\alpha]$ actually
+    equals $f[x]$).  Similarly, swapping $y$ and $b$ must give yet another
+    optimal code tree. In this final optimal code tree, $x$ and $y$ as
+    maximum-depth siblings, as required.
+\end{proof}
+
+\begin{theorem}
+    \thmlab{huffman:optimal}%
+    %
+    Huffman codes are optimal prefix-free binary codes.
+\end{theorem}
+
+\begin{proof}
+    If the message has only one or two different characters, the
+    theorem is trivial.  Otherwise, let $f[1 \ldots n]$ be the
+    original input frequencies, where without loss of generality,
+    $f[1]$ and $f[2]$ are the two smallest. To keep things simple, let
+    $f[n + 1] = f[1] + f[2]$. By the previous lemma, we know that some
+    optimal code for $f[1 .. n]$ has characters $1$ and $2$ as
+    siblings. Let $\TreeOpt$ be this optimal tree, and consider the
+    tree formed by it by removing $1$ and $2$ as it leaves. We remain
+    with a tree $\TreeOptA$ that has as leafs the characters
+    $3,\ldots, n$ and a ``special'' character $n+1$ (which is the
+    parent of $1$ and $2$ in $\TreeOpt$) that has frequency
+    $f[n+1]$. Now, since $f[n+1] = f[1] + f[2]$, we have
+    \begin{align}
+        \costX{\TreeOpt} &= \sum_{i=1}^n f[i] \DepthExt{\TreeOpt}{i} \nonumber\\
+        &= \sum_{i=3}^{n+1} f[i] \DepthExt{\TreeOpt}{i} + f[1]
+        \DepthExt{\TreeOpt}{1} + f[2] \DepthExt{\TreeOpt}{2} - f[n+1]
+        \DepthExt{\TreeOpt}{n+1} \nonumber\\
+        &= \costX{\TreeOptA} + \pth{\MakeSBig f[1] + f[2] }
+        \depthX{\TreeOpt} - \pth{\MakeSBig f[1] + f[2]
+        } \pth{\depthX{\TreeOpt}-1} \nonumber\\
+        &= \costX{\TreeOptA} + f[1] + f[2]. %
+        \eqlab{huffman:price}
+    \end{align}
+    This implies that minimizing the cost of $\TreeOpt$ is equivalent
+    to minimizing the cost of $\TreeOptA$. In particular, $\TreeOptA$
+    must be an optimal coding tree for $f[3\ldots n+1]$. Now, consider
+    the Huffman tree $\TreeA_H$ constructed for $f[3, \ldots, n+1]$
+    and the overall Huffman tree $\Tree_H$ constructed for
+    $f[1, \ldots, n]$. By the way the construction algorithm works, we
+    have that $\TreeA_H$ is formed by removing the leafs of $1$ and
+    $2$ from $\Tree$.  Now, by induction, we know that the Huffman
+    tree generated for $f[3, \ldots, n+1]$ is optimal; namely,
+    $\costX{\TreeOptA} = \costX{\TreeA_H}$.  As such, arguing as
+    above, we have
+    \begin{equation*}
+    \costX{\Tree_H} = \costX{\TreeA_H} + f[1] + f[2] =
+    \costX{\TreeOptA} + f[1] + f[2] = \costX{\TreeOpt},
+    \end{equation*}
+    by \Eqref{huffman:price}.  Namely, the Huffman tree has the same
+    cost as the optimal tree.
+\end{proof}
+
+
+\subsection{A formula for the average size of a code word}
+
+Assume that our input is made out of $n$ characters, where the $i$\th
+character is $p_i$ fraction of the input (one can think about $p_i$ as
+the probability of seeing the $i$\th character, if we were to pick a
+random character from the input).
+
+Now, we can use these probabilities instead of frequencies to build a
+Huffman tree. The natural question is what is the length of the
+codewords assigned to characters as a function of their probabilities?
+
+In general this question does not have a trivial answer, but there is
+a simple elegant answer, if all the probabilities are power of $2$. 
+
+\begin{lemma}
+    \lemlab{huffman:code}%
+    %
+    Let $1, \ldots, n$ be $n$ symbols, such that the probability for
+    the $i$\th symbol is $p_i$, and furthermore, there is an integer
+    $l_i\geq 0 $, such that $p_i = 1/2^{l_i}$. Then, in the Huffman
+    coding for this input, the code for $i$ is of length $l_i$.
+\end{lemma}
+\begin{proof}
+    The proof is by easy induction of the Huffman algorithm. Indeed,
+    for $n=2$ the claim trivially holds since there are only two
+    characters with probability $1/2$. Otherwise, let $i$ and $j$ be
+    the two characters with lowest probability. It must hold that $p_i
+    = p_j$ (otherwise, $\sum_k p_k$ can not be equal to one). As such,
+    Huffman's merges this two letters, into a single ``character''
+    that have probability $2p_i$, which would have encoding of length
+    $l_i-1$, by induction (on the remaining $n-1$ symbols). Now, the
+    resulting tree encodes $i$ and $j$ by code words of length $(l_i
+    -1 )+ 1 = l_i$, as claimed.
+\end{proof}
+
+In particular, we have that $l_i = \lg 1/p_i$. This implies that the
+average length of a code word is 
+\begin{equation*}
+\sum_i p_i \lg \frac{1}{p_i}. 
+\end{equation*}
+If we consider $X$ to be a random variable that takes a value $i$ with
+probability $p_i$, then this formula is
+\begin{equation*}
+\Entropy{X} = \sum_i \Prob{X = i} \lg \frac{1}{\Prob{X = i}},
+\end{equation*}
+which is the \emphi{entropy} of $X$.
+
+\begin{theorem}
+    Consider an input sequence $S$ of $m$ characters, where the
+    characters are taken from an alphabet set $\Sigma$ of size $n$. In
+    particular, let $f_i$ be the number of times the $i$\th character
+    of $\Sigma$ appears in $S$, for $i=1,\ldots, n$. Consider the
+    compression of this string using Huffman's code. Then, the total
+    length of the compressed string (ignoring the space needed to
+    store the code itself) is $\leq m \,(\Entropy{X} + 1)$, where $X$
+    is a random variable that returns $i$ with probability
+    $p_i = f_i/m$.
+\end{theorem}
+\begin{proof}
+    The trick is to replace $p_i$, which might not be a power of $2$,
+    by $q_i = 2^{\floor{\lg p_i }}$. We have that
+    $q_i \leq p_i \leq 2q_i$, and $q_i$ is a power of $2$, for all
+    $i$. The leftover of this coding is $\Delta = 1 - \sum_i q_i$. We
+    write $\Delta$ as a sum of powers of $2$ (since the frequencies
+    are fractions of the form $i/m$ [since the input string is of
+    length $m$] -- this requires at most $\tau = O(\log m)$ numbers):
+    $\Delta = \sum_{j=n+1}^{n+\tau}q_j$. We now create a Huffman code
+    $\Tree$ for the frequencies
+    ${q_1, \ldots, q_n, q_{n+1}, \ldots, q_{n+\tau}}$. The output
+    length to encode the input string using this code, by
+    \lemref{huffman:code}, is
+    \begin{equation*}
+        L%
+        =%
+        m \sum_{i=1}^n p_i \lg \frac{1}{q_i}
+        \leq %
+        m \sum_{i=1}^n p_i \pth{ 1 + \lg \frac{1}{p_i}}
+        \leq %
+        m + m \sum_{i=1}^n p_i  \lg \frac{1}{p_i}%
+        =%
+        m + m \EntropyX{X}.
+    \end{equation*}
+
+    One can now restrict $\Tree$ to be a prefix tree only for the
+    first $n$ symbols. Indeed, delete the $\tau$ ``fake''
+    leafs/symbols, and repeatedly remove internal nodes that have only
+    a single child. In the end of this process, we get a valid prefix
+    tree for the first $n$ symbols, and encoding the input string
+    using this tree would require at most $L$ bits, since process only
+    shortened the code words. Finally, let $\TreeB$ be the resulting
+    tree.
+
+    Now, consider the Huffman tree code for the $n$ input symbols
+    using the original frequencies $p_1,\ldots p_n$. The resulting
+    tree $\TreeA$ is a better encoder for the input string than
+    $\TreeB$, by \thmref{huffman:optimal}. As such, the compressed
+    string, would have at most $L$ bits -- thus establishing the
+    claim.
+\end{proof}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Compression}
+
+In this section, we consider the problem of how to compress a binary
+string. We map each binary string, into a new string (which is
+hopefully shorter).  In general, by using a simple counting argument,
+one can show that no such mapping can achieve real compression (when
+the inputs are adversarial). However, the hope is that there is an
+underling distribution on the inputs, such that some strings are
+considerably more common than others.
+
+\begin{defn}
+    A compression function $\CompressFunc$ takes as input a sequence
+    of $n$ coin flips, given as an element of $\brc{H,T}^n$, and
+    outputs a sequence of bits such that each input sequence of $n$
+    flips yields a distinct output sequence.
+\end{defn}
+
+The following is easy to verify.
+\begin{lemma}
+    If a sequence $S_1$ is more likely than $S_2$ then the compression
+    function that minimizes the expected number of bits in the output
+    assigns a bit sequence to $S_2$ which is at least as long as
+    $S_1$. 
+
+    \lemlab{monotonicity}
+\end{lemma}
+
+
+
+Note, that this is weak. Usually, we would like the function to output
+a prefix code, like the Huffman code.
+\begin{theorem}
+    Consider a coin that comes up heads with probability $p > 1/2$. For
+    any constant $\delta >0$, when $n$ is sufficiently large, the
+    following holds.
+    \begin{compactenumi}
+        \item There exists a compression function $\CompressFunc$ such
+        that the expected number of bits output by $\CompressFunc$ on
+        an input sequence of $n$ independent coin flips (each flip
+        gets heads with probability $p$) is at most $(1+\delta) n
+        \Entropy{p}$; and
+
+        \item The expected number of bits output by any compression
+        function on an input sequence of $n$ independent coin flips is
+        at least $(1-\delta)n \Entropy{p}$.
+    \end{compactenumi}
+\end{theorem}
+
+\begin{proof}
+    Let $\eps > 0$ be a constant such that $p -\eps > 1/2$. The first
+    bit output by the compression procedure is '1' if the output
+    string is just a copy of the input (using $n+1$ bits overall in
+    the output), and '0' if it is compressed. We compress only if the
+    number of ones in the input sequence, denoted by $X$ is larger than
+    $(p-\eps)n$. By the Chernoff inequality, we know that 
+    $\Prob{X < (p-\eps)n} \leq \exp \pth{-n \eps^2/2p}$.
+
+    If there are more than $(p-\eps)n$ ones in the input, and since
+    $p-\eps>1/2$, we have that
+    \begin{equation*}
+    \sum_{j=\ceil{n (p-\eps)}}^{n} \binom{n}{j} \leq 
+    \sum_{j=\ceil{n (p-\eps)}}^{n} \binom{n}{\ceil{n (p-\eps)}}
+    \leq \frac{n}{2} 2^{n \Entropy{p-\eps}},
+    \end{equation*}
+    by \corref{q:integer:values}. As such, we can assign each such
+    input sequence a number in the range $0 \ldots \frac{n}{2} 2^{n
+       \Entropy{p-\eps}}$, and this requires (with the flag bit) $1 +
+    \floor{\lg n + n \Entropy{p-\eps}}$ random bits.
+    
+    Thus, the expected number of bits output is bounded by
+    \begin{equation*}
+    (n+1)\exp \pth{-n \eps^2/2p} + \pth{1 + \floor{\lg n + n
+          \Entropy{p-\eps}}} \leq (1+\delta) n \Entropy{p},
+    \end{equation*}
+    by carefully setting $\eps$ and $n$ being sufficiently
+    large. Establishing the upper bound.
+
+    As for the lower bound, observe that at least one of the sequences
+    having exactly $\tau = \floor{(p + \eps)n}$ heads, must be
+    compressed into a sequence having
+    \begin{equation*}
+    \lg \binom{n}{\floor{(p+\eps)n}} - 1 \geq \lg
+    \frac{2^{n\Entropy{p+\eps}}}{n+1} - 1 = n\Entropy{p-\eps} - \lg (n+1) -
+    1 = \mu,
+    \end{equation*}
+    by \corref{q:integer:values}. Now, any input string with less than
+    $\tau$ heads has lower probability to be generated. Indeed, for a
+    specific strings with $\alpha < \tau$ ones the probability to
+    generate them is $p^\alpha (1-p)^{n-\alpha}$ and $p^\tau
+    (1-p)^{n-\tau}$, respectively. Now, observe that
+    \begin{equation*}
+        p^\alpha (1-p)^{n-\alpha}%
+        =%
+        p^{\tau}(1-p)^{n-\tau}\cdot\frac{(1-p)^{\tau - \alpha}}{p^{\tau-\alpha}}
+        =% 
+        p^{\tau}(1-p)^{n-\tau} \pth{\frac{1-p}{p}}^{\tau-\alpha}
+        <%
+        p^{\tau}(1-p)^{n-\tau},
+    \end{equation*}
+    as $1-p < 1/2 < p$ implies that $(1-p)/p < 1$.
+
+    As such, \lemref{monotonicity} implies that all the input strings
+    with less than $\tau$ ones, must be compressed into strings of
+    length at least $\mu$, by an optimal compresser. Now, the Chenroff
+    inequality implies that $\Prob{X \leq \tau } \geq 1- \exp \pth{ -
+       n \eps^2 /12p } $. Implying that an optimal compresser outputs
+    on average at least $\pth{1- \exp \pth{ - n \eps^2 /12p } }
+    \mu$. Again, by carefully choosing $\eps$ and $n$ sufficiently
+    large, we have that the average output length of an optimal
+    compressor is at least $(1-\delta)n \Entropy{p}$.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\StandAloneMode{
+\section{From previous lecture}
+\begin{corollary}
+     We have:
+     \begin{tabular}{ll}
+        (i) $q \in [0, 1/2]$ $\Rightarrow$ $\binom{n}{\floor{nq}} \leq
+        2^{n \Entropy{q}}$. &
+        (ii) $q \in [1/2,1]$ $\binom{n}{\ceil{nq}} \leq 2^{n
+           \Entropy{q}}$.
+        \\begin{equation*}0.1cm]
+        (iii)  $q \in [1/2,1]$ $\Rightarrow$ $\frac{2^{n \Entropy{q}}}{n+1}
+        \leq \binom{n}{\floor{nq}}$.
+        &
+        (iv)
+        $q \in [0,1/2]$ $\Rightarrow$ $\frac{2^{n \Entropy{q}}}{n+1}
+        \leq \binom{n}{\ceil{nq}}$.
+    \end{tabular}
+    
+    \corlab{q:integer:values}
+\end{corollary}
+
+\remove{
+\begin{lemma}
+    Suppose that $nq$ is integer in the range $[0,n]$. Then
+    $\displaystyle \frac{2^{n\Entropy{q}}}{n+1} \leq \binom{n}{nq}
+    \leq 2^{n \Entropy{q}}$.
+
+    \lemlab{q:values}
+\end{lemma}
+}
+}
+\section{Bibliographical Notes}
+
+The presentation here follows \cite[Sec. 9.1-Sec 9.3]{mu-pcrap-05}.
+
+
+\ChapterEnd{}
+
+%--------------------------------------------------------
+%
+% 12_vc_dim.tex - end of file
+%--------------------------------------------------------

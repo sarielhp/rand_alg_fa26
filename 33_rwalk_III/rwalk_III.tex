@@ -1,0 +1,447 @@
+\ifx\bookMode\undefined%
+    \input{../prefix}%
+\fi
+
+\Chapter{Random Walks III}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+\QuotePExt{%
+   ``I gave the girl my protection, offering in my equivocal way to be
+   her father. But I came too late, after she had ceased to believe in
+   fathers. I wanted to do what was right, I wanted to make
+   reparation: I will not deny this decent impulse, however mixed with
+   more questionable motives: there must always be a place for penance
+   and reparation. Nevertheless, I should never have allowed the gates
+   of the town to be opened to people who assert that there are higher
+   considerations that those of decency. They exposed her father to
+   her naked and made him gibber with pain, they hurt her and he could
+   not stop them (on a day I spent occupied with the ledgers in my
+   office).  Thereafter she was no longer fully human, sister to all
+   of us. Certain sympathies died, certain movements of the heart
+   became no longer possible to her. I too, if I live longer enough in
+   this cell with its ghost not only of the father and the daughter
+   but of the man who even by lamplight did not remove the black discs
+   from his eyes and the subordinate whose work it was to keep the
+   brazier fed, will be touched with the contagion and turned into a
+   create that believes in nothing.''}{J.  M. Coetzee}{Waiting for the
+   Barbarians}
+
+
+
+\section{Random walks on graphs}
+
+Let $\Graph = (\Vertices,\Edges)$ be a connected, non-bipartite,
+undirected graph, with $n$ vertices. We define the natural Markov
+chain on $\Graph$, where the transition probability is
+\begin{align*}
+  \MCPrbY{u}{v} = \begin{cases}
+      \frac{1}{d(u)} & \text{if } uv \in \Edges\\
+      0 & \text{otherwise},
+    \end{cases}
+\end{align*}
+where $d(w)$ is the degree of vertex $w$. Clearly, the resulting
+Markov chain $M_G$ is irreducible. Note, that the graph must have an
+odd cycle, and it has a cycle of length 2. Thus, the $\gcd$ of the
+lengths of its cycles is $1$. Namely, $M_G$ is aperiodic. Now, by the
+\thmrefY{Fundamental theorem of Markov chains}{fundamental}, $M_G$ has
+a unique stationary distribution $\pi$.
+
+\begin{lemma}
+    For all $v \in \Vertices$, we have $\pi_v = d(v) / 2m$.
+\end{lemma}
+
+\begin{proof}
+    Since $\pi$ is stationary, and the definition of $\MCPrbY{u}{v}$,
+    we get
+    \begin{align*}
+      \pi_v = \pbrc[]{\pi \MCPrbM }_v = \sum_{uv} \pi_u
+      \MCPrbY{u}{v},
+    \end{align*}
+    and this holds for all $v$. We only need to verify the claimed
+    solution, since there is a unique stationary distribution. Indeed,
+    \begin{align*}
+        \frac{d(v)}{2m} = \pi_v = [\pi \MCPrbM ]_v = \sum_{uv}
+        \frac{d(u)}{2m} \frac{1}{d(u)} = \frac{d(v)}{2m},
+    \end{align*}
+    as claimed.
+\end{proof}
+
+\begin{defn}
+    \deflab{commute:time}%
+    %
+    The \emphi{hitting time} $\MCExSteps{u}{v}$ is the expected number
+    of steps in a random walk that starts at $u$ and ends upon first
+    reaching $v$.
+    
+    The \emphi{commute time} between $u$ and $v$ is denoted by
+    $\CommuteTime{u}{v} = \MCExSteps{u}{v} + \MCExSteps{v}{u}$.
+    
+    Let $\CoverTime_u(G)$ denote the expected length of a walk that
+    starts at $u$ and ends upon visiting every vertex in $\Graph$ at least
+    once. The \emphi{cover time} of $\Graph$ denotes by $\CoverTime(G)$ is
+    defined by $\CoverTime(G) = \max_u \CoverTime_u(G)$.
+\end{defn}
+
+\begin{lemma}
+    For all $v \in \Vertices$, we have $\MCExSteps{v}{v} = 1/\pi_v =
+    2m/d(v)$.
+\end{lemma}
+
+
+\SaveIndent
+\noindent%
+\begin{minipage}{0.81\linewidth}
+    \RestoreIndent
+    \begin{example}[Lollipop]%
+        \exelab{lollipop}%
+        \index{graph!lollipop} %
+        %
+        Let $L_{2n}$ be the $2n$-vertex \emphi{lollipop graph}, this
+        graph consists of a clique on $n$ vertices, and a path on the
+        remaining $n$ vertices. There is a vertex $u$ in the clique
+        which is where the path is attached to it. Let $v$ denote the
+        end of the path, see figure on the right.
+        
+        Taking a random walk from $u$ to $v$ requires in expectation
+        $O(n^2)$ steps, as we already saw in class. This ignores the
+        probability of escape -- that is, with probability $(n-1)/n$
+        when at $u$ we enter the clique $K_{n}$ (instead of the
+        path). As such, it turns out that $\MCExSteps{u}{v} =
+        \Theta(n^3)$, and $\MCExSteps{v}{u} = \Theta(n^2)$. (Thus,
+        hitting times are not symmetric!)
+        
+        Note, that the cover time is not monotone decreasing with the
+        number of edges. Indeed, the path of length $n$, has cover
+        time $O(n^2)$, but the larger graph $L_n$ has cover time
+        $\Omega(n^3)$.        
+    \end{example}
+\end{minipage}%
+\quad%
+\begin{minipage}{0.15\linewidth}
+    \includegraphics[width=0.99\linewidth]{\File{figs/lollipop}}%}
+\end{minipage}%
+
+\begin{example}[More on walking on the Lollipop]
+    To see why $\MCExSteps{u}{v} = \Theta (n^3)$, number the vertices
+    on the stem $x_1, \ldots, x_n$. Let $T_i$ be the expected time to
+    arrive to the vertex $x_i$ when starting a walk from $u$. Observe,
+    that surprisingly, $T_1 = \Theta( n^2 )$. Indeed, the walk has to
+    visit the vertex $u$ about $n$ times in expectation, till the walk
+    would decide to go to $x_1$ instead of falling back into the
+    clique. The time between visits to $u$ is in expectation $O(n)$
+    (assuming the walk is inside the clique).
+    
+    Now, observe that $T_{2i} = T_i + \Theta(i^2) + \frac{1}{2}
+    T_{2i}$. Indeed, starting with $x_i$, it takes in expectation
+    $\Theta(i^2)$ steps of the walk to either arrive (with equal
+    probability) at $x_{2i}$ (good), or to get back to $u$
+    (\si{oopsi}). In the later case, the game begins from scratch. As
+    such, we have that
+    \begin{align*}
+      T_{2i}%
+      =%
+      2T_i + \Theta\pth{ i^2}%
+      =%
+      2\pth[]{\Big. 2T_{i/2} + \Theta\pth{ (i/2)^2}}%
+      + \Theta\pth{ i^2}%
+      =%
+      \cdots = 2^{1 + \log_2 i}T_1 + \Theta\pth{ i^2 },
+    \end{align*}
+    assuming $i$ is a power of two (why not?). As such, $T_n = nT_1 +
+    \Theta(n^2 )$. Since $T_1 = \Theta(n^2)$, we have that $T_n =
+    \Theta(n^3)$.
+\end{example}
+
+\begin{defn}
+    A $n \times n$ matrix $\Matrix$ is \emphi{stochastic} if all its
+    entries are non-negative and for each row $i$, it holds $\sum_{k}
+    \Matrix_{ik} =1$. It is \emphi{doubly stochastic} if in addition,
+    for any $i$, it holds $\sum_{k} \Matrix_{ki} =1$.
+\end{defn}
+
+\begin{lemma}
+    Let $\MC$ be a Markov chain, such that transition probability
+    matrix $\MCPrbM$ is \emph{doubly stochastic}. Then, the
+    distribution $u = (1/n, 1/n,\ldots, 1/n)$ is stationary for $\MC$.
+    
+    \lemlab{obvious}
+\end{lemma}
+
+\begin{proof}
+    $\displaystyle [u \MCPrbM]_i = \sum_{k=1}^n
+    \frac{\MCPrbY{k}{i}}{n} = \frac{1}{n}$.
+\end{proof}
+
+We can interpret every edge in $\G$ as corresponding to two directed
+edges. In particular, imagine performing a random walk in $\G$, but
+remembering not only the current vertex in the walk, but also the
+(directed) edge used the walk to arrive to this vertex. One can
+interpret this as a random walk on the (directed) edges. Observe, that
+there are $2m$ directed edges. Furthermore, a vertex $u$ of degree
+$d(u)$, has stationary distribution $\pi_u = d(u)/2m$. As such, the
+probability that the random walk would use any of the $d(u)$ outgoing
+edges from $u$ is exactly $\alpha = \pi_u / d(u) = 1/2m$. Namely, if
+we interpret the walk on the graph as walk on the directed edges, the
+stationary distribution is uniform. This readily implies that if
+$\dirEdge{u}{v}$ is in the graph, then
+$h_{\dirEdge{u}{v}\dirEdge{u}{v}}$ is $1/\alpha = 2m$. This readily
+implies that the expected time to go from $u$ to $v$ and back to $u$
+is at most $2m$. Next, we provide a more formal (and somewhat
+different) proof of this.
+
+
+\begin{lemma}
+    \lemlab{r:walk:previous}%
+    %
+    For any edge $\dirEdge{u}{v} \in \Edges$, we have
+    $\MCExSteps{u}{v} + \MCExSteps{v}{u} \leq 2m$.
+\end{lemma}
+
+(Note, that $\dirEdge{u}{v}$ being an edge in the graph is
+crucial. Indeed, without it a significantly worst case bound holds,
+see \thmref{amazing}.)
+
+\begin{proof}
+    Consider a new Markov chain defined by the edges of the graph
+    (where every edge is taken twice as two directed edges), where the
+    current state is the last (directed) edge visited. There are $2m$
+    edges in the new Markov chain, and the new transition matrix, has
+    $Q_{\dirEdge{u}{v}, \dirEdge{v}{w} } = \MCPrbY{v}{w} =
+    \frac{1}{d(v)}$. This matrix is \emph{doubly stochastic}, meaning
+    that not only do the rows sum to one, but the columns sum to one
+    as well.  Indeed, for an edge $\dirEdge{v}{w}$ we have
+    \begin{align*}
+      \sum_{x \in V, y \in \Nbr(x)} Q_{\dirEdge{x}{y},
+      \dirEdge{v}{w}} = \sum_{u \in \Nbr(v)} Q_{\dirEdge{u}{v},
+      \dirEdge{v}{w}} = \sum_{u \in \Nbr(v)} \MCPrbY{v}{w} = d(v)
+      \times \frac{1}{d(v)} = 1.
+    \end{align*}
+    Thus, the stationary distribution for this Markov chain is
+    uniform, by \lemref{obvious}. Namely, the stationary distribution
+    of $e =\dirEdge{u}{v}$ is $\MCExSteps{e}{e} = \pi_e = 1/(2m)$.
+    Thus, the expected time between successive traversals of $e$ is
+    $1/\pi_e = 2m$, by \thmref{fundamental} (iii).
+    
+    Consider $\MCExSteps{u}{v} + \MCExSteps{v}{u}$ and interpret this
+    as the time to go from $u$ to $v$ and then return to $u$.
+    Conditioned on the event that the initial entry into $u$ was via
+    the edge $\dirEdge{v}{u}$, we conclude that the expected time to
+    go from there to $v$ and then finally use $\dirEdge{v}{u}$ is
+    $2m$. The memorylessness property of a Markov chains now allows us
+    to remove the conditioning: since how we arrived to $u$ is not
+    relevant.  Thus, the expected time to travel from $u$ to $v$ and
+    back is at most $2m$.
+\end{proof}
+
+
+\section{Electrical networks and random walks}
+
+A \emphic{resistive electrical network}{electrical network} is an
+undirected graph. Each edge has \emphic{branch resistance}{resistance}
+associated with it. The electrical flow is determined by two laws:
+\emphi{Kirchhoff's law} (preservation of flow - all the flow coming
+into a node, leaves it) and \emphi{Ohm's law} (the voltage across a
+resistor equals the product of the resistance times the current
+through it). Explicitly, Ohm's law states
+\begin{align*}
+    \mathrm{voltage} = \mathrm{resistance} * \mathrm{current}.
+\end{align*}
+
+
+
+The \emphi{effective resistance} between nodes $u$ and $v$ is the
+voltage difference between $u$ and $v$ when one ampere is injected
+into $u$ and removed from $v$ (or injected into $v$ and removed from
+$u$). The effective resistance is always bounded by the branch
+resistance, but it can be much lower.
+
+Given an undirected graph $\Graph$, let $\NetworkE(G)$ be the electrical
+network defined over $\Graph$, associating one ohm resistance on the edges
+of $\NetworkE(G)$.
+
+You might now see the connection between a random walk on a graph and
+electrical network. Intuitively (used in the most unscientific way
+possible), the electricity, is made out of electrons each one of them
+is doing a random walk on the electric network. The resistance of an
+edge, corresponds to the probability of taking the edge. The higher
+the resistance, the lower the probability that we will travel on this
+edge. Thus, if the effective resistance $\EffectResist{u}{v}$ between
+$u$ and $v$ is low, then there is a good probability that travel from
+$u$ to $v$ in a random walk, and $\MCExSteps{u}{v}$ would be small.
+
+
+\subsection{A tangent on parallel and series resistors}
+
+Consider having $n$ resistors in parallel with resistance $R_1,
+\ldots, R_n$, connecting two nodes $u$ and $v$. As follows:
+
+\centerline{\includegraphics{\File{figs/circuit_parallel}}}%
+
+The \emph{effective resistance} between $u$ and $v$ is
+\begin{equation*}
+    R_{uv} = \frac{1}{ \frac{1}{R_1} + \frac{1}{R_2} \cdots + \frac{1}{R_n}}.
+\end{equation*}
+In particular, if $R_1 = \cdots=R_n = R$, then we have that
+$R_{uv} = 1/(1/R + \cdots 1/R) = 1/(n/R) = R/n$.
+
+Similarly, if we have $n$ resistors in series, with resistance
+$R_1, R_2, \ldots, R_n$, between $u$ and $v$:
+
+\centerline{\includegraphics{\File{figs/circuit_series}}}
+
+Then, the effective resistance between $u$ and $v$ is
+\begin{equation*}
+    R_{uv} = R_1 + \cdots + R_n.
+\end{equation*}
+In particular, if $R_1= \cdots = R_n$, then $R_{uv} = n R$.
+
+\subsection{Back to random walks}
+
+
+\begin{theorem}
+    \thmlab{amazing}
+    %
+    For any two vertices $u$ and $v$ in $\Graph$, the \defrefY{commute
+       time}{commute:time}
+    $\CommuteTime{u}{v} = 2 m \EffectResist{u}{v}$, where
+    $\EffectResist{u}{v}$ is the effective resistance between $u$ and
+    $v$.
+\end{theorem}
+
+\begin{proof}
+    Let $\phi_{uv}$ denote the voltage at $u$ in $\NetworkE(G)$ with
+    respect to $v$, where $d(x)$ amperes of current are injected into
+    each node $x \in \Vertices$, and $2m$ amperes are removed from
+    $v$. We claim that
+    \begin{align*}
+        \MCExSteps{u}{v} = \phi_{uv}.
+    \end{align*}
+    Note, that the voltage on an edge $x y$ is $\phi_{xy} = \phi_{xv}
+    - \phi_{yv}$. Thus, using Kirchhoff's Law and Ohm's Law, we obtain
+    that
+    % , for all $.$, we have
+    \begin{equation}
+        x \in V \setminus \brc{v}\;\;\;\;\;%
+        d(x) = \sum_{w \in
+           \Nbr(x)} \mathrm{current}(x w) = \sum_{w \in \Nbr(x)}
+        \frac{\phi_{x w}}{\mathrm{resistance}(x w)} = \sum_{w \in
+           \Nbr(x)} \pth{ \phi_{x v} - \phi_{wv}},%
+        %
+        \eqlab{voltage}
+    \end{equation}
+    since the resistance of every edge is $1$ ohm. (We also have the
+    ``trivial'' equality that $\phi_{vv}=0$.)  Furthermore, we have
+    only $n$ variables in this system; that is, for every $x \in
+    \Vertices$, we have the variable $\phi_{x v}$.
+    
+    Now, for the random walk interpretation -- by the definition of
+    expectation, we have
+    \begin{align*}
+        x \in V \setminus \brc{v} \;\;\;\;\; &\MCExSteps{x}{v} =
+        \frac{1}{d(x)}\sum_{w \in \Nbr(x)} \pth{1 + \MCExSteps{w}{v}}%
+        % 
+        \;\;\;\; \Longleftrightarrow \;\;\;\;%
+        % 
+        d(x)\, \MCExSteps{x}{v} = \sum_{w
+           \in \Nbr(x)} 1 + \sum_{w \in \Nbr(x)}\MCExSteps{w}{v}\\
+        &%
+        \Longleftrightarrow \;\;\;\; %
+        \sum_{w \in \Nbr(x)} 1 = d(x)\, \MCExSteps{x}{v} - \sum_{w \in
+           \Nbr(x)}\MCExSteps{w}{v}= \sum_{w \in \Nbr(x)} \pth{
+           \MCExSteps{x}{v} - \MCExSteps{w}{v}}.
+    \end{align*}
+    Since $d(x) = \sum_{w \in \Nbr(x)} 1$, this is equivalent to
+    \begin{align}
+        x \in V \setminus \brc{v} \;\;\;\;\; d(x) = \sum_{w \in
+           \Nbr(x)} \pth{ \MCExSteps{x}{v} - \MCExSteps{w}{v}}.
+        \eqlab{hitting:time}
+    \end{align}
+    Again, we also have the trivial equality
+    $\MCExSteps{v}{v}=0$.\footnote{%
+       In previous lectures, we interpreted $\MCExSteps{v}{v}$ as the
+       expected length of a walk starting at $v$ and coming back to
+       $v$.} Note, that this system also has $n$ equalities and $n$
+    variables.
+    
+    \Eqref{voltage} and \Eqref{hitting:time} show two systems of
+    linear equalities. Furthermore, if we identify $\MCExSteps{u}{v}$
+    with $\phi_{xv}$ then they are exactly the same system of
+    equalities.  Furthermore, since \Eqref{voltage} represents a
+    physical system, we know that it has a unique solution.  This
+    implies that $\phi_{x v} = \MCExSteps{x}{v}$, for all $x \in
+    \Vertices$.
+    
+    Imagine the network where $u$ is injected with $2m$ amperes, and
+    for all nodes $w$ remove $d(w)$ units from $w$. In this new
+    network, $\MCExSteps{v}{u} = - \phi_{vu}' = \phi_{uv}'$.  Now,
+    since flows behaves linearly, we can superimpose them (i.e., add
+    them up). We have that in this new network $2m$ unites are being
+    injected at $u$, and $2m$ units are being extracted at $v$, all
+    other nodes the charge cancel itself out. The voltage difference
+    between $u$ and $v$ in the new network is $\widehat{\phi} =
+    \phi_{uv} + \phi_{uv}' = \MCExSteps{u}{v} + \MCExSteps{v}{u} =
+    \CommuteTime{u}{v}$. Now, in the new network there are $2m$
+    amperes going from $u$ to $v$, and by Ohm's law, we have
+    \begin{align*}
+        \widehat{\phi} = \mathrm{voltage} = \mathrm{resistance} *
+        \mathrm{current} = 2m \EffectResist{u}{v},
+    \end{align*}
+    as claimed.
+\end{proof}
+
+
+\begin{figure}[h]
+    \centerline{\includegraphics{\File{figs/lollipop}}}%
+    \caption{Lollipop again.}
+    \figlab{lollipop}
+\end{figure}
+
+\begin{example}
+    Recall the lollipop $L_n$ from \exeref{lollipop}, see
+    \figref{lollipop}.  Let $u$ be the connecting vertex between the
+    clique and the stem (i.e., the path). The effective resistance
+    between $u$ and $v$ is $n$ since there are $n$ resistors in series
+    along the stem. That is $R_{uv} = n$.
+
+    The number of edges in the lollipop is
+    $\binom{n}{2} + n = n(n-1)/2 + n = n(n+1)/2$. As such, the commute
+    time
+    $\MCExSteps{v}{u} + \MCExSteps{u}{v}= \CommuteTime{u}{v} = 2 m
+    \EffectResist{u}{v} = 2\bigl(n(n+1)/2\bigr) n = n^2(n+1)$.
+
+    We already know that $\MCExSteps{v}{u}=\Theta(n^2)$. This implies
+    that $\MCExSteps{u}{v} = \CommuteTime{u}{v} - \MCExSteps{v}{u}  =
+    \Theta(n^3)$. 
+\end{example}
+
+\begin{lemma}
+    For any $n$ vertex connected graph $\Graph$, and for all $u,v \in
+    V(G)$, we have $\CommuteTime{u}{v} < n^3$.
+\end{lemma}
+
+\begin{proof}
+    The effective resistance between any two nodes in the network is
+    bounded by the length of the shortest path between the two nodes,
+    which is at most $n-1$. As such, plugging this into
+    \thmref{amazing}, yields the bound, since $m<n^2$.
+\end{proof}
+
+\StandAloneMode{
+   \section{Tools from previous lecture}
+   
+   \IncFragment{\deflabel{fund_m_c_theorem}} }
+
+\section{Bibliographical Notes}
+
+A nice survey of the material covered here, is available online at
+\url{http://arxiv.org/abs/math.PR/0001057} \cite{ds-rwen-00}.
+
+
+% \bibliographystyle{alpha} \bibliography{shortcuts,geometry}
+
+
+% \end{document}%
+\ChapterEnd{}
+

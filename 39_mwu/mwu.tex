@@ -1,0 +1,235 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Multiplicative weight updated.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\ifx\bookMode\undefined%
+\input{../prefix}%
+%\setChapterCounter{11}
+\fi%
+
+
+
+\Chapter{Multiplicative Weight Update: Expert Selection}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteOptExt{Possession of anything new or expensive only reflected a
+   person's lack of theology and geometry; it could even cast doubts
+   upon one's soul.}%
+{A confederacy of Dunces}%
+{John Kennedy Toole}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The problem: Expert selection} 
+
+We are given $N$ experts $\IRX{N} = \brc{ 1,2,\ldots, N}$. At each
+time $t$, an expert $i$ makes a prediction what is going to happen at
+this time slot. To make things simple, assume the prediction is one of
+two values, say, $0$ or $1$. You are going to play this game for a
+while -- at each iteration you are going to get the advice of the $N$
+experts, and you are going to select either decision as your own
+prediction. The purpose here is to come up with a strategy that
+minimizes the overall number of wrong predictions made.
+
+\paragraph*{If there is an expert that is never wrong.}
+This situation is easy -- initially start with all $n$ experts as
+being viable -- to this end, we assign $W(i) \leftarrow 1$, for all
+$i$. If an expert prediction turns out to be wrong, we set its weight
+to zero (i.e., it is no longer active). Clearly, if you follow the
+majority vote of the still viable experts, then at most $\log_2 n$
+mistakes would be made, before one isolates the infallible experts.
+
+% \bigskip
+
+
+\section{Majority vote}
+
+
+\paragraph*{The algorithm.}
+Unfortunately, we are unlikely to be in the above scenario -- experts
+makes mistakes. Throwing a way an expert because of a single mistake
+is a sure way to have no expert remaining. Instead, we are going to
+moderate our strategy. If expert $i$ is wrong, in a round, we are
+going to decrease its weight -- to be precise, we set
+$W(i) \leftarrow (1-\eps)W(i)$, where $\eps$ is some parameter.  Note,
+that this weight update is done every round, independent on the
+decision output in the round.  It is now natural, in each round, to
+compute the total weight of the experts predicting $0$, and the total
+weight of the experts predicting $1$, and return the prediction that
+has a heavier total weight supporting it.
+
+\paragraph*{Intuition.}
+
+The algorithm keeps track of the quality of the experts. The useless
+experts would have weights very close to zero.
+
+\paragraph*{Analysis.}
+We need the following easy calculation.
+
+\begin{lemma}
+    For $x \in [0,1/2]$, we have $1-x \geq \exp( -x -x^2 )$.
+\end{lemma}
+\begin{proof}
+    For $x \in (-1, 1)$, the Taylor expansion of $\ln(1+x)$ is
+    $ \sum_{i=1}^\infty (-1)^{i+1} \frac{x^i}{i}$. As such, for $x \in
+    [0,1/2]$ we have
+    \begin{equation*}
+        \ln (1-x) =
+        -  \sum_{i=1}^\infty \frac{x^i}{i}
+        =%
+        -x - \frac{x^2}{2} - \frac{x^3}{3} \cdots
+        \geq
+        -x - x^2,
+    \end{equation*}
+    since $x^{2+i}/(2+i) \leq x^2 /2^i$ $\iff$
+    $x^{i}/(2+i) \leq 1 /2^i$, which is obviously true as
+    $x \leq 1/2$.
+\end{proof}
+
+
+\newcommand{\Mistakes}{\Mh{\boldsymbol \beta}}%
+\newcommand{\mistakes}{\Mh{\beta}}
+
+\newcommand{\MistakesX}[1]{\Mistakes_{#1}}
+\newcommand{\mistakesY}[2]{\Mh{\beta}_{#1}\pth{#2}}
+
+\begin{lemma}
+    Let assume we have $N$ experts.  Let $\MistakesX{t}$ be the number
+    of the mistakes the algorithm performs, and let $\mistakes_t(i)$
+    be the number of mistakes made by the $i$\th expert, for
+    $i \in \IRX{n}$ (both till time $t$). Then, if we run this
+    algorithm for $T$ rounds, we have
+    \begin{equation*}
+        \forall i \in \IRX{n} \qquad%
+        \MistakesX{T}  \leq 2(1+\eps)\mistakesY{T}{i} + \frac{2\log N}{\eps}.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Let $\Phi_t$ be the total weight of the experts at the beginning
+    of round $t$. Observe that $\Phi_1 = N$, and if a mistake was made
+    in the $t$ round, then
+    \begin{equation*}
+        \Phi_{t+1}%
+        \leq%
+        (1-\eps/2) \Phi_{t}%
+        \leq%
+        \exp( -\eps \MistakesX{t+1}/2 ) N.
+    \end{equation*}
+    On the other hand, an expert $i$ made $\mistakes_i(t)$ mistakes in
+    the first $t$ rounds, and as such its weight, at this point in
+    time, is $(1-\eps)^{\mistakes_t(i)}$. We thus have, at time $T$,
+    and for any $i$, that
+    \begin{equation*}
+        \exp\pth{ - \pth{ \eps + \eps^2} \mistakesY{T}{i} \Bigr. }
+        \leq%
+        (1-\eps)^{\mistakesY{T}{i}}
+        \leq
+        \Phi_T %
+        \leq%
+        \exp \pth{ -\frac{\eps \MistakesX{T}}{2}}  N.
+    \end{equation*}
+    Taking $\ln$ of both sides, we have
+    \begin{math}
+        - \pth{ \eps + \eps^2} \mistakesY{T}{i} \leq%
+        -\frac{\eps \MistakesX{T}}{2} + \ln N.
+    \end{math}
+    $\iff$
+    \begin{math}
+        \MistakesX{T} \leq 2 \pth{ 1 + \eps} \mistakesY{T}{i} + 2\frac{\ln
+           N}{\eps}.
+    \end{math}
+\end{proof}
+
+
+\section{Randomized weighted majority}
+
+Let $W_t(i)$ be the weight assigned to the $i$\th expert with in the
+beginning of the $t$\th round. We modify the algorithm to choose
+expert $i$, at round $t$, with probability $W_t(i)/ \Phi_t$. That is,
+the algorithm randomly choose an expert to follow according to their
+weights. Unlike before, all the experts that are wrong in a round get
+a weight decrease.
+
+\begin{proof}
+    We have that $\Phi_{t} = \sum_{i=1}^N W_t(i)$. Let $m_t(i)=1$ be a
+    an indicator variable that is one if and only if expert $i$ made a
+    mistake at round $t$. Similarly, let $\textbf{m}_t=1$ $\iff$ the
+    algorithm made a mistake at round $t$. By definition, we have that
+    \begin{equation*}
+        \Ex{\textbf{m}_t}%
+        =%
+        \sum_{i=1}^N \Prob{ i \text{ expert chosen}} \, m_t(i)
+        =%
+        \sum_{i=1}^N \frac{W_t(i)}{\Phi_t} \, m_t(i).
+    \end{equation*}
+
+
+
+    We then have that
+    \begin{equation*}
+        W_{t+1}(i) = \bigl(1-\eps m_t(i) \bigr)W_t(i).        
+    \end{equation*}
+    As such, we have
+    $\Phi_{t+1}%
+        =%
+        \sum_{i=1}^N W_{t+1}(i)$, and 
+    \begin{equation*}
+        \Phi_{t+1}%
+        =%
+        \sum_{i=1}^N \bigl(1-\eps m_t(i) \bigr)W_t(i)        
+        =%
+        \Phi_{t} -\eps 
+        \sum_{i=1}^N  m_t(i)W_t(i)
+        =%
+        \Phi_{t} -\eps \Phi_t
+        \sum_{i=1}^N  m_t(i)\frac{W_t(i)}{\Phi_t}
+        =%
+        \Bigl( 1-\eps \Ex{\textbf{m}_t}\Bigr) \, \Phi_t.
+    \end{equation*}
+    We now follow the same argument as before
+    \begin{align*}
+      &(1-\eps)^{\mistakesY{T}{i}} \leq \Phi_T
+        \leq %
+        N \prod_{t=1}^T \Bigl( 1-\eps \Ex{\textbf{m}_t}\Bigr)
+        \leq %
+        N  \exp\pth{ -\eps \Ex{ \MistakesX{T}} }
+        \implies%
+        (-\eps - \eps^2 ) \mistakesY{T}{i}
+        \leq
+        \ln N  -\eps \Ex{ \MistakesX{T}} 
+      \\%
+      &\implies%
+        \Ex{ \MistakesX{T} } 
+        \leq
+        (1 + \eps ) \mistakesY{T}{i} + \frac{\ln N}{\eps}.
+    \end{align*}
+
+\end{proof}
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+
+\section{Bibliographical notes} 
+
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+%   \IncFragment{\deflabel{normal_distribution}}
+   % \IncFragment{\deflabel{A_N_N_PLEB_Euclidean}}
+   % \IncFragment{\deflabel{A_N_N_PLEB_slow}}
+   % \IncFragment{\deflabel{H_S_T_Euclidean}}
+}
+
+\ChapterEnd{}
+
+%--------------------------------------------------------
+%
+% end of file
+%--------------------------------------------------------

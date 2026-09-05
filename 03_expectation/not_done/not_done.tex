@@ -1,0 +1,161 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conditional expectation}
+
+For two random variables $X$ and $Y$, let $\ExCond{X}{Y}$ denote the
+expected value of $X$, if the value of $Y$ is specified. Formally, we
+have
+\begin{equation*}
+    \ExCond{X}{Y =y}%
+    =%
+    \sum_{x \in \Omega} x \ProbCond{X =x}{Y=y}.
+\end{equation*}
+The expression $\ExCond{X}{Y}$, which is a shorthand for
+$\ExCond{X}{Y=y}$, is the \emphi{conditional expectation} of $X$ given
+$Y$. In reality, it is a function from the value of $y$, to the
+average value of $X$. As such, one can think of conditional
+expectation as a function $f(y) = \ExCond{X}{Y=y}$.
+
+
+\begin{fragment}{conditional:expectation}
+\begin{lemma}%
+    \lemlab{conditional:expectation}%
+    % 
+    For any two random variables $X$ and $Y$, we have
+    \begin{math}
+        \Ex{ \bigl. \ExCond{X}{ Y} } = \Ex{ \bigl. X}.
+    \end{math}
+\end{lemma}
+\end{fragment}
+\begin{proof}
+    \begin{math}
+        \Ex{\bigl. \ExCond{X }{ Y} }%
+        =%
+        \ExExt{Y}{ \Ex{ X \sep{ Y = y}}} =%
+        \sum_y \Prob{Y = y} \ExCond{ X}{ Y = y}%
+    \end{math}
+    \begin{align*}
+      &=%
+        \sum_y \Prob{\bigl. Y = y} \frac{\sum_{x} x \Prob{X = x \cap
+        Y=y}}{\Prob{Y=y}}%
+      \\ &%
+           =%
+           \sum_{y} \sum_{x} x \Prob{ \bigl. X =x \cap Y = y}%
+           =%
+           \sum_{x} x \sum_y \Prob{ \bigl. X =x \cap Y = y}%
+      \\ &%
+           =%
+           \sum_{x} x \Prob{\bigl. X = x}%
+           =%
+           \Ex{\bigl. X}.
+    \end{align*}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{expectations:product}%
+    % 
+    For any two random variables $X$ and $Y$, we have
+    \begin{math}
+        \Ex{\bigl.Y \cdot \ExCond{X }{Y}} = \Ex{\bigl. X Y}.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    We have that
+    \begin{math}
+        \ds%
+        \Ex{Y \cdot \Ex{X \sep{Y}}}%
+        =%
+        \sum_y \Prob{Y = y} \cdot y \cdot \Ex{X \sep{Y =y }}
+    \end{math}
+    \begin{equation*}
+        =%
+        \sum_y \Prob{Y = y} \cdot y \cdot \frac{\sum_{x} x \Prob{X = x
+              \cap Y=y}}{\Prob{Y=y}}%
+        =%
+        \sum_x \sum_y x y \cdot \Prob{ \bigl. X = x \cap Y = y}%
+        =%
+        \Ex{\bigl. X Y}.
+    \end{equation*}
+\end{proof}
+
+
+\section{\QuickSort{} runs in $O(n \log n)$ time with high
+   probability}
+
+Consider a set $T$ of the $n$ items to be sorted, and consider a
+specific element $t \in T$. Let $X_i$ be the size of the input in the
+$i$\th level of recursion that contains $t$. We know that $X_0 = n$,
+and
+\begin{align*}
+    \Ex{X_i \sep{ X_{i-1}}}%
+    \leq%
+    \frac{1}{2} \frac{3}{4} X_{i-1} + \frac{1}{2} X_{i-1}%
+    \leq%
+    \frac{7}{8} X_{i-1}.
+\end{align*}
+Indeed, with probability $1/2$ the pivot is the middle of the
+subproblem; that is, its rank is between $X_{i-1}/4$ and
+$(3/4)X_{i-1}$ (and then the subproblem has size $\leq X_{i-1}(3/4)$),
+and with probability $1/2$ the subproblem might has not shrank
+significantly (i.e., we pretend it did not shrink at all).
+
+Now, observe that for any two random variables we have that
+$\Ex{X \MakeSBig } = \ExExt{y}{\Ex{X\left| \MakeSBig {Y=y}
+      \right.}\MakeBig }$, see \lemref{conditional:expectation}. As
+such, we have that
+\begin{align*}
+    \Ex{X_i \MakeBig }%
+    =%
+    \ExExt{y}{\Ex{X_i\sep{X_{i-1}=y}}\Bigl. }%
+    \leq%
+    \ExExt{X_{i-1}=y}{ \frac{7}{8} y }%
+    =%
+    \frac{7}{8} \Ex{X_{i-1}\MakeBig }%
+    \leq%
+    \pth{\frac{7}{8}}^i \Ex{X_0}%
+    =%
+    \pth{\frac{7}{8}}^i n.
+\end{align*}
+
+In particular, consider $M = 8 \log_{8/7} n$. We have that
+\begin{align*}
+    \mu%
+    =%
+    \Ex{\MakeBig X_M}%
+    \leq%
+    \pth{\frac{7}{8}}^M n%
+    \leq%
+    \frac{1}{n^8} n%
+    =%
+    \frac{1}{n^7}.
+\end{align*}
+
+Of course, $t$ participates in more than $M$ recursive calls, if and
+only if $X_M \geq 1$. However, by Markov's inequality
+(\thmref{Markov}), we have that
+\begin{align*}
+    \Prob{ \begin{array}{c}
+           \text{element } t \text{ participates }\\
+           \text{ in more than } M \text{ recursive calls}
+       \end{array}
+    }%
+    \leq %
+    \Prob{ \MakeBig X_M \geq 1 }%
+    \leq%
+    \frac{\Ex{X_M}}{1} \leq \frac{1}{n^7},
+\end{align*}
+as desired. That is, we proved that the probability that any element
+of the input $T$ participates in more than $M$ recursive calls is at
+most $n(1/n^7) \leq 1/n^6$.
+
+\begin{theorem}
+    For $n$ elements, \QuickSort runs in $O(n \log n)$ time, with high
+    probability.
+\end{theorem}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

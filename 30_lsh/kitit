@@ -1,0 +1,7 @@
+#! /usr/local/bin/tcsh -f 
+ 
+# Change the following
+setenv BASENAME  09_lsh
+setenv MSG  "09_lsh Paper is now kitted under"
+ 
+source  $HOME/bin/private/tex/kitit_suffix

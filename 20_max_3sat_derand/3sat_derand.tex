@@ -1,0 +1,163 @@
+
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+\Chapter{Derandomization using Conditional Expectations}
+\QuoteExt{%
+   Yes, my guard stood hard when abstract threats\\
+   Too noble to neglect\\
+   Deceived me into thinking\\
+   I had something to protect\\
+   Good and bad, I define these terms\\
+   Quite clear, no doubt, somehow\\
+   Ah, but I was so much older then\\
+   I’m younger than that now }%
+{My Back Pages}%
+{Bob Dylan}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+\bigskip%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+\newcommand{\evalEF}{\AlgorithmI{eval{\ensuremath{_{\ExChar f}}}}}
+
+\section{Method of conditional expectations}
+
+Imagine that we have a randomized algorithm that uses as randomized
+input $n$ bits $X_1, \ldots, X_n$, and outputs a solution of quality
+$f(X_1, \ldots, X_n)$. Assume that given values
+$v_1, \ldots, v_k \in \{0,1\}$, one can compute, efficiently and
+deterministicly, the quantity
+\begin{equation*}
+    \ExChar f(v_1,\ldots, v_k)
+    =%
+    \Ex{ f(v_1, \ldots, v_k, X_{k+1}, \ldots, X_n)}
+    =%
+    \ExCond{ f(X_1, \ldots, X_n) }{X_1=v_1, \ldots, X_k=v_k}
+\end{equation*}
+by a given procedure \evalEF.  In such settings, one can compute
+efficiently and deterministicly an assignment $v_1, \ldots, v_n$, such
+that
+\begin{equation*}
+    f(v_1, \ldots, v_n) \geq \ExChar f, \qquad \text{where}\qquad%
+    \ExChar f = \Ex{f(X_1,\ldots, X_n)}.
+\end{equation*}
+Or alternatively, one can find an assignment $u_1, \ldots, u_n$ such
+that $f(u_1, \ldots, u_n) \leq \Ex{f(X_1,\ldots, X_n)}$.
+
+
+\paragraph*{The algorithm.}
+
+Assume the algorithm had computed a partial assignment for
+$v_1, \ldots, v_k$, such that
+$\alpha_k = \ExChar f (v_1, \ldots, v_k) \geq \ExChar f$. The
+algorithm then would compute the two values
+\begin{equation*}
+    \alpha^{}_{k,0} = \ExChar f (v_1, \ldots, v_k, 0)
+    \qquad\text{and}\qquad%    
+    \alpha^{}_{k,1} = \ExChar f (v_1, \ldots, v_k, 1).
+\end{equation*}
+Observe that
+\begin{equation*}
+    \alpha^{}_k
+    =%
+    \ExChar f (v_1, \ldots, v_k)
+    =%
+    \Prob{X_{k+1} = 0} \ExChar f (v_1, \ldots, v_k,0)
+    +
+    \Prob{X_{k+1} = 1} \ExChar f (v_1, \ldots, v_k,1)
+    =%
+    \frac{\alpha_{k,0} + \alpha_{k,1}}{2}.
+\end{equation*}
+As such, there is an $i$, such that $\alpha_{k,i} \geq \alpha_k$. The
+algorithm sets $v_{k+1} = i$, and continues to the next iteration.
+
+\paragraph*{Correctness.} This is hopefully clear. Initially,
+$\alpha_0 = \ExChar f$. In each iteration, the algorithm makes a
+choice, such that $\alpha_k \geq \alpha_{k-1}$. Thus,
+\begin{equation*}
+    \alpha_n%
+    =
+    \ExChar f(v_1, \ldots, v_n)
+    =
+    f(v_1, \ldots, v_n)
+    \geq \alpha_{n-1 } \geq \cdots \geq \alpha_0%
+    =%
+    \ExChar f.    
+\end{equation*}
+
+\paragraph*{Running time.}
+The algorithm performs $2n$ invocations of \evalEF{}.
+
+\paragraph*{Result.}
+
+\begin{theorem}
+    \thmlab{conditional:expectations}%
+    %
+    Given a function $f(X_1, \ldots, X_n)$ over $n$ random binary
+    variables, such that one can compute determinedly
+    $\ExChar f(v_1, \ldots v_k) = \ExCond{f(X_1, \ldots, X_n)}{X_1 =
+       v_1, \ldots, X_k=v_k}$ in $T(n)$ time. Then, one can compute an
+    assignment $v_1, \ldots, v_n$, such that
+    $f(v_1, \ldots, v_n) \geq \ExChar f = \Ex{ f(X_1, \ldots,
+       X_n)}$. The running time of the algorithm is
+    $O\bigl(n + n T(n)\bigr)$.
+\end{theorem}
+
+\subsection{Applications}
+\subsubsection{Max \TPDF{$k$}{k}SAT}
+
+Given a boolean formula $F$ with $n$ variables and $m$ clauses, where each
+clause has exactly $k$ literals, let $f(X_1, \ldots,X_n)$ be the
+number of clauses the assignment $X_1, \ldots, X_n$
+satisfies. Clearly, one can compute $f$ in $O(m k )$ time. More
+generally, given a partial assignment $v_1, \ldots, v_k$, one can
+compute
+\begin{math}
+    \alpha_k = \ExChar f(v_1, \ldots, v_k).
+\end{math}
+Indeed, scan $F$ and assign all the literals that depends on the
+variables $X_1, \ldots, X_k$ their values. A literal evaluating to one
+satisfies its clause, and we count it as such. What remains are
+clauses with at most $k$ literals. A literal with $i$ literals, have
+probability \emph{exactly} $1-1/2^i$ to be satisfied. Thus, summing
+these probabilities on these leftover clauses given use the desired
+value. This takes $O(mk )$ time. 
+Using    \thmref{conditional:expectations} we get the following.
+
+\begin{lemma}
+    Let $F$ be a $k$SAT formula with $n$ variables and $m$
+    clauses. One can compute deterministicly an assignment that
+    satisfies at least $(1-1/2^{k})m$ clauses of $F$. This takes
+    $O( mnk)$ time.
+\end{lemma}
+
+
+\subsubsection{Max cut}
+
+\subsubsection{\Turan theorem}
+
+\begin{lemma}[\Turan's theorem]
+    \thmlab{turan:main}%
+    %
+    Let $\G=(\Vertices,\Edges)$ be a graph with $n$ vertices and $m$
+    edges. One can compute determinedly, in $O(n m)$ time, an
+    independent set of size at least $\displaystyle \frac{n}{1+2m/n}$.
+\end{lemma}
+
+\begin{proof}
+    Exercise.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{mr-ra-95}
+
+\ChapterEnd{}

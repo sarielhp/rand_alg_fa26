@@ -1,0 +1,29 @@
+#! /bin/bash
+
+#
+
+DIRS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+. $DIRS/directories
+
+cd $SRC
+
+TDIR=/tmp/sariel/book/reinput/
+mkdir -p $TDIR >& /dev/null
+
+cd $SRC
+$DIRS/gen_input_chap_commands  >& $TDIR/list.tex
+
+cp $SRC/book.tex $TDIR
+cd $TDIR
+
+
+sed '/INPUT CHAPTERS BEGIN/q' book.tex > book_prefix.tex
+sed -ne '/INPUT CHAPTERS END/,$ p' book.tex > book_suffix.tex
+
+cat book_prefix.tex list.tex book_suffix.tex > book_new.tex
+cp book_new.tex $SRC/book.tex
+
+
+#echo $DIRS 
+#exit
+#DIRS=$(dirname -- "${BASH_SOURCE[0]}")

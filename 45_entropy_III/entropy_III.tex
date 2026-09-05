@@ -1,0 +1,599 @@
+% -------------------------------------------------------- Shanon's
+% theorem --------------------------------------------------------
+
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+% \newcommand{\sign}{\mathrm{sign}}
+% \newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\newcommand{\StringsX}[1]{\mathcal{S}\pth{#1}}
+\newcommand{\NotInS}[2]{\overline{S_{{#1},{#2}}}}
+\newcommand{\sring}[1]{\mathrm{ring}\pth[]{#1}}
+\newcommand{\bring}[1]{\mathrm{ring}\pth{#1}}
+
+\Chapter{Entropy III - Shannon's Theorem}
+
+\ChapterPrefix{} \ChapterGen{}
+
+\QuoteExt{The memory of my father is wrapped up in\\
+   white paper, like sandwiches taken for a day at work.\\
+   ~\\begin{equation*}-0.2cm]
+   Just as a magician takes towers and rabbits\\
+   out of his hat, he drew love from his small body,\\
+   ~\\begin{equation*}-0.2cm]
+   and the rivers of his hands\\
+   overflowed with good deeds.}{-- Yehuda Amichai, My Father.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Coding: Shannon's Theorem}
+
+We are interested in the problem sending messages over a noisy
+channel. We will assume that the channel noise is ``nicely'' behaved.
+
+\begin{defn}
+    The input to a \emphi{binary symmetric channel} with parameter $p$
+    is a sequence of bits $x_1, x_2, \ldots,$ and the output is a
+    sequence of bits $y_1,y_2, \ldots,$ such that
+    $\Prob{x_i = y_i} = 1-p$ independently for each $i$.
+\end{defn}
+
+Translation: Every bit transmitted have the same probability to be
+flipped by the channel. The question is how much information can we
+send on the channel with this level of noise. Naturally, a channel
+would have some capacity constraints (say, at most 4,000 bits per
+second can be sent on the channel), and the question is how to send
+the largest amount of information, so that the receiver can recover
+the original information sent.
+
+Now, its important to realize that noise handling is unavoidable in
+the real world. Furthermore, there are tradeoffs between channel
+capacity and noise levels (i.e., we might be able to send considerably
+more bits on the channel but the probability of flipping (i.e., $p$)
+might be much larger). In designing a communication protocol over this
+channel, we need to figure out where is the optimal choice as far as
+the amount of information sent.
+
+\begin{defn}
+    A \emphi{$(k,n)$ encoding function}
+    $\EncodeFunc: \brc{0,1}^k \rightarrow \brc{0,1}^n$ takes as input
+    a sequence of $k$ bits and outputs a sequence of $n$ bits. A
+    \emphi{$(k,n)$ decoding function}
+    $\DecodeFunc: \brc{0,1}^n \rightarrow \brc{0,1}^k$ takes as input
+    a sequence of $n$ bits and outputs a sequence of $k$ bits.
+\end{defn}
+
+Thus, the sender would use the encoding function to send its message,
+and the decoder would use the received string (with the noise in it),
+to recover the sent message. Thus, the sender starts with a message
+with $k$ bits, it blow it up to $n$ bits, using the encoding function,
+to get some robustness to noise, it send it over the (noisy) channel
+to the receiver. The receiver, takes the given (noisy) message with
+$n$ bits, and use the decoding function to recover the original $k$
+bits of the message.
+
+Naturally, we would like $k$ to be as large as possible (for a fixed
+$n$), so that we can send as much information as possible on the
+channel. Naturally, there might be some failure probability; that is,
+the receiver might be unable to recover the original string, or
+recover an incorrect string.
+
+The following celebrated result of Shannon\footnote{Claude Elwood
+   Shannon (April 30, 1916 - February 24, 2001), an American
+   electrical engineer and mathematician, has been called ``the father
+   of information theory''. } in 1948 states exactly how much
+information can be sent on such a channel.
+
+\begin{theorem}[Shannon's theorem]
+    \thmlab{Shannon}%
+    %
+    For a binary symmetric channel with parameter $p < 1/2$ and for
+    any constants $\delta, \gamma > 0$, where $n$ is sufficiently
+    large, the following holds:
+    \begin{compactenumi}
+        \item For an $k \leq n\ts(1-\Entropy{p} - \delta)$ there
+        exists $(k,n)$ encoding and decoding functions such that the
+        probability the receiver fails to obtain the correct message
+        is at most $\gamma$ for every possible $k$-bit input messages.
+
+        \item There are no $(k,n)$ encoding and decoding functions
+        with $k \geq n (1-\Entropy{p}+\delta)$ such that the
+        probability of decoding correctly is at least $\gamma$ for a
+        $k$-bit input message chosen uniformly at random.
+    \end{compactenumi}
+\end{theorem}
+
+\section{Proof of Shannon's theorem}
+
+The proof is not hard, but requires some care, and we will break it
+into parts.
+
+\subsection{How to encode and decode efficiently}
+
+\subsubsection{The scheme}
+
+Our scheme would be simple. Pick
+\begin{equation*}
+    k \leq n(1-\Entropy{p} - \delta).
+\end{equation*}
+For any number $i= 0, \ldots, \widehat{K} = 2^{k+1}-1$,
+randomly generate a binary string $Y_i$ made out of $n$ bits, each one
+chosen independently and uniformly. Let $Y_0, \ldots, Y_{
+   \widehat{K}}$ denote these codewords.
+
+For each of these codewords we will compute the probability that if we
+send this codeword, the receiver would fail. Let $X_0, \ldots, X_{K}$,
+where $K = 2^k-1$, be the $K$ codewords with the lowest probability of
+failure. We assign these words to the $2^k$ messages we need to encode
+in an arbitrary fashion. Specifically, for $i=0,\ldots, 2^k-1$, we
+encode $i$ as the string $X_i$.
+
+The decoding of a message $w$ is done by going over all the codewords,
+and finding all the codewords that are in (Hamming) distance in the
+range $[p(1-\eps)n, p(1+\eps)n]$ from $w$. If there is only a single
+word $X_i$ with this property, we return $i$ as the decoded
+word. Otherwise, if there are no such word or there is more than one
+word then the decoder stops and report an error.
+
+
+\begin{figure}[h]
+    \centering{\includegraphics{\File{figs/rings}}}
+    \caption{The rings of error.}
+    \figlab{bad:rings}
+\end{figure}
+
+\subsubsection{The proof}
+
+
+\noindent \textbf{Intuition.}
+%
+Each code $Y_i$ corresponds to a region that looks like a ring. The
+``ring'' for $Y_i$ is all the strings in Hamming distance between
+$(1-\eps)r$ and $(1+\eps)r$ from $Y_i$, where $r= p n$. Clearly, if we
+transmit a string $Y_i$, and the receiver gets a string inside the
+ring of $Y_i$, it is natural to try to recover the received string to
+the original code corresponding to $Y_i$. Naturally, there are two
+possible bad events here:
+
+\begin{compactenumA}
+    \item The received string is outside the ring of $Y_i$.
+
+    \medskip%
+    \item The received string is contained in several rings of
+    different $Y$s, and it is not clear which one should the receiver
+    decode the string to. These bad regions are depicted as the darker
+    regions in \figref{bad:rings}.
+\end{compactenumA}
+
+\medskip
+
+%
+%
+Let $S_i = \StringsX{Y_i}$ be all the binary strings (of length $n$)
+such that if the receiver gets this word, it would decipher it to be
+the original string assigned to $Y_i$ (here are still using the
+extended set of codewords $Y_0, \ldots, Y_{\widehat{K}}$). Note, that
+if we remove some codewords from consideration, the set
+$\StringsX{Y_i}$ just increases in size (i.e., the bad region in the
+ring of $Y_i$ that is covered multiple times shrinks). Let $W_i$ be
+the probability that $Y_i$ was sent, but it was not deciphered
+correctly. Formally, let $r$ denote the received word. We have that
+\begin{equation}
+    W_i = \sum_{r \notin S_i} \Prob{ \MakeSBig  r \text{ was received when
+       } Y_i \text{ was sent}}.
+    \eqlab{W:i}
+\end{equation}
+To bound this quantity, let $\Delta(x,y)$ denote the Hamming distance
+between the binary strings $x$ and $y$. Clearly, if $x$ was sent the
+probability that $y$ was received is 
+\begin{equation*}
+    w(x,y)%
+    =%
+    p^{\Delta(x,y)} (1-p)^{n - \Delta(x,y)}.
+\end{equation*}
+As such, we have
+\begin{equation*}
+    \Prob{ \MakeSBig r \text{ received when } Y_i \text{ was sent}} =
+    w(Y_i, r).
+\end{equation*}
+
+\begin{defn}
+    \deflab{un:decode:able}%
+    %
+    Let $\NotInS{i}{r}$ be an indicator variable which is $1$ if
+    $r \notin S_i$. It is one if the receiver gets $r$, and does not
+    decode it to $Y_i$ (either because of failure, or because $r$ is
+    too close/far from $Y_i$).
+\end{defn}
+
+We have that failure probability when sending $r$ is
+\begin{equation}
+    W_i%
+    =%
+    \sum_{r \notin S_i} \Prob{ \MakeSBig r \text{ received when } Y_i \text{ was
+          sent}} = \sum_{r \notin S_i} w(Y_i, r)%
+    =%
+    \sum_{r} \NotInS{i}{r} w(Y_i, r).
+    \eqlab{W:i:2}
+\end{equation}
+
+The value of $W_i$ is a random variable over the choice of $Y_0,
+\ldots, Y_{ \widehat{K}}$. As such, its natural to ask what is the
+expected value of $W_i$.
+
+
+Consider the ring
+\begin{equation*}
+    \bring{r}%
+    =%
+    \Set{\bigl. x \in \brc{0,1}^n }{ (1-\eps)n p \leq  \Delta(x, r)
+       \leq  (1+\eps)n p},
+\end{equation*}
+where $\eps > 0$ is a small enough constant.  Observe that $x \in
+\bring{y}$ if and only if $y \in \bring{x}$.  Suppose, that the code
+word $Y_i$ was sent, and $r$ was received. The decoder returns the
+original code associated with $Y_i$, if $Y_i$ is the only codeword
+that falls inside $\bring{r}$.
+
+\begin{lemma}
+    \lemlab{s:2}%
+    %
+    Given that $Y_i$ was sent, and $r$ was received and furthermore
+    $r \in \bring{Y_i}$, then the probability of the decoder failing,
+    is
+    \begin{equation*}
+        \tau%
+        =%
+        \ProbCond{\bigl. r \notin S_i }{ r \in \bring{Y_i} }%
+        \leq
+        \frac{\gamma}{8},
+    \end{equation*}
+    where $\gamma$ is the parameter of \thmref{Shannon}.
+\end{lemma}
+
+\newcommand{\mBigA}{\rule[0.0cm]{0.0cm}{0.27cm}} % really small
+\newcommand{\mBigB}{\rule[0.0cm]{0.0cm}{0.29cm}} % really small
+
+\begin{proof}
+    The decoder fails here, only if $\bring{r}$ contains some other
+    codeword $Y_j$ ($j\ne i$) in it. As such,
+    \begin{equation*}
+        \tau = \Prob{ r \notin S_i \sep{ r \in \bring{Y_i} }} \leq \Prob{ Y_j \in
+           \bring{r}, \text{ for any } j\neq i} \leq \sum_{j\ne i} \Prob{ Y_j
+           \in \bring{r}}.
+    \end{equation*}
+    Now, we remind the reader that the $Y_j$s are generated by picking
+    each bit randomly and independently, with probability $1/2$. As
+    such, we have
+    \begin{equation*}
+        \Prob{ Y_j \in \bring{r}}%
+        =%
+        \frac{\,\cardin{\,\sring{r} \,}\,}{\,\cardin{\MakeSBig \brc{0,1}^n \,}\,}
+        =%
+        \sum_{m=(1-\eps)np}^{(1+\eps)np}
+        \frac{\binom{n}{m}}{2^n} \leq 
+        \frac{n}{2^n} \binom{n}{\floor{(1+\eps)np}},
+    \end{equation*}
+    since $(1+\eps)p < 1/2$ (for $\eps$ sufficiently small), and as
+    such the last binomial coefficient in this summation is the
+    largest. By \corref{q:integer:values} (i), we have
+    \begin{equation*}
+        \Prob{ Y_j \in \bring{r} \,}%
+        \leq%
+        \frac{n}{2^n} \, \binom{n}{\floor{(1+\eps)np}}%
+        \leq %
+        \frac{n}{2^n} 2^{n \EntropyX{ \mBigA (1+\eps)p }}%
+        =%
+        n 2^{n \pth{ \EntropyX{ \mBigA(1+\eps)p } -1 }}.
+    \end{equation*}
+    As such, we have
+    \begin{align*}
+      \tau%
+      &=%
+        \Prob{ r \notin S_i \sep{ r \in \bring{Y_i} }}%
+        \leq%
+        %
+        \sum_{j\ne i} \Prob{ Y_j \in \bring{r}}%
+        %
+        \leq%
+        %
+        \widehat{K} \Prob{\bigl. Y_1 \in \bring{r}}%
+        %
+        \leq%
+        %
+        2^{k+1} n 2^{n \pth[]{\mBigB \EntropyX{ \mBigA (1+\eps)p } -1 }}\\
+        %
+      &%
+        \leq%
+        n 2^{n\,\pth[]{ \mBigB 1-\EntropyX{p} - \delta} \, +\, 1 \,+
+        \, {n \,\pth[]{ \EntropyX{ \mBigA (1+\eps)p } -1 }}}%
+        \leq%
+        %
+        n 2^{ n\,\pth[]{\mBigB \EntropyX{ \mBigA (1+\eps)p } -
+        \EntropyX{p} - \delta}+1}
+    \end{align*}
+    since $k\leq n(1-\Entropy{p} - \delta)$. Now, we choose $\eps$ to
+    be a small enough constant, so that the quantity
+    $\Entropy{\MakeSBig (1+\eps)p } -\Entropy{ \MakeSBig p} - \delta$
+    is equal to some (absolute) negative (constant), say $-\beta$,
+    where $\beta > 0$ (importantly, $\delta$ is fixed, otherwise the
+    claim is of course false). Then, $\tau \leq n2^{-\beta n +1 }$,
+    and choosing $n$ large enough, we can make $\tau$ smaller than
+    $\gamma/8$, as desired. As such, we just proved that
+    \begin{equation*}
+        \tau = \Prob{ r \notin S_i \sep{ r \in \bring{Y_i} }} \leq
+        \frac{\gamma}{8}.
+    \end{equation*}
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{trivial:x}%
+    %
+    Consider the situation where $Y_i$ is sent, and the received
+    string is $r$.  We have that
+    \begin{equation*}
+        \Prob{ \bigl. r \notin \bring{Y_i}}%
+        =%
+        \sum_{r \,\notin\, \sring{Y_i}}
+        w(Y_i, r) \leq \frac{\gamma}{8},
+    \end{equation*}
+    where $\gamma$ is the parameter of \thmref{Shannon}.
+\end{lemma}
+\begin{proof}
+    This quantity, is the probability of sending $Y_i$ when every bit
+    is flipped with probability $p$, and receiving a string $r$ such
+    that more than $p n + \eps p n$ bits where flipped (or less than
+    $p n - \eps p n$). But this quantity can be bounded using the
+    Chernoff inequality. Indeed, let $Z = \Delta(Y_i, r)$, and observe
+    that $\Ex{Z} = pn$, and it is the sum of $n$ independent indicator
+    variables. As such
+    \begin{equation*}
+        \sum_{r\,\notin\, \sring{Y_i}} w(Y_i, r)%
+        =%
+        \Prob{ \bigl. \cardin{Z - \Ex{Z}} > \eps p n} \leq 2 \exp
+        \pth { -\frac{\eps^2}{4} p n}%
+        % 
+        <%
+        % 
+        \frac{\gamma}{4},
+    \end{equation*}
+    since $\eps$ is a constant, and for $n$ sufficiently large.
+\end{proof}
+
+We remind the reader that $\NotInS{i}{r}$
+is an indicator variable that is one if receiving $r$ (when sending
+$Y_i$) is ``bad'', see     \defref{un:decode:able}. Importantly, this
+indicator variable also depends on all the other codewords -- as they
+might cause some regions in the ring of $Y_i$ to be covered multiple times.
+
+
+\begin{lemma}
+    \lemlab{a:1}%
+    %
+    We have that
+    \begin{math}
+        f(Y_i )%
+        =%
+        \sum_{r \,\notin\, \sring{Y_i}} \Ex{\bigl.\ts
+           \smash{\NotInS{i}{r}} w(Y_i, r) } \leq \gamma/8
+    \end{math}
+    (the expectation is over all the
+    choices of the $Y$s excluding $Y_i$).
+\end{lemma}
+\begin{proof}
+    Observe that $\NotInS{i}{r} w(Y_i, r) \leq w(Y_i,r)$ and for fixed
+    $Y_i$ and $r$ we have that $\Ex{w(Y_i,r)} = w(Y_i,r)$.  As such,
+    we have that
+    \begin{equation*}
+        f(Y_i) = \sum_{r \,\notin\, \sring{Y_i}} \Ex{ \NotInS{i}{r}
+           w(Y_i, r) }%
+        \leq %
+        \sum_{r \,\notin\, \sring{Y_i}} \Ex{ w(Y_i, r) } = %
+        \sum_{r \,\notin\, \sring{Y_i}} w(Y_i, r) \leq
+        \frac{\gamma}{8},
+    \end{equation*}
+    by \lemref{trivial:x}.
+\end{proof}
+
+\begin{lemma}
+    We have that
+    $\ds g(Y_i) = \sum_{r \,\in\, \sring{Y_i}} \Ex{ \NotInS{i}{r}
+       w(Y_i, r) } \leq \gamma/8$ (the expectation is over all the
+    choices of the $Y$s excluding $Y_i$).
+
+    \lemlab{a:2}
+\end{lemma}
+\begin{proof}
+    We have that $ \NotInS{i}{r} w(Y_i, r) \leq \NotInS{i}{r} $, as
+    $0 \leq w(Y_i, r) \leq 1$. As such, we have that
+    \begin{align*}
+      g(Y_i) &=%
+               \sum_{r \,\in\, \sring{Y_i}} \Ex{ \NotInS{i}{r} w(Y_i, r) }
+               \leq%
+               \sum_{r \,\in\, \sring{Y_i}} \Ex{ \NotInS{i}{r} } =%
+               \sum_{r \,\in\, \sring{Y_i}} \Prob{r \notin S_i} \\&=%
+      \sum_{r } \Prob{r \notin S_i \cap \pth{ r \in \bring{Y_i} }}
+      \\
+             &= \sum_r \Prob{r \notin S_i \sep{ r \in \bring{Y_i}}} \Prob{r
+               \in \bring{Y_i}}
+      \\
+             &\leq \sum_r \frac{\gamma}{8} \Prob{r \in \bring{Y_i}} \leq
+               \frac{\gamma}{8},
+    \end{align*}
+    by \lemref{s:2}.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{error:Shannon}%
+    %
+    For any $i$, we have $\,\mu = \Ex{W_i} \leq \gamma/4$, where
+    $\gamma$ is the parameter of \thmref{Shannon}, where $W_i$ is the
+    probability of failure to recover $Y_i$ if it was sent, see
+    \Eqref{W:i}.
+\end{lemma}
+
+\begin{proof}
+    We have by \Eqref{W:i:2} that
+    $W_i= \sum_{r} \NotInS{i}{r} w(Y_i, r)$. For a fixed value of
+    $Y_i$, we have by linearity of expectation, that
+    \begin{align*}
+      \ExCond{W_i}{Y_i}%
+      &=%
+        \ExCond{\Bigl. \smash{\sum_{r} \NotInS{i}{r} w(Y_i, r)}}{Y_i} %
+        =%
+        \sum_{r}
+        \Ex{ \NotInS{i}{r} w(Y_i, r) \sep{Y_i}}
+      \\
+      & =%
+        \sum_{r \,\in\, \sring{Y_i}} \Ex{ \NotInS{i}{r} w(Y_i, r)
+        \sep{Y_i} } + \sum_{r \,\notin\, \sring{Y_i}} \Ex{
+        \NotInS{i}{r} w(Y_i, r) \sep{Y_i}} = g(Y_i) + f(Y_i) \leq
+        \frac{\gamma}{8} + \frac{\gamma}{8} = \frac{\gamma}{4},
+    \end{align*} 
+    by \lemref{a:1} and \lemref{a:2}. Now
+    \begin{math}
+        \Ex{W_i}%
+        =%
+        \Ex{\bigl.\ExCond{W_i}{Y_i}}%
+        \leq%
+        \Ex{ \gamma/4 }%
+        \leq%
+        \gamma/4.
+    \end{math}
+\end{proof}
+
+In the following, we need the following trivial (but surprisingly
+deep) observation.
+
+\begin{observation}%
+    \obslab{probabilistic:method}%
+    %
+    For a random variable $X$, if $\Ex{X} \leq \psi$, then there
+    exists an event in the probability space, that assigns $X$ a value
+    $\leq \psi$.
+\end{observation}
+
+% The above observation is one of the main tools in a powerful
+% technique to proving various claims in mathematics, known as the
+% \emphi{probabilistic method}.
+
+\begin{lemma}
+    For the codewords $X_0, \ldots, X_K$, the probability of failure
+    in recovering them when sending them over the noisy channel is at
+    most $\gamma$.
+
+    \lemlab{codewords:good}
+\end{lemma}
+\begin{proof}
+    We just proved that when using $Y_0,\ldots, Y_{\widehat{K}}$, the
+    expected probability of failure when sending $Y_i$, is
+    $\Ex{W_i} \leq \gamma/4$, where $\widehat{K} = 2^{k+1}-1$. As
+    such, the expected total probability of failure is
+    \begin{equation*}
+        \Ex{\Bigl. \smash{\sum_{i=0}^{\widehat{K}} W_i} }%
+        =%
+        \sum_{i=0}^{\widehat{K}} \Ex{\bigl. W_i }%
+        \leq%
+        \frac{\gamma}{4} 2^{k+1}%
+        \leq%
+        \gamma 2^{k},
+    \end{equation*}
+    by \lemref{error:Shannon}. As such, by
+    \obsref{probabilistic:method}, there exist a choice of $Y_i$s,
+    such that
+    \begin{equation*}
+        \sum_{i=0}^{\widehat{K}} W_i \leq  2^{k} \gamma.
+    \end{equation*}
+    Now, we use a similar argument used in proving Markov's
+    inequality. Indeed, the $W_i$ are always positive, and it can not
+    be that $2^k$ of them have value larger than $\gamma$, because in
+    the summation, we will get that
+    \begin{equation*}
+        \sum_{i=0}^{\widehat{K}} W_i > 2^k \gamma.
+    \end{equation*}
+    Which is a contradiction. As such, there are $2^k$ codewords with
+    failure probability smaller than $\gamma$. We set the $2^k$
+    codewords $X_0, \ldots, X_{K}$ to be these words, where
+    $K = 2^k - 1$. Since we picked only a subset of the codewords for
+    our code, the probability of failure for each codeword shrinks,
+    and is at most $\gamma$.
+\end{proof}
+
+\lemref{codewords:good} concludes the proof of the constructive part
+of Shannon's theorem.
+
+
+\subsection{Lower bound on the message size}
+
+We omit the proof of this part. It follows similar argumentation
+showing that for every ring associated with a codewords it must be
+that most of it is covered only by this ring (otherwise, there is no
+hope for recovery). Then an easy packing argument implies the claim.
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   \begin{lemma}
+       Suppose that $n q$ is integer in the range $[0,n]$. Then
+       $\displaystyle \frac{2^{n\EntropyX{q}}}{n+1} \leq \binom{n}{nq}
+       \leq 2^{n \EntropyX{q}}$.
+       
+       \lemlab{q:values}
+   \end{lemma}
+   
+   \lemref{q:values} can be extended to handle non-integer values of
+   $q$. This is straightforward, and we omit the easy details.
+   \begin{corollary}
+       \corlab{q:integer:values}%
+       % 
+       We have:
+       \begin{tabular}{ll}
+         (i) $q \in [0, 1/2]$ $\Rightarrow$ $\binom{n}{\floor{nq}} \leq
+         2^{n \EntropyX{q}}$.
+         &
+           (ii) $q \in [1/2,1]$ $\binom{n}{\ceil{nq}} \leq 2^{n
+           \EntropyX{q}}$.
+         \\begin{equation*}0.1cm]
+         (iii)  $q \in [1/2,1]$ $\Rightarrow$ $\frac{2^{n \EntropyX{q}}}{n+1}
+         \leq \binom{n}{\floor{nq}}$.
+         &
+         (iv)
+         $q \in [0,1/2]$ $\Rightarrow$ $\frac{2^{n \EntropyX{q}}}{n+1}
+         \leq \binom{n}{\ceil{nq}}$.
+     \end{tabular}           
+\end{corollary}
+           
+\begin{theorem}
+    Suppose that the value of a random variable
+    $X$ is chosen uniformly at random from the integers
+    $\brc{0,\ldots,
+       m-1}$. Then there is an extraction function for
+    $X$ that outputs on average at least
+    $\floor{ \lg m} -1 = \floor{\EntropyX{X}} -1$ independent and
+    unbiased bits.
+    
+    \thmlab{extract}
+\end{theorem}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+\section{Bibliographical Notes}
+
+The presentation here follows \cite[Sec. 9.1-Sec 9.3]{mu-pcrap-05}.
+
+
+
+\ChapterEnd{}
+
+% --------------------------------------------------------
+%
+% Shannon's Theorem - end of file
+% --------------------------------------------------------

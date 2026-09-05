@@ -1,0 +1,215 @@
+
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+\Chapter{Independent set -- \Turan's theorem}
+
+\QuotePExt{I don't know why it should be, I am sure; but the sight of
+   another man asleep in bed when I am up, maddens me.  It seems to me
+   so shocking to see the precious hours of a man's life - the
+   priceless moments that will never come back to him again - being
+   wasted in mere brutish sleep.  }%
+{Jerome K. Jerome}{Three men in a boat}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+~
+
+% \bigskip%
+
+\bigskip%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+\section{\Turan's theorem}
+
+\subsection{Some silly helper lemmas}
+We will need the following well-known inequality.
+
+\begin{lemma}[AM-GM inequality: Arithmetic and geometric means
+    inequality.]
+
+    For any $x_1, \ldots, x_n \geq 0$ we have
+    $\ds \frac{x_1 + x_2 + \cdots + x_n}{n} \geq
+    \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}$.
+\end{lemma}
+This inequality readily implies the ``inverse'' inequality:
+\begin{math}
+    \ds \frac{1}{ \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}} \geq
+    \frac{n}{x_1 + x_2 + \cdots + x_n}
+\end{math}
+
+\begin{lemma}
+    \lemlab{mixit:A:M}%
+    %
+    Let $x_1, \ldots, x_n \geq 0$ be $n$ numbers. We have that
+    \begin{math}
+        \sum_{i=1}^n \frac{1}{x_i} \geq \frac{n}{(\sum_i x_i)/n}.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    By the SM-GM inequality and then its ``inverse'' form, we have
+    \begin{equation*}
+        \frac{\sum_{i=1}^n \frac{1}{x_i}}{n}
+        =%
+        \frac{1/x_1 + 1/x_2 + \cdots + 1/x_n}{n}%
+        \geq%
+        \sqrt[\uproot{4}n]{(1/x_1) (1/x_2) \cdots (1/x_n)}
+        =%
+        \frac{1}{
+           \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}}
+        \geq%
+        \frac{n}{x_1 + x_2 + \cdots + x_n}.        
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{helper:turan}%
+    %
+    Let $\G=(\Vertices,\Edges)$ be a graph with $n$ vertices, and let
+    $d_\G$ be the average degree in the graph. We have
+    that
+    \begin{math}
+        \ds \sum_{v \in \Vertices} \frac{1}{1+d(v)} \geq \frac{n}{1+d_\G}.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    Let the $i$\th vertex in $\G$ be $v_i$. Set $x_i = 1+ d(v_i)$, for
+    all $i$.  By \lemref{mixit:A:M}, we have
+    \begin{equation*}
+        \sum_{i=1}^n \frac{1}{1+d(v_i)}
+        =%
+        \sum_{i=1}^n \frac{1}{x_i}%
+        \geq%
+        \frac{n}{(\sum_i x_i)/n}
+        =%
+        \frac{n}{\bigl[\sum_i \bigl(1+d(v_i)\bigr) \bigr] /n}
+        =%
+        \frac{n}{1+d_\G}.
+    \end{equation*}
+\end{proof}
+
+\subsection{Statement and proof}
+
+\begin{theorem}[\Turan's theorem]
+    \thmlab{turan:main}%
+    %
+    Let $\G=(\Vertices,\Edges)$ be a graph with $n$ vertices. The
+    graph $\G$ has an independent set of size at least
+    $\displaystyle \frac{n}{1+d_G}$, where $d_G$
+    is the average vertex degree in $G$.
+\end{theorem}
+
+\begin{proof}
+    Let $\pi = \pth{\pi_1, \ldots, \pi_n}$ be a random permutation of
+    the vertices of $G$. Pick the vertex $\pi_i$ into the independent
+    set if none of its neighbors appear before it in $\pi$. Clearly,
+    $v$ appears in the independent set if and only if it appears in
+    the permutation before all its $d(v)$ neighbors. The probability
+    for this is $1/(1+d(v))$. Thus, the
+    expected size of the independent set is (exactly)
+    \begin{equation}
+        \tau = \sum_{v \in V} \frac{1}{1+d(v)}, 
+        \eqlab{one}
+    \end{equation}
+    by linearity of expectations. Thus, by the probabilistic method,
+    there exists an independent set in $G$ of size at least $\tau$.
+    The claim now readily follows from
+    \lemref{helper:turan}.
+\end{proof}
+
+\subsection{An alternative proof of \Turan's theorem}
+Following a post of this write-up on my blog, readers suggested two
+modifications. We present an alternative proof incorporating both
+suggestions.
+
+\medskip
+
+%\begin{proof}
+
+\begin{proofnoproof}
+    \emph{Alternative proof of \thmref{turan:main}:} We associate a
+    charge of size $1/(d(v) +1)$ with each vertex of $G$. Let
+    $\gamma(G)$ denote the total charge of the vertices of $G$.  We
+    prove, using induction, that there is always an independent set in
+    $G$ of size at least $\gamma(G)$. If $G$ is the empty graph, then
+    the claim trivially holds. Otherwise, assume that it holds if the
+    graph has at most $n-1$ vertices, and consider the vertex $v$ of
+    lowest degree in $G$. The total charge of $v$ and its neighbors is
+    \[
+    \frac{1}{d(v) +1} +\sum_{uv \in E}\frac{1}{d(u) +1} \leq
+    \frac{1}{d(v) +1} +\sum_{uv \in E}\frac{1}{d(v) +1} =
+    \frac{d(v)+1}{d(v) +1} = 1,
+    \]
+    since $d(u) \geq d(v)$, for all $uv \in E$.  Now, consider the
+    graph $H$ resulting from removing $v$ and its neighbors from
+    $G$. Clearly, $\gamma(H)$ is larger (or equal) to the total charge
+    of the vertices of $V(H)$ in $G$, as their degree had either
+    decreased (or remained the same). As such, by induction, we have
+    an independent set in $H$ of size at least $\gamma(H)$. Together
+    with $v$ this forms an independent set in $G$ of size at least
+    $\gamma(H) + 1 \geq \gamma(G)$. Implying that there exists an
+    independent set in $G$ of size
+    \begin{equation}
+        \tau = \sum_{v \in V} \frac{1}{1+d(v)}, 
+        \eqlab{two}
+    \end{equation}
+    Now, set $x_v =1 +d(v)$, and observe that 
+    \begin{equation*}
+        \pth{n +2 |E|} \tau = 
+        \pth{\sum_{v \in V} x_v }
+        \pth{\sum_{v \in V} \frac{1}{x_v} }
+        \geq 
+        \pth{\sum_{v \in V} \sqrt{x_v}  \frac{1}{\sqrt{x_v}}}^2
+        =
+        n^2,
+    \end{equation*}
+    using Cauchy-Schwartz inequality.  Namely,
+    $\displaystyle \tau \geq \frac{n^2}{n +2 |E|} = \frac{n}{1+ 2|E|/
+       n} = \frac{n}{1+ d_G}$.
+\end{proofnoproof}
+
+\begin{lemma}[Cauchy-Schwartz inequality]
+    For positive numbers $\alpha_1, \ldots, \alpha_n, \beta_1, \ldots,
+    \beta_n$, we have
+    \begin{equation*}
+        \sum_{i} \alpha_i \beta_i \leq \sqrt{\sum_i \alpha_i^2}
+        \sqrt{\sum_i \beta_i^2} .
+    \end{equation*}
+
+\end{lemma}
+
+\subsection{An algorithm for the weighted case}
+
+In the weighted case, we associate weight $w(v)$ with each vertex of
+$G$, and we are interested in the maximum weight independent set in
+$G$. Deploying the algorithm described in the first proof of
+\thmref{turan:main}, implies the following.
+
+\begin{lemma}
+    The graph $G=(V,E)$ has an independent set of size $\ds \geq
+    \sum_{v \in V} \frac{w(v)}{1+d(v)}$.
+\end{lemma}
+\begin{proof}
+    By linearity of expectations, we have that the expected weight of
+    the independent set computed is equal to
+    \begin{equation*}
+        \sum_{v \in V} w(v) \cdot \Prob{v \text{ in the independent set}}
+        = \sum_{v \in V} \frac{w(v)}{1+d(v)},        
+    \end{equation*}
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{mr-ra-95}
+
+\ChapterEnd{}

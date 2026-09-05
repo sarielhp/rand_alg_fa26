@@ -1,0 +1,240 @@
+\def\UseBibLatex{TRUE}%$
+%\def\amsMode{TRUE}
+%\def\ShowFrame{TRUE}
+
+\ifx\ShowFrame\undefined
+\documentclass[12pt,oneside,fleqn]{memoir}
+\else
+\documentclass[12pt,draft,oneside]{book}
+\usepackage{showframe}
+\fi
+
+\RequirePackage{iftex}
+\ifPDFTeX
+  \PackageError{engine-guard}{This document requires LuaLaTeX or XeLaTeX}{%
+    Please recompile using 'lualatex' or 'xelatex' instead of 'pdflatex'.%
+  }
+  \stop
+\fi
+
+\usepackage{mathtools}
+\usepackage{newcomputermodern}   % Loads fontspec & unicode-math
+
+\providecommand{\square}{\mdlgwhtsquare}
+\def\Box{\mdlgwhtsquare}
+\def\Diamond{\mdlgwhtdiamond}
+\def\leadsto{\rightsquigarrow}
+
+
+\usepackage[table]{xcolor} % Required for row colors
+
+%\usepackage{showframe}
+
+%\usepackage{authblk}
+%\usepackage{layout}
+
+%\usepackage[inline]{enumitem}
+
+%\usepackage[most]{tcolorbox}
+
+\input{sbook.sty}
+
+\ifPDFTeX
+\usepackage{amssymb}
+\fi
+%\usepackage{textgreek}
+\usepackage{alphabeta}
+\usepackage[normalem]{ulem} % Provides \sout for strikethrough
+%\usepackage{emoji}
+%\usepackage{twemojis}
+
+%\usepackage{svg}
+
+
+\ifx\bookMode\undefined%
+\input{notations.sty}% 
+\IfFileExists{junk/num.tex}%
+{\input{junk/num.tex}}%
+{}%
+%\input{\File{junk/page_number.txt}}
+\else
+\IfFileExists{../notations.sty}{%
+   \input{../notations.sty}%
+}{%
+   \input{notations.sty}%
+}%
+\fi
+
+
+\usepackage[framemethod=default]{mdframed}
+%\usepackage{xcolor}
+
+\newmdenv[
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftline=true,
+  linecolor=gray!80,
+  linewidth=3pt,
+  backgroundcolor=gray!10,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=1pt,
+  innerbottommargin=10pt,
+  skipabove=0pt,
+  skipbelow=2\baselineskip
+  ]{shadedquote}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Restating lemmas/theorems...
+%
+% Example
+%---------------------------------------------------------------------
+% \SaveContent{\LemmaNumVerticesDepthBody}{ BLA BLA }
+% 
+% \begin{lemma}[{{\normalfont Proof in \apndref{num_v_depth}}}]
+%       \lemlab{num_vertices_depth}%
+%       \LemmaNumVerticesDepthBody{}
+% \end{lemma}
+%...
+% \bigskip%
+% \RestatementOf{\lemref{num_vertices_depth}}{\LemmaNumVerticesDepthBody}
+%---------------------------------------------------------------------
+
+\newcommand{\SaveContent}[2]{%
+   \expandafter\newcommand{#1}{#2}%
+}
+
+\newcommand{\RestatementOf}[2]{
+   \noindent%
+   \textbf{Restatement of #1.}
+   % 
+   {\em #2{}}%
+}
+
+% Sets the "Chapter 1" part
+%\chapnamefont{\large\bfseries} 
+% Sets the "Introduction" part
+%\chapnumfont{\large\bfseries}
+
+%\headstyles{compact} % Shrinks and tightens space around all sections
+%\chapterstyle{section} % Makes chapters look like standard sections
+
+%-------------------------------------------------------
+%\remove{%
+\definecolor{DeepNavy}{HTML}{002366}
+\definecolor{RoyalBlue}{HTML}{004E92}
+\definecolor{SteelBlue}{HTML}{4682B4}
+\definecolor{TealBlue}{HTML}{008080}
+\definecolor{DarkSlate}{HTML}{2F4F4F}
+\definecolor{DustyGrey}{HTML}{696969}
+
+
+\makeatletter
+\AtBeginDocument{\let\@elt\relax}
+\makeatother
+
+% Apply colors to memoir levels
+\headstyles{bringhurst} % A clean starting point
+
+
+%\chapterstyle{demo} % Or your preferred style
+%\chapterstyle{southall} % Or your preferred style
+%\chapterstyle{bianchi}
+\chapterstyle{dash} % A clean starting point
+
+\renewcommand{\chapnamefont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\renewcommand{\chapnumfont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries\color{DeepNavy}}
+
+%\usepackage{alphalph}
+
+% Reset footnote counter inside 
+\counterwithin{footnote}{chapter}
+
+%\newcommand{\mysectionstyle}{\normalfont\Large\bfseries\color{RoyalBlue}}
+%\setsecheadstyle{\mysectionstyle}
+
+%\colorlet{headingcolor}{RoyalBlue}
+
+\StandAloneMode{%
+\DeclareRobustCommand{\setheadingcolor}{\color{RoyalBlue}}
+\setsecheadstyle{\setheadingcolor\normalfont\Large\bfseries}
+
+\setsubsecheadstyle{\normalfont\large\bfseries\color{SteelBlue}}
+\setsubsubsecheadstyle{\normalfont\normalsize\bfseries\color{TealBlue}}
+
+% For Paragraph and Subparagraph (inline by default in memoir)
+\setparaheadstyle{\normalfont\normalsize\bfseries\color{DarkSlate}}
+%-------------------------------------------------------
+
+%\renewcommand*{\chapnumfont}{\normalfont\large\bfseries\sffamily}
+%\renewcommand*{\chaptitlefont}{\normalfont\large\bfseries\sffamily}
+%\renewcommand*{\chapnamefont}{\normalfont\large\bfseries\sffamily}
+}
+\setsubparaheadstyle{\normalfont\normalsize\itshape\color{DustyGrey}}
+\setlength{\beforechapskip}{-20pt} 
+\setlength{\afterchapskip}{30pt}
+
+\setsecnumformat{\csname the#1\endcsname.\quad}
+
+\newcommand{\LongQuoteY}[2]{%  
+   \begin{shadedquote}%
+       \itshape%
+       \footnotesize%
+       #1       
+       \par\hfill--- \textnormal{\textsc{#2}}
+   \end{shadedquote}%
+}
+\newcommand{\LongQuoteZ}[3]{%
+   \LongQuoteY{#1}{#2, #3}
+}
+
+%%% Detect hbox..
+%\overfullrule=5pt
+
+%%% End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IpeModeRemove{
+   \BibLatexMode{%      
+      \IfFileExists{\jobname.bib}{%
+         \bibliography{\jobname}%
+      }{%
+          \bibliography{shortcuts,geometry} %
+      }
+
+%      \ifx\LocalBib\undefined
+%      \else
+%          \bibliography{\LocalBib} %
+%      \fi
+   }%
+   \makeindex
+%\@addtoreset{footnote}{chapter} 
+\begin{document}
+
+}
+
+
+\providecommand{\delX}[1]{{\color{red}\sout{#1}}}
+\providecommand{\newX}[1]{{\color{blue}#1}}
+\providecommand{\chgY}[2]{{\color{red}\sout{#1}}{\color{blue}#2}}
+\providecommand{\remX}[1]{{\color{purple}\textbf{[Remark: #1]}}}
+
+% Ignore the text inside this macro and do not spell check it...
+\newcommand{\SpellIgnore}[1]{#1}  
+
+\newcommand{\EQ}{\mathrel{\;\;=\;\;}}%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

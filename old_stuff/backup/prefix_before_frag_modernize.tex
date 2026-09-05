@@ -1,0 +1,1719 @@
+%-----------------------------------------------------------------------------
+% Master Prefix File for Randomized Algorithms Class Notes & Book
+% Unified self-contained configuration for LuaLaTeX and XeLaTeX with Memoir
+%-----------------------------------------------------------------------------
+
+\RequirePackage{iftex}
+\ifPDFTeX
+  \PackageError{engine-guard}{This document requires LuaLaTeX or XeLaTeX}{%
+    Please recompile using LuaLaTeX or XeLaTeX instead of pdfLaTeX.%
+  }
+  \stop
+\fi
+
+% Always use memoir
+\documentclass[12pt,oneside,fleqn]{memoir}
+
+%-----------------------------------------------------------------------------
+% Typography, Fonts & Math Packages
+%-----------------------------------------------------------------------------
+\usepackage{mathtools}
+\usepackage{newcomputermodern}   % Loads fontspec & unicode-math
+
+% OpenType math aliases and fixes
+\providecommand{\square}{\mdlgwhtsquare}
+\def\Box{\mdlgwhtsquare}
+\def\Diamond{\mdlgwhtdiamond}
+\def\blacksquare{\mdlgblksquare}
+\def\leadsto{\rightsquigarrow}
+
+\usepackage{alphabeta}
+\usepackage[normalem]{ulem} % Provides \sout
+\usepackage{mleftright}
+\usepackage{microtype}
+\usepackage{xspace}
+\usepackage{xurl}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{booktabs,array,colortbl,hhline,multirow,tabularx}
+\usepackage[inline]{enumitem}
+\usepackage[thicklines]{cancel}
+\renewcommand\CancelColor{\color{purple}}
+\usepackage{euscript}
+\usepackage{pifont}
+\usepackage{marvosym}
+\let\Cross\undefined
+\let\Square\undefined
+\usepackage{bbding}
+\usepackage{stmaryrd}
+\usepackage{fancyvrb}
+\usepackage{framed}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{epigraph}
+\usepackage{makeidx}
+\usepackage{perpage}
+\usepackage{tikz}
+
+%-----------------------------------------------------------------------------
+% Boondox / mathcalb font declaration
+%-----------------------------------------------------------------------------
+\DeclareFontFamily{U}{BOONDOX-calo}{\skewchar\font=45 }
+\DeclareFontShape{U}{BOONDOX-calo}{m}{n}{
+  <-> s*[1.05] BOONDOX-r-calo}{}
+\DeclareFontShape{U}{BOONDOX-calo}{b}{n}{
+  <-> s*[1.05] BOONDOX-b-calo}{}
+\DeclareMathAlphabet{\mathcalb}{U}{BOONDOX-calo}{m}{n}
+\SetMathAlphabet{\mathcalb}{bold}{U}{BOONDOX-calo}{b}{n}
+\DeclareMathAlphabet{\mathbcalb}{U}{BOONDOX-calo}{b}{n}
+
+%-----------------------------------------------------------------------------
+% Algorithm Environment (formerly salgorithm.sty)
+%-----------------------------------------------------------------------------
+\newcommand{\ProgWordX}[1]{{\small\textbf{#1}}{\ }}
+\newcommand{\Do}{\ProgWordX{do}\xspace}
+\newcommand{\End}{\ProgWordX{end}\xspace}
+\newcommand{\Return}{\ProgWordX{return}\xspace}%
+\newcommand{\Proc}[1]{#1\+}
+\newcommand{\Returns}{\ProgWordX{returns}}
+\newcommand{\Procbegin}{\ProgWordX{begin}}
+\newcommand{\If}{\ProgWordX{if}\xspace}
+\newcommand{\Then}{\ProgWordX{then}\xspace}
+\newcommand{\Else}{\ProgWordX{else}\xspace}
+\newcommand{\rElse}{{\small\bfseries else}\ }
+\newcommand{\Elseif}{{\small\bfseries elseif}\ }
+\newcommand{\Foreach}{{\small\bfseries for each}\ }
+\newcommand{\Endif}{{\small\bfseries end\ if\ }}
+\newcommand{\Break}{{\small\bfseries break }}
+\newcommand{\Endproc}[1]{\ProgWordX{end} #1}
+\newcommand{\For}{\ProgWordX{for}\xspace}
+\newcommand{\Endfor}{{\small\bfseries end\ for}}
+\newcommand{\While}{{\small\bfseries while}\ }
+\newcommand{\Endwhile}{{\small\bfseries end\ while}}
+\newcommand{\LogAnd}{{\small\bfseries and}}
+\newcommand{\Repeat}{{\small\bfseries repeat}\ }
+\newcommand{\Until}{{\small\bfseries Until}}
+\newcommand{\Loop}{{\bfseries loop}\ }
+\newcommand{\Endloop}{{\bfseries end\ loop}\ }
+
+\newcommand{\xbeginlgox}{\begin{minipage}{1in}\begin{tabbing}
+           \quad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\kill}
+\newcommand{\xendlgox}{\end{tabbing}\end{minipage}}
+
+\newenvironment{algorithmEnv}{%
+   \begin{tabular}{|l|}\hline\xbeginlgox\bigskip}%
+   {\xendlgox\\\hline\end{tabular}}
+
+\newenvironment{program}{%
+   \begin{minipage}{4.0in}%
+   \begin{tabbing}%
+       \ \ \ \ \=\ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=%
+      \ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=%
+      \ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\kill%
+}{%
+   \end{tabbing}%
+   \end{minipage}%
+}
+
+\newenvironment{programBare}{%
+   \begin{tabbing}%
+       \ \ \ \ \=\ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=%
+      \ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=%
+      \ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\ \ \ \ \=\kill%
+}{%
+   \end{tabbing}%
+}
+
+\newcommand{\AlgorithmBox}[1]{%
+   \fbox{\begin{program} #1 \end{program}}%
+}
+
+\definecolor{AlgorithmColor}{cmyk}{0.07,0.90,0,0.34}
+\providecommand{\Algorithm}[1]{{\AlgorithmI{#1}\index{algorithm!#1@{\AlgorithmI{#1}}}}}
+\newcommand{\CodeComment}[1]{\textcolor{blue}{\texttt{#1}}}
+
+%-----------------------------------------------------------------------------
+% Path & Directory Resolution
+%-----------------------------------------------------------------------------
+\newcommand{\RootDIR}{../}
+\IfFileExists{../../../book.tex}{\renewcommand{\RootDIR}{../../../}}{}
+\IfFileExists{../../book.tex}{\renewcommand{\RootDIR}{../../}}{}
+\IfFileExists{../book.tex}{\renewcommand{\RootDIR}{../}}{}
+\IfFileExists{./book.tex}{\renewcommand{\RootDIR}{}}{}
+
+\providecommand{\File}[1]{#1}
+\providecommand{\RootFile}[1]{\RootDIR #1}
+
+%-----------------------------------------------------------------------------
+% QED Duck Symbol
+%-----------------------------------------------------------------------------
+\newlength{\CharHeight}
+\AtBeginDocument{\setlength{\CharHeight}{\fontcharht\font`X}}
+
+\IfFileExists{\RootDIR shared/qed_duck.pdf}{%
+   \providecommand{\myqedsymbol}{%
+      \reflectbox{\includegraphics[height=1.4\CharHeight]{\RootDIR shared/qed_duck.pdf}}%
+   }%
+}{%
+   \IfFileExists{shared/qed_duck.pdf}{%
+      \providecommand{\myqedsymbol}{%
+         \reflectbox{\includegraphics[height=1.4\CharHeight]{shared/qed_duck.pdf}}%
+      }%
+   }{%
+      \providecommand{\myqedsymbol}{$\blacksquare$}%
+   }%
+}
+
+%-----------------------------------------------------------------------------
+% BibLaTeX Setup (Pure Biber, No BibTeX)
+%-----------------------------------------------------------------------------
+\usepackage[bibencoding=utf8,style=alphabetic,refsegment=chapter,
+indexing=cite,
+backend=biber]{biblatex}
+
+\ExecuteBibliographyOptions{%
+   maxnames = 40,%
+   maxalphanames = 4,%
+   maxcitenames = 3,%
+   minalphanames = 3,%
+   minnames = 1,%
+   giveninits = true,%
+   doi = false,%
+   url = false,%
+   isbn = false%
+}
+
+\renewbibmacro{in:}{}
+
+\AtEveryBibitem{%
+   \ifentrytype{inproceedings}{%
+      \clearname{editor}%
+      \clearlist{editor}%
+      \clearfield{editor}%
+      \clearlist{publisher}%
+      \clearfield{series}%
+      \clearlist{location}%
+      \clearfield{publisher}%
+   }{}%
+   \ifentrytype{book}{%
+      \clearname{publisher}%
+   }{}%
+}
+\AtEveryCitekey{%
+   \ifentrytype{inproceedings}{%
+      \clearlist{publisher}%
+   }{}%
+   \clearname{editor}%
+   \clearlist{location}%
+}
+\DeclareFieldFormat[inproceedings]{date}{}
+\DeclareFieldFormat[inproceedings]{pages}{#1, \printfield{year}}
+\DeclareFieldFormat[inproceedings]{booktitle}{\mkbibemph{#1,\nopunct}}
+
+\renewcommand*{\bibpagespunct}{\addspace}
+\DeclareFieldFormat{journaltitle}{\mkbibemph{#1}\isdot}
+
+\DeclareFieldFormat[article]{number}{\mkbibparens{#1}}
+\DeclareFieldFormat[article]{date}{}
+\DeclareFieldFormat[article]{pages}{#1, \printfield{year}}
+\DeclareFieldFormat[article]{issue}{\nopunct#1}
+\renewbibmacro*{issue+date}{%
+   \iffieldundef{issue}{}%
+   {%
+      \printtext{\unspace}%
+      (\printfield{issue})%
+   }%
+   \iffieldundef{pages}%
+   {\addcomma\printfield{year}}%
+   {}%
+}
+
+\renewcommand{\bibpagespunct}{%
+   \ifentrytype{article}{\addcolon}{\addcomma}\space%
+}
+
+\DeclareFieldFormat[article]{titlecase}{\MakeSentenceCase{#1}}
+\DeclareFieldFormat[inproceedings]{titlecase}{\MakeSentenceCase{#1}}
+\DeclareFieldFormat[incollection]{titlecase}{\MakeSentenceCase{#1}}
+\DeclareFieldFormat[book]{titlecase}{\MakeSentenceCase{#1}}
+
+\renewbibmacro*{journal}{%
+   \iffieldundef{journaltitle} {} {\printtext[journaltitle]{%
+         \printfield[myplain]{journaltitle}%
+         \setunit{\subtitlepunct}%
+         \printfield[myplain]{journalsubtitle}}}}
+\DeclareFieldFormat{myplain}{#1}
+
+\renewbibmacro*{booktitle}{%
+   \ifboolexpr{ test {\iffieldundef{booktitle}} and test
+      {\iffieldundef{booksubtitle}} } {} {\printtext[booktitle]{%
+         \printfield[myplain]{booktitle}%
+         \setunit{\subtitlepunct}%
+         \printfield[myplain]{booksubtitle}}%
+      \newunit}%
+   \printfield{booktitleaddon}}
+
+\DeclareFieldFormat[inproceedings]{titlecase}{\MakeSentenceCase{#1}}
+
+\renewbibmacro*{volume+number+eid}{%
+   \setunit*{\addcomma\addspace}%
+   \printfield{volume}%
+   \printfield{number}%
+   \setunit{\addcomma\space}%
+   \printfield{eid}%
+}
+
+\newbibmacro{string+doi}[1]{%
+   \iffieldundef{doi}{%
+      \iffieldundef{url}{%
+         #1%
+      }{%
+         \href{\thefield{url}}{#1}%
+      }%
+   }{%
+      \href{http://dx.doi.org/\thefield{doi}}{#1}}%
+}
+\DeclareFieldFormat*{title}{\usebibmacro{string+doi}{\mkbibemph{#1}}}
+\renewcommand*{\multicitedelim}{\addcomma\space}
+\DeclareFieldFormat[inproceedings]{title}{\usebibmacro{string+doi}{{#1}}}
+\DeclareFieldFormat[article]{title}{\usebibmacro{string+doi}{{#1}}}
+\DeclareFieldFormat[incollection]{title}{\usebibmacro{string+doi}{{#1}}}
+\DeclareFieldFormat[book]{titlecase}{{#1}}
+
+\DeclareCiteCommand{\tcite}%
+{\usebibmacro{prenote}}%
+{\usebibmacro{citeindex}\usebibmacro{cite}}%
+{\multicitedelim}%
+{\usebibmacro{postnote}}
+\providecommand{\tciteY}[2]{\tcite[#1]{#2}}
+
+\providecommand{\BibLatexMode}[1]{#1}
+
+%-----------------------------------------------------------------------------
+% Hyperref & Visual Formatting
+%-----------------------------------------------------------------------------
+\usepackage{hyperref}
+\hypersetup{%
+   breaklinks,%
+   colorlinks=true,%
+   linkcolor=[rgb]{0.45,0.0,0.0},%
+   citecolor=[rgb]{0,0,0.45}%
+}
+
+\definecolor{DeepNavy}{HTML}{002366}
+\definecolor{RoyalBlue}{HTML}{004E92}
+\definecolor{SteelBlue}{HTML}{4682B4}
+\definecolor{TealBlue}{HTML}{008080}
+\definecolor{DarkSlate}{HTML}{2F4F4F}
+\definecolor{DustyGrey}{HTML}{696969}
+
+\makeatletter
+\AtBeginDocument{\let\@elt\relax}
+\makeatother
+
+\headstyles{bringhurst}
+\chapterstyle{dash}
+
+\renewcommand{\chapnamefont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\renewcommand{\chapnumfont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries\color{DeepNavy}}
+
+\counterwithin{footnote}{chapter}
+
+\setsubparaheadstyle{\normalfont\normalsize\itshape\color{DustyGrey}}
+\setlength{\beforechapskip}{-20pt} 
+\setlength{\afterchapskip}{30pt}
+\setsecnumformat{\csname the#1\endcsname.\quad}
+
+\newmdenv[
+  topline=false,
+  bottomline=false,
+  rightline=false,
+  leftline=true,
+  linecolor=gray!80,
+  linewidth=3pt,
+  backgroundcolor=gray!10,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=1pt,
+  innerbottommargin=10pt,
+  skipabove=0pt,
+  skipbelow=2\baselineskip
+  ]{shadedquote}
+
+\newcommand{\LongQuoteY}[2]{%  
+   \begin{shadedquote}%
+       \itshape%
+       \footnotesize%
+       #1       
+       \par\hfill--- \textnormal{\textsc{#2}}
+   \end{shadedquote}%
+}
+\newcommand{\LongQuoteZ}[3]{%
+   \LongQuoteY{#1}{#2, #3}
+}
+
+%-----------------------------------------------------------------------------
+% Standalone Chapter vs Master Book Modes
+%-----------------------------------------------------------------------------
+\newlength{\ppicwd}
+
+\newcommand{\Copyright}{This work is licensed under the Creative Commons Attribution-Noncommercial 3.0 License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc/3.0/} or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.}
+
+\newcommand{\RealChapterEndInner}{%
+   {%
+      \begingroup%
+      \emergencystretch=1em%
+      \printbibliography[heading=subbibliography,segment=\therefsegment]{}%
+      \endgroup%
+   }%
+}
+
+\providecommand{\BookMode}[1]{}
+\providecommand{\StandAloneMode}[1]{#1}
+
+\ifx\bookMode\undefined
+   % STANDALONE CHAPTER MODE
+   \renewcommand{\StandAloneMode}[1]{#1}
+   \renewcommand{\BookMode}[1]{}
+
+   \DeclareRobustCommand{\setheadingcolor}{\color{RoyalBlue}}
+   \setsecheadstyle{\setheadingcolor\normalfont\Large\bfseries}
+   \setsubsecheadstyle{\normalfont\large\bfseries\color{SteelBlue}}
+   \setsubsubsecheadstyle{\normalfont\normalsize\bfseries\color{TealBlue}}
+   \setparaheadstyle{\normalfont\normalsize\bfseries\color{DarkSlate}}
+
+   \newcommand{\Chapter}[1]{\chapter[]{#1}\setcounter{footnote}{0}}
+   \newcommand{\ChapterPrefix}{}
+   \newcommand{\ChapterGen}{\pagestyle{plain}\vspace*{-0.7cm}}
+   \newcommand{\ChapterEnd}{%
+      \RealChapterEndInner{}%
+      \end{document}%
+   }
+
+   \renewcommand{\File}[1]{#1}
+   \renewcommand{\RootFile}[1]{../#1}
+\else
+   % MASTER BOOK MODE
+   \renewcommand{\StandAloneMode}[1]{}
+   \renewcommand{\BookMode}[1]{#1}
+
+   \newcommand{\Chapter}[1]{\chapter{#1}}
+   \newcommand{\ChapterPrefix}{%
+      \vspace{-1cm}%
+      \subsection*{\small
+         {598 - Class notes for Randomized Algorithms}\\
+         {Sariel Har-Peled}\\
+         {\today}}%
+   }
+   \newcommand{\ChapterGen}{}
+   \newcommand{\ChapterEnd}{\RealChapterEndInner{}}
+
+   \renewcommand{\File}[1]{\Dir/#1}
+   \renewcommand{\RootFile}[1]{#1}
+
+   \newcommand{\InputChap}[2]{%
+      \def\Dir{#1}%
+      \typeout{}%
+      \typeout{------------------------------------------------------------}%
+      \typeout{PROCESSING FILE: #1/#2}%
+      \typeout{}%
+      \input{#1/#2}%
+   }
+   \providecommand{\InputHWChap}[2]{\InputChap{#1}{#2}}
+\fi
+
+%-----------------------------------------------------------------------------
+% Fragments & Quotes
+%-----------------------------------------------------------------------------
+\newcommand{\InputExt}[1]{%
+   \IfFileExists{#1}%
+   {\input{#1}}%
+   {\IfFileExists{../#1}%
+      {\input{../#1}}%
+      {\IfFileExists{../../#1}%
+         {\input{../../#1}}%
+         {\typeout{ERROR: Unable to find #1}}%
+      }%
+   }%
+}
+\newcommand{\FragmentName}[1]{\RootFile{fragment/#1.tex}}
+\newcommand{\IncFragment}[1]{\InputExt{\FragmentName{#1}}}
+\newenvironment{fragment}[1]%
+{%
+   \VerbatimEnvironment
+   \def\TmpFragmentName{\FragmentName{#1}}%
+   \begin{VerbatimOut}{\FragmentName{#1}}%
+}%
+{\end{VerbatimOut}%
+   \InputExt{\TmpFragmentName}%
+}
+
+\newcommand{\QuoteOpen}{}
+\newcommand{\QuoteClose}{}
+\newcommand{\QuoteWrite}[2]{}
+
+\newcommand{\Quote}[2]{%
+   \SaveIndent
+   \QuoteWrite{#1}{#2}%
+   \begin{center}%
+      {\footnotesize
+         \begin{quote}
+             \RestoreIndent
+             {#1}\\
+             \hspace*{2cm}-- {#2.}
+         \end{quote}%
+      }%
+      \index{quotation!#2}%
+   \end{center}%
+   \bigskip
+}
+
+\newcommand{\QuotePExt}[3]{%
+   \hfill%
+   \begin{minipage}{0.95\linewidth}%
+       \footnotesize {#1}%
+       \rule{\linewidth}{0.3mm}%
+       \hfill #2, #3%
+   \end{minipage}%
+}
+
+\epigraphfontsize{\small\itshape}
+\setlength{\epigraphwidth}{0.6\textwidth}
+\newcommand{\QuoteExt}[3]{%
+   \vspace*{-1.6cm}%
+   \epigraph{{\footnotesize #1}}{{#2}, {#3}}%
+   \vspace*{-1.2cm}%
+}
+
+\newcommand{\SaveContent}[2]{%
+   \expandafter\newcommand{#1}{#2}%
+}
+
+\newcommand{\RestatementOf}[2]{%
+   \noindent%
+   \textbf{Restatement of #1.}
+   {\em #2{}}%
+}
+
+\providecommand{\delX}[1]{{\color{red}\sout{#1}}}
+\providecommand{\newX}[1]{{\color{blue}#1}}
+\providecommand{\chgY}[2]{{\color{red}\sout{#1}}{\color{blue}#2}}
+\providecommand{\remX}[1]{{\color{purple}\textbf{[Remark: #1]}}}
+\newcommand{\SpellIgnore}[1]{#1}
+\newcommand{\EQ}{\mathrel{\;\;=\;\;}}
+
+%-----------------------------------------------------------------------------
+% Save a symbol that we know is going to get redefined.
+\def\savesymbol#1{%
+  \expandafter\let\expandafter\origsym\expandafter=\csname#1\endcsname
+  \expandafter\let\csname orig#1\endcsname=\origsym
+  \expandafter\let\csname#1\endcsname=\relax
+}
+
+% Restore a previously saved symbol, and rename the current one.
+\def\restoresymbol#1#2{%
+  \expandafter\let\expandafter\newsym\expandafter=\csname#2\endcsname
+  \expandafter\global\expandafter\let\csname#1#2\endcsname=\newsym
+  \expandafter\let\expandafter\origsym\expandafter=\csname orig#2\endcsname
+  \expandafter\global\expandafter\let\csname#2\endcsname=\origsym
+}
+
+\usepackage{pictex}%
+\savesymbol{triangle}%
+\usepackage{tree}%
+\restoresymbol{TreePKG}{triangle}%
+
+% Definitions absorbed from sbook.sty
+\providecommand{\NearNbr}{\ensuremath{\mathrm{NNbr}}}
+\providecommand{\MdPrc}{\nu}
+
+\providecommand{\TwoFiguresBase}[4]{%
+   \begin{tabular}{cc}
+      \begin{minipage}{0.48\linewidth}
+          \begin{center}
+              {{{#1}}}
+          \end{center}
+      \end{minipage}
+      &
+      \begin{minipage}{0.48\linewidth}
+          \begin{center}
+              {{#3}}
+          \end{center}
+      \end{minipage}
+      \\
+      {#2} & {#4}
+   \end{tabular}%
+}
+
+\providecommand{\TwoFigures}[6]{%
+   \begin{tabular}{cc}
+      \begin{minipage}{0.48\linewidth}
+          \begin{center}
+              {\IncludeGraphics[#1]{{#2}}}
+          \end{center}
+      \end{minipage}
+      &
+      \begin{minipage}{0.48\linewidth}
+          \centerline{\IncludeGraphics[#4]{{#5}}}
+      \end{minipage}
+      \\
+      {#3} & {#6}
+   \end{tabular}%
+}
+
+\providecommand{\ThreeFigures}[6]{%
+   \begin{tabular}{ccc}
+        \begin{minipage}{0.30\linewidth}
+            \IncludeGraphics[width=5.1cm]{{#1}}\\
+        \end{minipage}
+        &
+        \begin{minipage}{0.30\linewidth}
+            \IncludeGraphics[width=5.1cm]{{#2}}\\
+        \end{minipage}
+        &
+        \begin{minipage}{0.30\linewidth}
+            \IncludeGraphics[width=5.1cm]{{#3}}\\
+        \end{minipage}
+        \vspace{-1cm}
+        \\
+        {#4} & {#5}& {#6}
+   \end{tabular}%
+}
+
+%-----------------------------------------------------------------------------
+\providecommand{\remove}[1]{}
+\providecommand{\IpeModeRemove}[1]{#1}
+\providecommand{\AMSMode}[1]{}
+\providecommand{\NotAMSMode}[1]{#1}
+\providecommand{\Solution}[1]{}
+\providecommand{\Version}[1]{\hfill{Version: #1}}
+\providecommand{\Distor}{\mathrm{dist}}
+\providecommand{\Hardness}[1]{(h:#1)}
+\providecommand{\QuoteOptExt}[3]{\QuoteExt{#1}{#2}{#3}}
+\providecommand{\QuoteOpt}[2]{\Quote{#1}{#2}}
+\providecommand{\Hypercube}{\EuScript{H}}
+\providecommand{\emphiC}[1]{\emphic{#1}{#1}}
+\providecommand{\Func}{f}
+\providecommand{\CoverTime}{\EuScript{C}}
+\providecommand{\Nbr}{\Gamma}
+\providecommand{\CommuteTime}[2]{\mathbf{CT}_{#1#2}}
+\providecommand{\Resistance}{\mathbf{R}}
+\providecommand{\EffectResist}[2]{\mathbf{R}_{#1#2}}
+\providecommand{\NetworkE}{\EuScript{N}}
+\providecommand{\trinom}[4]{\binom{#1}{#2 \;\; #3 \;\; #4}}
+\providecommand{\Ranges}{\EuScript{R}}
+\providecommand{\CClass}[1]{\ensuremath{\mathbf{#1}}}
+\providecommand{\coCClass}[1]{\ensuremath{\mathrm{co-}}\CClass{#1}}
+\providecommand{\CX}{\EuScript{C}}
+\providecommand{\packet}{\mathbf{c}}
+\providecommand{\packetA}{\mathbf{d}}
+\providecommand{\mopt}{m_{\mathrm{opt}}}
+\providecommand{\girth}{\mathop{\mathrm{girth}}}
+\providecommand{\CR}{\mathop{\mathrm{cr}}}
+\providecommand{\TRUE}{{\textcolor[named]{RedViolet}{\textsf{TRUE}}}\xspace}
+\providecommand{\FALSE}{{\textcolor[named]{RedViolet}{\textsf{FALSE}}}\xspace}
+\providecommand{\Part}[1]{\part{#1}}
+\providecommand{\BookPart}[1]{\part{#1}}
+\providecommand{\Section}[1]{\section{#1}}
+\providecommand{\SubSection}[1]{\subsection{#1}}
+\providecommand{\SubSubSection}[1]{\subsubsection{#1}}
+\providecommand{\Exercise}[5]{%
+\begin{exercise_h}[#1]%
+   \exelab{#3}{}%
+   #4%
+\end{exercise_h}%
+}
+\providecommand{\si}[1]{#1}
+\providecommand{\myParagraph}[1]{\noindent\textbf{#1}}
+\providecommand{\DefName}[1]{#1}
+\providecommand{\deflabel}[1]{def_#1}
+\providecommand{\Here}{\typeout{LOCATION: \currfilename\space L\the\inputlineno}\xspace}
+\providecommand{\Description}[1]{}
+
+%-----------------------------------------------------------------------------
+% Mathematical Notations & Environments (from notations.sty)
+%-----------------------------------------------------------------------------
+%-----------------------------------------------------------------------------
+% List environments (questions & compactenum)
+%-----------------------------------------------------------------------------
+\definecolor{questions:l:color}{RGB}{255,227,200}
+\definecolor{questions:l:fg:color}{RGB}{0,0,100}
+
+\newlist{questions}{enumerate}{5}%
+\setlist[questions,1]{label=%
+   {\protect \Large \bfseries%
+      {\arabic*}},%
+   labelsep=1em, itemsep=0em }
+\setlist[questions,2]{label={\bfseries\arabic{questionsi}.\Alph*.}}
+\setlist[questions,3]{label={\bfseries\arabic{questionsi}.\Alph{questionsii}.\roman*.}}
+
+\newlist{compactenumA}{enumerate}{5}%
+\setlist[compactenumA]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,%
+   label=(\Alph*)}%
+
+\newlist{compactenumI}{enumerate}{5}%
+\setlist[compactenumI]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,%
+   label=(\Roman*)}%
+
+\newlist{compactenuma}{enumerate}{5}%
+\setlist[compactenuma]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,%
+   label=(\alph*)}%
+
+\newlist{compactitem}{enumerate}{5}%
+\setlist[compactitem]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,%
+   label=\textbullet}%
+
+\newlist{compactenumi}{enumerate}{5}%
+\setlist[compactenumi]{topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex,%
+   label=(\roman*)}%
+
+\setcounter{secnumdepth}{5}
+
+\newcommand{\HST}{\TermI{HST}\xspace}
+\newcommand{\Term}[1]{\textsf{#1}}
+\newcommand{\TermI}[1]{\Term{#1}\index{#1@\Term{#1}}}
+
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+
+\newcommand{\Author}{Sariel Har-Peled}
+\newcommand{\Course}{CS 598}
+\newcommand{\CourseName}{Randomized  Algorithms}
+\newcommand{\Semester}{Fall 2008}
+
+\newcommand{\seg}{\mathsf{s}}
+\newcommand{\segB}{\mathsf{t}}
+
+\newcommand{\Permutation}{\sigma}
+
+\newcommand{\Diam}{\mathrm{diam}}
+\newcommand{\diam}{\mathrm{diam}}
+
+\newcommand{\Copt}{C_{\mathrm{opt}}}
+\newcommand{\CenterPnt}{\mathrm{cen}}
+
+\newcommand{\parent}{\overline{\mathrm{p}}}
+\newcommand{\parentX}[2][\!]{\parent\pth[#1]{#2}}
+
+\newcommand{\FMS}{\Mh{\EuScript{X}}\index{metric space}}  
+\newcommand{\FMSB}{\Mh{\EuScript{Y}}\index{metric space}}  
+\newcommand{\FastCut}{\Algorithm{FastCut}\xspace}
+\newcommand{\MinCut}{\Algorithm{MinCut}\xspace}
+\newcommand{\MinCutRep}{\Algorithm{MinCutRep}\xspace}
+\newcommand{\Contract}{\Algorithm{Contract}\xspace}
+
+\newcommand{\Grid}{\mathrm{G}}
+\newcommand{\ClosestPair}{\mathcal{CP}}
+\newcommand{\SphereChar}{\ensuremath{\mathbb{S}}}
+\newcommand{\Sphere}[1]{{\SphereChar^{(#1)}}}
+
+\newcommand{\PntSet}{{\Mh{\mathsf{P}}}}%
+\providecommand{\PntSetA}{{\Mh{\mathsf{Q}}}}%
+
+\newcommand{\query}{\mathcalb{q}}
+
+\newcommand{\pnt}{\mathsf{p}}
+\newcommand{\pntA}{\mathsf{u}}
+\newcommand{\pntB}{\mathsf{v}}
+\newcommand{\pntC}{{\mathsf{x}}}
+\newcommand{\pntD}{{\mathsf{y}}}
+\newcommand{\pntE}{{\mathsf{z}}}
+
+\newcommand{\pntCoord}{\Mh{p}}
+\newcommand{\pntCoordA}{\Mh{q}}
+\newcommand{\pntCoordB}{\Mh{r}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Markov chain notations.
+
+\newcommand{\MCSpc}{\Mh{\mathtt{S}}}
+\newcommand{\MCPrb}{\Mh{\mathtt{P}}}
+\newcommand{\MCPrbY}[2]{\MCPrb_{#1#2}}
+\newcommand{\MCPrbM}{\Mh{\mathbf{P}}}%
+\newcommand{\MCPrbT}[3]{\MCPrb_{#1#2}^{(#3)}}
+\newcommand{\MCFPrbT}[3]{\Mh{\mathtt{r}}_{#1#2}^{(#3)}}
+\newcommand{\MCVstProb}[2]{\Mh{\mathtt{f}}_{#1#2}}
+\newcommand{\MCExSteps}[2]{\Mh{\mathtt{h}}_{#1#2}}
+\newcommand{\MCPVec}[1]{\mathbf{q}^{(#1)}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\Spread}{\Phi}
+\newcommand{\VC}{\ensuremath{\mathsf{VC}}\xspace}
+\newcommand{\MC}{\ensuremath{\mathsf{MC}}\xspace}
+\newcommand{\hyperplane}{h}
+\newcommand{\hyperplaneB}{g}
+
+\newcommand{\LazySelect}{\Algorithm{LazySelect}\xspace}
+\newcommand{\QuickSort}{\Algorithm{QuickSort}\xspace}
+\newcommand{\Alg}{\Algorithm{Alg}\xspace}
+
+
+\newcommand{\Graph}{\Mh{\mathsf{G}}}%
+\newcommand{\GraphB}{\mathsf{H}}
+\newcommand{\GraphC}{\mathsf{K}}
+\newcommand{\GraphD}{\mathsf{F}}
+
+\providecommand{\G}{}
+\renewcommand{\G}{\Graph}
+
+\newcommand{\RLP}{\ComplexityClass{RLP}\xspace}
+\newcommand{\USTCON}{\ComplexityClass{USTCON}}
+\newcommand{\STCON}{\overrightarrow{\ComplexityClass{STCON}}}
+
+\newcommand{\Mtrx}{\mathsf{M}}
+\newcommand{\TMtrx}{\mathsf{Q}}
+\newcommand{\IMtrx}{\mathcal{I}}
+
+\newcommand{\Expander}[3]{$\left[#1,#2,#3\right]$-expander}
+
+
+\newcommand{\ChartEnt}{\chi}
+\newcommand{\ChartX}[1]{\ensuremath{\chi_{#1}}}
+\newcommand{\Field}{\mathbb{F}}
+\newcommand{\LSpace}{\mathbb{G}}
+\newcommand{\LD}[2]{\mathsf{L{D}}\pth{#1,#2}}
+\newcommand{\SEVN}{\widehat{\lambda_2}}
+\newcommand{\NX}[2]{#1\!\left[#2\right]}
+\newcommand{\Entry}[2]{#1\!\left[#2\right]}
+\newcommand{\NXExt}[3]{#1_{#2}\!\left[#3\right]}
+\newcommand{\RangeI}[1]{\llbracket #1 \rrbracket}
+\newcommand{\DialX}[1]{\gamma\pth{#1}}
+\newcommand{\BiDialX}[1]{{\gamma}_2\pth{#1}}
+
+\newcommand{\EV}[1]{\widehat{\lambda_{#1}}}
+\newcommand{\TEV}[1]{\widehat{\lambda_{#1}}}
+\newcommand{\EVal}{\widehat{\lambda}}
+\newcommand{\Basis}{\mathcal{B}}
+
+
+\newcommand{\ZProd}[2]{\ensuremath{#1 \, \text{\textcircled{z}} #2}}
+\newcommand{\RProd}[2]{\ensuremath{#1 \, \text{\textcircled{r}} #2}}
+
+
+
+\newcommand{\OneVec}[1]{\mathbf{1}^{#1}}
+\newcommand{\DstrbV}[1]{\mathbf{\mathsf{q}}^{(#1)}}
+\newcommand{\DstrbE}[2]{\mathsf{q}^{(#1)}_{#2}}
+
+\newcommand{\DEdges}{\widetilde{\Edges}}
+
+\newcommand{\VV}{\Mh{\mathsf{V}}}%
+\newcommand{\EE}{\Mh{\mathsf{E}}}%
+
+\newcommand{\Vertices}{\VV}%
+\newcommand{\Edges}{\EE}%
+
+\newcommand{\EdgesX}[1]{\Edges\pth{#1}}
+\newcommand{\VerticesX}[1]{V\pth{#1}}
+
+\newcommand{\StringX}[1]{\mathsf{s}\pth{#1}}
+
+\newcommand{\BMtrx}{\mathsf{B}}
+\newcommand{\WMtrx}{\mathsf{W}}
+\newcommand{\NWMtrx}{\overline{\mathsf{W}}}
+\newcommand{\Sequence}{\EuScript{S}}
+
+\newcommand{\Flat}{\EuScript{F}}
+\newcommand{\Levy}{L{\'e}vy}
+\newcommand{\JL}{\textsf{JL}\xspace}
+\newcommand{\constA}{\mathpzc{c}}
+\newcommand{\med}{\mathrm{med}}
+\newcommand{\medX}[1]{\Mh{\mathrm{med}}\pth{#1}}
+
+\newcommand{\medianC}{\Mh{\nu}}%
+
+\newcommand{\AreaSphere}[2]{{\mathrm{Area}\pth{ #2 \Sphere{#1} } } }
+\newcommand{\VolBall}[2]{\volX{#2 \Ball^{#1}}}
+
+\newcommand{\atgen}{\symbol{'100}}
+\newcommand{\SarielThanks}[1]{\thanks{Department of Computer Science;
+      University of Illinois; 201 N. Goodwin Avenue; Urbana, IL,
+      61801, USA; {\tt sariel\atgen{}illinois.edu}; {\tt
+         \url{http://sarielhp.org/}.} #1}}
+
+\newlength{\savedparindent}
+\newcommand{\SaveIndent}{\setlength{\savedparindent}{\parindent}}
+\newcommand{\RestoreIndent}{\setlength{\parindent}{\savedparindent}}
+
+\newcommand{\NNN}{\mathbb{N}}%
+\providecommand{\NN}{\mathbb{N}}%
+\renewcommand{\Re}{\mathbb{R}}%
+\newcommand{\reals}{\Re}%
+\newcommand{\ZZ}{\mathbb{Z}}%
+
+\newcommand{\level}{\mathop{\mathrm{level}}}
+
+\providecommand{\TPDF}[2]{\texorpdfstring{#1}{#2}}
+
+\newcommand{\Hint}[1]{\emph{[#1]}}
+\newcommand{\Arr}{\mathop{\mathrm{\EuScript{A}}}}
+
+\newcommand{\Array}{\mathcal{T}}%
+
+\newcommand{\dirEdge}[2]{\left({{#1} \rightarrow {#2}} \right)}
+\newcommand{\ndirEdge}[2]{{{#1} \rightarrow {#2}} }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Emphasize stuff...
+\definecolor{blue25}{rgb}{0, 0, 11}
+\providecommand{\emphi}[1]{}%
+\providecommand{\emphOnly}[1]{}%
+\providecommand{\emphic}[2]{}%
+
+\renewcommand{\emphic}[2]{%
+   \textcolor{blue25}{%
+      \bfseries{\emph{#1}}}%
+   \index{#2}}
+\renewcommand{\emphi}[1]{\emphic{#1}{#1}}
+\renewcommand{\emphOnly}[1]{\textcolor{blue25}{\bfseries{\emph{#1}}}}
+
+\definecolor{almostblack}{rgb}{0, 0, 0.3}
+\providecommand{\emphw}[1]{{\textcolor{almostblack}{\emph{#1}}}}%
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\volX}[1]{\mathrm{vol}\pth{#1}}
+
+\newcommand{\Surf}[1]{\mathsf{S}\pth{#1}}
+\newcommand{\Project}[1]{P_{#1}}
+
+\newcommand{\Interval}{\EuScript{I}}
+\newcommand{\IntervalA}{\EuScript{I}}
+
+\newcommand{\Exp}{\mathrm{Exp}}
+
+\let\Ball\undefined
+\newcommand{\Ball}{\mathbf{b}}
+\newcommand{\hdim}{d}
+\newcommand{\Domain}{\mathcal{D}}
+\newcommand{\points}[1]{[\bfseries{#1 points}]}
+\newcommand{\Event}{\Mh{\EuScript{E}}}%
+\newcommand{\EventB}{\Mh{\EuScript{B}}}%
+\newcommand{\EventF}{\Mh{\EuScript{F}}}%
+\newcommand{\EventG}{\Mh{\EuScript{G}}}%
+
+\newcommand{\NNbrC}{\mathsf{n{}n}}
+\newcommand{\NNbr}[1]{\NNbrC\pth{#1}}
+\newcommand{\distCmd}[1]{\left\| {#1}  \right\|}
+\newcommand{\distY}[2]{\distCmd{#1 - #2}}
+
+
+
+\newcommand{\UselessStuffWarning}[1]{
+   \marginnote{\includegraphics{\RootFile{figs/trash}}}
+       #1}
+
+\newcommand{\NormalC}{\mathbf{N}}
+\newcommand{\NormalY}[2]{\NormalC\pth{#1, #2}}%
+\newcommand{\NormalDistOneDim}{\NormalC}
+\newcommand{\NormalDistX}[1]{\NormalC^{#1}}
+\DeclareMathOperator{\lca}{lca}
+\newcommand{\RangeSpace}{\Mh{\mathsf{S}}}%
+\newcommand{\RangeSpaceA}{\mathsf{T}}
+\newcommand{\RangeSpaceB}{\mathsf{U}}
+
+\newcommand{\range}{\mathbf{r}}
+\newcommand{\rangeA}{\mathbf{r}'}
+
+\newcommand{\BadProb}{\varphi}
+
+\newcommand{\CInterval}{\mathrm{I}}
+
+\newcommand{\EntropyChar}{\mathbb{H}}
+\newcommand{\Entropy}[1]{\EntropyChar\pth{#1}}
+\newcommand{\EntropyX}[1]{\EntropyChar\pth[]{#1}}
+
+\newcommand{\Matrix}{\mathsf{M}}
+\newcommand{\MatrixA}{\mathsf{N}}
+\newcommand{\MatrixB}{\mathsf{B}}
+\newcommand{\MatrixC}{\mathsf{C}}
+\newcommand{\MatrixD}{\mathsf{D}}
+
+\renewcommand{\th}{th\xspace}
+
+\newcommand{\Family}{\mathcal{F}}
+\newcommand{\FamilyB}{\mathcal{G}}
+\newcommand{\FamilyC}{\mathcal{H}}
+\newcommand{\FMSC}{\EuScript{Y}\index{metric space}}
+
+\newcommand{\indx}{{\it index}}
+\newcommand{\IndexX}[1]{\mathrm{index}\pth{#1}}
+\newcommand{\BSP}{\textsf{BSP}\xspace}
+\newcommand{\median}{\overline{\mathsf{m}}}
+\newcommand{\QuickSelect}{\Algorithm{Quick{}Select}\xspace}
+
+
+\providecommand{\row}{\mathbf{r}}%
+\newcommand{\rowc}{{r}}%
+
+\newcommand{\vecb}{\mathbf{b}}
+
+\newcommand{\vecA}{\mathbf{v}}
+\newcommand{\vecB}{\mathbf{u}}
+\newcommand{\vecRand}{\mathbf{r}}
+
+\newcommand{\vecH}{\mathbf{h}}
+\newcommand{\vecV}{\mathbf{v}}
+
+\newcommand{\vecX}{\mathbf{x}}
+\newcommand{\vecY}{\mathbf{y}}
+\newcommand{\vecZ}{\mathbf{z}}
+
+\newcommand{\DistBinom}[2]{\mathrm{Bin}\pth{#1,#2}}
+
+\newcommand{\DistGeom}[1]{\mathrm{Geom}\pth{#1}}
+
+\newcommand{\Sample}{\mathsf{R}}
+
+\newcommand{\lcm}{\mathop{\mathrm{lcm}}}
+\newcommand{\bdiv}{\mathop{\mathrm{div}}}%
+\newcommand{\divides}{\mid}%
+\newcommand{\ndivides}{\nmid}%
+\newcommand{\poly}{\mathrm{poly}}%
+
+\newcommand{\Group}{\mathcal{G}} 
+\newcommand{\GroupA}{\mathcal{H}} 
+
+\newcommand{\algGCD}{\Algorithm{EuclidGCD}\xspace}%
+
+\newcommand{\gOp}{\times}%
+\newcommand{\gIdent}{\mathsf{i}}%
+
+\newcommand{\ordX}[2][\!]{\mathop{\mathrm{o{r}d}}\pth[#1]{#2}}
+
+
+
+\newcommand{\lSym}[2]{%
+   \left(
+       \ds {#1}\divides{#2}%
+   \right) %
+}
+\newcommand{\jSym}[2]{\left\llbracket%
+       \ds {#1}\divides{#2}%
+       \right\rrbracket%
+}
+\newcommand{\Line}{\ell}
+\newcommand{\LineA}{\hbar}
+\newcommand{\LineB}{l}
+
+
+\newcommand{\LevelChar}{\mathbb{L}}
+\newcommand{\AtMostKLevelChar}{\LevelChar_{\leq k}}
+\newcommand{\AtMostKLevel}[1]{\LevelChar_{\leq k} \pth{ #1}}
+\newcommand{\Level}{\LevelChar}
+\newcommand{\BLevel}{\LevelChar}
+
+\newcommand{\LineSet}{\mathsf{L}}%
+\newcommand{\ArrX}[1]{\EuScript{A}\pth{#1}}%
+
+\providecommand{\Ungor}{\"{U}ng\"{o}r\xspace}
+\providecommand{\Matousek}{Matou{\v s}ek\xspace}
+\providecommand{\Gartner}{G\"{a}rtner\xspace}
+\providecommand{\Badoiu}{B\u{a}doiu\xspace}
+\providecommand{\Barany}{B{\'a}r{\'a}ny\xspace}
+\providecommand{\Bronnimann}{Br{\"o}nnimann\xspace}
+\providecommand{\Gartner}{G{\"a}rtner\xspace}
+\providecommand{\Erdos}{Erd{\H o}s\xspace}
+\providecommand{\Lovasz}{Lov\'asz\xspace}
+\providecommand{\Komlos}{Koml{\'o}s\xspace}
+
+\newcommand{\ProblemC}[1]{{\textsf{\textcolor{red}{#1}\index{problem!#1}}}}
+\DefineNamedColor{named}{OliveGreen} {cmyk}{0.64,0,0.95,0.40}
+\providecommand{\ComplexityClass}[1]{{{\textcolor[named]{OliveGreen}{%
+            \textsc{#1}}}}}
+\providecommand{\NPHard}{{\ComplexityClass{NP-Hard}}%
+   \index{NP!hard}\xspace}
+\providecommand{\NPComplete}{\ComplexityClass{NP-Complete}%
+   \index{NP!complete}\xspace}
+\providecommand{\APXHard}{\ComplexityClass{APX-Hard}%
+   \index{APX!Hard}\xspace}
+\providecommand{\NPC}{\ComplexityClass{NPC}%
+   \index{NP!complete}\xspace}
+\providecommand{\NP}{\ComplexityClass{NP}%
+   \index{NP}\xspace}
+\providecommand{\coNP}{\ComplexityClass{co-NP}\xspace}
+\providecommand{\POLYT}{\ComplexityClass{P}\xspace}
+
+\newcommand{\envFrame}[1]{\begin{center}\fbox{\begin{minipage}[c]{0.75\textwidth}{#1}\end{minipage}}\end{center}}
+
+\newcommand{\mysqrt}[1]{\ts\!\!\sqrt{#1}}
+\newcommand{\SegSet}{\mathsf{S}}
+\newcommand{\ArrVD}[1]{\Arr^{|} \pth{#1}}
+\newcommand{\RIC}{\textsf{RIC}\index{random incremental
+      construction}\xspace}
+\newcommand{\ArrB}{\EuScript{B}}
+
+\newcommand{\TreeOpt}{\EuScript{T}_\mathrm{opt}}
+\newcommand{\TreeOptA}{\EuScript{T}_\mathrm{opt}'}
+
+\newcommand{\DepthExt}[2]{\mathrm{depth}_{#1}\pth{#2}}
+\newcommand{\depthX}[1]{\mathrm{depth}\pth{#1}}
+
+\newcommand{\TreeA}{\EuScript{U}}
+\newcommand{\TreeB}{\EuScript{V}}
+
+\newcommand{\Trap}{\sigma}
+\newcommand{\TrapA}{\sigma'}
+\newcommand{\TrapB}{\sigma''}
+
+
+\newcommand{\SampleA}{\mathsf{R}'}
+
+\newcommand{\AllRegions}{\mathcal{T}}
+\newcommand{\AllRegionsHeavy}[1]{\mathcal{T}_{\!\geq #1}}
+\newcommand{\RegionsSet}[1]{\mathcal{F}\pth{#1}}
+\newcommand{\RegionsHeavy}[2]{\mathcal{F}_{\!\geq#1}\pth{#2}}
+\newcommand{\NumOfRegionsZero}[1]{\ExChar \!f\pth{#1}}
+\newcommand{\NumOfRegions}[2]{\ExChar\! f_{\!\geq #1}\pth[]{#2}}
+\newcommand{\ObjSet}{\mathsf{S}}
+
+\newcommand{\WeightX}[2][\!]{\omega \pth[#1]{#2}}
+\newcommand{\Edge}{\mathsf{e}}
+
+\newcommand{\Face}{\mathsf{f}}
+\newcommand{\FaceA}{\mathsf{g}}
+\newcommand{\FaceB}{\mathsf{s}}
+
+
+\newcommand{\DefSet}[1]{D\pth{#1}}
+\newcommand{\KillSet}[1]{K\pth{#1}}
+
+
+\newcommand{\CSProbFull}[4]{
+   \,\rho_{\!\!\stackrel{\rule[-.005cm]{0cm}{0.1cm}}{#1,
+       #4}}\pth{\MakeSBig #2,#3}}
+
+\newcommand{\disk}{D}
+\newcommand{\diskA}{D'}
+
+
+\newcommand{\IntervalSet}{\widehat{\mathcal{I}}}
+
+
+\newcommand{\GroundSet}{\textsf{X}}
+\newcommand{\GroundSetB}{\textsf{Y}}
+\newcommand{\FGroundSet}{\mathsf{x}}
+\newcommand{\DualRangeSpace}{\Dual{\RangeSpace}}
+\newcommand{\DualGroundSet}{\Dual{\GroundSet}}
+\newcommand{\RangeSet}{{\mathcal{R}}}
+\newcommand{\RangeSetA}{\mathcal{R}'}
+\newcommand{\RangeSetB}{\mathcal{X}}
+\newcommand{\MeasureChar}{\overline{m}}
+\newcommand{\sMeasureChar}{\overline{s}}
+\newcommand{\Measure}[1]{\MeasureChar\pth{#1}}
+\newcommand{\MeasureX}[2]{\MeasureChar_{#2}\pth{#1}}
+\newcommand{\sMeasure}[1]{\overline{s}\pth{#1}}
+\newcommand{\sMeasureX}[2]{\overline{s}_{#2}\pth{#1}}
+\newcommand{\sMeasureXC}[1]{\overline{s}_{#1}}
+
+\newcommand{\SetX}{\Mh{X}}%
+\newcommand{\SetZ}{\Mh{N}}%
+\newcommand{\SetA}{\Mh{S}}%
+\newcommand{\SetB}{\Mh{T}}%
+\newcommand{\SetC}{\Mh{N}}%
+
+\newcommand{\VCProj}[2]{#1_{|#2}}
+\newcommand{\VCDim}{\mathrm{dim}_{\VC}}
+\newcommand{\Dim}{\delta}
+\newcommand{\DimA}{\delta'}
+\newcommand{\PntSetB}{{{\mathsf{Q}}}}
+\newcommand{\PntSetC}{{{\mathsf{R}}}}
+\newcommand{\PntSetD}{{{\mathsf{U}}}}
+\newcommand{\Growth}[2]{{\EuScript{G}}_{#1}\pth{#2}}
+\newcommand{\ShatterFunc}[1]{\pi_{#1}}
+\newcommand{\DualShatterFunc}[1]{\Dual{\pi}_{#1}}
+\newcommand{\Dual}[1]{#1^{\star}}
+\newcommand{\Distribution}{\EuScript{D}}
+\newcommand{\Error}{\EuScript{E}}
+
+\newcommand{\bd}{{\partial}}%
+\newcommand{\eps}{{\varepsilon}}%
+
+\newcommand{\clmlab}[1]{\label{claim:#1}}
+\newcommand{\clmref}[1]{\HLink{Claim}{claim:#1}}
+\newcommand{\clmrefpage}[1]{\HLinkPage{Claim}{claim:#1}}%
+
+\newcommand{\CH}{{\mathcal{CH}}}
+\newcommand{\CHX}[1]{{\mathcal{CH}}\pth{#1}}
+
+\newcommand{\ts}{\hspace{0.6pt}}
+
+\providecommand{\qedsymbol}{\myqedsymbol}%
+\renewcommand{\qedsymbol}{\myqedsymbol}%
+
+\newcommand{\qedsign}{\hfill{\hfill\myqedsymbol}}
+\newcommand{\qedsignBig}{\hfill{\hfill\rule{4mm}{4mm}}}
+\newcommand{\QED}{{\hfill{\hfill\qedsymbol}}}
+
+\newcommand{\disc}{\mathop{\mathrm{disc}}}
+\newcommand{\Partition}{\Pi}
+
+\newcommand{\constB}{\constA_1}
+\newcommand{\constC}{\constA_2}
+\newcommand{\constD}{\constA_3}
+\newcommand{\constE}{\constA_4}
+\newcommand{\constF}{\constA_5}
+
+\newcommand{\num}{\alpha}
+\newcommand{\numA}{\beta}
+
+\newcommand{\VectSet}{\EuScript{V}}
+\newcommand{\VectSetB}{\EuScript{U}}
+\newcommand{\VectSetC}{\EuScript{W}}
+
+\newcommand{\AffineX}[1]{\mathrm{affine}\pth{#1}}
+\newcommand{\LinearX}[1]{\mathrm{linear}\pth{#1}}
+
+\newcommand{\Vect}{\overrightarrow{\mathsf{v}}}
+\newcommand{\VectA}{\overrightarrow{\mathsf{u}}}
+\newcommand{\VectB}{\overrightarrow{\mathsf{w}}}
+
+\newcommand{\NEW}[1]{#1}
+
+\newcommand{\ThreeFiguresExt}[9]{%
+   \begin{tabular}{ccc}
+     \begin{minipage}{0.31\linewidth}
+         \begin{center}
+             {\IncludeGraphics[#1]{{#2}}}
+         \end{center}
+     \end{minipage}
+     &
+       \begin{minipage}{0.31\linewidth}
+           \centerline{\IncludeGraphics[#4]{{#5}}}
+       \end{minipage}
+     &
+       \begin{minipage}{0.31\linewidth}
+           \centerline{\IncludeGraphics[#7]{{#8}}}
+       \end{minipage}
+     \\
+     ~\\[-0.2cm]
+     {#3} & {#6} & {#9}
+   \end{tabular}}
+
+\newcommand{\IncludeGraphics}[2][]{%
+   \typeout{}%
+   \typeout{Graphics: #2}%
+   \typeout{\ includegraphics[#1]{#2}}%
+   \includegraphics[#1]{#2}
+   \typeout{}%
+}
+
+
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    Handling references
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+\newcommand{\HLinkShort}[2]{\hyperref[#2]{#1\ref*{#2}}}
+\newcommand{\HLink}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\HLinkPage}[2]{\hyperref[#2]{#1~\ref*{#2}%
+      $_\text{p\pageref{#2}}$}}
+\newcommand{\HLinkPageOnly}[1]{\hyperref[#1]{Page~\refpage*{#1}%
+      $_\text{p\pageref{#1}}$}}
+
+\newcommand{\HLinkSuffix}[3]{\hyperref[#2]{#1\ref*{#2}{#3}}}
+\newcommand{\HLinkPageSuffix}[3]{\hyperref[#2]{#1\ref*{#2}%
+      #3$_\text{p\pageref{#2}}$}}
+
+\newcommand{\figlab}[1]{\label{fig:#1}}
+\newcommand{\figref}[1]{\HLink{Figure}{fig:#1}}
+\newcommand{\Figref}[1]{\HLink{Figure}{fig:#1}}
+\newcommand{\figrefpage}[1]{\HLinkPage{Figure}{fig:#1}}
+
+\newcommand{\exelab}[1]{\label{exer:#1}}
+\newcommand{\exeref}[1]{Exercise~\ref{exer:#1}}
+\newcommand{\exerefpage}[1]{Exercise~\ref{exer:#1}%
+   $_\text{p\pageref{exer:#1}}$}
+
+\providecommand{\deflab}[1]{\label{def:#1}}
+\newcommand{\defref}[1]{\HLink{Definition}{def:#1}}
+\newcommand{\defrefY}[2]{\hyperref[def:#2]{#1}}
+\newcommand{\defrefpage}[1]{\HLinkPage{Definition}{def:#1}}
+
+\newcommand{\etal}{\textit{et~al.}\xspace}
+
+\newcommand{\obslab}[1]{\label{observation:#1}}
+\newcommand{\obsref}[1]{\HLink{Observation}{observation:#1}}
+\newcommand{\obsrefY}[2]{\hyperref[observation:#2]{#1}}
+\newcommand{\obsrefshort}[1]{\HLinkShort{O}{observation:#1}}
+\newcommand{\obsrefpage}[1]{\HLinkPage{Observation}{observation:#1}}
+
+\newcommand{\exmlab}[1]{\label{example:#1}}
+\newcommand{\exmref}[1]{\HLink{Example}{example:#1}}
+
+\newcommand{\remlab}[1]{\label{rem:#1}}
+\newcommand{\remref}[1]{\HLink{Remark}{rem:#1}}%
+\newcommand{\remrefpage}[1]{\HLinkPage{Remark}{rem:#1}}%
+
+\newcommand{\chaplab}[1]{\label{chap:#1}}
+\newcommand{\chapref}[1]{Chapter~\ref{chap:#1}}
+\newcommand{\chaprefpage}[1]{Chapter~\ref{chap:#1}%
+   $_\text{p\pageref{chap:#1}}$}
+
+\newcommand{\itemlab}[1]{\label{item:#1}}
+\newcommand{\itemref}[1]{\HLinkSuffix{}{item:#1}{}}
+\newcommand{\itemrefpage}[1]{\HLinkPageSuffix{}{item:#1}}
+
+
+\newcommand{\tedlab}[1]{\label{tedium:#1}}
+\newcommand{\tedref}[1]{\HLink{Tedium}{tedium:#1}}%
+
+\newcommand{\factlab}[1]{\label{fact:#1}}%
+\newcommand{\factref}[1]{\HLink{Fact}{fact:#1}}%
+
+\newcommand{\alglab}[1]{\label{algorithm:#1}}
+\newcommand{\algref}[1]{\HLink{Algorithm}{algorithm:#1}}%
+
+\newcommand{\net}{\Mh{\mathcal{N}}}%
+\newcommand{\netY}[2]{\net\pth{#1, #2}}%
+      
+\newcommand{\lemlab}[1]{\label{lemma:#1}}
+\newcommand{\lemref}[1]{\HLink{Lemma}{lemma:#1}}%
+\newcommand{\lemrefY}[2]{\hyperref[lemma:#2]{#1}}
+\newcommand{\lemrefpage}[1]{\HLinkPage{Lemma}{lemma:#1}}
+\newcommand{\lemrefshort}[1]{\HLinkShort{L}{lemma:#1}}
+\newcommand{\pagelemref}[1]{\HLinkPageOnly{lemma:#1}}
+
+\providecommand{\eqlab}[1]{}%
+\renewcommand{\eqlab}[1]{\label{equation:#1}}
+\newcommand{\Eqrefbare}[1]{\HLinkSuffix{(}{equation:#1}{)}}
+\newcommand{\Eqref}[1]{\HLinkSuffix{Eq.~(}{equation:#1}{)}}
+\newcommand{\Eqrefpage}[1]{\HLinkPageSuffix{Eq.~(}{equation:#1}{)}}
+
+\newcommand{\seclab}[1]{\label{sec:#1}}
+\newcommand{\secref}[1]{\HLink{Section}{sec:#1}}
+\newcommand{\secrefY}[2]{\hyperref[sec:#2]{#1}}
+\newcommand{\secrefpage}[1]{\HLinkPage{Section}{sec:#1}}
+
+\newcommand{\thmlab}[1]{{\label{theo:#1}}}
+\newcommand{\thmref}[1]{\HLink{Theorem}{theo:#1}}
+\newcommand{\thmrefY}[2]{\hyperref[theo:#2]{#1}}
+\newcommand{\thmrefpage}[1]{\HLinkPage{Theorem}{theo:#1}}
+
+\newcommand{\corlab}[1]{\label{cor:#1}}
+\newcommand{\corref}[1]{\HLink{Corollary}{cor:#1}}%
+\newcommand{\correfshort}[1]{\HLinkShort{C}{cor:#1}}%
+\newcommand{\correfpage}[1]{\HLinkPage{Corollary}{cor:#1}}
+
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    Handling references
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+%    -----------------------------------------------------------------
+
+\newcommand{\ceil}[1]{\left\lceil {#1} \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor {#1} \right\rfloor}
+\newcommand{\brc}[1]{\left\{ {#1} \right\}}
+\newcommand{\pth}[2][\!]{\mleft({#2}\mright)}%
+\newcommand{\brk}[1]{\mleft[{#1}\mright]}%
+\newcommand{\pbrc}[2][\!\!]{#1\left[ {#2} \bigr. \right]}
+\newcommand{\pbrcS}[1]{\left[ {#1} \right]}
+
+\newcommand{\dotprod}[2]{{#1}\cdot{#2}}
+\newcommand{\DotProd}[2]{\permut{{#1},{#2}}}
+\newcommand{\permut}[1]{\left\langle {#1} \right\rangle}
+
+\newcommand{\MakeBig}{}
+\newcommand{\MakesBig}{}
+\newcommand{\MakeSBig}{}
+\newcommand{\MakeVBig}{}
+
+\newcommand{\DistChar}{\Mh{\mathsf{d}}}%
+\newcommand{\DistSetY}[2]{\DistChar\pth{#1,#2}}
+\newcommand{\distG}[2]{\DistChar_\Graph\pth{#1, #2}}
+\newcommand{\DistMtrCharX}[1]{\DistChar_{#1}}
+
+\newcommand{\dY}[2]{\DistChar\pth{#1, #2}}%
+\newcommand{\dGY}[2]{\DistChar_\Graph\pth{#1, #2}}%
+
+\newcommand{\cset}{\mathcal{C}}%
+
+\newcommand{\gidX}[1]{\mathrm{id}\pth{#1}}%
+\newcommand{\MTR}{\mathcal{M}}
+\newcommand{\DistMtr}[2]{\DistChar\pth{#1,#2}}
+\newcommand{\gset}{\Mh{\mathcal{G}}}%
+\newcommand{\cell}{\Box}%%
+
+\newcommand{\GridNbrChar}{\Mh{\mathsf{N}}}%
+\newcommand{\GridNbr}[2]{\GridNbrChar_{\leq #2}\pth{#1}}%
+
+\newcommand{\dist}[1]{\left\| {#1} \right\|}
+\newcommand{\norm}[1]{\left\| {#1} \right\|}
+\newcommand{\pnorm}[1]{\left\| {#1} \bigr. \right\|}
+
+
+\providecommand{\ds}{\displaystyle}
+\newcommand{\sep}[1]{\,\left|\, {#1} \bigr.\right.}%
+\newcommand{\sepw}[1]{\left|\, {#1} \right.}%
+
+
+\newcommand{\ProbExt}[2]{\mathop{\mathbf{Pr}}_{#1}\pbrcx{#2}}
+\newcommand{\ProbLTR}{\mathbb{P}}%
+
+\newcommand{\Prob}[1]{\mathop{\ProbLTR} \mleft[ #1 \mright]}%
+\newcommand{\ProbCond}[2]{\mathop{\ProbLTR}\!\left[%
+       #1 \;\middle\vert\; #2 \right]}
+\newcommand{\ProbY}[2]{\ProbLTR^{}_{\!#1}\pbrc{#2}}
+
+\newcommand{\ExChar}{\mathbb{E}}%
+\newcommand{\ExSym}{\mathop{\ExChar}}%
+\newcommand{\Ex}[2][\!]{\ExSym#1\pbrcx{#2}}
+\newcommand{\ExExt}[2]{\ExSym_{#1}\!\pbrcx{#2}}
+\newcommand{\ExExtS}[2]{\ExSym_{\substack{#1}}\!\pbrcx{#2}}
+\newcommand{\ExCond}[2]{\ExSym\!\left[%
+       #1 \;\middle\vert\; #2 \right]}
+
+\newcommand{\VarSymb}{\mathop{\mathbb{V}}}
+\newcommand{\Var}[1]{\mathop{\mathbb{V}}\!\pbrcx{#1}}
+
+\newcommand{\pbrcx}[1]{\left[ {#1} \right]}%
+\newcommand{\nfrac}[2]{{#1}/{#2}}
+\newcommand{\cardin}[1]{\left| {#1} \right|}%
+
+\newcommand\CCancel[2][black]{{\renewcommand\CancelColor{\color{#1}}\cancel{#2}}}
+
+\newcommand{\IncGraphPage}[4][]{%
+   \IncludeGraphics[page=#4,#1]{\File{#2/#3}}%
+}
+
+\newcommand{\IncGraphPageExt}[4]{%
+   \IncludeGraphics[page=#3,#4]{\File{#1/#2}}%
+}
+
+\newcommand{\IncGraph}[2][]{
+   \IncludeGraphics[#1]{\File{#2}}
+}
+
+\newenvironment{enumEx}{
+   \begin{compactenumA}
+    }{\end{compactenumA}}
+
+\newcommand{\cl}{{\mathrm{cl}}}
+
+\usepackage[amsmath,thmmarks]{ntheorem}
+\theoremseparator{.}%
+
+\newtheorem{theorem:unnumbered}{Theorem}[section]
+\newtheorem{theorem}{Theorem}[section]
+
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{tedium}[theorem]{Tedium}
+
+\theoremstyle{plain}%
+\theoremheaderfont{\sffamily}
+\theorembodyfont{\upshape}%
+
+\newtheorem{defn}[theorem]{Definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newtheorem*{remark_unnumbered}[theorem:unnumbered]{Remark}%
+\newtheorem*{remarks}[theorem]{Remarks}%
+\newtheorem{remark}[theorem]{Remark}%
+\newtheorem{fact}[theorem]{Fact}%
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{algorithm}[theorem]{Algorithm}%
+\newtheorem{xca}[theorem]{Exercise}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\newtheorem{exercise_h}[theorem]{Exercise}
+
+% Proof environments
+\theoremheaderfont{\em}%
+\theorembodyfont{\upshape}%
+\theoremstyle{nonumberplain}
+\theoremseparator{}
+\theoremsymbol{\myqedsymbol}
+\newtheorem{proof}{Proof:}
+\newtheorem{proofextin}{Proof}
+\newtheorem{altproof}{Alternative proof:}
+
+\theoremsymbol{}
+\newtheorem{proofnoqed}{Proof:}
+
+\theoremsymbol{\myqedsymbol}
+\theorempreskip{0pt}%
+\theorempostskip{0pt}%
+\newtheorem{proof_no_space}{Proof:}
+
+\newtheorem{proofof}{Proof of\!}%
+
+\newenvironment{proofext}{{\em Proof of }}{\hfill{\hfill\myqedsymbol}}
+\newenvironment{proofExt}[1]{{\emph{#1:}}}{\hfill{\hfill\myqedsymbol}}
+\newenvironment{proofnoproof}{{}}{{\hfill{\hfill\myqedsymbol}}}
+\newcommand{\HrX}{%
+   \noindent \hspace{-0.5\linewidth}%
+   \rule{2\linewidth}{0.8mm}%
+}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Macros to embed figures in text
+
+\newlength{\RecordedWidth}
+\newcommand{\RecordWidth}[1]{\settowidth{\RecordedWidth}{#1}}%
+
+\newlength{\msize}%
+
+%-------------------------------------------------------------------
+% \minipageWFigure{ TEXT }{ Figure }{ Figure caption/label }
+%-------------------------------------------------------------------
+\newcommand{\minipageWFigure}[3]{%
+   \RecordWidth{#2}%
+   \setlength{\msize}{\dimexpr(\textwidth-1.1\RecordedWidth)\relax}
+   \noindent%
+   \SaveIndent%
+   \begin{minipage}{\msize}%
+       \RestoreIndent%
+       #1
+   \end{minipage}%
+   \null\hfill%
+   \begin{minipage}{\RecordedWidth}
+       \null\hfill%
+       #2%       
+
+       #3%
+   \end{minipage}%
+}
+
+
+
+\newcommand{\EBRY}[2]{#1_{\langle#2\rangle}}%
+\newcommand{\Mod}[1]{\;(\mathop{\mathrm{mod}} #1)}
+
+\newcommand{\NiceFrac}[2]{%
+   {\raisebox{0.2em}{\ensuremath{#1}}\!\!\!}%
+   {\rotatebox[origin=c]{-20}{\Big/}}% Rotated /
+   {\! \raisebox{-0.2em}{\ensuremath{#2}} }}%
+
+% end - Macros to embed figures in text
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Color in math
+\providecommand{\Mh}[1]{{#1}}%
+\providecommand{\IfColorMath}[2]{#2}%
+
+\IfFileExists{.latex_printer_friendly}{\def\GenPrinterVer{1}}{}%
+
+\ifx\GenPrinterVer\undefined
+   \IfFileExists{.latex_color}{\def\GenColorMath{1}}{}
+\else
+   \renewcommand{\IfPrinterVer}[2]{#1}%
+\fi
+
+\ifx\GenColorMath\undefined
+\else
+\renewcommand{\IfColorMath}[2]{#1}%
+\renewcommand{\Mh}[1]{{\textcolor{red}{#1}}}%
+\fi
+% Color in math - end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\HSetY}[2]{\Mh{H}\pth{#1, #2}}%
+\newcommand{\CHSetY}[2]{\Mh{C}\pth{#1, #2}}%
+\newcommand{\Holder}{H\"older\xspace}
+\newcommand{\OldOm}{{\mathcal{O}}}
+\newcommand{\NewOm}{{\mathcal{N}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%---------------------------------------------------------------
+\newcommand{\IntRange}[1]{\left\llbracket #1 \right\rrbracket}
+\newcommand{\IRX}[1]{\left\llbracket #1 \right\rrbracket}%
+\newcommand{\IRY}[2]{\left\llbracket #1:#2 \right\rrbracket}
+
+%---------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\obj}{\Mh{f}}%
+\newcommand{\Wg}{\Mh{\omega}}%
+\newcommand{\TotalW}{\Mh{W}}%
+
+\newcommand{\rankY}[2]{{#1}_{ \permut{#2}}}%%
+\newcommand{\areaX}[1]{\Mh{\mathrm{area}}\pth{#1}}%%
+
+\newcommand{\mybinom}[2]%
+{\Bigl(\begin{array}{@{}c@{}}#1\\#2\end{array}\Bigr)}
+
+\newcommand{\algNet}{\AlgorithmI{net}\xspace}%
+
+\newcommand{\HWProblem}[4]{%\points{#1}%
+   \textsf{#2}
+       
+       #3}%
+
+\providecommand{\Set}[2]{\left\{ #1 \;\middle\vert\; #2 \right\}}
+\newcommand*{\biga}[1]{\vcenter{\hbox{\scalebox{1.5}{\ensuremath#1}}}}
+\newcommand{\CNF}{\TermI{CNF}\xspace}%
+\newcommand{\Tree}{\Mh{T}}%
+
+
+
+\DeclareSymbolFont{sfletters}{OML}{cmbrm}{m}{it}
+
+\DeclareMathSymbol{\salpha}{\mathord}{sfletters}{"0B}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\NPProblem}[3]{\NPProblemInd{#1}{#1}{#2}{#3}}
+\providecommand{\ZZ}{{\sf Z\!\hspace{-0.2em} Z}}
+
+\providecommand{\ProblemInd}[2]{\textsf{\textcolor{red}{#1}\index{Problem!#2}}}
+\providecommand{\NPProblemInd}{}
+\renewcommand{\NPProblemInd}[4]{
+   \begin{center}
+      \vspace{0.6cm}
+       \fbox{
+          \begin{minipage}{0.9\linewidth}
+              \vspace{-0.6cm} \hspace{-0.35cm}
+              {\large \bfseries \ProblemInd{#1}{#2}}
+              \vspace{+0.2cm}%
+
+              \noindent{\textcolor{blue}{\bfseries \textsf{Instance}}:} {#3}
+              
+              \noindent{\textcolor{blue}{\bfseries \textsf{Question}:}} {#4}
+          \end{minipage}
+       }
+   \end{center}
+   \smallskip
+   }
+
+\providecommand{\NPProblemOpt}{}
+\renewcommand{\NPProblemOpt}[4]{\NPProblemInd{#1}{#2}{#3}{#4}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\Hastad}{H{\aa}stad\xspace}
+
+\newcommand{\ANNbr}{\Term{ANN}\index{approximate nearest neighbor}\xspace}
+\newcommand{\PLEB}{\TermI{PLEB}\xspace}
+\newcommand{\LSH}{\TermI{L{S}H}\xspace}
+\newcommand{\AVD}{\Term{AVD}\index{approximate Voronoi diagram}\xspace}
+
+\newcommand{\DS}{\EuScript{D}} % DataStructure
+\newcommand{\DSC}{\mathsf{D}} % DataStructure
+
+\newcommand{\distH}[2]{\DistChar_{H}\pth{#1, #2}}
+\newcommand{\distHY}[2]{\DistChar_{H}\pth{#1, #2}}
+
+\newcommand{\DSNearNbr}{\ensuremath{\DataStructure{\text{Near}}}
+   \index{near neighbor!data-structure}
+}
+
+\newcommand{\DSAprxNearNbr}{\ensuremath{\DataStructure{{\approx%
+         \text{Near{}}}}}%
+   \index{near neighbor!data-structure!approximate}%
+}
+\newcommand{\INearNbr}{\widehat{\mathcal{I}}%
+   \index{near neighbor!data-structure!interval}}
+\newcommand{\DataStructure}[1]{\ensuremath{\DS_{#1}}}
+\newcommand{\DistNN}[2]{\DistChar\pth{#1,#2}}
+\newcommand{\pntc}{\Mh{{p}}}%
+
+\newcommand{\seq}{{\Mh{M}}}%
+\newcommand{\cTimes}{\Mh{\beta}}%
+\newcommand{\cDSTimes}{\Mh{\delta}}%
+\newcommand{\nnConst}{\Mh{c}}%
+
+\newcommand{\DSTimes}{\Mh{L}}%
+\newcommand{\rad}{\Mh{r}}%
+\newcommand{\Rad}{\Mh{R}}%
+\newcommand{\radius}{\mathop{\mathrm{radius}}}
+
+\newcommand{\HypercubeX}[1]{\Hypercube^{#1}}
+\newcommand{\kFunctions}[2]{\mathrm{combine}\pth{#1,#2}}
+\newcommand{\WEqualChar}{\Bumpeq}
+\newcommand{\WEqual}[2]{{#1}\WEqualChar{#2}}
+\newcommand{\FamilyAmp}{\FamilyC_{\WEqualChar}}
+\newcommand{\PSPACE}{\ComplexityClass{PSPACE}\xspace}%
+
+\newcommand{\PS}{\Mh{P}}%
+
+\newcommand{\PSetFar}{\ensuremath{\PntSet^{}_{\geq}\xspace}}%
+\newcommand{\DA}{\Mh{D}}%
+\newcommand{\uniqX}[1]{\Mh{\mathrm{uniq}}\pth{#1}}%
+\newcommand{\diffX}[1]{\mathop{}\!\mathrm{d}#1}
+
+\newcommand{\Frq}{\Mh{F}}%
+\newcommand{\frq}{\Mh{f}}%
+\newcommand{\STRM}{\Mh{\mathcal{S}}}%
+\newcommand{\strm}{\Mh{{s}}}%
+
+\providecommand{\Turan}{Tur\'an\xspace}
+\newcommand{\fGrowX}[1]{\Mh{G}^{}_{\Dim}\pth{#1}}
+\newcommand{\CompressFunc}{\mathtt{Compress}}
+\newcommand{\RSA}{\Term{RSA}\xspace}
+\newcommand{\MST}{\Term{MST}\xspace}
+\providecommand{\CClassPP}{\CClass{P{}P}\xspace}
+\providecommand{\ID}{\mathrm{id}}
+
+\newcommand{\EncodeFunc}{\text{\ttfamily{Enc}}}
+\newcommand{\DecodeFunc}{\text{\ttfamily{Dec}}}
+\newcommand{\discX}[1]{\mathrm{disc}\pth{#1}}%
+
+\newcommand{\leqSetX}[2]{\cardin{{#1}_{\leq #2}}}%
+\newcommand{\propertyC}{\psi}%
+\newcommand{\propertyX}[1]{\propertyC\pth{#1}}%
+\newcommand{\numC}{\Gamma}%
+
+\newcommand{\degreeX}[1]{\mathrm{degree}\pth{#1}}
+
+
+\newcommand{\ind}{m}
+
+\providecommand{\nequiv}{\not\equiv}
+\providecommand{\sqcupplus}{\sqcup^+}
+
+
+\providecommand{\AlgorithmI}[1]{}%
+\renewcommand{\AlgorithmI}[1]{%
+   {\protect\color{RedViolet}{#1}}}%
+\providecommand{\AlgorithmX}[1]{{\AlgorithmI{#1}\index{algorithm!#1@{\AlgorithmI{#1}}}}}
+
+\MakePerPage{footnote} % Resets footnote counter on every page
+
+
+ 
+
+    % Define relation macros
+\newcommand{\Crel}[2][blue!35]{%
+  \mathrel{\tikz[baseline=-0.55ex]{%
+    \node[fill=#1, rounded corners=2pt, inner xsep=3.5pt, inner ysep=4.5pt] {$#2$};%
+  }}%
+}
+\newcommand{\Ceq}{\Crel{=}}
+\newcommand{\Cleq}{\Crel{\le}}
+\newcommand{\Cgeq}{\Crel{\ge}}
+
+\allowdisplaybreaks % Allows page breaks inside multiline math environments
+
+%-----------------------------------------------------------------------------
+% Bibliography & Document Begin
+%-----------------------------------------------------------------------------
+\IfFileExists{\jobname.bib}{%
+   \addbibresource{\jobname.bib}%
+}{%
+   \addbibresource{shortcuts.bib}%
+   \addbibresource{geometry.bib}%
+}
+\makeindex
+\begin{document}

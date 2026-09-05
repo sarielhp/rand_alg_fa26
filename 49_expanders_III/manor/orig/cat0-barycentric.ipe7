@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20081007074836" modified="D:20081106092655"/>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="xi"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<layer name="mu"/>
+<layer name="delta"/>
+<layer name="epsilon"/>
+<layer name="nu"/>
+<layer name="zeta"/>
+<layer name="eta"/>
+<layer name="theta"/>
+<layer name="iota"/>
+<layer name="kappa"/>
+<layer name="lambda"/>
+<view layers="alpha" active="alpha"/>
+<view layers="alpha xi beta delta theta" active="xi"/>
+<view layers="alpha xi beta delta nu zeta eta theta kappa lambda" active="beta"/>
+<view layers="alpha xi gamma mu delta epsilon nu eta iota lambda" active="gamma"/>
+<view layers="alpha xi beta gamma mu delta epsilon zeta eta theta iota kappa" active="mu"/>
+<view layers="alpha xi beta delta nu zeta eta theta kappa lambda" active="mu"/>
+<path layer="xi" stroke="black" pen="normal" matrix="1 0 0 1 37 -81" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path stroke="black" pen="normal" matrix="1 0 0 1 -47 -65" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="gamma" stroke="green" pen="normal">
+49 735 m
+133 719 l
+</path>
+<path layer="beta" stroke="red" pen="normal">
+49 735 m
+69 748
+110 742
+133 719 s
+</path>
+<path layer="delta" stroke="black" pen="normal" fill="green">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="zeta" stroke="red" pen="normal" matrix="1 0 0 1 0 -0.591716">
+96 800 m
+91.9054 744.202 l
+</path>
+<path layer="epsilon" stroke="green" pen="normal" matrix="1 0 0 1 -3 0">
+99 800 m
+90.6783 727.061 l
+</path>
+<path layer="theta" stroke="red" pen="normal" matrix="1 0 0 1 -4.0946 -55.7976" fill="red">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="lambda" stroke="blue" pen="normal">
+96 800 m
+49 735 l
+</path>
+<path stroke="blue" pen="normal">
+96 800 m
+133 719 l
+</path>
+<path layer="mu" stroke="green" pen="normal" matrix="1 0 0 1 -8.3217 -72.939" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<use name="mark/cross(sx)" pos="32 800" layer="alpha" matrix="1 0 0 1 0 8" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="32 704" matrix="1 0 0 1 0 -16" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="144 704" matrix="1 0 0 1 0 -16" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="144 800" matrix="1 0 0 1 0 8" size="tiny" stroke="gray4"/>
+<text layer="lambda" stroke="blue" matrix="1 0 0 1 -0.591716 -7.69231" pos="60.8462 776.414" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<text stroke="blue" matrix="1 0 0 1 55.0296 -10.6509" pos="60.8462 776.414" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<text layer="beta" stroke="red" matrix="1 0 0 1 4.73373 -9.46746" pos="68.5385 760.438" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<text stroke="red" matrix="1 0 0 1 39.645 -15.3846" pos="68.5385 760.438" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<text layer="gamma" stroke="red" matrix="1 0 0 1 4.14201 -24.8521" pos="68.5385 760.438" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<text stroke="red" matrix="1 0 0 1 34.9113 -31.9526" pos="68.5385 760.438" type="label" transformations="translations" valign="baseline" size="normal">$\frac12$</text>
+<path layer="kappa" stroke="red" pen="ultrafat">
+48 696 m
+64 696 l
+</path>
+<path layer="nu" stroke="blue" pen="ultrafat">
+112 696 m
+128 696 l
+</path>
+<text layer="kappa" stroke="red" pos="66.1716 691.799" type="label" transformations="translations" valign="baseline" size="Large">$\le$</text>
+<text layer="iota" stroke="blue" matrix="1 0 0 1 31.3609 0" pos="66.1716 691.799" type="label" transformations="translations" valign="baseline" size="Large">$=$</text>
+<path stroke="green" pen="ultrafat" matrix="1 0 0 1 31.3609 0">
+48 696 m
+64 696 l
+</path>
+</page>
+</ipe>

@@ -1,0 +1,35 @@
+#! /bin/bash
+
+cp ../ckr_partition.ipe .
+cp ../partition_0_1_*.ipe .
+
+# Convert everything to pdf
+ipep
+
+pdftk ckr_partition.pdf   cat 1-12 output out_1.pdf
+pdftk ckr_partition.pdf   cat 13-13 output partition.pdf
+pdftk partition_0_1_a.pdf cat 1-1  output out_2.pdf
+pdftk partition_0_1_b.pdf cat 1-1  output out_3.pdf
+pdftk partition_0_1_c.pdf cat 1-1  output out_4.pdf
+pdftk partition_0_1_d.pdf cat 1-1  output out_5.pdf
+pdftk partition_0_1_e.pdf cat 1-1  output out_6.pdf
+
+echo x
+
+pdftk out_1.pdf partition.pdf \
+      out_2.pdf partition.pdf \
+      out_3.pdf partition.pdf \
+      out_5.pdf partition.pdf \
+      out_6.pdf partition.pdf \
+      cat output final.pdf
+
+./animate_pdf_to_gif final.pdf out.gif
+
+
+mv out.gif ckr_partition_bourgain.gif
+
+rm *.pdf *.ipe
+
+echo "Generated ckr_partition_bourgain.gif"
+
+

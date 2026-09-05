@@ -1,0 +1,186 @@
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Complexity classes}
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteExt{%
+   ``I'm a simple man, a guileless man,'' Panin answered. ``There is a
+   norm. The norm is five gravities. My simple, uncomplicated organism
+   cannot bear anything exceeding the norm. My organism tried six
+   once, and got carried out at six minutes some seconds. With me
+   along.''%
+}%
+{Almost the same}%
+{Arkady and Boris Strugatsky}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Las Vegas and Monte Carlo algorithms}
+\seclab{complexity}
+
+\begin{defn}
+    A \emphic{Las Vegas algorithm}{algorithm!Las Vegas} is a
+    randomized algorithms that {\em always} return the correct result.
+    The only variant is that it's running time might change between
+    executions.
+\end{defn}
+
+An example for a Las Vegas algorithm is the \Algorithm{QuickSort}
+algorithm.
+
+\begin{defn}
+    A \emphic{Monte Carlo algorithm}{algorithm!Monte Carlo}
+    is a randomized algorithm that might output an incorrect result.
+    However, the probability of error can be diminished by repeated
+    executions of the algorithm.
+\end{defn}
+
+The matrix multiplication algorithm is an example of a Monte Carlo
+algorithm.
+
+\section{Complexity classes}
+
+I assume people know what are Turing machines, \CClass{NP},
+\CClass{NPC}, RAM machines, uniform model, logarithmic model.
+\CClass{PSPACE}, and \CClass{EXP}. If you do now know what are those
+things, you should read about them. Some of that is covered in the
+randomized algorithms book, and some other stuff is covered in any
+basic text on complexity theory\footnote{There is also the internet.}.
+
+
+\begin{defn}\index{Complexity!\CClass{P}}
+    The class \CClass{P} consists of all languages $L$ that have a
+    polynomial time algorithm $\Algorithm{Alg}$, such that for any
+    input $\Sigma^{*}$, we have
+    \begin{compactenumA}
+        \item $x \in L \Rightarrow \Algorithm{Alg}(x)$ accepts,
+        \item $x \notin L \Rightarrow \Algorithm{Alg}(x)$ rejects.
+    \end{compactenumA}
+\end{defn}
+
+\begin{defn}\index{Complexity!\CClass{NP}}
+    The class \CClass{NP} consists of all languages $L$ that have a
+    polynomial time algorithm \Alg, such that for any input
+    $\Sigma^{*}$,  we have:
+    \begin{compactenumi}
+        \item If $x \in L \Rightarrow$ then $\exists y \in \Sigma^*$,
+        $\Alg(x,y)$ accepts, where $|y|$ (i.e. the length of $y$) is
+        bounded by a polynomial in $|x|$.
+     
+        \item If $x \notin L \Rightarrow$ then $ \forall y \in
+        \Sigma^* \Alg(x,y)$ rejects.
+    \end{compactenumi}
+\end{defn}
+
+\begin{defn}\index{Complexity!$co-$}
+    For a complexity class $\CX$, we define the complementary
+    class co-$\CX$ as the set of languages whose complement
+    is in the class $\CX$. That is 
+    \begin{equation*}
+        \coCClass{\CX} = \Set{L}{\bigl.\smash{\overline{L}} \in \CX},
+    \end{equation*}4
+    where $\overline{L} = \Sigma^* \setminus L$.
+\end{defn}
+
+It is obvious that $\CClass{P} = \coCClass{P}$ and $\CClass{P}
+\subseteq \CClass{NP} \cap \coCClass{NP}$. (It is currently unknown if
+$\CClass{P} = \CClass{NP} \cap \coCClass{NP}$ or whether
+$\CClass{NP}=\coCClass{NP}$, although both statements are believed to be
+false.)
+
+\begin{defn}\index{Complexity!\CClass{RP}}
+    The class \CClass{R{}P} (for Randomized Polynomial time) consists of
+    all languages $L$ that have a randomized algorithm \Alg with worst
+    case polynomial running time such that for any input $x \in
+    \Sigma^*$, we have
+    \begin{compactenumi}
+        \item If $x \in L$ then $\Prob{\Alg(x) \text{
+              accepts}} \geq 1/2$.
+     
+        \item $x \notin L$ then $\Prob{\Alg(x) \text{
+              accepts}} = 0 $.
+    \end{compactenumi}
+\end{defn}
+
+An \CClass{RP} algorithm is a Monte Carlo algorithm, but this
+algorithm can make a mistake only if $x \in L$. As such, \coCClass{RP}
+is all the languages that have a Monte Carlo algorithm that make a
+mistake only if $x \notin L$. A problem which is in $\CClass{RP} \cap
+\coCClass{RP}$ has an algorithm that does not make a mistake, namely a
+Las Vegas algorithm.
+
+\begin{defn}\index{Complexity!\CClass{ZPP}}
+    The class \CClass{ZPP} (for Zero-error Probabilistic Polynomial
+    time) is the class of languages that have a Las Vegas algorithm
+    that runs in expected polynomial time.
+\end{defn}
+
+
+\begin{defn}\index{Complexity!\CClass{P{}P}}
+    The class \CClassPP (for Probabilistic Polynomial time) is the
+    class of languages that have a randomized algorithm \Alg, with
+    worst case polynomial running time, such that for any input
+    $x \in \Sigma^*$, we have
+    \begin{compactenumi}
+        \item If $x \in L$ then $\Prob{\MakeBig \Alg(x) \text{
+              accepts}} > 1/2$.
+     
+        \item If $x \notin L$ then $\Prob{\MakeBig\Alg(x) \text{
+              accepts}} < 1/2$.
+    \end{compactenumi}
+\end{defn}
+
+The class \CClassPP is not very useful. Why?
+
+\begin{exercise}
+    Provide a \CClassPP algorithm for 3SAT.
+\end{exercise}
+
+Consider the mind-boggling stupid randomized algorithm that returns
+either yes or no with probability half. This algorithm is almost in
+\CClassPP, as it return the correct answer with probability half. An
+algorithm is in \CClassPP needs to be \emph{slightly} better, and be
+correct with probability better than half. However, how much better
+can be made to be arbitrarily close to $1/2$. In particular, there is
+no way to do effective amplification with such an algorithm.
+
+\begin{fragment}{\deflabel{b_p_p}}
+    \begin{defn}\index{Complexity!\CClass{BPP}}
+        \deflab{b:p:p}%
+        %
+        The class \CClass{BPP} (for Bounded-error Probabilistic Polynomial
+        time) is the class of languages that have a randomized algorithm
+        \Alg with worst case polynomial running time such that for any
+        input $x \in \Sigma^*$, we have
+        \begin{compactenumi}
+            \item If $x \in L$ then $\Prob{\Alg(x) \text{ accepts}}
+            \geq 3/4$.
+     
+            \item If $x \notin L$ then $\Prob{\Alg(x) \text{ accepts}}
+            \leq 1/4$.
+        \end{compactenumi}    
+    \end{defn}
+\end{fragment}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+\secref{complexity} follows \cite[Section 1.5]{mr-ra-95}.
+
+
+\ChapterEnd{}
+%\bibliographystyle{alpha}  
+%\bibliography{shortcuts,geometry}
+
+%\end{document}

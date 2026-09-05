@@ -1,0 +1,400 @@
+%--------------------------------------------------------
+% 22_entropy.tex
+%
+%--------------------------------------------------------
+
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+\newcommand{\SolveLP}{{\AlgorithmI{SolveLP}}}
+%\newcommand{\sign}{\mathrm{sign}}
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Low Dimensional Linear Programming}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\Quote{``Napoleon has not been conquered by man. He was greater than
+   all of us. But god punished him because he relied on his own
+   intelligence alone, until that prodigious instrument was strained
+   to breaking point. Everything breaks in the end.'' }{Carl XIV
+   Johan, King of Sweden}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\title{}
+
+%\maketitle
+
+
+\section{Linear programming in constant dimension ($d>2$)}
+
+Let assume that we have a set $H$ of $n$ linear inequalities defined
+over $d$ ($d$ is a small constant) variables. Every inequality in $H$
+defines a closed half space in $\Re^{d}$ . Given a vector
+$\overrightarrow{c}=(c_{1},\ldots,c_{d})$ we want to find
+$p=(p_{1},\ldots,p_{d})\in\Re^{d}$ which is in all the half spaces
+$h\in H$ and $f(p)=\sum_{i}c_{i}p_{i}$ is maximized.  Formally:
+
+\envFrame{%
+   LP in $d$ dimensions:$(H,\overrightarrow{c})$ 
+   
+   $H$ - set of $n$ closed half spaces in $\Re^{d}$
+   
+   $\overrightarrow{c}$ - vector in $d$ dimensions
+   
+   Find $p\in\Re^{d}$ s.t. $\forall h\in H\text{ we have}\  p\in h$
+   and $f(p)$ is maximized. 
+   
+   Where $f(p)=\permut{p,\overrightarrow{c}}$.}
+
+
+A closed half space in $d$ dimensions is defined by an inequality of
+the form
+\[
+a_{1}x_{1}+a_{2}x_{2}+\cdots+a_{n}x_{n}\leq b_{n}.
+\]
+
+
+One difficulty that we ignored earlier, is that the optimal solution
+for the LP might be unbounded, see \figref{unbounded}.
+
+
+\begin{figure}[t]
+    \begin{tabular}{ccc}
+      \IncludeGraphics[width=5cm]{\File{figs/unbounded}}%
+      &%
+        \IncludeGraphics[width=5cm]{\File{figs/unbounded_check}}
+      &%
+        \IncludeGraphics[width=5cm]{\File{figs/ub_check_2}}
+      \\
+      (a)
+      &
+        (b)
+      &
+        (c)
+    \end{tabular}
+
+    \caption{(a) Unbounded LP. (b). (c).}
+    \figlab{unbounded}
+\end{figure}
+
+
+Namely, we can find a solution with value $\infty$ to the target
+function.
+
+
+
+For a half space $h$ let $\eta(h)$ denote the normal of $h$ directed
+into the feasible region. Let $\mu(h)$ denote the closed half space,
+resulting from $h$ by translating it so that it passes through the
+origin. Let $\mu(H)$ be the resulting set of half spaces from $H$. See
+\figref{unbounded} (b).
+
+The new set of constraints $\mu(H)$ is depicted in \figref{unbounded}
+(c).
+% look like:
+
+% \centerline{\includegracclphics[width=5cm]{figs/ub_check_2}}
+
+\begin{lemma}
+    $(H,\overrightarrow{c})$ is unbounded if and only if
+    $(\mu(H),\overrightarrow{c})$ is unbounded.
+\end{lemma}
+\begin{proof}
+    Consider the $\rho'$ the unbounded ray in the feasible region of
+    $(H,\overrightarrow{c})$ such that the line that contain it passes
+    through the origin. Clearly, $\rho'$ is unbounded also in
+    $(H,\overrightarrow{c})$,
+    and this is if and only if. See \figref{ub} (a).
+%    \centerline{\includegraphics[width=5cm]{figs/ub_check_3}}
+\end{proof}
+
+\begin{figure}[t]
+    \ThreeFiguresExt%
+    {width=5cm} {\File{figs/ub_check_3}} {(a)}%
+    {width=5cm} {\File{figs/bounded}} {(b)}%
+    {width=5cm} {\File{figs/bounded_1}} {(c)}%
+
+    \caption{(a). (b). (c).}
+    \figlab{ub}
+\end{figure}
+
+
+\begin{lemma}
+Deciding if $(\mu(H),\overrightarrow{c})$ is bounded can be done
+by solving a $d-1$ dimensional LP. Furthermore, if it is bounded,
+then we have a set of $d$ constraints, such that their intersection
+prove this. 
+
+Furthermore, the corresponding set of $d$ constraints in $H$ testify
+that $(H,\overrightarrow{c})$ is bounded.
+\end{lemma}
+\begin{proof}
+    Rotate space, such that $\overrightarrow{c}$ is the vector
+    $(0,0,\ldots,0,1)$.  And consider the hyperplane $g\equiv
+    x_{d}=1$. Clearly, $(\mu(H),\overrightarrow{c})$ is unbounded if
+    and only if the region $g\cap\bigcap_{h\in\mu(H)}h$ is non-empty.
+    By deciding if this region is unbounded, is equivalent to solving
+    the following LP: $L'=(H',(1,0,\ldots,0))$ where
+    \[
+    H'=\brc{g\cap h\ \sep{h\in\mu(H)}}.
+    \]
+    
+    Let $h\equiv a_{1}x_{1}+\ldots+a_{d}x_{d}\leq0$, the region
+    corresponding to $g\cap h$ is
+    $a_{1}x_{1}+\cdots+a_{d-1}x_{d-1}\leq-a_{d}$ which is a $d-1$
+    dimensional hyperplane. See \figref{ub} (b).   
+    
+%    \centerline{\includegraphics[width=5cm]{figs/bounded}}
+    
+    But this is a $d-1$ dimensional LP, because everything happens on
+    the hyperplane $x_{d}=1$.
+    
+    Notice that if $(\mu(H),\overrightarrow{c})$ is bounded (which
+    happens if and only if $(H,\overrightarrow{c})$ is bounded), then
+    $L'$ is infeasible, and the LP $L'$ would return us a set $d$
+    constraints that their intersection is empty. Interpreting those
+    constraints in the original LP, results in a set of constraints
+    that their intersection
+    is bounded in the direction of $\overrightarrow{c}$. See
+    \figref{ub} (c).
+
+%    \centerline{\includegraphics[width=5cm]{figs/bounded_1}}
+    
+    (In the above example, $\mu(H)\cap g$ is infeasible because the
+    intersection of $\mu(h_{2})\cap g$ and $\mu(h_{1})\cap g$ is
+    empty, which implies that $h_{1}\cap h_{2}$ is bounded in the
+    direction $\overrightarrow{c}$ which we care about. The positive
+    $y$ direction in this figure. )
+\end{proof}
+
+
+
+
+We are now ready to show the algorithm for the LP for
+$L=(H,\overrightarrow{c}).$ By solving a $d-1$ dimensional LP we
+decide whether $L$ is unbounded.  If it is unbounded, we are done (we
+also found the unbounded solution,
+if you go carefully through the details). 
+
+
+
+\begin{figure}[t]
+    \ThreeFiguresExt{width=5cm}{\File{figs/bounded_2}}{(a)}
+    {width=5cm}{\File{figs/opt_changed}}{(b)}
+    {width=5cm}{\File{figs/bounded_1}}{(c)}
+
+    \caption{(a). (b). (c).}
+    \figlab{3}
+\end{figure}
+
+
+See \figref{3} (a).
+%\centerline{\includegraphics[width=5cm]{figs/}}
+
+(in the above figure, we computed $p$.)
+
+
+
+In fact, we just computed a set $h_{1},\ldots,h_{d}$ s.t. their intersection
+is bounded in the direction of $\overrightarrow{c}$ (thats what the
+boundness check returned). 
+
+Let us randomly permute the remaining half spaces of $H$, and let
+$h_{1},h_{2},\ldots,h_{d},h_{d+1},\ldots,h_{n}$ be the resulting
+permutation.~\\
+
+
+Let $v_{i}$ be the vertex realizing the optimal solution for the
+LP:
+
+\[
+L_{i}=\pth{\brc{h_{1},\ldots,h_{i}},\overrightarrow{c}}\]
+
+
+There are two possibilities:
+
+\begin{enumerate}
+    \item $v_{i}=v_{i+1}$. This means that $v_{i}\in h_{i+1}$ and it
+    can be checked in constant time.
+
+    \item $v_{i}\ne v_{i+1}.$ It must be that $v_{i}\notin h_{i+1}$
+    but then,
+    we must have... What is depicted in \figref{3} (b).
+%%    \centerline{\includegraphics[width=5cm]{figs/opt_changed} }
+\end{enumerate}
+$B$ - the set of $d$ constraints that define $v_{i+1}$. If $h_{i+1}\notin B$
+then $v_{i}=v_{i+1}.$ As such, the probability of $v_{i}\ne v_{i+1}$
+is roughly $d/i$ because this is the probability that one of the elements
+of $B$ is $h_{i+1}$. Indeed, fix the first $i+1$ elements, and
+observe that there are $d$ elements that are marked (those are the
+elements of $B$). Thus, we are asking what is the probability of
+one of $d$ marked elements to be the last one in a random permutation
+of $h_{d+1},\ldots,h_{i+1}$, which is exactly $d/(i+1-d)$.
+
+\remove{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline 
+$h_{1},h_{2},\ldots,h_{d}$&
+...&
+{*}&
+&
+...&
+...&
+&
+{*}&
+&
+&
+...&
+&
+...&
+$h_{i+1}$\tabularnewline
+\hline
+\end{tabular}
+}
+
+Note that if some of the elements of $B$ is $h_{1},\ldots,h_{d}$
+than the above expression just decreases (as there are less marked
+elements).
+
+Well, let us restrict our attention to $\partial h_{i+1}$. Clearly,
+the optimal solution to $L_{i+1}$ on $h_{i+1}$ is the required $v_{i+1}$.
+Namely, we solve the LP $L_{i+1}\cap h_{i+1}$ using recursion. 
+
+This takes $T(i+1,d-1)$ time. What is the probability that $v_{i+1}\ne v_{i}$?
+
+
+Well, one of the $d$ constraints defining $v_{i+1}$ has to be $h_{i+1}$.The
+probability for that is $\leq1$ for $i\leq2d-1,$ and it is \[
+\leq\frac{d}{i+1-d},\]
+otherwise.
+
+Summarizing everything, we have:
+
+\begin{eqnarray*}
+    T(n,d) & = & O(n)+T(n,d-1)+\sum_{i=d+1}^{2d}T(i,d-1)\\
+    \  & + & \sum_{i=2d+1}^{n}\frac{d}{i+1-d}T(i,d-1)
+\end{eqnarray*}
+What is the solution of this monster? Well, one essentially to guess
+the solution and verify it. To guess solution, let us {}``simplify''
+(incorrectly) the recursion to :
+\begin{eqnarray*}
+    T(n,d) & = & O(n)+T(n,d-1)
+     + d\sum_{i=2d+1}^{n}\frac{T(i,d-1)}{i+1-d}
+\end{eqnarray*}
+
+So think about the recursion tree. Now, every element in the sum is
+going to contribute a near constant factor, because we divide it by
+(roughly) $i+1-d$ and also, we are guessing the the optimal solution
+is linear/near linear.
+
+In every level of the recursion we are going to penalized by a
+multiplicative factor of $d$. Thus, it is natural, to conjecture that
+$T(n,d)\leq\pth{3d}^{3d}n$.
+
+Which can be verified by tedious substitution into the recurrence,
+and is left as exercise. \\
+
+
+\begin{theorem}
+    Given an $d$ dimensional LP $(H,\overrightarrow{c}),$it can be
+    solved in expected $O\pth{(3d)^{3d}n}$ time (the constant in the O
+    is dim independent).
+\end{theorem}
+BTW, we are being a bit conservative about the constant. In fact, one
+can prove that the running time is $d!n$. Which is still exponential
+in $d$.
+
+
+
+
+\begin{algorithmEnv}
+    \SolveLP{}($(H,\overrightarrow{c})$) \+ \\
+
+~~~/{*} initialization {*}/\\
+
+~~~Rotate $(H,\overrightarrow{c})$ s.t. $\overrightarrow{c}=(0,\ldots,1)$\\
+
+~~~Solve recursively the $d-1$ dim LP: \+ \\
+~~~~~~~~~~$L'\equiv\mu(H)\cap(x_{d}=1)$ \-\\
+
+~~~\If $L'$ has a solution \Then{}\+\\
+~~~~~ \Return {}``Unbounded''\-\\
+~~~\\
+~~~Let $g_1,\ldots, g_d$ be the set of constraints of $L'$ that
+testifies that $L'$ is infeasible\\
+
+~~~Let $h_{1},\ldots,h_{d}$ be the hyperplanes of $H$ corresponding to
+$g_1, \ldots, g_d$\\
+
+
+~~~Permute $H$ s.t. $h_{1},\ldots,h_{d}$ are first.\\
+
+~~~$v_{d}= \bd h_1 \cap \bd h_2 \cap \cdots \cap \bd h_d$\\
+~~~/*$v_d$ is a vertex that testifies that $(H,\overrightarrow{c})$ is
+bounded */
+
+~~~\\
+
+\\
+
+~~~/{*} the algorithm itself {*}/\\
+
+~~~\For $i\leftarrow d+1$ to $n$ do \+ \\
+
+
+\If $v_{i-1}\in h_{i}$ \Then \+ \\
+$v_{i}\leftarrow v_{i-1}$\-\\
+\Else\+\\
+$v_{i}\leftarrow \SolveLP{}((H_{i-1}\cap\partial h_{i}$,
+$\overrightarrow{c})$) ~~~~~(*)\\
+~~~~where $H_{i-1}=\brc{h_{1},\ldots,h_{i-1}}$\-\-\-\\
+
+~~~\\
+~~~~~~~\Return $v_{n}$%
+\end{algorithmEnv}
+
+
+\section{Handling Infeasible Linear Programs}
+
+In the above discussion, we glossed over the question of how to handle
+LPs which are infeasible. This requires slightly modifying our
+algorithm to handle this case, and I am only describing the required
+modifications. 
+
+First, the simplest case, where we are given an LP $L$ which is one
+dimensional (i.e., defined over one variable). Clearly, we can solve
+this LP in linear time (verify!), and furthermore, if there is no
+solution, we can return two input inequality $ax \leq b$ and $c x \geq
+d$ for which there is no solution together (i.e., those two
+inequalities [i.e., constraints] testifies that the LP is not
+satisfiable). 
+
+Next, assume that the algorithm \SolveLP{} when called on a $d-1$
+dimensional LP $L'$, if $L'$ is not feasible it return the $d$
+constraints of $L'$ that together have non-empty intersection. Namely,
+those constraints are the witnesses that $L'$ is infeasible.
+
+So the only place, where we can get such answer, is when computing
+$v_i$ (in the (*) line in the algorithm). Let $h_1',\ldots, h_d'$ be
+the corresponding set of $d$ constraints of $H_{i-1}$ that testifies
+that $(H_{i-1}\cap\partial h_{i}$, $\overrightarrow{c})$ is an
+infeasible LP. Clearly, $h_1', \ldots, h_d', h_i$ must be a set of
+$d+1$ constraints that are together are infeasible, and that is what
+\SolveLP{} returns.
+
+\section{References}
+
+The description in this class notes is loosely based on the description
+of low dimensional LP in the book of de Berg \etal{}
+\cite{bcko-cgaa-08}.
+
+
+\ChapterEnd{}
+

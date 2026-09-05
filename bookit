@@ -1,0 +1,11 @@
+#! /usr/bin/tcsh -f 
+
+setenv BOOKNAME  book_rand
+setenv BASEDIR ~/rand_alg/lec/
+setenv HTMLBASEDIR  ~/rand_alg/web/lec/notes/
+setenv IGNORESTR "*solutions*"
+
+#echo $IGNORESTR
+
+~/bin/misc/book/bookit $*
+

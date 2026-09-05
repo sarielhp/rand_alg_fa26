@@ -1,0 +1,206 @@
+\ifx\bookMode\undefined%
+\input{../prefix}%
+\fi
+
+
+\Chapter{Conditional Expectation and Concentration}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{%
+   \indent%
+   ``You see, dogs aren't enough any more. People feel so damned
+   lonely, they need company, they need something bigger, stronger, to
+   lean on, something that can really stand up to it all. Dogs aren't
+   enough, what we need is elephants...''%
+}%
+{The roots of heaven}%
+{Romain Gary}
+
+    % During a native rebellion in German East Africa, the Imperial
+%    Ministry in Berlin issued the following order to its
+%    representatives on the ground: “The natives are to be instructed
+%    that on pain of harsh penalties, every rebellion must be announced,
+%    in writing, six weeks before it breaks out.”  }%
+% {Dead Funny: Humor in Hitler's Germany}%
+% {Rudolph Herzog}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Section{Conditional expectation}
+
+\begin{defn}
+    For two random variables $X$ and $Y$, let $\ExCond{X}{Y}$ denote
+    the expected value of $X$, if the value of $Y$ is
+    specified. Formally, we have
+    \begin{equation*}
+        \ExCond{X}{Y =y}%
+        =%
+        \sum_{x \in \Omega} x \ProbCond{X =x}{Y=y}.
+    \end{equation*}
+    The expression $\ExCond{X}{Y}$, which is a shorthand for
+    $\ExCond{X}{Y=y}$, is the \emphi{conditional expectation} of $X$
+    given $Y$.
+\end{defn}
+
+As such, the conditional expectation is a function from the value of
+$y$, to the average value of $X$. As such, one can think of
+conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.
+
+
+\begin{fragment}{\deflabel{conditional_expectation}}
+\begin{lemma}%
+    \lemlab{conditional:expectation}%
+    % 
+    For any two random variables $X$ and $Y$, we have
+    \begin{math}
+        \Ex{ \bigl. \ExCond{X}{ Y} } = \Ex{ \bigl. X}.
+    \end{math}
+\end{lemma}
+\end{fragment}
+\begin{proof}
+    \begin{math}
+        \Ex{\bigl. \ExCond{X }{ Y} }%
+        =%
+        \ExExt{Y}{\bigl. \ExCond{ X}{ Y = y}}%
+        =%
+        \sum_y \Prob{Y = y} \ExCond{ X}{ Y = y}%
+    \end{math}
+    \begin{align*}
+      &=%
+        \sum_y \Prob{\bigl. Y = y} \frac{\sum_{x} x \Prob{X = x \cap
+        Y=y}}{\Prob{Y=y}}%
+      \\ &%
+           =%
+           \sum_{y} \sum_{x} x \Prob{ \bigl. X =x \cap Y = y}%
+           =%
+           \sum_{x} x \sum_y \Prob{ \bigl. X =x \cap Y = y}%
+      \\ &%
+           =%
+           \sum_{x} x \Prob{\bigl. X = x}%
+           =%
+           \Ex{\bigl. X}.
+    \end{align*}
+\end{proof}
+
+\begin{fragment}{\deflabel{product_expectation}}
+\begin{lemma}
+    \lemlab{expectations:product}%
+    % 
+    For any two random variables $X$ and $Y$, we have
+    \begin{math}
+        \Ex{\bigl.Y \cdot \ExCond{X }{Y}} = \Ex{\bigl. X Y}.
+    \end{math}
+\end{lemma}
+\end{fragment}
+\begin{proof}
+    We have that
+    \begin{math}
+        \ds%
+        \Ex{Y \cdot \Ex{X \sep{Y}}}%
+        =%
+        \sum_y \Prob{Y = y} \cdot y \cdot \Ex{X \sep{Y =y }}
+    \end{math}
+    \begin{equation*}
+        =%
+        \sum_y \Prob{Y = y} \cdot y \cdot \frac{\sum_{x} x \Prob{X = x
+              \cap Y=y}}{\Prob{Y=y}}%
+        =%
+        \sum_x \sum_y x y \cdot \Prob{ \bigl. X = x \cap Y = y}%
+        =%
+        \Ex{\bigl. X Y}.
+    \end{equation*}
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\SubSection{Concentration from conditional expectation}
+
+\begin{lemma}
+    Let $X_1, \ldots, X_n$ be independent random variables, that with
+    equal probability are $0$ or $1$.  We have that
+    $\Prob{ \sum_i X_i < n/4} < 0.9^n$ and
+    $\Prob{ \sum_i X_i > (3/4) n} < 0.9^n$.
+\end{lemma} 
+\begin{proof}
+    Let $Y_0 =1$. If $X_i = 1$, then we set $Y_i = Y_{i-1}$, and if $X_i
+    =0$, then we set $Y_i = Y_{i-1}/2$. We thus have that
+    \begin{equation*}
+        \ExCond{Y_i}{Y_{i-1}}%
+        =%
+        \frac{1}{2} \frac{Y_{i-1}}{2} +
+        \frac{1}{2} Y_{i-1}
+        = \frac{3}{4} Y_{i-1}.
+    \end{equation*}
+    As such, by \lemref{conditional:expectation} we have
+    \begin{equation*}
+        \Ex{Y_i}%
+        =%
+        \Ex{ \bigl. \ExCond{Y_i}{Y_{i-1}}}
+        =%
+        \Ex{ \frac{3}{4} Y_{i-1}}%
+        =%
+        \frac{3}{4}\Ex{  Y_{i-1}}%
+        =%
+        \pth{\frac{3}{4}}^i.
+    \end{equation*}
+    In particular, $\Ex{Y_n} = (3/4)^n$.
+    Now, if $\sum_i X_i > (3/4) n$, then  we have 
+    \begin{equation*}
+        Y_n \geq (1/2)^{n/4}.
+    \end{equation*}
+    We are now ready for our conclusions:
+    \begin{equation*}
+        \Prob{ \sum\nolimits_i X_i > (3/4) n }
+        =%
+        \Prob{ Y_n \geq (1/2)^{n/4}}
+        \leq%
+        \frac{\Ex{Y_n}}{(1/2)^{n/4}}
+        \leq%
+        \frac{(3/4)^n}{(1/2)^{n/4}}
+        =%
+        \pth{\frac{2^{1/4}3}{4}}^n
+        \leq
+        0.9^n.
+    \end{equation*}
+    By symmetry, we have
+    $\Prob{ \sum_i X_i < (1/4) n } = \Prob{ \sum_i X_i > (3/4) n } <
+    0.9^n$.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\ChapterEnd{}
+
+% -------------------------------------------------------------------------
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: t
+% End: 
+

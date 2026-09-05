@@ -1,0 +1,725 @@
+% ------------------------------------------------------- V C dim
+% chapter
+% 
+% 09/27/2010 16:56:36 Finished a pass. Would benefit form another
+% iteration.  --------------------------------------------------------
+
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+\Chapter{Double sampling}
+
+\ChapterPrefix{}
+\ChapterGen{}
+\chaplab{double:sampling}
+
+
+\QuotePExt{``What does not work when you apply force, would work when
+   you apply even more force.''}%
+{}%
+{Anonymous}
+
+\bigskip%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+% \providecommand{\obj}{\Mh{f}}%
+% \providecommand{\Wg}{\Mh{\omega}}%
+% \newcommand{\TotalW}{\Mh{W}}%
+
+\section{Double sampling}
+
+Double sampling is the idea that two random independent samples should
+look similar, and should \emph{not} be completely different in the way
+they intersect a certain set. We use the following sampling model,
+which makes the computations somewhat easier.
+
+\begin{defn}
+    \deflab{m:sample}%
+    %
+    Let $\ObjSet = \brc{ \obj_1, \ldots, \obj_n}$ be a set of objects,
+    where the $i$\th object has weight $\Wg_i > 0$, for all $i$. Let
+    $\TotalW = \sum_i \Wg_i$.  For a target size $\rho$, a
+    \emphi{$\rho$-sample} is a random sample
+    $\Sample \subseteq \ObjSet$, where object $\obj_i$ is picked
+    independently with probability
+    $\displaystyle \rho \Wg_i / \TotalW$. To simplify the discussion,
+    we assume that $\rho \Wg_i / \TotalW < 1$. Handling the more
+    general case is easy if somewhat tedious.
+\end{defn}
+
+
+\begin{lemma}
+    \lemlab{double:sample}%
+    %
+    Let $\Sample_1$ and $\Sample_2$ be two $\rho$-samples, and
+    consider the merged sample $\Sample = \Sample_1 \cup
+    \Sample_2$. Let $\SetB \subseteq \ObjSet$ be a set of $m$
+    elements. Then, we have that
+    \begin{align*}
+      \Prob{ \Bigl. \SetB \subseteq \Sample_1 \bigm\vert{ \SetB \subseteq
+      \Sample}} \geq \frac{1}{2^m}
+%    \end{align*}
+      \qquad \text{ and } \qquad%
+%    \begin{align*}
+      \Prob{ \Bigl. \SetB \subseteq \Sample_1%
+      \text{ and }\;
+      \SetB \cap \Sample_2 = \emptyset \bigm\vert{ \SetB \subseteq \Sample}}
+      \leq \frac{1}{2^m}.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    Consider an object $\obj \in \SetB$, and observe that
+    \begin{math}
+        \Prob{\bigl. \obj \in \Sample_1
+           \text{ or }  \obj \in \Sample_2
+           \mid \obj \in \Sample} = 1.%
+    \end{math}
+    As such, 
+    by symmetry
+    \begin{align*}
+        % \tau%
+        % =%
+      \Prob{\bigl. \obj \in \Sample_1 \mid \obj \in \Sample}%
+      =%
+      \Prob{\bigl. \obj \in \Sample_2 \mid \obj \in \Sample}%
+      \geq%
+      1/2,
+    \end{align*}    
+    Now, let $\SetB = \brc{ \obj_1, \ldots, \obj_m}$. Since
+    $\Sample_1$ and $\Sample_2$ are independent, and each element is
+    being picked independently, we have that
+    \begin{align*}
+%      \nu%
+%      &=%
+        \Prob{ \bigl. \SetB \subseteq \Sample_1 \mid{ \SetB \subseteq
+        \Sample}}%
+        %
+      &=%
+        \Prob{ \bigl. \obj_1, \ldots, \obj_m  \in \Sample_1 \mid{
+        \obj_1, \ldots, \obj_m \in \Sample}}
+        =%
+        \prod_{i=1}^b \Prob{ \bigl. \obj_i  \in \Sample_1 \mid{
+        \obj_1, \ldots, \obj_m \in \Sample}}
+      \\&%
+          =%
+          \prod_{i=1}^b \Prob{ \bigl. \obj_i  \in \Sample_1 \mid{
+          \obj_i \in \Sample}}
+          \geq%
+          \frac{1}{2^m}.
+    \end{align*}
+
+    For the second claim, observe that again, by
+    symmetry, we have that 
+    \begin{equation*}
+        \ProbCond{\bigl. \obj \in \Sample_1
+           \text{ and }
+           \obj \notin \Sample_2
+        }{ \obj \in \Sample}%
+        =%
+%  \end{equation*}
+%  \begin{equation*}
+      \Prob{\bigl. \obj \notin \Sample_1
+      \text{ and } \obj \in \Sample_2
+      \mid \obj \in \Sample}%
+      \leq%
+      1/2,
+  \end{equation*}
+    as the two events are disjoint. Now, the claim follows by arguing
+    as above.
+\end{proof}
+
+\subsection{Disagreement between samples on a specific set}
+
+We provide three proofs of the following lemma -- the constants are
+somewhat different for each version.
+\begin{lemma}
+    \lemlab{double:sample:2:sets}%
+    %
+    Let $\Sample_1$ and $\Sample_2$ be two $\rho$-samples from a
+    ground set $\ObjSet$, and consider a fixed set $\SetB \subseteq
+    \ObjSet$. We have that 
+    \begin{equation*}
+        \Prob{\Bigl.
+           \cardin{\bigl.\cardin{\Sample_1 \cap \SetB} - \cardin{\Sample_2
+                 \cap \SetB} }%
+           > %
+           \eps \rho
+        }%
+        \leq %
+        3 \exp\pth{ -   \eps^2 \rho/2 }.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}[Simplest proof.]
+    By Chernoff's inequality, for $\delta \in (0,1)$, we have
+    \begin{equation*}
+        \Prob{ \Bigl.\cardin{\bigl.\cardin{\Sample_1} - \rho}
+           \geq (\eps/2) \rho } %
+        \leq %
+        2 \exp\pth{ - (\eps/2)^2 \rho /4 }
+        = %
+        2 \exp\pth{ - \eps^2 \rho /16 }.
+    \end{equation*}
+    The same holds for $\Sample_2$, and as such we have
+    \begin{align*}
+      \Prob{ \Bigl.\cardin{\bigl.\cardin{\Sample_1} - \cardin{\Sample_2}}
+      \geq \eps \rho } %
+      &\leq %
+        \Prob{ \Bigl.\cardin{\bigl.\cardin{\Sample_1} -\rho }
+        + \cardin{\bigl.\rho - \cardin{\Sample_2}}
+        \geq \eps \rho } %
+      \\&
+      \leq
+      \Prob{ \Bigl.\cardin{\bigl.\cardin{\Sample_1} -\rho }
+      \geq (\eps/2)\rho}
+      +
+      \Prob{ \Bigl.
+      \cardin{\bigl.\rho - \cardin{\Sample_2}}
+      \geq (\eps/2) \rho } %
+      \leq %
+      4 \exp\pth{ - \eps^2 \rho /16 }
+    \end{align*}       
+\end{proof}
+
+\begin{proof}
+    For an object $\obj_i \in \ObjSet$, let $X_i$ be a random 
+    variable, where
+    \begin{equation*}
+        X_i = \begin{cases}
+            1 & \obj_i \in \Sample_1 \text{ and } \obj_i \notin
+            \Sample_2\\
+            -1 & \obj_i \notin \Sample_1 \text{ and } \obj_i \in
+            \Sample_2\\
+            0 & \text{otherwise.}
+        \end{cases}
+    \end{equation*}
+    We have that
+    $p_i = \Prob{X_i = 1} = \Prob{X_i=-1} = (\rho \Wg_i / \TotalW)( 1-
+    \rho \Wg_i / \TotalW)$ and $\Ex{X_i} = 0$. Applying the regular
+    concentration inequalities in this case is not immediate, since
+    there are many $X_i$s that are zero. To overcome this, let $T$ be
+    a random variable that is the number of variables in
+    $X_1, \ldots, X_n$ that are non-zero. We have that $T$ is a sum of
+    $n$ independent $0/1$ random variables, where
+    $\Ex{T} = \sum_i 2p_i =2 \rho$. In particular, by
+    \lemrefY{Chernoff's inequality}{chernoff:small:delta}, we have
+    that
+    \begin{equation*}
+        q_1 = \Prob{\bigl. T  > (1+\eps) 2 \rho}%
+        \leq%
+        \exp\pth{ \bigl.- 2\rho\eps^2 /4}
+        =%
+        \exp\pth{ \bigl.- \rho\eps^2 /2}.
+    \end{equation*}
+    and assume this happens.  In particular, let $Z_1, \ldots, Z_T$ be
+    the non-zero variables in $X_1,\ldots, X_n$, and observe that
+    $\Prob{Z_i=1} = \Prob{Z_i=-1} = 1/2$.  Let
+    $Y=\sum_i X_i = \sum_i Z_i$. Observe that $\Ex{Y} = 0$, and by
+    \thmrefY{Chernoff inequality}{Chernoff:special}, we have that
+    \begin{align*}
+      q_2%
+      &=%
+        \Prob{\Bigl.
+        \cardin{\bigl.\cardin{\Sample_1 \cap \ObjSet} - \cardin{\Sample_1
+        \cap \ObjSet} }%
+        > %
+        \eps \rho
+        }
+        =%
+        \Prob{\Bigl. \cardin{Y - \Ex{Y}} \geq \eps \rho}
+        \leq%
+        \Prob{\Bigl. \cardin{\bigl.\textstyle{\sum}_i Z_i - 0} \geq
+        \eps \rho}
+      \\%
+      &
+        \leq%
+        2 \exp\pth{ - 2 \frac{ (\eps \rho)^2 }{2T}}
+        \leq%
+        2 \exp\pth{ - 2 \frac{ (\eps \rho)^2 }{2(1+\eps)\rho}} + q_1
+        =%
+        2 \exp\pth{ -  \frac{ \eps^2 \rho }{1+\eps}} + q_1
+        \leq%
+        3 \exp\pth{ -   \eps^2 \rho/2 },
+    \end{align*}
+    using $T \leq (1+\xi)2\rho$.
+\end{proof}
+
+
+
+\subsection{Exponential decay for a single set}
+
+
+
+\begin{lemma}%[Exponential decay for a single set]
+    \lemlab{single:decay}%
+    %
+    Consider a set $\ObjSet$ of $m$ objects, where every object
+    $\obj_i \in \ObjSet$ has weight $\Wg_i > 0 $, and
+    \begin{math}
+        \TotalW= \sum_{i=1}^m \Wg_i.
+    \end{math}
+    Next, consider a set $\range \subseteq \ObjSet$ such that
+    $\WeightX{\range} \geq t \TotalW / \rho$ (such a set is
+    \emphi{$t$-heavy}). Let $\Sample$ be a $\rho$-sample from
+    $\ObjSet$. Then, the probability that $\Sample$ misses $\range$ is
+    at most $e^{-t}$. Formally, we have
+    \begin{math}
+        \Prob{ \range \cap \Sample = \emptyset} \leq \exp\pth{-t}.
+    \end{math}
+\end{lemma}
+
+\begin{proof}
+    Let $\range = \brc{\obj_1, \ldots, \obj_k}$.
+    Clearly, the probability that $\Sample$ fails to pick one
+    of these conflicting objects, is bounded by
+    \begin{math}
+      \Prob{ \range \cap \Sample = \emptyset}%
+      %&
+      =%
+      \Prob{ \bigl. \forall i \in \brc{1,\ldots, k} \quad \obj_i
+         \notin \Sample_2}%
+      =%
+      \prod_{i=1}^k \pth{1 - \rho\frac{\Wg_i}{\TotalW}}%
+      %
+%          \hspace{-2cm}%
+      \leq %
+      \prod_{i=1}^k \exp \pth{ - \rho \frac{\Wg_i}{\TotalW}} %
+        %\\&
+        =%
+        \exp \pth{ - \frac{\rho}{\TotalW} \sum_i \Wg_i } %
+        \leq%
+        \exp\pth{ - \frac{\rho}{\TotalW} \cdot t \frac{\TotalW}{\rho}
+        } = \exp\pth{-t}. %
+      \end{math}
+\end{proof}
+
+\subsection{Moments of the sample size}
+
+\newcommand{\cEFunc}[1]{\Mh{U}\pth{#1}}
+\newcommand{\cFuncX}[1]{\Mh{f}\pth{#1}}%
+\begin{lemma}
+    \lemlab{two:samples:gen}%
+    %
+    Let $\Sample$ an $m$-sample. And let
+    $\cFuncX{t} \leq \alpha t^\beta$, where $\alpha\geq 1$ and
+    $\beta\geq 1$ are constants, such that $m \geq 16\beta$. Then
+    \begin{math}
+        \cEFunc{m} = \Ex{\bigl.  \cFuncX{\bigl. \cardin{\Sample}} } \leq 2
+        \alpha (2m)^\beta.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    The proof follows from Chernoff's inequality and some tedious but
+    straightforward calculations. The reader is as such encouraged to
+    skip reading it.
+
+    Let $X = \cardin{\Sample}$. This is a sum of $0/1$ random variables with
+    expectation $m$. As such, we have
+    \begin{equation*}
+        \nu%
+        =%
+        \Ex{\bigl. \cFuncX{\bigl.\cardin{\Sample}} }%
+        \leq %
+        \sum_{i=0}^\infty \Prob{X = i} f(i)
+        \leq%
+        \alpha 
+        \sum_{i=0}^\infty \Prob{X = i} 
+        i^\beta.        
+    \end{equation*}
+    Considering the last sum, we have
+    \begin{equation*}
+        \sum_{i=0}^\infty \Prob{\big. X = i} i^\beta
+        \leq %
+        \sum_{j=0}^\infty \Prob{\big. X \geq  j  m } \pth{(j+1) m}^\beta%
+        \leq %
+        (2m)^\beta  
+        + m^\beta \sum_{j=2}^\infty \Prob{\big. X \geq  j  m }
+        \pth{j+1 }^\beta.%        
+    \end{equation*}
+    We bound the last summation using Chernoff's inequality (see
+    \thmref{Chernoff:simplified}), we have
+    \begin{align*}
+      \tau%
+      &= %
+        \sum_{j=2}^5 \Prob{\big. X \geq  j  m }
+        \pth{j+1 }^\beta
+        + 
+        \sum_{j=6}^\infty \Prob{\big. X \geq  j  m }
+        \pth{j+1 }^\beta
+      \\&%
+      \leq      
+      \sum_{j=2}^5 \exp \pth{ - \frac{m (j-1)^2}{4} }
+      \pth{j+1 }^\beta
+      + 
+      \sum_{j=6}^\infty 2^{-jm}
+      \pth{j+1 }^\beta %
+      \\&%
+      \leq%
+      \exp\pth{ - \frac{m}{4} } 3^\beta
+      + \exp\pth{ - m} 4^\beta 
+      + \exp\pth{ - 2m} 5^\beta 
+      + \exp\pth{ - 4m} 6^\beta 
+      + \sum_{j=6}^\infty 2^{-jm}
+      \pth{j+1 }^\beta %
+      < 1,
+    \end{align*}
+    since $m \geq 16 \beta$. We conclude that
+    $\nu \leq \alpha (2 m)^\beta + \alpha m^\beta \tau \leq 2
+    \alpha(2m)^\beta$.
+\end{proof}
+
+\begin{remark}
+    The constant $16$ in the above lemma is somewhat strange. A better
+    constant can be derived by breaking the range of sizes into
+    smaller intervals and using the right Chernoff inequality. Since
+    this is somewhat tangential to the point of this write-up, we
+    leave it as is (i.e., this constant is not critical to our
+    discussion).
+\end{remark}
+
+
+
+\subsection{Growth function}
+
+The \emphi{growth function} $\Growth{\Dim}{n}$ is the maximum number
+of ranges in a range space with \VC dimension $\Dim$, and with $n$
+elements. By Sauer's lemma, it is known that 
+\begin{equation}
+    \Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}
+    \leq \sum_{i=0}^{\Dim} \frac{n^i}{i!}
+    \leq n^\Dim,
+    % 
+    \eqlab{g:d:n:estimate:2}
+\end{equation}
+
+The following is well known (the estimates are somewhat
+tedious to prove):
+\begin{lemma}[\cite{h-gaa-11}]
+    \lemlab{g:estimate}%
+    %
+    For $n \geq 2\Dim$ and $\Dim \geq 1$, we have
+    \begin{math}
+        \displaystyle \pth{\frac{n }{\Dim}}^\Dim%
+        \leq%
+        \Growth{\Dim}{n}%
+        \leq%
+        2 \pth{\frac{n e}{\Dim}}^\Dim,
+    \end{math}
+    where $\Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}$.
+\end{lemma}
+
+\newcommand{\Net}{\Mh{{\Sample}}}%
+\newcommand{\NetA}{\Mh{{T}}}%
+
+\begin{lemma}
+    \lemlab{two:samples}%
+    %
+    Let $\Sample$ and $\SampleA$ be two independent $m$-samples from
+    $\FGroundSet$. Assume that $m \geq \Dim$. Then
+    \begin{math}
+        \Ex{\bigl. \Growth{\Dim}{\bigl.\cardin{\Sample} +
+              \cardin{\SampleA}} }%
+        \leq%
+        \fGrowX{2m},
+    \end{math}
+    where 
+    \begin{math}
+        \fGrowX{2m} = 4 \, \pth{{4 e m}/{\Dim}}^{\Dim}.
+  \end{math}
+\end{lemma}
+\begin{proof}
+    We set
+    \begin{math}
+        \alpha = 2 \pth{\frac{ e}{\Dim}}^\Dim,
+    \end{math}
+    $\beta = \Dim$, and $f(n) = \alpha n^\beta$. Duplicate every
+    element in $\FGroundSet$, and let $\FGroundSet'$ be the resulting
+    set. Clearly, the size of a $2m$-sample $\Sample$ from
+    $\FGroundSet'$ is the same as $\cardin{\Sample} + \cardin{T}$.  By
+    \lemref{g:estimate}, we have
+    \begin{math}
+      \Ex{\Bigl. \Growth{\Dim}{\bigl.\cardin{\Sample}} }%
+      \leq %
+      \Ex{\Bigl. f \pth{\bigl.\cardin{\Sample}} }%
+      \leq %
+      2 \alpha (4m)^\beta%
+      \leq%
+      4 \pth{\frac{ 4em}{\Dim}}^\Dim
+    \end{math}
+    The last inequality follows from \lemref{two:samples:gen}.
+\end{proof}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Proof of the $\eps$-net theorem}
+\seclab{full:proof}
+
+Here we are working in the unweighted settings (i.e., the weight of a
+single element is one).
+
+\begin{theorem}[$\eps$-net theorem, \cite{hw-ensrq-87}]
+    \index{random sample}%
+    \index{net!theorem@$\varepsilon$-net theorem|textbf}%
+    \index{theorem!net@$\varepsilon$-net|textbf}%%
+    \thmlab{epsilon:net:2}%
+    % 
+    Let $(\GroundSet,\RangeSet)$ be a range space of \VC dimension
+    $\Dim$, let $\FGroundSet$ be a finite subset of $\GroundSet$, and
+    suppose that $0 < \eps \leq 1$ and $\BadProb < 1$. Let $N$ be an
+    $m$-sample from $\FGroundSet$ (see \defref{m:sample}), where
+    \begin{equation}
+        m \geq \max\pth{\;
+           \frac{8}{\eps} \lg \frac{4}{\BadProb} \,,\,
+           \frac{16\Dim}{\eps}\lg \frac{16}{\eps} \;}.
+        \eqlab{e:net:2}
+    \end{equation}
+    Then $N$ is an $\eps$-net for $\FGroundSet$ with probability at
+    least $1-\BadProb$.
+\end{theorem}
+
+
+\subsection{The proof}
+
+\subsubsection{Reduction to double sampling}
+
+Let $n = \cardin{\FGroundSet}$.  Let $N$ be the $m$-sample from
+$\FGroundSet$.  Let $\Event_1$ be the probability that $N$ fails to be
+an $\eps$-net.  Namely,
+\begin{equation*}
+    \Event_1%
+    =%
+    \Set{ \exists{\range \in \RangeSet} }{\bigl.\ts
+       \cardin{\range \cap \FGroundSet} \geq \eps n \text{ ~ and ~
+       } \range \cap N = \emptyset}.    
+\end{equation*}
+(Namely, there exists a ``heavy'' range $\range$ that does not contain
+any point of $N$.)  To complete the proof, we must show that
+$\Prob{\Event_1}\leq \BadProb$. Let $T$ be another $m$-sample
+generated in a similar fashion to $N$. Let $\Event_2$ be the event
+that $N$ fails but $T$ ``works''. Formally
+\begin{equation*}
+    \Event_2%
+    =%
+    \Set{\bigl. \exists{\range \in \RangeSet}}%
+    {\bigl.\cardin{\range \cap \FGroundSet} \geq \eps n, \, \range \cap
+       N = \emptyset, \, \text{ and } \cardin{\range \cap T} \geq
+       \frac{\eps m}{2} }.
+\end{equation*}
+Intuitively, since
+$\Ex{\bigl. \cardin{\range \cap \FGroundSet} } \geq \eps m$, we have
+that for the range $\range$ that $N$ fails for, it follows with
+``good'' probability that $\cardin{\range \cap T} \geq \eps m /
+2$. Namely, $\Event_1$ and $\Event_2$ have more or less the same
+probability.
+
+\begin{claim}
+    \clmlab{V:C:e1}%
+    %
+    $\Prob{\Event_2} \leq \Prob{\Event_1} \leq 2\Prob{\Event_2}$.
+\end{claim}
+
+\begin{proof}
+    Clearly, $\Event_2 \subseteq \Event_1$, and thus $\Prob{\Event_2}
+    \leq \Prob{\Event_1}$. As for the other part, note that by the
+    definition of conditional probability, we have
+    \[
+        \Prob{ \Event_2 \mid{ \Event_1}} = \Prob{\Event_2 \cap
+           \Event_1} / \Prob{\Event_1} = \Prob{\Event_2} /
+        \Prob{\Event_1}.
+    \]
+    It is thus enough to show that $\Prob{\Event_2 \mid{\Event_1}}$
+    $\geq 1/2$.
+    
+    Assume that $\Event_1$ occurs. There is $\range \in \RangeSet$,
+    such that $\cardin{\range \cap \FGroundSet} > \eps n$ and
+    $\range \cap N = \emptyset$.  The required probability is at least
+    the probability that for this specific $\range$, we have
+    $X = \cardin{ \range \cap T} \geq \tfrac{\eps n}{2}$. The variable
+    $X$ is a sum of $t = \cardin{\range \cap \FGroundSet} \geq \eps n$
+    random independent 0/1 variables, each one has probability $m/n$
+    to be one. Setting $\mu = \Ex{X} = t m/n \geq \eps m$ and
+    $\xi = 1/2$, we have by Chernoff's inequality that
+    \begin{align*}
+      \Prob{ \cardin{\range \cap T} \leq \eps m /2} %
+      \leq%
+      \Prob{ X  < (1-\xi) \mu }%
+      \leq%
+      \exp \pth{ - \mu \xi^2 / 2 }%
+      =%
+      \exp \pth{ - \eps m / 8 }%
+      < %
+      1/2,
+    \end{align*}
+    if $\eps m \geq 8$.  Thus, for $\range \in \Event_1$, we have
+    \begin{math}
+        \Prob{\Event_2} / \Prob{\Event_1} \geq \Prob{\cardin{ \range
+              \cap T} \geq \tfrac{\eps m}{2}} = 1 -\Prob{
+           \cardin{\range \cap T} < \frac{\eps m}{2} } \geq
+        \frac{1}{2}.
+    \end{math}
+%    \aftermathA
+\end{proof}
+
+
+\clmref{V:C:e1} implies that to bound the probability of $\Event_1$,
+it is enough to bound the probability of $\Event_2$.  Let
+\begin{equation*}
+    \Event_2'%
+    =%
+    \Set{ \exists{\range \in \RangeSet} }{\bigl. \range \cap
+       N
+       = \emptyset \text{ and }\cardin{\range \cap T} \geq
+       \frac{\eps m}{2} }.
+\end{equation*}
+Clearly, $\Event_2 \subseteq \Event_2'$. Thus, bounding the
+probability of $\Event_2'$ is enough to prove
+\thmref{epsilon:net:2}. Note, however, that a shocking thing happened!
+We no longer have $\FGroundSet$ participating in our event. Namely, we
+turned bounding an event that depends on a global quantity (i.e., the
+ground set $\FGroundSet$) into bounding a quantity that depends only
+on a local quantity/experiment (involving only $N$ and $T$).  This is
+the crucial idea in this proof.
+
+\subsubsection{Using double sampling to finish the proof}
+
+
+\begin{claim}
+    \clmlab{e2}%
+    %
+    \begin{math}
+        \Prob{\bigl. \Event_2} \leq \Prob{ \bigl. \Event_2'}%
+        \leq%
+        2^{-\eps m /2} \fGrowX{2m}.
+    \end{math}
+\end{claim}
+\begin{proof}
+    We fix the content of $\Sample = N \cup T$. The range space
+    $(\Sample, \VCProj{\RangeSet}{\Sample})$ has
+    $\Growth{\Dim}{ \cardin{\Sample}}$ ranges. Fix a range $\range$ in
+    this range space. Let $\SetB = \range \cap \Sample$.  If
+    $b = \cardin{ \SetB } < \eps m /2$ then the $\Event_2'$ can not
+    happened. Otherwise, the probability that $\range$ is a bad range
+    is
+    \begin{math}
+        \Prob{ \Bigl. \SetB \subseteq T \text{ and }\; \SetB \cap N =
+           \emptyset \bigm\vert{ \SetB \subseteq \Sample}} \leq
+        \frac{1}{2^b},
+    \end{math}
+    by \lemref{double:sample}. In particular, by the union bound over
+    all ranges, we have
+    \begin{math}
+        \Prob{\Event_2' \mid \Sample} %\Growth{\Dim}{ \cardin{\Sample}}
+        \leq 2^{-\eps m /2}  \Growth{\Dim}{ \cardin{\Sample}}.
+    \end{math}
+    As such, we have
+    \begin{align*}
+      \Prob{\Event_2'}%
+      =%
+      \sum_{\Sample}       
+      \Prob{\bigl. \Event_2' \mid \Sample} \Prob{\Sample}
+      \leq%
+      \sum_{\Sample}
+      2^{-\eps m /2}  \Growth{\Dim}{\bigl. \cardin{\Sample}}      
+      \Prob{\Sample}
+      \leq%
+      2^{-\eps m /2}
+      \Ex{\Bigl.
+      \Growth{\Dim}{\bigl. \cardin{\Sample}} }
+      \leq%
+      2^{-\eps m /2}
+      \fGrowX{2m}.
+    \end{align*}
+    by \lemref{two:samples}.
+\end{proof}
+
+% \newpage
+
+\begin{proofof} {\textsc{\thmref{epsilon:net:2}.}}
+    By \clmref{V:C:e1} and \clmref{e2}, we have that
+    \begin{math}
+        \Prob{\Event_1} \leq%
+        2 \cdot 2^{-\eps m /2} \fGrowX{2m}.
+    \end{math}
+    It thus remains to verify that if $m$ satisfies \Eqref{e:net:2},
+    then the above is smaller than $\BadProb$.
+    Which is equivalent to
+    \begin{align*}
+      2 \cdot 2^{-\eps m/2} \fGrowX{2m} \leq \BadProb
+      &  \iff
+      %
+        16 \cdot 2^{-\eps m/2} \pth{\frac{4 e m}{\Dim}}^{\!\Dim}
+        \leq \BadProb
+      \iff
+      %
+        -4 + \frac{\eps m }{ 2} - \Dim \lg \pth{\frac{4 e m}{\Dim}}
+        \geq \lg \frac{1}{\BadProb}%
+      \\%
+      &%
+        \iff
+        \pth{ \frac{ \eps m}{8} -4 - \Dim \lg \frac{4 e}{\Dim}}
+        + \pth{ \frac{\eps m}{8} - \lg \frac{1}{\BadProb}}
+        + \pth{\frac{\eps m }{ 4} - \Dim \lg \pth{\frac{ m}{\Dim}}}
+        \geq 0%
+    \end{align*}
+    We remind the reader that the value of $m$ we pick is such that 
+    \begin{math}
+        m \geq \max\pth{ \frac{8}{\eps} \lg \frac{4}{\BadProb} \,,\,
+           \frac{16\Dim}{\eps}\lg \frac{16}{\eps} }.
+    \end{math}
+    In particular, $m \geq 64 \Dim / \eps$
+    and
+    \begin{math}
+        -4 - \Dim \lg \pth{\frac{4 e }{\Dim}} \geq -4 - 4 \Dim \leq -8
+        \Dim \geq -\eps m /8.
+    \end{math} 
+    Similarly, by the choice of $m$, we have
+    \begin{math}
+        \eps m /8 \geq \lg \frac{1}{\BadProb}. 
+    \end{math}
+    As such, we need to show that
+    \begin{math}
+        \frac{\eps m }{ 4} \geq \Dim \lg \pth{\frac{ m}{\Dim}} \iff%
+        m \geq \frac{4\Dim}{\eps} \lg {\frac{ m}{\Dim}},
+    \end{math}
+    and one can verify using some easy but tedious calculations that
+    this holds if $ m \geq \frac{16\Dim}{\eps}\lg \frac{16}{\eps} $.
+%    
+    % This completes the proof of the theorem.
+\end{proofof}
+
+
+
+
+
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   
+%   \IncFragment{\deflabel{convex:hull}}
+%   \IncFragment{\deflabel{Chebychev}}
+   \IncFragment{\deflabel{chernoff_small_delta}}
+   \IncFragment{\deflabel{Chernoff_simplified}}
+   % \IncFragment{\deflabel{Chernoff_below}}
+%   \IncFragment{\deflabel{t:Chernoff:special}}
+   \IncFragment{\deflabel{c_special}}%
+ %  \IncFragment{\deflabel{epsilon:sample:stronger}
+%
+}
+
+
+
+\ChapterEnd{}
+
+% --------------------------------------------------------
+% 
+% 12_VC dim - end of file
+% --------------------------------------------------------
+  

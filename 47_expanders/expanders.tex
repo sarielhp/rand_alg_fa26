@@ -1,0 +1,379 @@
+\ifx\bookMode\undefined
+\input{../prefix}
+\fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Expanders I}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteExt{``Mr. Matzerath has just seen fit to inform me that this
+   partisan, unlike so many of them, was an authentic partisan. For -
+   to quote the rest of my patient's lecture - there is no such thing
+   as a part-time partisan.  Real partisans are partisans always and
+   as long as they live. They put fallen governments back in power and
+   over throw governments that have just been put in power with the
+   help of partisans. Mr. Matzerath contended - and this thesis struck
+   me as perfectly plausible - that among all those who go in for
+   politics your incorrigible partisan, who undermines what he has
+   just set up, is closest to the artiest because he consistently
+   rejects what he has just created.''}{Gunter Grass}{The tin drum}
+
+
+
+
+
+
+\section{Preliminaries on expanders}
+
+\subsection{Definitions}
+
+Let $\Graph=(V,E)$ Be an undirected graph, where $V=\brc{1,\ldots,
+   n}$.  A \emphic{$d$-regular graph}{graph!$d$-regular} is a graph
+where all vertices have degree $d$. A $d$-regular graph $\Graph=(V,E)$
+is a $\delta$-edge expander (or just, \emphi{$\delta$-expander}) if
+for every set $S \subseteq V$ of size at most $\cardin{V}/2$, there
+are at least $\delta d \cardin{S}$ edges connecting $S$ and
+$\overline{S} = V \setminus S$; that is 
+\begin{align} 
+    e(S, \overline{S}) \geq
+    \delta d \cardin{S},
+    \eqlab{expand}
+\end{align}
+where
+\[
+e(X,Y) = \cardin{\brc{ uv \sep{u \in X, v \in Y}}}.
+\]
+A graph is
+\emphic{\Expander{n}{d}{\delta}}{expander!$[n,d,\delta]$-expander} if
+it is a $n$ vertex, $d$-regular, $\delta$-expander.
+
+
+A \emphi{$(n,d)$-graph} $\Graph$ is a connected $d$-regular undirected
+(multi) graph. We will consider the set of vertices of such a graph to
+be the set $\RangeI{n} = \brc{1,\ldots, n}$.
+
+For a (multi) graph $\Graph$ with $n$ nodes, its \emphi{adjacency
+   matrix} is a $n\times n$ matrix $\Mtrx$, where $\Mtrx_{ij}$ is the
+number of edges between $i$ and $j$.  It would be convenient to work
+the \emphi{transition matrix} $\TMtrx$ associated with the random walk
+on $\Graph$. If $\Graph$ is $d$-regular then $\TMtrx =
+\Mtrx(\Graph)/d$ and it is doubly stochastic.
+
+A vector $x$ is \emphi{eigenvector} of a matrix $\Mtrx$ with
+\emphi{eigenvalue} $\mu$, if $x \Mtrx = \mu x$. In particular,
+by taking the dot product of both size by $x$, we get $\DotProd{x
+   \Mtrx}{x} = \DotProd{\mu x}{x} $, which implies $\mu =
+\DotProd{x \Mtrx}{x}/ \DotProd{ x}{x}$. Since the adjacency matrix
+$\Mtrx$ of $\Graph$ is symmetric, all its eigenvalues are real numbers
+(this is a special case of the spectral theorem from linear algebra).
+Two eigenvectors with different eigenvectors are orthogonal to each
+other.
+
+We denote the eigenvalues of $\Mtrx$ by $\EV{1} \geq \EV{2} \geq
+\cdots \EV{n}$, and the eigenvalues of $\TMtrx$ by $\TEV{1}\geq
+\TEV{2} \geq \cdots \TEV{n}$.  Note, that for a $d$-regular graph, the
+eigenvalues of $\TMtrx$ are the eigenvalues of $\Mtrx$ scaled down by
+a factor of $1/d$; that is $\TEV{i} = \EV{i}/d$.
+
+\begin{fragment}{\deflabel{m_expander}}
+\begin{lemma}
+    Let $\Graph$ be an undirected graph, and let $\Delta$ denote the
+    maximum degree in $\Graph$. Then,
+    $\cardin{\smash{\EV{1}(\Graph)}} =
+    \cardin{\smash{\EV{1}(\Mtrx)}}=\Delta$ if and only one connected
+    component of $\Graph$ is $\Delta$-regular. The multiplicity of
+    $\Delta$ as an eigenvector is the number of $\Delta$-regular
+    connected components. Furthermore, we have
+    $\cardin{\smash{\EV{i}(\Graph)}} \leq \Delta$, for all $i$.
+
+    \lemlab{multiplicity:e:v:d}
+\end{lemma}
+\end{fragment}
+
+\begin{proof}
+    The $i$th entry of $\Mtrx \mathbf{1}_n$ is the degree of the $i$th
+    vertex $v_i$ of $\Graph$ (i.e., $\Mtrx \mathbf{1}_n=d(v_i)$, where
+    $\mathbf{1}_n =(1,1,\ldots, 1) \in \Re^n$.
+    So, let $x$ be an eigenvector of $\Mtrx$ with eigenvalue
+    $\lambda$, and let $x_j\ne 0$ be the coordinate with the largest
+    (absolute value) among all coordinates of $x$ corresponding to a
+    connect component $H$ of $\Graph$. We have that
+    \[
+    \cardin{\lambda} \, \cardin{x_j} 
+    = \cardin{\pth{\Mtrx x}_j} = \cardin{\sum_{v_i \in N(v_j)} x_i}
+    \leq \Delta \cardin{x_j}, 
+    \]
+    where $N(v_j)$ are the neighbors of $v_i$ in $\Graph$. Thus, all
+    the eigenvalues of $\Graph$ have $\cardin{\EV{i}} \leq \Delta$,
+    for $i=1,\ldots, n$. If $\lambda=\Delta$, then this implies that
+    $x_i = x_j$ if $v_i \in N(v_j)$, and $d(v_j) = \Delta$. Applying
+    this argument to the vertices of $N(v_j)$, implies that $H$ must
+    be $\Delta$-regular, and furthermore, $x_j=x_i$, if $x_i \in
+    V(H)$. Clearly, the dimension of the subspace with eigenvalue (in
+    absolute value) $\Delta$ is exactly the number of such connected
+    components.
+\end{proof}
+
+The following is also known. We do not provide a proof since we do not
+need it in our argumentation.
+
+\begin{lemma}
+    If $\Graph$ is bipartite, then if $\lambda$ is eigenvalue of
+    $\Mtrx(\Graph)$ with multiplicity $k$, then $-\lambda$ is also its
+    eigenvalue also with multiplicity $k$.
+\end{lemma}
+
+\section{Tension and expansion}
+
+Let $\Graph=(V,E)$, where $V = \brc{1,\ldots, n}$ and $\Graph$ is a
+$d$ regular graph.
+
+
+
+\begin{defn}
+    For a graph $\Graph$, let $\DialX{\Graph}$ denote the
+    \emphi{tension} of $\Graph$; that is, the smallest constant, such
+    that for any function $f:V(\Graph) \rightarrow \Re$, we have that
+    \begin{align}
+        \ExExt{x,y \in V}{\cardin{f(x)- f(y)}^2} \leq
+        \DialX{\Graph} \ExExt{ xy \in E}{\cardin{f(x)- f(y)}^2}.
+        \eqlab{tension}
+    \end{align}
+\end{defn}
+
+Intuitively, the tension captures how close is estimating the variance
+of a function defined over the vertices of $\Graph$, by just
+considering the edges of $\Graph$. Note, that a disconnected graph
+would have infinite tension, and the clique has tension $1$.
+
+Surprisingly, tension is directly related to expansion as the
+following lemma testifies.
+
+\begin{fragment}{\deflabel{tension_expansion}}
+\begin{lemma}
+    Let $\Graph=(V,E)$ be a given connected $d$-regular graph with $n$
+    vertices. Then, $\Graph$ is a $\delta$-expander, where
+    $\displaystyle \delta \geq \frac{1}{2 \DialX{\Graph}}$ and 
+    $\DialX{\Graph}$ is the tension of $\Graph$.
+
+    \lemlab{tension:to:expansion}
+\end{lemma}
+\end{fragment}
+
+\begin{proof}
+    Consider a set $S \subseteq V$, where $\cardin{S} \leq n/2$. Let
+    $f_S(v)$ be the function assigning $1$ if $v \in S$, and zero
+    otherwise. Observe that if $(u,v) \in \pth{S \times \overline{S} }
+    \cup \pth{ \overline{S} \times S}$ then $\cardin{f_S(u)-f_S(v)} =
+    1$, and $\cardin{f_S(u)-f_S(v)}=0$ otherwise. As such, we have
+    \[
+    \frac{2 \cardin{S}\pth{n-\cardin{S}}}{n^2} = \ExExt{x,y \in
+       V}{\cardin{f_S(x)- f_S(y)}^2} \leq \DialX{\Graph} \ExExt{ xy
+       \in E}{\cardin{f_S(x)- f_S(y)}^2} = \DialX{\Graph}
+    \frac{e\pth{S, \overline{S}}}{\cardin{E}},
+    \]
+    by \lemref{expansion}. Now, since $\Graph$ is $d$-regular, we have
+    that $\cardin{E} = nd/2$. Furthermore, $n- \cardin{S} \geq n/2$,
+    which implies that
+    \[
+    e\pth{S, \overline{S}}%
+    \geq%
+    \frac{2\cardin{E}\cdot
+       \cardin{S}\,\pth{n-\cardin{S}}}{\DialX{\Graph}n^2} = \frac{2(n
+       d/2)(n/2) \cardin{S}}{ \DialX{\Graph} n^2} = \frac{1}{2
+       \DialX{\Graph}} \, d\cardin{S}.
+    \]
+    which implies the claim (see \Eqref{expand}).
+\end{proof}
+
+\bigskip
+
+Now, a clique has tension $1$, and it has the best expansion
+possible. As such, the smaller the tension of a graph, the better
+expander it is.
+
+
+\begin{fragment}{\deflabel{orthonormal_basis_d}}
+%    \deflab{orthonormal:basis}
+\begin{defn}
+    Given a random walk matrix $\TMtrx$ associated with a $d$-regular
+    graph, let $\Basis(\TMtrx)= \permut{v_1,\ldots, v_n}$ denote the
+    \emphi{orthonormal eigenvector basis} defined by $\TMtrx$. That
+    is, $v_1,\ldots, v_n$ is an orthonormal basis for $\Re^n$, where
+    all these vectors are eigenvectors of $\TMtrx$ and $v_1=
+    1^n/\sqrt{n}$. Furthermore, let $\TEV{i}$ denote the $i$th
+    eigenvalue of $\TMtrx$, associated with the eigenvector $v_i$,
+    such that $\TEV{1} \geq \TEV{2} \geq \cdots \geq \TEV{n}$.
+
+    \deflab{orthonormal:basis}
+\end{defn}
+\end{fragment}
+
+\begin{fragment}{\deflabel{expansion_lemma}}
+\begin{lemma}
+    Let $\Graph=(V,E)$ be a given connected $d$-regular graph with $n$
+    vertices. Then $\DialX{\Graph} = \frac{1}{1-\SEVN}$, where
+    $\SEVN=\lambda_2/d$ is the second largest eigenvalue of $\TMtrx$.
+
+    \lemlab{expansion}
+\end{lemma}
+\end{fragment}
+
+\begin{proof}
+    Let $f:V\rightarrow \Re$. Since in \Eqref{tension}, we only look
+    on the difference between two values of $f$, we can add a constant
+    to $f$, and would not change the quantities involved in
+    \Eqref{tension}. As such, we assume that $\Ex{f(x)}=0$. As such,
+    we have that
+    \begin{align}
+        \eqlab{reduction:1} &\hspace{-1cm} \ExExt{x,y \in
+           V}{\cardin{f(x)- f(y)}^2} = \ExExt{x,y \in V}{\pth[]{f(x)-
+              f(y)}^2} =%
+        %
+        \ExExt{x,y \in V}{\pth[]{f(x)}^2 -2 f(x) f(y) + \pth{f(y)}^2}
+        %
+        \\
+        &=%
+        \ExExt{x,y \in V}{\pth[]{f(x)}^2} -2 \ExExt{x,y \in V}{ f(x)
+           f(y)}
+        + \ExExt{x,y \in V}{\pth[]{f(y)}^2}    
+        \nonumber\\
+        \nonumber
+        &=%
+        \ExExt{x \in V}{\pth[]{f(x)}^2} -2 \ExExt{x \in V}{ f(x)}
+        \ExExt{y \in V}{f(y)}
+        + \ExExt{y \in V}{\pth[]{f(y)}^2}    
+        = 2 \ExExt{x \in V}{\pth[]{f(x)}^2}.
+    \end{align}
+    
+    Now, let $\IMtrx$ be the $n\times n$ identity matrix (i.e., one on
+    its diagonal, and zero everywhere else). We have that
+    \begin{align*}
+        \rho & 
+        = \frac{1}{d} \sum_{xy \in E}\pth{ f(x) -f(y) }^2
+        =
+        \frac{1}{d} \pth{ \sum_{x\in V} d \pth{f(x)}^2 -
+           2\sum_{xy \in E}f(x) f(y) }
+        =
+        \sum_{x\in V} \pth{f(x)}^2 - \frac{2}{d} \sum_{xy \in E}f(x)
+        f(y) 
+        \\        &
+        =
+        \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy} f(x) f(y).
+    \end{align*}
+    Note, that $1^n$ is an eigenvector of $\TMtrx$ with eigenvalue
+    $1$, and this is the largest eigenvalue of $\TMtrx$.  Let
+    $\Basis(\TMtrx)= \permut{v_1,\ldots, v_n}$ be the orthonormal
+    eigenvector basis defined by $\TMtrx$, with eigenvalues $\TEV{1}
+    \geq \TEV{2} \geq \cdots \geq \TEV{n}$, respectively.  Write
+    $f=\sum_{i=1}^n \alpha_i v_i$, and observe that
+    \[
+    0 = \Ex{f(x)} = \sum_{i=1}^n \frac{f(i)}{n} =
+    \DotProd{f}{\frac{v_1}{\sqrt{n}}} =
+    \DotProd{\sum_i \alpha_i v_i}{\frac{v_1}{\sqrt{n}}} =
+    \frac{1}{\sqrt{n}} \DotProd{\alpha_1v_1}{v_1} =
+    \frac{\alpha_1}{\sqrt{n}},
+    \]
+    since $v_i \bot v_1$ for $i \geq 2$. Hence $\alpha_1=0$, and we
+    have
+    \begin{align*}
+        \rho &=  \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy} f(x) f(y)
+         = \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy}\sum_{i=2}^n
+        \alpha_{i=1}^n \alpha_i v_i (x) \sum_{j=1}^n \alpha_j v_j(y)\\
+        &%
+        =%
+        \sum_{i,j} \alpha_i \alpha_j \sum_{x \in V} v_i(x) \sum_{y \in
+           V} \pth{\IMtrx - \TMtrx}_{xy} v_j(y).
+    \end{align*}
+    Now, we have that
+    \begin{align*}
+        \sum_{y \in V} \pth{\IMtrx - \TMtrx}_{xy} v_j(y) =
+        \DotProd{\;\;\pbrc{\begin{array}{l}
+                  x\text{th row of }\\
+                  \pth{\IMtrx - \TMtrx}
+               \end{array}}}{v_j}
+        =%
+        \pth{\MakeBig
+           \pth{\IMtrx - \TMtrx} v_j} ({x})
+        =%        
+        \pth{
+           \pth{1- \TEV{j}} v_j}(x) =      
+           \pth{1- \TEV{j}} v_j(x),
+    \end{align*}
+    since $v_j$ is eigenvector of $\TMtrx$ with eigenvalue $\TEV{j}$.
+    Since $v_1,\ldots, v_n$ is an orthonormal basis, and
+    $f=\sum_{i=1}^n \alpha_i v_i$, we have that $\norm{f}^2 = \sum_j
+    \alpha_j^2$.  Going back to $\rho$, we have that
+    \begin{align}
+        \nonumber \rho &= \sum_{i,j} \alpha_i \alpha_j \sum_{x \in V} v_i(x)
+        \pth{1- \TEV{j}} v_j(x)
+        %
+        =%
+        \sum_{i,j} \alpha_i \alpha_j \pth{1- \TEV{j}}
+        \sum_{x \in V} v_i(x) v_j(x)\\
+        &= \sum_{i,j} \alpha_i \alpha_j \pth{1- \TEV{j}}
+        \DotProd{v_i}{v_j} = \sum_{j=1}^n \alpha_j^2 \pth{1- \TEV{j}}
+        \DotProd{v_j}{v_j}%
+        \nonumber \\%
+        \eqlab{inequality:tension} &\geq \; \pth{1-
+           \TEV{2}} \sum_{j=2}^n \alpha_j^2 \sum_{x \in V}
+        \pth{v_j(x)}^2 =
+        \pth{1-
+           \TEV{2}} \sum_{j=2}^n \alpha_j^2  =         \pth{1-
+           \TEV{2}} \norm{f}^2= \pth{1-
+           \TEV{2}} \sum_{j=1}^n \pth{f(x) }^2\\
+        &= n\pth{1- \TEV{2}} \ExExt{x \in
+           V}{\pth[]{f(x)}^2}, \nonumber
+    \end{align}
+    since $\alpha_1 = 0$ and $\TEV{1} \geq
+    \TEV{2} \geq \cdots \geq \TEV{n}$.
+
+    We are now ready for the kill. Indeed, by \Eqref{reduction:1}, and
+    the above, we have that
+    \begin{align*}
+        \ExExt{x,y \in V}{\cardin{f(x)- f(y)}^2} &=2 \ExExt{x \in
+           V}{\pth[]{f(x)}^2} \; \leq \; \frac{2}{n\pth[]{1-
+              \TEV{2}}} \, \rho = \frac{2}{dn\pth[]{1-
+              \TEV{2}}}  \sum_{xy \in E}\pth{ f(x) -f(y) }^2\\
+        &= \frac{1}{1- \TEV{2}} \cdot \frac{1}{\cardin{E}}
+        \sum_{xy \in E}\pth{ f(x) -f(y) }^2 = \frac{1}{1-
+           \TEV{2}} \ExExt{ xy \in E}{\cardin{f(x)-
+              f(y)}^2}.
+    \end{align*}
+    This implies that $\ds \DialX{\Graph} \leq \frac{1}{1-
+       \TEV{2}}$. Observe, that the inequality in our analysis, had
+    risen from \Eqref{inequality:tension}, but if we take $f= v_2$,
+    then the inequality there holds with equality, which implies that
+    $\DialX{\Graph} \geq \frac{1}{1- \TEV{2}}$, which implies the
+    claim.
+\end{proof}
+
+\bigskip \lemref{tension:to:expansion} together with the above lemma,
+implies that the expansion $\delta$ of a $d$-regular graph $\Graph$ is
+at least $\delta = 1/2\DialX{\Graph} = \pth{1-\lambda_2/d}/2$, where
+$\lambda_2$ is the second eigenvalue of the adjacency matrix of
+$\Graph$. Since the tension of a graph is direct function of its
+second eigenvalue, we could either argue about the tension of a graph
+or its second eigenvalue when bounding the graph expansion.
+
+
+
+
+
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

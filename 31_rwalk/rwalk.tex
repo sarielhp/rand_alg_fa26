@@ -1,0 +1,248 @@
+
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+
+
+% \newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Random Walks I}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteExt{``A drunk man will find his way home; a drunk bird may
+   wander forever.''}{ Anonymous}{}
+
+
+\section{Definitions}
+
+Let $\Graph= \Graph(\Vertices, \Edges)$ be an undirected connected
+graph. For $v \in \Vertices$, let $\Nbr(v)$ denote the set of
+neighbors of $v$ in $\Graph$; that is, $\Nbr(v) = \brc{u \sep{vu \in
+      \Edges(\Graph)}}$. A \emphi{random walk} on $\Graph$ is the
+following process: Starting from a vertex $v_0$, we randomly choose
+one of the neighbors of $v_0$, and set it to be $v_1$. We continue in
+this fashion, in the $i$\th step choosing $v_i$, such that $v_i \in
+\Nbr(v_{i-1})$. It would be interesting to investigate the random walk
+process. Questions of interest include:
+\begin{compactenumA}
+    \item How long does it take to arrive from a vertex $v$ to a
+    vertex $u$ in $\Graph$?
+    \item How long does it take to visit all the vertices in the
+    graph.
+    \item If we start from an arbitrary vertex $v_0$, how long the
+    random walk has to be such that the location of the random walk in
+    the $i$\th step is uniformly (or near uniformly) distributed on
+    $\Vertices(\Graph)$?
+\end{compactenumA}
+
+
+\begin{example}
+    In the complete graph $K_n$, visiting all the vertices takes in
+    expectation $O(n \log n)$ time, as this is the coupon collector
+    problem with $n-1$ coupons. Indeed, the probability we did not
+    visit a specific vertex $v$ by the $i$\th step of the random walk
+    is $\leq (1-1/n)^{i-1} \leq e^{- (i-1)/n} \leq 1/n^{10}$, for $i =
+    \Omega( n \log n)$. As such, with high probability, the random
+    walk visited all the vertex of $K_n$.  Similarly, arriving from
+    $u$ to $v$, takes in expectation $n-1$ steps of a random walk, as
+    the probability of visiting $v$ at every step of the walk is $p =
+    1/(n-1)$, and the length of the walk till we visit $v$ is a
+    geometric random variable with expectation $1/p$.
+\end{example}
+
+\subsection{Walking on grids and lines}
+
+\begin{lemma}[Stirling's formula]
+    For any integer $n \geq 1$, it holds $n! \approx \sqrt{2 \pi n}
+    \,(n/e)^n$.
+\end{lemma}
+
+\subsubsection{Walking on the line}
+
+\begin{lemma}
+    Consider the infinite random walk on the integer line, starting
+    from $0$. Here, the vertices are the integer numbers, and from a
+    vertex $k$, one walks with probability $1/2$ either to $k-1$ or
+    $k+1$.  The expected number of times that such a walk visits $0$
+    is unbounded.
+\end{lemma}
+
+\begin{proof}
+    The probability that in the $2i$\th step we visit $0$ is
+    $\frac{1}{2^{2i}} \binom{2i}{i}$, As such, the expected number of
+    times we visit the origin is
+    \begin{equation*}
+        \sum_{i=1}^\infty \frac{1}{2^{2i}} \binom{2i}{i} \geq
+        \sum_{i=1}^{\infty} \frac{1}{2\sqrt{i}} = \infty,
+    \end{equation*}
+    since $\ds \frac{2^{2i}}{2\sqrt{i}} \leq \binom{2i}{i} \leq
+    \frac{2^{2i}}{\sqrt{2i}}$ \cite[p. 84]{mn-idm-98}. This can also
+    be verified using the Stirling formula, and the resulting sequence
+    diverges.
+\end{proof}
+
+
+\subsubsection{Walking on two dimensional grid}
+
+
+A random walk on the integer grid $\ZZ^d$, starts from a point of this
+integer grid, and at each step if it is at point $(i_1,
+i_2,\ldots,i_d)$, it chooses a coordinate and either increases it by
+one, or decreases it by one, with equal probability.
+
+\begin{figure}
+    \phantom{}\hfill%
+    \includegraphics[page=1]{\File{figs/grid_walk}}%
+    \hfill%
+    \includegraphics[page=2]{\File{figs/grid_walk}}%
+    \hfill\phantom{}%
+    \caption{A walk in the integer grid, when rotated by 45 degrees,
+       results, in two independent walks on one dimension.}
+    \figlab{2:d:grid:walk}
+\end{figure}
+
+\begin{lemma}
+    Consider the infinite random walk on the two dimensional integer
+    grid $\ZZ^2$, starting from $(0,0)$. The expected number of times
+    that such a walk visits the origin is unbounded.
+\end{lemma}
+
+\begin{proof}
+    Rotate the grid by $45$ degrees, and consider the two new axes
+    $X'$ and $Y'$, see \figref{2:d:grid:walk}.. Let $x_i$ be the
+    projection of the location of the $i$\th step of the random walk
+    on the $X'$-axis, and define $y_i$ in a similar fashion. Clearly,
+    $x_i$ are of the form $j/\sqrt{2}$, where $j$ is an integer. By
+    scaling by a factor of $\sqrt{2}$, consider the resulting random
+    walks $x_i' = \sqrt{2}x_i$ and $y_i' = \sqrt{2} y_i$. Clearly,
+    $x_i$ and $y_i$ are random walks on the integer grid, and
+    furthermore, they are \emph{independent}. As such, the probability
+    that we visit the origin at the $2i$\th step is
+    $\Prob{x_{2i}' = 0 \cap y_{2i}'= 0} = \Prob{x_{2i}' = 0}^2 =
+    \pth{\frac{1}{2^{2i}} \binom{2i}{i}}^2 \geq 1/4i$. We conclude,
+    that the infinite random walk on the grid $\ZZ^2$ visits the
+    origin in expectation
+    \begin{equation*}
+        \sum_{i=0}^\infty \Prob{ x_i' =0 \cap y_i'=0} \geq
+        \sum_{i=0}^\infty \frac{1}{4i} = \infty,
+    \end{equation*}
+    as this sequence diverges.
+\end{proof}
+
+
+\subsubsection{Walking on three dimensional grid}
+
+In the following, let $\,\displaystyle \binom{i}{a\;\;b\;\;c} =
+\frac{i!}{a! \, b!\, c!}$ denote the multinomial coefficient. The
+multinomial theorem states that 
+\begin{equation*}
+    (x_{1}+x_{2}+\cdots +x_{m})^{n}=\sum _{k_{1}+k_{2}+\cdots +k_{m}=n\ k_{1},k_{2},\cdots ,k_{m}\geq 0}{n \choose k_{1},k_{2},\ldots ,k_{m}}\prod _{t=1}^{m}x_{t}^{k_{t}}.    
+\end{equation*}
+In particular, we have
+\begin{equation}
+    1^n =%
+    (1/3 + 1/3 + 1/3)^n%
+    =%
+    \sum _{a + b + c=n,\, a,b,c\geq 0}{n \choose a\,\, b\,\, c}
+    \frac{1}{3^n}.
+    \eqlab{3:multinomial}
+\end{equation}
+
+
+
+
+\begin{lemma}
+    Consider the infinite random walk on the three dimensional integer
+    grid $\ZZ^3$, starting from $(0,0,0)$. The expected number of
+    times that such a walk visits the origin is bounded.
+\end{lemma}
+
+\begin{proof}
+    The probability of a neighbor of a point $(x,y,z)$ to be the next
+    point in the walk is $1/6$. Assume that we performed a walk for
+    $2i$ steps, and decided to perform $2a$ steps parallel to the
+    $x$-axis, $2b$ steps parallel to the $y$-axis, and $2c$ steps
+    parallel to the $z$-axis, where $a+b+c = i$. Furthermore, the walk
+    on each dimension is balanced, that is we perform $a$ steps to the
+    left on the $x$-axis, and $a$ steps to the right on the
+    $x$-axis. Clearly, this corresponds to the only walks in $2i$
+    steps that arrives to the origin.
+    
+    Next, the number of different ways we can perform such a walk is
+    $\frac{(2i)!}{ a!  a! b! b! c! c!}$, and the probability to
+    perform such a walk, summing over all possible values of $a,b$ and
+    $c$, is
+    \begin{equation*}
+        \alpha_i%
+        =%
+        \sum_{\substack{a+b+c =i\\
+              a,b,c \geq 0}} \frac{(2i)!}{ a!  a! b! b! c!
+           c!}\frac{1}{6^{2i}}%
+        %&%
+        =%
+        \binom{2i}{i} \frac{1}{2^{2i}}
+        \sum_{\substack{a+b+c =i\\
+              a,b,c \geq 0}} \pth{\frac{i!}{a! \, b! \, c!}}^2
+        \pth{\frac{1}{3}}^{2i}
+        % \\&%
+        =%
+        \,\binom{2i}{i} \frac{1}{2^{2i}}
+        \sum_{\substack{a+b+c =i\\
+              a,b,c \geq 0}} \pth[]{\,\trinom{i}{a}{b}{c}
+           \pth{\frac{1}{3}}^{i} \, }^2
+    \end{equation*}
+    Consider the case where $i=3m$. We have that $\trinom{i}{a}{b}{c}
+    \leq \trinom{i}{m}{m}{m}$. As such, we have
+    \begin{equation*}
+        \alpha_i%
+        \leq%
+        \binom{2i}{i} \frac{1}{2^{2i}} \pth{\frac{1}{3}}^{i}
+        \trinom{i}{m}{m}{m}
+        \underbrace{%
+           \sum_{\substack{a+b+c =i\\
+                 a,b,c \geq 0}} \trinom{i}{a}{b}{c}
+           \pth{\frac{1}{3}}^{i}
+        }_{=1 \text{ by    \Eqref{3:multinomial}}}.
+     % \\&%
+        % =%
+        % \binom{2i}{i} \frac{1}{2^{2i}} \pth{\frac{1}{3}}^{i}
+        % \trinom{i}{m}{m}{m}.
+    \end{equation*}
+    By the Stirling formula, we have
+    \begin{equation*}
+        \trinom{i}{m}{m}{m} \approx \frac{\sqrt{2 \pi i}(i/e)^i}
+        {\pth{ \sqrt{2 \pi i/3 } \pth[]{\frac{i}{3e} }^{i/3} }^3} = c
+        \frac{3^i}{i},
+    \end{equation*}
+    for some constant $c$. As such,
+    \begin{math}
+        \ds \alpha_i = O \pth[]{\frac{1}{\sqrt{i}}
+           \pth[]{\frac{1}{3}}^{i} \frac{3^i}{i}}%
+        =%
+        O\pth[]{ \frac{1}{i^{3/2}} }.
+    \end{math}
+    Thus,
+    \begin{equation*}
+        \sum_{m=1}^{\infty} \alpha_{6m} = \sum_{i} O\pth[]{
+           \frac{1}{i^{3/2}} } = O(1).
+    \end{equation*}
+    
+    Finally, observe that $\alpha_{6m} \geq (1/6)^2 \alpha_{6m-2}$ and
+    $\alpha_{6m} \geq (1/6)^4 \alpha_{6m-4}$. Thus,
+    \begin{equation*}
+        \sum_{m=1}^{\infty} \alpha_{m} = O(1).
+    \end{equation*}
+\end{proof}
+
+
+\section{Bibliographical notes}
+
+The presentation here follows \cite{n-mc-98}.
+
+\ChapterEnd
+% \bibliographystyle{alpha} \bibliography{shortcuts,geometry}
+
+
+% \end{document}%
+

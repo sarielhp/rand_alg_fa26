@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20081001062209" modified="D:20081002051920"/>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<layer name="delta"/>
+<layer name="epsilon"/>
+<layer name="zeta"/>
+<layer name="eta"/>
+<view layers="alpha beta gamma delta epsilon zeta" active="epsilon"/>
+<text layer="beta" stroke="black" matrix="1 0 0 1 -16 -32" pos="64 800" type="label" transformations="translations" valign="baseline" size="Large">$(n_1,d_1)$ graph $G$</text>
+<path layer="gamma" stroke="blue" pen="normal">
+32 0 0 32 288 720 e
+</path>
+<use name="mark/disk(sx)" pos="289.58 688.039" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="318.014 708.902" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="311.317 741.916" matrix="1 0 0 1 -4.12248 3.05992" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="273.57 748.562" matrix="1 0 0 1 -3.88212 -1.97928" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="257.403 710.628" size="large" stroke="blue"/>
+<text layer="delta" stroke="black" pos="256 768" type="label" transformations="translations" valign="baseline" size="Large">$(n_2,d_2)$ graph $H$</text>
+<text layer="eta" stroke="black" matrix="1 0 0 1 -7 -18" pos="192 736" type="label" transformations="translations" valign="baseline" size="Large">$d_1=n_2$</text>
+<use name="mark/disk(sx)" pos="64 800" layer="epsilon" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="112 800" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="32 768" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="144 768" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="112 736" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="64 736" matrix="1 0 0 1 16 -48" size="large" stroke="red"/>
+<path stroke="red" pen="normal" matrix="1 0 0 1 16 -48">
+112 800 m
+64 736 l
+</path>
+<path stroke="red" pen="normal">
+128 752 m
+160 720 l
+128 688 l
+80 688 l
+48 720 l
+80 752 l
+128 752 l
+</path>
+<path stroke="red" pen="normal">
+80 752 m
+128 688 l
+</path>
+<path stroke="red" pen="normal">
+160 720 m
+48 720 l
+</path>
+</page>
+</ipe>

@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20081004150306" modified="D:20081106092738"/>
+<preamble>\usepackage{amssymb}</preamble>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="zeta"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<layer name="delta"/>
+<layer name="epsilon"/>
+<layer name="eta"/>
+<view layers="alpha beta" active="alpha"/>
+<view layers="alpha zeta beta" active="beta"/>
+<view layers="alpha zeta beta gamma" active="gamma"/>
+<view layers="alpha beta delta" active="delta"/>
+<view layers="alpha beta delta epsilon eta" active="eta"/>
+<path layer="gamma" stroke="black" pen="normal" matrix="1 0 0 1 -80 48">
+32 0 0 32 288 720 e
+</path>
+<use name="mark/disk(sx)" pos="289.58 688.039" layer="beta" matrix="1 0 0 1 -80 48" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="318.014 708.902" matrix="1 0 0 1 -80 48" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="311.317 741.916" matrix="1 0 0 1 -84.1225 51.0599" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="273.57 748.562" matrix="1 0 0 1 -83.882 46.021" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="257.403 710.628" matrix="1 0 0 1 -80 48" size="large" stroke="blue"/>
+<path layer="gamma" stroke="black" pen="normal" matrix="1 0 0 1 -224 48">
+32 0 0 32 288 720 e
+</path>
+<use name="mark/disk(sx)" pos="289.58 688.039" layer="beta" matrix="1 0 0 1 -224 48" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="318.014 708.902" matrix="1 0 0 1 -224 48" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="311.317 741.916" matrix="1 0 0 1 -228.123 51.0599" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="273.57 748.562" matrix="1 0 0 1 -227.882 46.0207" size="large" stroke="blue"/>
+<use name="mark/disk(sx)" pos="257.403 710.628" matrix="1 0 0 1 -224 48" size="large" stroke="blue"/>
+<text layer="alpha" stroke="black" matrix="1 0 0 1 -16 0" pos="64 816" type="label" transformations="translations" valign="baseline" size="Large">$\mathbb E \rho(x,y)$</text>
+<text stroke="black" matrix="1 0 0 1 -39 -1.95" pos="144 816" type="label" transformations="translations" valign="baseline" size="Large">$\le$</text>
+<text stroke="black" matrix="1 0 0 1 14.7929 0" pos="176 816" type="label" transformations="translations" valign="baseline" size="Large">$\mathbb E \rho(x,y)$</text>
+<path layer="gamma" stroke="black" pen="normal">
+83.1945 792.976 m
+65.58 736.039 l
+</path>
+<path stroke="black" pen="normal">
+94.014 756.902 m
+45.6879 794.583 l
+</path>
+<path stroke="black" pen="normal">
+45.6879 794.583 m
+65.58 736.039 l
+</path>
+<path stroke="black" pen="normal">
+33.403 758.628 m
+94.014 756.902 l
+</path>
+<path stroke="black" pen="normal">
+83.1945 792.976 m
+33.403 758.628 l
+</path>
+<use name="mark/disk(sx)" pos="289.58 688.039" layer="delta" matrix="1 0 0 1 -80 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="318.014 708.902" matrix="1 0 0 1 -80 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="311.317 741.916" matrix="1 0 0 1 -84.1225 -44.9401" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="273.57 748.562" matrix="1 0 0 1 -83.8821 -49.9793" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="257.403 710.628" matrix="1 0 0 1 -80 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="289.58 688.039" matrix="1 0 0 1 -224 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="318.014 708.902" matrix="1 0 0 1 -224 -48" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="311.317 741.916" matrix="1 0 0 1 -228.123 -44.9401" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="273.57 748.562" matrix="1 0 0 1 -227.882 -49.9793" size="large" stroke="red"/>
+<use name="mark/disk(sx)" pos="257.403 710.628" matrix="1 0 0 1 -224 -48" size="large" stroke="red"/>
+<text layer="gamma" stroke="black" matrix="1 0 0 1 -8.87574 -5.32544" pos="64 768" type="label" transformations="translations" valign="baseline" size="large">$K_5$</text>
+<text stroke="black" matrix="1 0 0 1 -7.10059 -5.91716" pos="208 768" type="label" transformations="translations" valign="baseline" size="Large">$C_5$</text>
+<path layer="epsilon" stroke="black" pen="normal">
+238.014 756.902 m
+227.195 696.976 s
+</path>
+<path stroke="black" pen="normal">
+238.014 756.902 m
+256.201 660.225
+247.917 638.923
+209.58 640.039 s
+</path>
+<path stroke="black" pen="normal">
+227.195 792.976 m
+238.014 660.902 s
+</path>
+<path stroke="black" pen="normal">
+209.58 736.039 m
+213.006 680.343
+238.014 660.902 s
+</path>
+<path stroke="black" pen="normal">
+209.58 736.039 m
+204.13 672.059
+177.403 662.628 s
+</path>
+<path stroke="black" pen="normal">
+227.195 792.976 m
+192.296 741.29
+189.688 698.583 s
+</path>
+<path stroke="black" pen="normal">
+189.688 794.583 m
+227.195 696.976 s
+</path>
+<path stroke="black" pen="normal">
+189.688 794.583 m
+177.403 662.628 s
+</path>
+<path stroke="black" pen="normal">
+177.403 758.628 m
+189.688 698.583 s
+</path>
+<path stroke="black" pen="normal">
+65.58 736.039 m
+83.194 696.976 s
+</path>
+<path stroke="black" pen="normal">
+65.58 736.039 m
+45.688 698.583
+45.688 698.583 s
+</path>
+<path stroke="black" pen="normal">
+65.58 736.039 m
+75.7278 672.651
+94.014 660.902 s
+</path>
+<path stroke="black" pen="normal">
+65.58 736.039 m
+51.4675 671.467
+33.403 662.628 s
+</path>
+<path stroke="black" pen="normal">
+65.58 736.039 m
+65.58 640.039 s
+</path>
+<path stroke="black" pen="normal">
+65.58 640.039 m
+80.4615 721.172
+94.014 756.902 s
+</path>
+<path stroke="black" pen="normal">
+65.58 640.039 m
+49.6923 721.763
+33.403 758.628 s
+</path>
+<path stroke="black" pen="normal">
+65.58 640.039 m
+45.6879 794.583 s
+</path>
+<path stroke="black" pen="normal">
+65.58 640.039 m
+83.1945 792.976 s
+</path>
+<path stroke="black" pen="normal">
+177.403 758.628 m
+162.71 660.225
+165.077 645.432
+209.58 640.039 s
+</path>
+<path stroke="black" pen="normal">
+45.688 698.583 m
+94.014 756.902 s
+</path>
+<path stroke="black" pen="normal">
+83.194 696.976 m
+33.403 758.628 s
+</path>
+<path stroke="black" pen="normal">
+45.688 698.583 m
+83.1945 792.976 s
+</path>
+<path stroke="black" pen="normal">
+83.194 696.976 m
+66.2604 751.349
+45.6879 794.583 s
+</path>
+<path stroke="black" pen="normal">
+45.688 698.583 m
+33.403 758.628 s
+</path>
+<path stroke="black" pen="normal">
+83.194 696.976 m
+94.014 756.902 s
+</path>
+<text layer="zeta" stroke="black" matrix="1 0 0 1 -49.0178 -0.94" pos="176 816" type="label" transformations="translations" valign="baseline" size="Large">$g^{-1}(C_5,\rho)$</text>
+<text layer="eta" stroke="black" matrix="1 0 0 1 -49.0178 -0.94" pos="176 816" type="label" transformations="translations" valign="baseline" size="Large">$\tilde g^{-1}(C_5,\rho)$</text>
+<path layer="epsilon" stroke="black" pen="normal">
+94.014 660.902 m
+94.014 756.902 s
+</path>
+<path stroke="black" pen="normal">
+94.014 660.902 m
+108.272 753.124
+83.1945 792.976
+83.1945 792.976 s
+</path>
+<path stroke="black" pen="normal">
+33.403 662.628 m
+33.403 758.628 s
+</path>
+<path stroke="black" pen="normal">
+33.403 662.628 m
+20.6982 758.45
+45.6879 794.583 s
+</path>
+<path stroke="black" pen="normal">
+33.403 662.628 m
+14.1893 752.533
+29.574 803.42
+49.1006 807.562
+83.1945 792.976 s
+</path>
+<path stroke="black" pen="normal">
+94.014 660.902 m
+111.231 759.633
+94.6627 804.604
+86.9704 804.604
+45.6879 794.583 s
+</path>
+<path stroke="black" pen="normal">
+94.014 660.902 m
+37.858 686.26
+37.2663 706.97
+33.403 758.628 s
+</path>
+<path stroke="black" pen="normal">
+33.403 662.628 m
+86.3787 681.527
+90.5207 699.87
+94.014 756.902 s
+</path>
+<use name="mark/cross(sx)" pos="0 832" layer="alpha" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="256 832" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="256 624" matrix="1 0 0 1 0 -16" size="tiny" stroke="black"/>
+<use name="mark/cross(sx)" pos="0 624" matrix="1 0 0 1 0 -16" size="tiny" stroke="black"/>
+<text layer="epsilon" stroke="black" pos="45 615" type="label" transformations="translations" valign="baseline" size="Large">$K_{5,5}$</text>
+<text stroke="black" pos="188 615" type="label" transformations="translations" valign="baseline" size="Large">$C_5 \otimes \{0,1\}$</text>
+</page>
+</ipe>

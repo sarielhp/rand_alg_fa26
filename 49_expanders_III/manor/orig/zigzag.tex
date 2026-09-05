@@ -1,0 +1,1224 @@
+\documentclass[compress]{beamer}
+
+
+\usetheme{Madrid}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+\usepackage{empheq}
+\usepackage{cancel}
+
+\usepackage{amsmath}
+
+\DeclareMathOperator{\cm}{cm}
+\DeclareMathOperator*{\Avg}{\mathbb{E}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\diam}{\mathrm{diam}}
+\newcommand{\oz}{{\bigcirc\!\!\!\!\mathrm{z}\,\,}}
+
+% Author, Title, etc.
+
+\newcommand{\mcite}[1]{{\color{blue}[#1]}}
+\newcommand{\e}{\varepsilon}
+\newtheorem{question}{Question}
+\newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{claim}{Claim}
+\newtheorem{observation}{Observation}
+
+
+
+\title[Non-linear spectral gaps]{Towards a calculus for non-linear spectral gaps}
+
+\author[M.~Mendel]{Manor~Mendel, Open University}
+\institute[OUI]{Jointly with Assaf Naor, NYU}
+%\institute[OpenU, NYU]
+%{
+%  \inst{1}%
+%  Open University of Israel
+%  \and
+%  \vskip-2mm
+%  \inst{2}%
+%  Courant Institute
+%  }
+
+\date[Nov '08]{Theory Seminar, HU, Nov '08}
+
+
+\AtBeginSection
+{
+\begin{frame} %<beamer> \frametitle
+{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+}
+% The main document
+
+\begin{document}
+
+\begin{comment}
+Title: Towards a calculus for non-linear spectral gaps
+Speaker: Manor Mendel, The Open University of Israel
+
+Abstract:
+For a regular undirected graph G=(V,E), let g(G) be the largest positive number g
+such that for every f:V--> Reals,
+
+AVERAGE_{x,y \in V} |f(x)-f(y)|^2 < g^{-1} AVERAGE_{(x,y)\in E} |f(x) - f(y)|^2.
+
+It is known that g(G) is the (normalized) spectral gap of G, i.e. g(G)=1 - \lambda_2(G), 
+where \lambda_2(G) is the normalized second eigenvalue of G.
+
+Motivated by questions on the embedability of expander graphs in more general metric spaces,
+we replace the Reals in the above definition with other metric spaces, and study the behavior
+of the resulting "non-linear spectral gap" under various operations.
+
+We obtain the following results:
+* A clean and general analysis of the zigzag product of graphs, devoid of linear algebra.
+* A unification of geodesic spaces with non-positive curvature and uniformly convex Banach spaces as "barycentric" spaces.
+* A proof that spectral gap in barycentric spaces of a power of graph increases similarly to the classical spectral gap.
+* A high degree, yet non-trivial, family of graphs with constant spectral gap in K-convex Banach spaces. 
+   The graph is obtained by applying the noise (Bonami-Beckner) operator on the Hamming cube, 
+   and taking a quotient of it by the dual of "good" linear code.
+   The analysis is inspired by a construction of Khot and Naor and the proof of Pisier's K-convexity theorem.
+
+The above results are applied to show a construction of constant degree zigzag expanders in uniformly convex Banach spaces. 
+As a side benefit, we also obtain a Lipschitz extension theorem from subsets of L_p or series/parallel graphs into spaces of non-positive curvature.
+
+No prior knowledge of the notions above will be assumed.
+
+Joint work with Assaf Naor (NYU).
+
+\end{comment}
+
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+
+\section{Expanders}
+
+\begin{frame}{Graphs}
+
+\begin{minipage}{2in}
+$(n,d)$ graph $G=(V,E)$ is
+\begin{itemize} 
+\item on $n$ vertices. 
+\item the degree is $d$. 
+\item undirected, 
+\item connected,
+\item multigraph (self loops + parallel edges)
+\end{itemize}
+\end{minipage}\quad\qquad
+\begin{minipage}{2in}
+\includegraphics[width=2in]{graph-ex}
+\end{minipage}
+\medskip
+
+The normalized adjacency matrix $A=(a_{ij})$
+\[a_{ij}= \#((i,j)\in E) /d, \]
+$A$ is symmetric doubly stochastic. Its eigenvalues are 
+\[ 1=\lambda_1> \lambda_2 \ge \cdots \lambda_n \ge -1 .\]
+
+Also define 
+\( \lambda=\max\{\lambda_2, -\lambda_n\}=\max _{i\ge 2} |\lambda_i| .\)
+\end{frame}
+
+
+\begin{frame}{Spectral Gap}
+\onslide<+->
+\begin{definition}[Spectral gap]
+\[ g(G)=1-\lambda_2(G) % \qquad \qquad  \tilde{g}(G)=1-\lambda(G) 
+\]
+\end{definition}
+
+Intuition: 
+$g(G)>0$ $\Longleftrightarrow$ $G$ is connected.
+
+% $\tilde{g}(G)>0$ $\Longleftrightarrow$ $G$ is connected.
+\onslide<+->
+\begin{definition}[Expanders]
+ An infinite family of graphs with uniform positive lower bound on the spectral gap.
+\end{definition}
+
+In this definition complete graphs are expanders.
+We will usually be interested in \alert{constant degree} expanders.
+Their existence is by no means trivial. However
+
+\onslide<+->
+\begin{theorem}[ Pinsker, Margulis]
+Constant degree expanders do exist.
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Expanders are Common}
+\begin{itemize}[<+->]
+\item Derandomization
+\item Networking 
+\item Coding
+\item Metric Geometry
+\item Geometric Group Theory
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Poincar\'e Inequality (PI) for Expanders}
+\begin{proposition}
+Given $G=(V,E)$ and every $f:V\to \mathbb R$,
+\[ \Avg_{x,y\in V} |f(x)-f(y)|^2  \le (1-\lambda_2)^{-1} \Avg_{(x,y)\in E} |f(x)-f(y)|^2. 
+\]
+\end{proposition}
+
+\begin{overprint}
+\begin{proof}[Proof (I\onslide*<2>{I})]
+\onslide*<1>{
+By translation, we assume wlog  that $\sum_x f(x)=0$, 
+so 
+\[ \Avg_{x,y\in V} |f(x)-f(y)|^2 =  2 \Avg_{x\in V} f(x)^2. \]
+
+On the other hand,
+\[
+ \frac{1}{n} \sum_{(x,y)\in V} a_{xy} (f(x)-f(y))^2 
+=\frac{2}{n} \sum_{x\in V} f(x)^2 - \frac{2}{n} \sum_{x,y\in V} a_{xy}f(x)f(y) .
+\]
+\renewcommand{\qed}{}}
+\onslide*<2>{
+Using the spectral decomposition $f=\sum_i \alpha_i v_i$, (remembering that $\alpha_1=\langle f, v_1 \rangle=0$), 
+we have  
+\begin{multline*} 
+\sum_{x,y\in V} a_{xy}f(x)f(y)=
+\sum_{x,y\in V} a_{xy} (\sum_i \alpha_i v_i(x)) (\sum_j \alpha_j v_j(y)) \\
+= \sum_{i,j\ge 2} \alpha_i \alpha_j \sum_{x\in V}  v_i(x) \lambda_j v_j(x) 
+= \sum_{i\ge 2}\alpha_i^2  \lambda_i \sum_{x\in V} v_i(x)^2
+\le \lambda_2 \sum_{x\in V} f(x)^2.
+\end{multline*}}
+\end{proof}
+\end{overprint}
+\end{frame}
+
+\begin{frame}{Redefining $g(G)$: PI Const}
+The previous analysis is tight: Checking with $f=v_2$.
+
+\onslide<+->
+We can redefine
+\[ g(G)^{-1} = \sup_{\text{const} \ne f:V\to \mathbb R } \frac{\Avg_{x,y\in V} |f(x)-f(y)|^2 }{\Avg_{(x,y)\in E} |f(x)-f(y)|^2}. \]
+
+\onslide<+->
+Furthermore
+\[ g(G)^{-1} = \sup_{\text{const} \ne f:V\to  L_2 } \frac{\Avg_{x,y\in V} \|f(x)-f(y)\|_2^2 }{\Avg_{(x,y)\in E} \|f(x)-f(y)\|_2^2}. \]
+\end{frame}
+
+\section{Background \& Motivation}
+
+\begin{frame}{BiLipschitz \& Coarse embedding}
+\onslide<+->
+Let $f:(X,\rho)\to (Y,\nu)$, satisfying
+\begin{itemize}
+\item  $\nu(f(x),f(y)) \ge \rho(x,y)$, $\forall x,y\in X$,
+\item $\nu(f(x_0),f(y_0))=\rho(x_0,y_0)$ for some $x_0,y_0\in X$.
+\end{itemize}
+
+\begin{definition}[Distortion]
+$\dist(f)= \sup_{x\ne y} \frac {\nu(f(x),f(y))}{\rho(x,y)} \qquad$
+$ c_Y(X)= \inf \{\dist(f): f:X\to Y\}$.
+\end{definition}
+
+\medskip
+
+\onslide<+->
+\begin{definition}[Coarse Embedding]
+$f:(X,\rho) \to (Y,\nu)$ is a coarse embedding if $\exists \alpha,\beta:[0,\infty) \to [0,\infty)$ such that
+$\lim _{t\to \infty} \alpha(t)=\infty$, and
+\[ \forall x,y\in X,\  \alpha(\rho(x,y)) \le \nu(f(x),f(y)) \le \beta(\rho(x,y)). \]
+\end{definition}
+
+\end{frame}
+
+\begin{frame}{Non embedability of Expanders}
+\onslide<+->
+\begin{claim}
+In $(n,d)$ graphs,  most pair of points are at distance $\Omega(\log_d n)$ (counting argument).
+Therefore,
+\[ \frac{\Avg_{x,y\in V} d_G(x,y)^2 }{\Avg_{(x,y)\in E} d_G(x,y)^2} = \Omega(\log_d ^2 n) .\]
+\end{claim}
+
+\onslide<+->
+\begin{theorem}[Linial-London-Rabinoovich, Matou\v{s}ek, Gromov]
+If $(G_n)_n$ is a  family of $(n,d)$ graphs  with uniform bound $g^{-1}$ on the PI constant. Then
+\begin{itemize}
+\item $c_{L_2}(G_n)=\Omega( \sqrt g \log_d n)$.
+\item $(G_n)$ is not coarsely embeddable in $L_2$.
+\end{itemize}
+\end{theorem}
+
+\onslide<+->
+Non-embedding in other spaces?
+\onslide <+-> Generalizes PI to those spaces!
+\end{frame}
+
+
+
+\begin{frame}{PI Constant in Abstract Spaces}
+\onslide<+->
+$\rho:X\times X \to  [0,\infty)$ is called symmetric kernel if $\rho(x,y)=\rho(y,x)$.
+
+\begin{definition}[PI Constant]
+\[ g(G,\rho)^{-1} = \sup_{\text{const} \ne f:V\to  X } \frac{\Avg_{x,y\in V} \rho(f(x),f(y)) }{\Avg_{(x,y)\in E} \rho(f(x),f(y))}. \]
+\end{definition}
+
+We will care mostly when $\rho$ is a power of a metric.
+
+But, there are non trivial facts even in this abstract setting.
+
+\onslide<+->
+
+\begin{example}
+\begin{itemize}
+\item When $(X,\rho)=(\mathbb R, | \cdot |^2)$ or $(X,\rho)=(L_2, \| \cdot \|_2^2)$,
+$g(G,\rho)$ is the spectral gap.
+\item  When $(X,\rho)=(\{0,1\})$ or $(X,\rho)=(L_1, \|\cdot \|_1)$, 
+$g(G,\rho)$ is (closely related to) the edge expansion. 
+\end{itemize}
+\end{example}
+\end{frame}
+
+\begin{frame}{Abstract PI: Simple Observations}
+\onslide<+->
+\begin{observation}[Cheeger-Tanner-Alon-Milman]
+For any graph $G$ and non trivial $(X,\rho)$,  
+\[ \sqrt{ g^{-1}(G)} \le g^{-1}(G,\{0,1\})\le g^{-1}(G,\rho). \]
+\end{observation}
+
+\onslide<+->
+\begin{observation}
+When $(X,\rho)$ is a metric space, and $p\ge 1$,
+\[ g^{-1}(G,\rho^p)\le \diam(G)^p \]
+\end{observation}
+
+\onslide<+->
+\begin{observation}
+When $(X,\rho)$ contains all metric spaces and $G$ is an $(n,d)$ graph,
+\[ g^{-1}(G,\rho^p) \ge (\log_{d-1}(n/2))^p .\]
+\end{observation}
+\end{frame}
+
+
+\begin{frame}{Inembeddability in other spaces}
+
+\onslide<+->
+\begin{proposition}
+If $(X,\rho)$ a metric and $p\ge 1$, for which there is an $(n,d)$ graphs $(G_n)$,  such that $g^{-1}(G,\rho^p)\le g^{-1}$, then 
+\begin{itemize}
+\item $c_X(G_n)=\Omega(\log n)$, and
+$(G_n)$ do not coarsely embed in $X$.
+\end{itemize}
+\end{proposition}
+
+
+\onslide<+->
+
+Theorems of this flavor are  of considerable interest for metric geometry, Banach spaces, and geometric group theory.
+
+Spaces which were studied in this context before.
+
+\begin{itemize}
+\item $L_p$ spaces [Matou\v{s}ek]
+\item Banach Lattices with cotype [Ozawa]
+\item Uniform convex Banach spaces [Kasparov, Yu]
+\item CAT(0) spaces [Gromov]
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Related Previous Results}
+\onslide<+->
+\begin{theorem}[Matou\v{s}ek]
+When $1\le p \le q$, for $(n,d)$ graph $G$,
+\[ g(G,(\ell_p,\|\cdot\|_p^p))^{-1} \le g(G,(\ell_q,\|\cdot\|_q^q))^{-1} \le \left( \tfrac{4q}{p} g(G,(\ell_p,\|\cdot\|_p^p))^{-1/p} \right)^q. \]
+In particular, any expander family is also expander with respect to $\|\cdot \|_p^p$.
+\end{theorem}
+\medskip
+
+\onslide<+->
+
+\begin{theorem}[Ozawa, Naor-Rabani]
+For any Banach lattice $(X,\|\cdot \|)$ there exist $\alpha:[0,\infty)\to [0,\infty)$
+such that
+\[ g(G,\|\cdot\|)^{-1} \le \alpha(g(G)^{-1}) \]
+\end{theorem}
+
+\end{frame}
+
+\begin{frame}{$B$-Convex Spaces}
+\begin{definition}[$B$-convex Banach spaces]
+Do not contain $(1+\epsilon)$ distortion of $\ell_1^r$, for some $\epsilon>0$, and $r\ge 2$
+\end{definition}
+
+\begin{theorem}[Lafforgue]
+If $X$ is $B$ convex banach space then there exist $d\in \mathbb N$, $g^{-1}\ge 1$, and a family of $d$-regular graphs
+$(G_n)$, with $g(G_n,\|\cdot\|_X^2)^{-1}\le g^{-1}$.
+\end{theorem}
+
+The proof is algebraic using strong form of Property (T).
+ \end{frame}
+
+\begin{frame}{Natural questions}
+
+\onslide<+->
+\begin{question}
+Under what conditions on $(X,\rho)$, there exists $\alpha:[1,\infty)\to [1,\infty)$ such that
+$\forall G$,  $g(G,\rho)^{-1} \le \alpha(g(G)^{-1})$ ?
+\end{question}
+
+I.e., when does ``expander is expander" ?
+
+\onslide<+-> 
+\begin{question}
+Under what conditions on $(X,\rho)$ there exist $d\in \mathbb N$,  $g^{-1}\ge 1$, and a family of $d$-regular graphs
+$(G_n)$, with $g(G_n,\rho)^{-1}\le g^{-1}$ ?
+\end{question} 
+
+I.e., when do expanders exist?
+
+\medskip
+
+\begin{itemize}[<+->]
+\item Those questions are quite general. We don't have satisfactory answers.
+
+\item We concentrate on the second question --- building a ``toolbox" for non-linear spectral gaps.
+
+\item Specifically, tools that are instrumental for constructing RVW expanders. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+
+\begin{itemize}[<+->]
+\item A clean, ``abstract" and general analysis of the zigzag product.
+\item Geometric condition for the decay of the PI const of powers of graph.
+\item A high degree but non-trivial expander graph for $B$-convex spaces in the form of a quotient of a ``noisy Hamming cube".
+\item Ball's extension theorem for Lipschitz function into CAT(0) spaces.
+\item A unification of non-positive curvature  and uniform convexity via barycentric spaces.
+\item RVW expanders for super-reflexive spaces.
+\end{itemize}
+
+%
+%\onslide<+->
+%
+%We believe that RVW expanders can be obtained for more general  and other classes of spaces.
+
+\end{frame}
+
+\section{RVW Expanders \& Zig-Zag Product}
+
+\begin{frame}{Review of RVW Expanders  I}
+
+\begin{itemize}[<+->]
+\item Reingold, Vadhan , \& Wigderson [RVW] introduced the zigzag product, and used it to construct expanders.
+\item RVW expanders were the first explicit expanders  using ``purely" combinatorial methods.
+\item Since then, they were used in many applications, some of them impossible using previous methods.
+\begin{itemize}
+\item Edge expansion beyond the spectral gap. [CRVW]
+\item Symmetric log space = log space [Reingold].
+\item Expander codes 
+\end{itemize}
+\item This current work is yet another application of this paradigm.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Review of RVW Expanders II}
+Ingredients:
+\begin{itemize}[<+->]
+\item  \alert{Base graph}: A $(D^{2t},D)$ graph $H$, with  $g^{-1}(H) \le \sqrt{t}$.
+\item  \alert{Power operation}: Given $(n,d)$ graph $G^s$ is an $(n,d^s)$, with 
+$ 1- g(G^s)= (1- g(G))^s$, and hence for odd $s$,
+\[ g(G^s)^{-1}  % = (1 -(1-g(G))^s)^{-1}
+\le 2 \cdot \max\{1,g(G)^{-1}/s\} \]
+
+Powering: {\color{blue}Improves the PI const $g^{-1}$}, while {\color{red} increasing the degree}.
+
+\item \alert{Zig-zag product}: 
+If $G$ is $(n_1,d_1)$-graph, and $H$ is $(n_2,d_2)$ graph, and $n_2=d_1$, then
+$G \oz H$ is $(n_1 n_2, d_2^2)$ graph with 
+\[ g(G\oz H)^{-1}\le g(G)^{-1} \cdot g(H)^{-2} \]
+
+{Zig-zag: \color{blue} Increase the size, decrease the degree, \color{red}controlled increase of $g^{-1}$}.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Review of RVW Expanders III}
+\begin{itemize}[<+->]
+\item The expander family $(G_i)_i$ is constructed as follows:
+\begin{itemize}
+\item $G_0=H^2$
+\item $G_{i+1}=G_i^t \oz H$
+\end{itemize}
+
+\item By induction: $G_i$ is $(D^{2ti},D^2)$ graph with 
+\[ g(G_{i+1})^{-1} \le 2 \max\{1, g(G_i)^{-1}/t\} \cdot g(H)^{-2} .\]
+
+\item
+Hence, if $g(H)^{-1} \le \sqrt{t/2}$, we have
+\[\forall i, \ g(G_i) \le O_t(1) 	 \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Zig-Zag Product [RVW]}
+Given:
+\medskip
+
+\includegraphics<+>[page=1]{zigzag-op1}
+\includegraphics<+->[page=2]{zigzag-op1}
+
+\onslide<+->
+\medskip
+
+Define:
+$K=G\oz H$ as follows:
+\end{frame}
+
+\begin{frame}{Zig-Zag Product [RVW]}
+\begin{center}
+\includegraphics<+>[page=1 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=2 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=3 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=4 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=5 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=6 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=7 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=8 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=9 ,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=10,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=11,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=12,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=13,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=14,scale=0.75]{zigzag-op2}
+\includegraphics<+>[page=15,scale=0.75]{zigzag-op2}
+\includegraphics<+->[page=16,scale=0.75]{zigzag-op2}
+\onslide<+->
+
+$G \oz H$ is $(n_1d_1, d_2^2)=(n_1n_2,d_2^2)$ graph.
+\end{center}
+\end{frame}
+
+\begin{frame}{PI Const of the Zig-Zag Product}
+
+\onslide<+->
+[RVW,RTV] showed\onslide<4->{\alert{(*)}} that $g(G\oz H)^{-1} \le g(G)^{-1}\cdot g(H)^{-2}$.
+
+\onslide<+->
+\begin{theorem}[{[MN]} \onslide<4->{\alert{*}}]
+For every symmetric kernel $\rho$,
+\[ g(G\oz H,\rho)^{-1} \le g(G,\rho)^{-1}\cdot g(H,\rho)^{-2}. \]
+\end{theorem}
+
+\medskip
+\onslide<+->
+Of interest even if one only cares about ``classical" spectral gap.
+
+\end{frame}
+
+
+\begin{frame}{Double Cover (DC) PI Constant}
+\begin{overprint}
+\begin{minipage}[b]{2.7in}
+\begin{overprint}
+\onslide*<1-3>{
+\begin{definition}[PI Constant]
+\[ g(G,\rho)^{-1} = \sup_{\substack{f:V\to X\\ f \ne \text{const}}} \frac{\Avg_{x,y\in V} \rho(f(x),f(y)) }{\Avg_{(x,y)\in E} \rho(f(x),f(y))}. \]
+\end{definition}}
+\onslide*<4->{
+\begin{definition}[DC PI Constant]
+\[ \tilde g(G,\rho)^{-1} = \sup_{\substack{f,h:V\to X\\ ~ }} \frac{\Avg_{x,y\in V} \rho(f(x),h(y)) }{\Avg_{(x,y)\in E} \rho(f(x),h(y))}. \]
+\end{definition}}
+\end{overprint}
+
+\onslide<6->{
+\vskip -0.3in
+\begin{claim}
+\begin{itemize}
+\item $\forall G,\rho$, \quad $g(G,\rho)^{-1} \le \tilde g(G,\rho)^{-1}$
+\item $\tilde g(G)=1-\lambda(G)$, where $\lambda(G)=\max_{i\ge 2} |\lambda_i(G)|$
+\end{itemize}
+\end{claim}}
+\end{minipage}
+\;
+\begin{minipage}[t]{1.9in}
+\includegraphics<1 >[page=1,width=2in]{dc-pi}
+\includegraphics<2 >[page=2,width=2in]{dc-pi}
+\includegraphics<3 >[page=3,width=2in]{dc-pi}
+\includegraphics<4 >[page=4,width=2in]{dc-pi}
+\includegraphics<5->[page=5,width=2in]{dc-pi}
+\end{minipage}
+\end{overprint}
+
+\onslide<7->
+\vskip -0.2in
+\begin{theorem}[{[MN]} correct formulation]
+$\forall$ symmetric kernel $\rho$, \quad
+\( \tilde g(G\oz H,\rho)^{-1} \le \tilde g(G,\rho)^{-1}\cdot \tilde g(H,\rho)^{-2} 
+%\onslide*<+>{, \qquad g(G\oz H,\rho)^{-1} \le g(G,\rho)^{-1}\cdot \tilde g(H,\rho)^{-2}}
+. \)
+\end{theorem}
+
+\onslide<8->
+The analysis is simple, but beyond my drawing capabilities. 
+
+We will instead analyze the tensor product $G\otimes H$.
+\end{frame}
+
+\begin{frame}{Tensor Product}
+Given:
+\medskip
+
+\includegraphics[page=1]{tensor-op1}
+
+\medskip
+
+Define:
+$K=G\otimes H$ as follows:
+\end{frame}
+
+\begin{frame}{Tensor Product}
+\begin{center}
+\includegraphics<+>[page=1 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=2 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=3 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=4 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=5 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=6 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=7 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=8 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=9 ,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=10,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=11,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=12,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=13,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=14,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=15,scale=0.70]{tensor-op2}
+\includegraphics<+>[page=16,scale=0.70]{tensor-op2}
+\includegraphics<+->[page=17,scale=0.70]{tensor-op2}
+
+\onslide<1->{
+
+\(E(G\otimes H)= \{((u,x),(v,y)):\  (u,v)\in E(G),\ (x,y)\in E(H) \} \)
+
+~\\
+
+\( G \otimes H \text{ is } (n_1 n_2, d_1 d_2) \text{ graph}. \)
+}
+\end{center}
+\end{frame}
+
+\begin{frame}{PI Const of Tensor Product}
+Let $A_G$ the adjacency matrix of $G$. 
+\begin{claim}[Easy]
+$A_{G\otimes H}= A_G\otimes A_H$.
+\end{claim}
+The eigenvalues of $G\otimes H$ are $\{\lambda(G)_i \lambda(H)_j: i\in [n_1],\, j\in [n_2]\}$.
+
+Therefore $\lambda(G\otimes H)=\max \{\lambda(G),\lambda(H)\}$.
+
+Which means \[\tilde g(G\otimes H)^{-1}= \max\{\tilde g(G)^{-1}, \tilde g(H)^{-1}\}.\]
+
+\onslide<2->{
+We will prove
+\begin{proposition}
+$\forall \rho$,\quad $\onslide*<2>{\tilde g(G\otimes H, \rho)^{-1}\le \tilde g(G,\rho)^{-1} \cdot \tilde g(H,\rho)^{-1}}$
+\end{proposition}}
+\end{frame}
+
+\begin{frame}{Analysis of Tensor Product}
+\begin{center}
+\includegraphics<+>[page=1 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=2 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=3 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=4 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=5 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=6 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=7 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=8 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=9 ,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=10,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=11,scale=0.60]{tensor-analysis}
+\includegraphics<+>[page=12,scale=0.60]{tensor-analysis}
+\includegraphics<+->[page=13,scale=0.60]{tensor-analysis}
+\end{center}
+
+\vskip -0.5in
+
+\begin{align*} 
+\uncover<3-> {\Avg_{u,v\in V_H} & \Avg_{x,y\in V_G}  \rho(f(x,u)\,,\,h(y,v)) \\  }
+\uncover<10->{  &\le  \tilde g(G,\rho)^{-1} \Avg_{(x,y)\in E_G} \Avg_{u,v\in V_H} \rho(f(x,u)\,,\,h(y,v)) \\}
+\uncover<13->{ &\le  \tilde g(G,\rho)^{-1} \cdot \tilde g(H,\rho)^{-1} \Avg_{(x,y)\in E_G} \Avg_{(u,v)\in E_H} \rho(f(x,u)\,,\,h(y,v)) \\}
+\uncover<+->{ & = \tilde g(G,\rho)^{-1} \cdot \tilde g(H,\rho)^{-1} \Avg_{((x,u),(y,v))\in E_{G\otimes H}} \rho(f(x,u)\,,\,h(y,v)) }
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{Wrapping up the zig-zag product}
+
+\begin{itemize}[<+->]
+\item Similar (but slightly more intricate)  analysis  proves the best known bound on $g(G\oz H, \rho)^{-1}$ in surprising generality.
+
+\item The zig-zag  step in RVW expanders works in a general setting.\\
+It implies  the existence of  expanders in the most general setting.\\
+ {\color{blue}Right?}
+
+\item \alert{Wrong!}
+
+\item From our perspective the zig-zag product is the easiest step in RVW expanders --- almost an ``abstract nonsense".
+
+\item Finding geometric conditions when powering improves the PI constant and finding a base graph is much more challenging.
+
+\item We manage to find non-trivial sufficient conditions.
+\alert{But}, we believe that weaker or other conditions are possible.
+\end{itemize}
+\end{frame}
+
+
+\section{Decay of the PI Constant}
+
+\begin{frame}{Decay of the PI Const}
+
+\begin{itemize}[<+->]
+\item  $\lambda_i(G^t)=\lambda_i(G)^t$, and therefore $\tilde g (G^t)^{-1} \le 2 \max\{1, \tilde g(G)^{-1}/t\}$.
+
+\item We look for a similar effect in more general setting.
+
+\begin{question}[Linear decay of the PI const]
+Under what conditions on $\rho$,  $\tilde g(G^t,\rho) \le C\max\{1,\tilde g(G,\rho)/t\}$ ?
+\end{question}
+
+\item For RVW-expanders, much weaker decay may suffice.
+
+\begin{question}[Uniform decay of the PI const] 
+For which $\rho$, $\forall M\ge 1$,  $\exists t\in\mathbb N$,  $s_0\in[1,\infty)$ such that
+$\forall G$, if $\tilde g(G,\rho)\ge s_0$, then $\tilde g (G^t,\rho) \le \tilde g(G,\rho)/M$.
+\end{question}
+
+\item Note that some decay is guaranteed.
+\begin{proposition} [Non uniform decay of the PI const]
+$\forall \rho, G$,\ if $\tilde g(G,\rho)^{-1}<\infty$ then $\lim _{t\to \infty}\tilde g(G^t,\rho)^{-1}=1$
+\end{proposition}
+
+\end{itemize}
+
+
+%
+%\onslide<+->
+%
+%One can ask variants of those question, which may be instrumental to RVW construction, depending on the nature of the base graph.
+%
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Sufficient condition: Barycentric spaces} 
+
+\onslide<+->
+
+\begin{definition}[$(X,\rho)$ is  $p$-barycentric (w/ const $K$)]
+$\forall$ discrete r.v. $U:(\Omega,\mu) \to X$, $\exists \cm(U)$ satisfying
+\begin{enumerate}
+\item $\forall$ discrete probability space $(\Omega,\mu)$ and  two r.v. $U,V:\Omega\to X$, \\
+\(
+ \rho(\cm(U),\cm(V)) \le \Avg_\mu \rho(U,V) . 
+ \)
+\item $\forall$ r.v. $U:(\Omega,\mu)\to X$, and for every $x\in X$, \\
+\(
+ \rho(\cm(U),x)^p+ K^{-p} \Avg_\mu \rho(U,\cm(U))^p \le \Avg_\mu\rho(U,x)^p.
+\)
+\end{enumerate}
+\end{definition}
+
+\onslide<+->
+\begin{example}[Hilbert space is 2-barycentric w/ Const 1]
+Take $\cm(U)=\Avg U$, and for every $x\in H$,
+\begin{multline*}
+ \Avg \|U-x\|^2= \Avg\| (U-\Avg U) - (x-\Avg U)\|^2 \\ =  
+\Avg \| U-\Avg U \|^2 \cancel{-2 \langle x -\Avg U,\Avg U -\Avg U \rangle} +\|x -\Avg U\|^2 
+\end{multline*}
+\end{example}
+%
+%\begin{example}
+%$2$-barycentric spaces with constant $1$ are precisely spaces of non-positive curvature in the sense of Alexandrov (CAT(0)).
+%\end{example}
+%
+%\onslide<+->
+%\begin{example}
+%$p$-barycentric Banach spaces are precisely the $p$-convex Banach spaces.
+%\end{example}
+
+\onslide<+->
+The class of barycentric spaces is much richer\ldots
+\end{frame}
+
+\begin{frame}{CAT(0): Non-positive curvature}
+
+Geodesic metric spaces with the property:
+
+\medskip
+\begin{center}
+\includegraphics<+>[page=1]{cat0}
+\includegraphics<+>[page=2]{cat0}
+\includegraphics<+>[page=3]{cat0}
+\includegraphics<+>[page=4]{cat0}
+\includegraphics<+>[page=5]{cat0}
+\includegraphics<+>[page=6]{cat0}
+\includegraphics<+>[page=7]{cat0}
+\includegraphics<+>[page=8]{cat0}
+\includegraphics<+>[page=9]{cat0}
+\includegraphics<+>[page=10]{cat0}
+\includegraphics<+>[page=11]{cat0}
+\includegraphics<+->[page=12]{cat0}
+\end{center}
+\end{frame}
+
+\begin{frame}{CAT(0) are 2-barycentric w/ const 1}
+\alert{Claim:} \(
+ \rho(\cm(U),x)^2+ 1^{-2} \Avg_\mu \rho(U,\cm(U))^2 \le \Avg_\mu\rho(U,x)^2.
+\)
+
+\begin{center}
+\includegraphics<1>[page=2]{cat0-barycentric}
+\includegraphics<2>[page=3]{cat0-barycentric}
+\includegraphics<3>[page=4]{cat0-barycentric}
+\includegraphics<4>[page=5]{cat0-barycentric}
+\includegraphics<5->[page=6]{cat0-barycentric}
+\end{center}
+\onslide<1->
+\begin{multline*} \onslide<4->{\color{red}\rho(\cm(U),x)^2+ 1^{-2} \Avg_\mu \rho(U,\cm(U))^2} {\color{black}\le}  
+\onslide<3,4>{\color{green}\|\cm(U)-x\|_2^2+  \Avg_\mu \|U-\cm(U)\|_2^2} \\
+=
+ \onslide<3>{\color{blue}\Avg_\mu\|U-x\|_2^2}  {\color{black}=} \onslide<3,5->{\color{blue}\Avg_\mu\rho(U,x)^2}.
+\end{multline*}
+
+\end{frame}
+
+\begin{frame}{Uniform Convex Banach Spaces}
+\begin{center}
+\includegraphics<+>[page=1]{uconvex}
+\includegraphics<+->[page=2]{uconvex}
+\end{center}
+\begin{definition}[Uniformly convex Banach space $X$]
+\( \forall \e>0\; \exists \delta>0\; \forall x,y\in X,\; \text{ if } \|x\|_X=\|y\|_X=1, 
+\text{ then } \|\frac{x+y}{2}\| \le 1-\delta. \)
+\end{definition}
+\onslide<3->
+\begin{theorem}[{[Pisier] $p$-convexity}]
+U. Convex space can be renormed s.t.  $\exists 2\le p<\infty$, and $K>0$
+\[ \forall x,y\in X,\; \left\|\frac{x+y}{2}\right\|^p + K^{-p} \left\|\frac{x-y}2 \right \|^p \le  \frac{\|x\|^p+\|y\|^p}2 \]
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Uniform Convex are $p$-barycentric for some $p<\infty$}
+\onslide<+->
+\begin{theorem}[{[Pisier] $p$-convexity}]
+U. Convex space can be renormed s.t.  $\exists 2\le p<\infty$, and $K>0$
+\[ \forall x,y\in X,\; \left\|\frac{x+y}{2}\right\|^p + K^{-p} \left\|\frac{x-y}2 \right \|^p \le  \frac{\|x\|^p+\|y\|^p}2 \]
+\end{theorem}
+
+\onslide<+->
+\begin{corollary}
+$\forall$ p.d. $U$,
+\( \|\Avg U \|^p + K^{-p} \Avg \|U-\Avg U\|^p \le \Avg \|U\|^p .\)
+\end{corollary}
+
+\onslide<+->
+This is the 2nd item of $p$-barycentric space
+\[
+ \rho(\cm(U),x)^p+ K^{-p} \Avg_\mu \rho(U,\cm(U))^p \le \Avg_\mu\rho(U,x)^p,
+\]
+where $\cm(U)=\Avg U$, and $x=0$ (translation invariance).
+
+\medskip
+\onslide<+->
+The 1st item follows from the convexity of the norm.
+\end{frame}
+
+
+\begin{frame}{The plan for barycentric spaces}
+
+\begin{enumerate}[<+->]
+\item Deduce Pisier's martingale inequality for barycentric spaces.
+\item The martingale inequality implies a strong form of Ball's metric Markov cotype inequality.
+\item Ball's metric Markov cotype inequality implies the decay of $g^{-1}$:\\ 
+Let $\mathcal B_t(G) =\tfrac{1}{t}\sum_{i=0}^{t-1} A_G^i$, then
+\[ g^{-1}(\mathcal B_t(G),\rho^p) \le C \max\{1,g^{-1}(G,\rho^p)/t \} .\]
+\item 
+This decay falls short of power of graph, 
+but it is good enough for the RVW construction since the degree is not much larger.
+
+%\item Side note:  A Lipschitz extension theorem from $L_p$ spaces, $p\ge 2$, to CAT(0) spaces.
+%Follows from the metric Markov cotype 2 property, and Ball's extension theorem.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Martingales in Barycentric Spaces}
+
+\onslide<1->{
+\begin{definition}[Martingale in $p$-barycentric space $(X,\rho)$]
+$(M_n)_n$: A seq' of $X$ valued variables of finite prob. space $(\Omega, \mathcal F, \mu)$, for which there is filterization $(\mathcal F_n))_n$
+of $\mathcal F$ such that
+\[ \cm\left (M_{n+1}| \mathcal F_n \right)=M_n .\]
+\end{definition}
+}
+
+\onslide<2->{
+\begin{example}[It is possible that $\cm(M_{n+2}| \mathcal F_n)\ne M_n$]
+\begin{center}
+\includegraphics<1-2>[page=1]{martingale-not}
+\includegraphics<3>[page=2]{martingale-not}
+\includegraphics<4>[page=3]{martingale-not}
+\includegraphics<5>[page=4]{martingale-not}
+\includegraphics<6>[page=5]{martingale-not}
+\includegraphics<7>[page=6]{martingale-not}
+\includegraphics<8>[page=7]{martingale-not}
+\includegraphics<9>[page=8]{martingale-not}
+\includegraphics<10>[page=9]{martingale-not}
+\includegraphics<11>[page=10]{martingale-not}
+\includegraphics<12>[page=11]{martingale-not}
+\includegraphics<13>[page=12]{martingale-not}
+\end{center}
+\end{example}
+}
+\end{frame}
+
+\begin{frame}{Pisier's Martingale Cotype Inequality}
+
+\onslide<+->
+\begin{proposition}
+Let $(M_n)_{n=0}^m$ be a martingale in $p$-barycentric space $(X,\rho)$, then
+\[ \sum_{i=0}^{m-1} \Avg \rho(M_i, M_{i+1})^p \le K^p \Avg \rho(M_m,M_0)^p .\]
+\end{proposition}
+\onslide<+->
+\begin{proof}
+Recall that \(
+ \rho(\cm(U),x)^p+ K^{-p} \Avg_\mu \rho(U,\cm(U))^p \le \Avg_\mu\rho(U,x)^p.
+\)
+
+Take $U=[M_{i+1}|\mathcal F_i]$, and $x=M_0$, and obtain
+\[ \rho(M_i,M_0)^p+ K^{-p} \Avg_\mu [\rho(M_{i+1},M_i)^p|\mathcal F_i] \le \Avg_\mu[\rho(M_{i+1},M_0)^p|\mathcal F_i]. \]
+
+Summing over $i$ and taking expectation over $\mathcal F$, we conclude observing the telescoping sum.
+\end{proof}
+\end{frame}
+
+\begin{frame}{Markov Cotype}
+
+\onslide<+->
+\begin{definition}[(metric) Markov cotype {[Ball]}]
+A metric space $(X,\rho)$ has Markov cotype $p$ w/ const $K>0$ 
+
+ $\forall n\times n \text{ symmetric stochastic matrix }A,$
+ \vskip -0.2in
+\begin{multline*}
+\  \forall x_1,\ldots x_n\in X, \ \forall \alpha\in (0,1),\ \exists y_1,\ldots, y_n\in X \\
+ \frac{\alpha}{1-\alpha} \sum_{i,j} A_{ij}\rho(y_i,y_j)^p+ 2\sum_i\rho(y_i,x_i)^p \le K^p\sum_{i,j}
+ \mathcal G_\alpha(A)_{i,j} \rho(x_i,x_j)^p, 
+ \end{multline*}
+ \vskip -0.2in
+ where  $\mathcal G_\alpha(A)=(1-\alpha)(I-\alpha A)^{-1}=(1-\alpha) \sum_{\ell=0}^\infty (\alpha A)^\ell $.
+\end{definition}
+
+\begin{overprint}
+\begin{itemize}
+\onslide*<2-3>{\item
+{[Ball]}: A Lipschitz mapping $f:S\to X$ can be extended
+to $Y\supset S$ provided that  $X$ has \alert{Markov cotype 2} and  $Y$ has a property called \alert{Markov type 2}.
+}
+\onslide*<3>{\item We use Markov cotype 2 to prove the decay of the PI const under $\mathcal G_\alpha$ operation.}
+
+\item<4-> Writing $\alpha\approx 1 -1/t$, \ 
+\( \mathcal G_\alpha(A)\approx \sum_{i={0}}^\infty e^{-i} A^{it} \frac{1}{t} \sum_{j=0}^{t-1} A^j .\)
+
+\item<5-> I don't see how to represent (or approx.) $\mathcal G_\alpha(A)$ as low deg. graph.
+
+
+\item<6->  If $A=A_G$, and $G$ is $(n,d)$ graph,  $\frac{1}{t} \sum_{j=0}^{t-1} A^j $ can be represented by
+$(n,td^t)$ graph, which is good enough. 
+\end{itemize}
+\end{overprint}
+\end{frame}
+
+\begin{frame}{Variant of the Markov Cotype}
+\onslide<+->
+\begin{definition}[Strong Markov cotype]
+A metric space $(X,\rho)$ has strong Markov cotype $p$ w/ const $K>0$ 
+
+ $\forall n\times n \text{ symmetric stochastic matrix }A,$
+ \vskip -0.2in
+\begin{multline*}
+  \forall x_1,\ldots x_n\in X, \ \forall t\in \mathbb N,\ \exists y_1,\ldots, y_n\in X \\
+ t \sum_{i,j} A_{ij}\rho(y_i,y_j)^p+ 2\sum_i\rho(y_i,x_i)^p \le K^p\sum_{i,j}
+ \mathcal B_t(A)_{i,j} \rho(x_i,x_j)^p, 
+ \end{multline*}
+ \vskip -0.2in
+ where  $\mathcal B_t(A)= \frac 1t \sum_{i=0}^{t-1} A^i $.
+\end{definition}
+
+Strengths:
+\begin{itemize}[<+->]
+\item Can be proved from martingale cotype.  Ball proves Markov cotype only for uniformly convex spaces.
+\item implies Markov cotype.
+\item Can be represented with relatively low degree graph:\\
+\( \mathcal B_t(G)= \bigcup_{i=0}^{t-1} d^{t-1-i} \times G^i . \)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Proof of `Strong Markov Cotype` in Barycentric Space}
+\begin{itemize}[<+->]
+\item Given: $n\times n$ matrix $A$, $t\in \mathbb N$, and $x_1,\ldots, x_n\in X$.
+\item Fix $\ell\in [n]$.
+\item Define  filterization $(\mathcal F_s)_{s=1}^t$.  $\mathcal F_s=[n]^s$,
+\[ \Pr\bigl[(i_0=\ell,i_1,\ldots, i_s)\bigr ]=\prod_{i=1}^s A_{i_{j-1} i_j}. \]
+\item Define martingale $(M_s)_{s=0}^t$. $M_t(\ell,i_1,\ldots, i_t)=x_{i_t}$,
+\[ M_s(i_0=\ell,i_1,\ldots, i_s)= \cm \Bigl( \sum_j A_{i_s,j}M^k_{s+1}(i_0=\ell,i_1,\ldots, i_s,j) \Bigr ) .\]
+\item Apply the martingale cotype ineq., and average over all $\ell$.
+\item Define $y_\ell=\cm\bigl (\tfrac{1}{t} \sum_{k=1}^t M_k(\ldots, \ell) \bigr)$. 
+\item Do 2 pages of (straightforward) calculations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Decay of of the PI Const}
+\onslide<+->
+\begin{proposition}
+If $(X,\rho)$ has Markov cotype $p$, then for any graph $G$, \\
+\(g(\mathcal B_t(G),\rho^p)^{-1} \le O(1) \cdot \max\{1,g(G,\rho^p)^{-1}/t\} .\)
+\end{proposition}
+\begin{proof}
+Rewriting the conclusion:
+
+$\forall n\times n$ matrix $A$, $\forall x_1,\ldots,x_n\in X$, and $\forall t\in \mathbb N$,
+$\exists y_1,\ldots, y_n\in X$ s.t.
+\[ \frac{\sum_{i,j} \mathcal B_t(A)_{i,j} \rho(x_i,x_j)^p}{n^{-1} \sum_{i,j} \rho(x_i,x_j)^p} \ge
+\Omega(1) \cdot \min \biggl \{1, \frac{ t\cdot \sum_{i,j}  A_{i,j} \rho(y_i,y_j)^p}{n^{-1} \sum_{i,j} \rho(y_i,y_j)^p} \biggr \}
+\]
+The numerators are close to the Markov cotype inequality ---
+
+\smallskip
+\begin{center}
+\(  K^p\sum_{i,j}
+ \mathcal B_t(A)_{i,j} \rho(x_i,x_j)^p \ge 
+t \text{$\sum_{i,j}$} A_{ij}\rho(y_i,y_j)^p+ 2\sum_i\rho(y_i,x_i)^p .\)
+\end{center}
+\smallskip
+
+The denominators discrepancy is mitigated by $\sum_i \rho(y_i,x_i)^p$.
+\end{proof}
+
+\end{frame}
+
+\begin{frame}{Wrapping up the decay of the PI Const}
+
+\begin{itemize}[<+->]
+\item In  CAT(0) and uniformly convex  the PI const decays linearly.
+\item The proof used a series of reductions: 
+\begin{multline*}
+ \text{CAT(0)/U. Convex} \longrightarrow \text{Barycentric space} \longrightarrow \text{Martingale cotype}\\
+ \longrightarrow \text{strong Markov cotype} \longrightarrow \text{Decay of PI const.}
+ \end{multline*}
+\item In the paper: the decay of the DC PI const --- $\tilde g(\mathcal B_t(G),\rho^p)$.
+\item Side benefit: Lipschitz extensions of functions from subset of $L_p$ or series/parallel graphs, into CAT(0) spaces.
+\item It will be more satisfying to have the decay for $G^t$,  instead of $\mathcal B_t(G)$.
+\item For RVW expanders both the hypothesis (barycentric) and the conclusion (\alert{linear} decay) may be too strong.
+\end{itemize}
+\end{frame}
+
+
+\section{Base graph in $B$-convex Banach spaces}
+
+\begin{frame}{Base Graph: An Introduction}
+The ``base graph" for $(X,\rho)$:
+\begin{itemize}
+\item A family of $(N,N^{1/ \log^{\delta}N})$ graphs $G_N$, where $\delta=\delta(X)>0$. 
+\item For each $G_N$, $g(G_N,\rho^p)^{-1}=O_{\rho,p}(1)$.
+\item The point: Assuming uniform decay, we can choose $N$ large enough, such that the degree is small enough compared to the size, allowing just high enough powers.
+\item The family of graphs will be based on (but different from) the Hamming cubes.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Hamming Cube in $L_2$}
+Let $C_n=(\{\pm 1\}^n,\; \{(x,y)\in X_n\times C_n:\; \|x-y\|_1=2\})$
+
+\begin{theorem}[Enflo]
+\[ \forall f:C_n \to L_2,\  \Avg_{x,y\in C_n}\|f(x)-f(y)\|_2^2 \le O({n}) \!\!\Avg_{(x,y)\in E(C_n)} \!\! \|f(x)- f(y)\|_2^2 .\]
+\end{theorem}
+\begin{proof}[Khot-Naor]
+For $A\subset [n]$, let $W_A:\{\pm 1\}^n \to \{\pm 1\}$, $W_A(x)=\prod_{i\in A} x_i$.
+Then
+\[ f=\sum_A \hat f(A) W_A, \qquad \text{where}, \qquad \hat f(A)= \Avg_{x\in C_n} f(x) W_A(x)  \in L_2. \]
+As we have seen, $\Avg_{x,y\in C_n}\|f(x)-f(y)\|_2^2\sim \Avg_x \|f(x)\|_2^2$, whereas
+\( \Avg_{(x,y)\in E(C_n)} \!\!\! \|f(x)- f(y)\|_2^2\sim (1-\lambda_2 \)
+\end{proof}
+\end{frame}
+
+\begin{frame}{Improving the PI for the Cube [Khot-Naor]}
+\begin{itemize}[<+->]
+\item Crucial observation I:
+If $f:C_n \to L_2$ is supported only on the eigenfunctions of low eigenvalues, then the PI const improves.
+
+\item Crucial Observation II:
+This happens when $f$ is const on $x+C^\bot$, and $C$ is code of large weight $w$. In this case, if $|A|<w$, then $\hat f(A)=0$.
+
+\item Hence: Take a linear code $D\subset \{\pm 1\}^n$, $\dim(D)=\Omega(n)$, and $w(D)=\Omega(n)$.
+Then $C_n/D^\bot$ is a graph with $2^{\Omega(n)}$ vertices, and whose (effective) degree is still $n$,
+and
+
+\begin{multline*} \forall f:C_n/D^\bot \to L_2,\\  
+\Avg_{x,y\in C_n}\|f(x)-f(y)\|_2^2 \le O({1}) \!\!\Avg_{(x,y)\in E(C_n)} \!\! \|f(x)- f(y)\|_2^2 .
+\end{multline*}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{The Laplacian}
+
+\end{frame}
+
+\begin{frame}{Bonami-Beckner Operator}
+
+\end{frame}
+
+\begin{frame}{Bounding the Laplacian via BB operator}
+
+\end{frame}
+
+\begin{frame}{Bounding BB on $K$-convex spaces}
+
+\end{frame}
+
+\begin{frame}{Near Miss?}
+
+\end{frame}
+
+\begin{frame}{``Noisy Cube''}
+
+\end{frame}
+
+
+\section{Discussion}
+
+\begin{frame}{Concrete Construction}
+
+Since uniformly convex Banach spaces are B-convex, we have
+all three ingredients for RVW expanders in uniformly convex Banach spaces.
+
+\onslide<+->
+\begin{theorem}
+There are RVW expanders w.r.t uniformly convex Banach spaces.
+\end{theorem}
+
+\onslide<+->
+For B-convex and CAT(0) spaces we have 2-out-3 ingredients. 
+\begin{question}
+\begin{itemize}
+\item Is there a base graph for CAT(0) spaces?
+\item Is there a uniform decay of the PI const in B-convex spaces?
+\end{itemize}
+\end{question}
+
+\end{frame}
+
+\begin{frame}{Open Problems}
+\onslide<+->
+We already asked:
+\begin{question}[Q1]
+Under what conditions on $(X,\rho)$, there exists $\alpha:[1,\infty)\to [1,\infty)$ such that
+$\forall G$,  $g(G,\rho)^{-1} \le \alpha(g(G)^{-1})$ ?
+\end{question}
+
+\begin{question}[Q2]
+Under what conditions on $(X,\rho)$ there exist $d\in \mathbb N$,  $g^{-1}\ge 1$, and a family of $d$-regular graphs
+$(G_n)$, with $g(G_n,\rho)^{-1}\le g^{-1}$ ?
+\end{question} 
+
+\onslide<+->
+\begin{question}
+If and when we have Q2 $\land$ $\lnot$ Q1:\\
+Can this stronger expansion property be used in other contexts?
+\end{question}
+
+\end{frame}
+
+
+\begin{frame}{Agenda}
+
+\onslide<+->
+Beyond those concrete questions. An agenda emerges:
+
+\begin{quote}
+``Calculus of non-linear spectral gaps"
+\end{quote}
+
+We feel that this subject may be a ground for a rich theory.
+
+\end{frame}
+
+\begin{frame}{My Pet Problem}
+\onslide<+->{
+(Far away) Goal:
+\begin{question}[Dichotomy]
+For any metric space $(X,\rho)$.
+Either 
+\begin{itemize}
+\item $c_X(M)=1$, $\forall$ finite $M$
+\item  $\exists (M_n)_n$, such that $|M_n|=n$, and $c_X(M_n)=\Omega(\log n)$.
+\end{itemize}
+\end{question}}
+\onslide<+->{
+We do know:
+\begin{theorem}[Weaker Dichotomy {[M.--Naor]}]
+For any metric space $(X,\rho)$.
+Either 
+\begin{itemize}
+\item $c_X(M)=1$, $\forall$ finite $M$
+\item  $\exists \beta>0$, $\exists (M_n)_n$, such that $|M_n|=n$, and $c_X(M_n)=\Omega(\log^\beta n)$.
+\end{itemize}
+\end{theorem}}
+
+\end{frame}
+
+\begin{frame}{The Dichotomy \& Expanders}
+\begin{itemize}[<+->]
+\item An  approach for proving the dichotomy: Given $(X,\rho)$, either
+\begin{enumerate}
+\item $X$ contains all finite spaces (``cotype $\infty$'').
+\item $X$ does not (``finite cotype''), and then contains a base graph.
+\end{enumerate}
+\item Then we also need general uniform  decay of the PI const .
+\item If those conditions are met: On the 2nd case we can construct an expander.
+\item This approach fails for general metric spaces. Example:  $\sqrt{\ell_\infty}$.
+\item It may be true for normed spaces. May be connected to open questions about metric cotype.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\vskip 0.7in
+
+\begin{center}
+
+{\Huge Thank You}
+\end{center}
+\end{frame}
+
+\end{document}
+
+

@@ -1,0 +1,264 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "open3"
+require "optparse"
+require "json"
+
+ROOT_DIR = File.expand_path("..", __dir__)
+BOOK_TEX = File.join(ROOT_DIR, "book.tex")
+
+class ChapterScorer
+  ChapterResult = Struct.new(
+    :dir,
+    :file,
+    :path,
+    :errors,
+    :warnings,
+    :success,
+    :exit_code,
+    :raw_output,
+    keyword_init: true
+  )
+
+  def initialize(options = {})
+    @options = options
+    @jobs = options[:jobs] || 4
+    @quiet = options[:quiet] || false
+    @json = options[:json] || false
+    @reverse = options[:reverse] || false
+    @target_patterns = options[:targets] || []
+  end
+
+  def run
+    chapters = collect_chapters
+    if chapters.empty?
+      warn "No chapters found matching target criteria."
+      exit 1
+    end
+
+    puts "Scoring #{chapters.size} chapters using #{@jobs} workers with 'l -score'...\n\n" unless @quiet || @json
+
+    results = execute_scoring(chapters)
+    sort_results!(results)
+
+    if @json
+      output_json(results)
+    else
+      output_table(results)
+    end
+
+    any_errors = results.any? { |r| !r.success || r.errors.positive? }
+    exit(any_errors ? 1 : 0)
+  end
+
+  private
+
+  def collect_chapters
+    all_chapters = []
+    return all_chapters unless File.exist?(BOOK_TEX)
+
+    File.foreach(BOOK_TEX) do |line|
+      if line =~ /\\InputChap\{([^}]+)\}\s*\{([^}]+)\}/
+        dir = Regexp.last_match(1).strip
+        file = Regexp.last_match(2).strip
+        all_chapters << { dir: dir, file: file, path: "#{dir}/#{file}" }
+      end
+    end
+
+    if @target_patterns.empty?
+      all_chapters
+    else
+      all_chapters.select do |chap|
+        @target_patterns.any? do |pat|
+          chap[:dir].include?(pat) || chap[:file].include?(pat) || chap[:path].include?(pat)
+        end
+      end
+    end
+  end
+
+  def execute_scoring(chapters)
+    results = []
+    mutex = Mutex.new
+    queue = Queue.new
+    chapters.each_with_index { |chap, idx| queue << [chap, idx] }
+
+    workers = Array.new(@jobs) do
+      Thread.new do
+        until queue.empty?
+          begin
+            chap, idx = queue.pop(true)
+          rescue ThreadError
+            break
+          end
+
+          res = score_chapter(chap)
+          mutex.synchronize do
+            results << res
+            print_progress(res, idx + 1, chapters.size) unless @quiet || @json
+          end
+        end
+      end
+    end
+
+    workers.each(&:join)
+    results
+  end
+
+  def score_chapter(chap)
+    chap_dir = File.join(ROOT_DIR, chap[:dir])
+    tex_path = File.join(chap_dir, chap[:file])
+
+    unless Dir.exist?(chap_dir) && File.exist?(tex_path)
+      return ChapterResult.new(
+        dir: chap[:dir],
+        file: chap[:file],
+        path: chap[:path],
+        errors: 999,
+        warnings: 999,
+        success: false,
+        exit_code: 1,
+        raw_output: "File or directory not found"
+      )
+    end
+
+    cmd = ["l", "-score", chap[:file]]
+    stdout, stderr, status = Open3.capture3(*cmd, chdir: chap_dir)
+    combined = "#{stdout}\n#{stderr}".strip
+
+    errors = 0
+    warnings = 0
+    matched = false
+
+    # Standard l -score output format: "Errors: X, Warnings: Y"
+    if combined =~ /Errors:\s*(\d+),\s*Warnings:\s*(\d+)/i
+      errors = Regexp.last_match(1).to_i
+      warnings = Regexp.last_match(2).to_i
+      matched = true
+    end
+
+    ChapterResult.new(
+      dir: chap[:dir],
+      file: chap[:file],
+      path: chap[:path],
+      errors: matched ? errors : 999,
+      warnings: matched ? warnings : 999,
+      success: matched && errors.zero? && status.success?,
+      exit_code: status.exitstatus,
+      raw_output: combined
+    )
+  end
+
+  def print_progress(res, current, total)
+    err_str = res.errors.zero? ? "0 errors" : "#{res.errors} ERRORS"
+    warn_str = "#{res.warnings} warnings"
+    status_label = res.success ? "PASS" : "FAIL"
+    printf("[%2d/%2d] %-42s ... %s (%s, %s)\n", current, total, res.path, status_label, err_str, warn_str)
+  end
+
+  def sort_results!(results)
+    results.sort_by! do |r|
+      multiplier = @reverse ? -1 : 1
+      [multiplier * r.errors, multiplier * r.warnings, r.path]
+    end
+  end
+
+  def output_table(results)
+    puts "\n"
+    puts "=" * 80
+    sort_dir = @reverse ? "Errors ↓, Warnings ↓" : "Errors ↑, Warnings ↑"
+    puts " LaTeX Chapter Score Report (Sorted by #{sort_dir})"
+    puts "=" * 80
+    printf(" %-5s  %-44s  %7s  %9s  %-8s\n", "Rank", "Chapter", "Errors", "Warnings", "Status")
+    puts "-" * 80
+
+    results.each_with_index do |r, idx|
+      status_desc = if !r.success && r.errors == 999
+                      "ERROR"
+                    elsif r.errors.positive?
+                      "ERRORS"
+                    else
+                      "OK"
+                    end
+
+      printf(
+        " %4d.  %-44s  %7d  %9d  %-8s\n",
+        idx + 1,
+        r.path,
+        r.errors,
+        r.warnings,
+        status_desc
+      )
+    end
+
+    puts "=" * 80
+    total_chapters = results.size
+    zero_err_count = results.count { |r| r.errors.zero? }
+    total_errors = results.sum(&:errors)
+    total_warnings = results.sum(&:warnings)
+
+    puts format(
+      "Total Chapters: %d | Clean (0 Errors): %d | Total Errors: %d | Total Warnings: %d",
+      total_chapters,
+      zero_err_count,
+      total_errors,
+      total_warnings
+    )
+    puts "=" * 80
+  end
+
+  def output_json(results)
+    payload = results.map do |r|
+      {
+        path: r.path,
+        dir: r.dir,
+        file: r.file,
+        errors: r.errors,
+        warnings: r.warnings,
+        success: r.success,
+        exit_code: r.exit_code
+      }
+    end
+    puts JSON.pretty_generate(payload)
+  end
+end
+
+def main
+  options = {
+    jobs: 4,
+    quiet: false,
+    json: false,
+    reverse: false,
+    targets: []
+  }
+
+  OptionParser.new do |opts|
+    opts.banner = "Usage: tools/score [options] [chapter_filter...]"
+
+    opts.on("-j", "--jobs N", Integer, "Number of parallel jobs (default: 4)") do |v|
+      options[:jobs] = v
+    end
+
+    opts.on("-r", "--reverse", "Sort in descending order (highest errors/warnings first)") do
+      options[:reverse] = true
+    end
+
+    opts.on("-q", "--quiet", "Suppress per-chapter progress output") do
+      options[:quiet] = true
+    end
+
+    opts.on("--json", "Output results in JSON format") do
+      options[:json] = true
+    end
+
+    opts.on("-h", "--help", "Show this help message") do
+      puts opts
+      exit 0
+    end
+  end.parse!
+
+  options[:targets] = ARGV.dup
+  ChapterScorer.new(options).run
+end
+
+main if __FILE__ == $PROGRAM_NAME

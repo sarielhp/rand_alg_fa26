@@ -1,0 +1,598 @@
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+
+\Chapter{Expanders II}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteExt{Be that as it may, it is to night school that I owe what
+   education I possess; I am the first to own that it doesn't amount
+   to much, though there is something rather grandiose about the gaps
+   in it.}{Gunter Grass}{The tin drum}
+
+
+
+\section{Bi-tension}
+
+Our construction of good expanders, would use the idea of composing
+graphs together. To this end, in our analysis, we will need the notion
+of bi-tension. Let $\DEdges(\Graph)$ be the set of \emph{directed}
+edges of $\Graph$; that is, every edge $xy \in E(\Graph)$ appears
+twice as $\dirEdge{x}{y}$ and $\dirEdge{y}{x}$ in $\DEdges$.
+
+\begin{defn}
+    For a graph $\Graph$, let $\BiDialX{\Graph}$ denote the
+    \emphi{bi-tension} of $\Graph$; that is, the smallest constant,
+    such that for any two function $f,g :V(\Graph) \rightarrow \Re$,
+    we have that
+    \begin{align}
+        \ExExt{x,y \in V}{\cardin{f(x)- g(y)}^2} \leq
+        \BiDialX{\Graph} \ExExt{ \dirEdge{x}{y} \in \DEdges\;
+        }{\cardin{f(x)- g(y)}^2}.
+        \eqlab{b:i:tension}
+    \end{align}
+\end{defn}
+
+
+
+The proof of the following lemma is similar to the proof of
+\lemref{expansion}. The proof is provided for the sake of
+completeness, but there is little new in it.
+
+\begin{fragment}{\deflabel{b_i_expansion}}
+\begin{lemma}
+    Let $\Graph=(V,E)$ be a connected $d$-regular graph with $n$
+    vertices. Then $\ds \BiDialX{\Graph} = \frac{1}{1-\EVal}\,$, where
+    $\EVal = \EVal(\Graph)$, where $\EVal(\Graph) = \max\pth{\TEV{2},
+       -\TEV{n} }$, where $\TEV{i}$ is the $i$th largest eigenvalue of
+    the random walk matrix associated with $\Graph$.
+
+    \lemlab{b:i:expansion}
+\end{lemma}
+\end{fragment}
+
+\begin{proof}
+    We can assume that $\Ex{f(x)}=0$. As such, we have that
+    \begin{align}
+        \eqlab{reduction:2} &\hspace{-1cm} \ExExt{x,y \in
+           V}{\cardin{f(x)- g(y)}^2} =%
+        \ExExt{x,y \in V}{\pth[]{f(x)}^2} -2 \ExExt{x,y \in V}{ f(x)
+           g(y)} + \ExExt{y \in V}{\pth[]{g(y)}^2} =%
+        \ExExt{x,y \in V}{\pth[]{f(x)}^2} + \ExExt{y \in
+           V}{\pth[]{g(y)}^2}.
+    \end{align}
+
+    Let $\TMtrx$ be the matrix associated with the random walk on
+    $\Graph$ (each entry is either zero or $1/d$), we have
+    \begin{align*}
+        \rho = \ExExt{\dirEdge{x}{y} \in \DEdges\;}{
+           \cardin{f(x)-g(y)}^2 } & = \frac{1}{nd}
+        \sum_{\dirEdge{x}{y} \in \DEdges\;}\pth{ f(x) -g(y) }^2 =
+        \frac{1}{n} \sum_{x,y \in V} \TMtrx_{xy} \pth{f(x) - g(y)}^2\\
+        &= \frac{1}{n}\sum_{x\in V} \pth{\pth{f(x)}^2 +\pth{ g(x)}^2}
+        - \frac{2}{n} \sum_{x,y \in V} \TMtrx_{xy} f(x)g(y).
+    \end{align*}
+    Let $\Basis(\TMtrx)= \permut{v_1,\ldots, v_n}$ be the orthonormal
+    eigenvector basis defined by $\TMtrx$ (see
+    \defref{orthonormal:basis}), with eigenvalues $\TEV{1}
+    \geq \TEV{2} \geq \cdots \geq \TEV{n}$, respectively. Write
+    $f=\sum_{i=1}^n \alpha_i v_i$ and $g=\sum_{i=1}^n \beta_i
+    v_i$. Since $\Ex{f(x)} = 0$, we have that $\alpha_1 = 0$. Now,
+    $\TMtrx_{xy}= \TMtrx_{yx}$, and we have
+    \begin{align*}
+        \sum_{x,y \in V} \TMtrx_{xy} f(x) g(y) &= \sum_{x,y \in V}
+        \TMtrx_{yx} \pth{\sum_{i} \alpha_iv_i(x)} \pth{\sum_{j}
+           \beta_jv_j(y)} = \sum_{i,j} \alpha_i \beta_j \sum_{y\in V}
+        v_j(y) \sum_{x \in V} \TMtrx_{yx} v_i(x) %
+        \\ & =%
+        \sum_{i,j} \alpha_i \beta_j \sum_{y\in V} v_j(y) \pth{\TEV{i}
+           v_i \pth{y} \MakeBig} =%
+        \sum_{i,j} \alpha_i \beta_j \TEV{i} \DotProd{v_j}{v_i}
+        %
+        =%
+        \sum_{i=2}^n \alpha_i \beta_i \TEV{i} \sum_{y\in
+           V}\pth{v_i(y)}^2 \\%
+        &\leq %
+        \EVal \sum_{i=2}^n \frac{\alpha_i^2 + \beta_i^2}{2}\sum_{y\in
+           V}\pth{v_i(y)}^2 \leq \frac{\EVal}{2} \sum_{i=1}^n
+        \sum_{y\in V}\pth{ \pth{\alpha_iv_i(y)}^2 +
+           \pth{\beta_iv_i(y)}^2 }\\
+        %
+        &=%
+        \frac{\EVal}{2} \sum_{y\in V} \pth{ \pth{f(y)}^2 + \pth{g(y)}^2
+        }
+    \end{align*}
+    As such,
+    \begin{align*}
+        \ExExt{\dirEdge{x}{y} \in \DEdges\;}{ \cardin{f(x)-g(y)}^2 }
+        &= \frac{1}{nd}\sum_{\dirEdge{x}{y} \in \DEdges\;}
+        \cardin{f(x)-g(y)}^2 
+        %
+        = \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} -
+        \frac{1}{n} \sum_{x,y \in V} \frac{2 f(x)g(y)}{d}\\
+        &= \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} -
+        \frac{2}{n} \sum_{x,y \in V} \TMtrx_{xy} f(x)g(y)\\
+        & \geq \pth{ \frac{1}{n}- \frac{2}{n} \cdot \frac{\EVal}{2} }
+        \sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} =
+        \pth{1-\EVal} \pth{ \ExExt{y \in V}{\pth[]{f(y)}^2} +
+           \ExExt{y \in V}{\pth[]{g(y)}^2} }\\
+        &=%
+        \pth{1-\EVal} \ExExt{x,y \in V}{\cardin{f(x)- g(y)}^2},
+    \end{align*}
+    by \Eqref{reduction:2}.  This implies that $\BiDialX{\Graph} \leq
+    {1}/\pth[]{1-\EVal\,}$. Again, by trying either $f=g= v_2$ or $f =
+    v_n$ and $g= -v_n$, we get that the inequality above holds with
+    equality, which implies $\displaystyle \BiDialX{\Graph} \geq {1} /
+    \pth[]{1-\EVal\,}$. Together, the claim now follows.
+\end{proof}
+
+
+
+
+\section{Explicit construction}
+
+
+
+For a set $U \subseteq V$ of vertices, its \emphi{characteristic
+   vector}, denoted by $x = \ChartX{U}$, is the $n$ dimensional
+vector, where $x_i = 1$ if and only if $i \in U$.
+
+
+%\medskip
+The following is an easy consequence of \lemref{multiplicity:e:v:d}.
+
+\begin{lemma}
+    For a $d$-regular graph $\Graph$ the vector $\OneVec{n} = \pth{1,
+       1, \ldots, 1}$ is the only eigenvector with eigenvalue $d$ (of
+    the adjacency matrix $\Mtrx\pth{\Graph}$, if and only if $\Graph$
+    is connected. Furthermore, we have $\cardin{\lambda_i} \leq d$,
+    for all $i$.
+\end{lemma} 
+% \begin{proof}
+%     Let $U$ be the set of vertices of one of the connected components
+%     of $\Graph$, and let $\chi_U$ be \emphi{characteristic vector} of
+%     $U$; that is, $\chi_i = 1$ if and only if $i \in U$. Clearly,
+%     $\chi_U \Mtrx = d\chi_U$, which implies that $\chi_u$ is an
+%     eigenvector of $\Graph$ with eigenvalue $d$. Thus, every connected
+%     component of $\Graph$ give rise to one (distinct) eigenvector with
+%     eigenvalue $d$. As such, if $\Graph$ has only $\OneVec{n}$ with
+%     eigenvalue $d$, then it must be that $\Graph$ is connected, as all
+%     its vertices form a single connected component.
+% \end{proof}
+
+\medskip
+
+Our main interest would be in the second largest
+eigenvalue of $\Mtrx$. Formally, let
+\[
+\lambda_2(\Graph) = \max_{x \bot \OneVec{n}, x \ne 0}
+\cardin{\frac{\DotProd{x \Mtrx}{x}}{\DotProd{x}{x}}}.
+\]
+
+%\medskip
+
+\remove{
+\begin{theorem}
+    Let $\Graph$ be a $\delta$-expander with adjacency matrix $\Mtrx$
+    and let $\lambda_2 = \lambda_2(\Graph)$ be the second-largest
+    eigenvalue of $\Mtrx$. Then 
+    \[
+    \frac{1}{2} \pth{1- \frac{\lambda_2}{d}} \leq \delta.
+    \]
+\end{theorem}
+
+\begin{proof}
+    Let $S$ be any subset of $V$, and observe, that $\ChartX{S}\Mtrx$
+    is a vector where the $j$th entry is the number of edges from the
+    set $S$ entering the vertex $j$. As such, we have that for any $S
+    \subseteq V$, it holds $\DotProd{\ChartX{S}\Mtrx}{\ChartX{S}} =
+    2e(S) = 2e(S,S)$, as every edge is being counted twice. Similarly,
+    $\DotProd{\ChartX{S}\Mtrx}{ \ChartX{\overline{S}}} =e
+    \pth{S,\overline{S}}$.
+    
+    So, let $x = \cardin{\overline{S}}\ChartX{S} -
+    \cardin{S}\ChartX{\overline{S}}$, and observe that 
+    \[
+    \DotProd{x}{\OneVec{n} } =
+    \cardin{\overline{S}}\DotProd{\ChartX{S}}{\OneVec{n}} -
+    \cardin{S}\DotProd{\ChartX{\overline{S}}}{\OneVec{n}} =
+    \cardin{\overline{S}}\cdot\cardin{S} -
+    \cardin{S}\cdot\cardin{\overline{S}} = 0.
+    \]
+    Now,
+    \begin{align*}
+        \DotProd{x}{x}
+        % 
+        &=%
+        \DotProd{\cardin{\overline{S}}\ChartX{S} -
+           \cardin{S}\ChartX{\overline{S}}\;}{\cardin{\overline{S}}\ChartX{S}
+           - \cardin{S}\ChartX{\overline{S}}} =%
+        \cardin{\overline{S}}^2 \DotProd{\ChartX{S}}{\ChartX{S}} - 2
+        \cardin{S}\cdot \cardin{\overline{S}}
+        \DotProd{\ChartX{S}}{\ChartX{\overline{S}}} + \cardin{S}^2
+        \DotProd{\ChartX{\overline{S}}}{\ChartX{\overline{S}}}\\
+        &=%
+        \cardin{\overline{S}}^2 \cardin{S} +
+        \cardin{S}^2\cardin{\overline{S}} = \pth{ \cardin{S} +
+           \cardin{\overline{S}}} \cardin{S} \cdot
+        \cardin{\overline{S}} .
+    \end{align*}
+    Similarly, setting we have
+    \begin{align*}
+        \DotProd{ x \Mtrx}{x}
+        % 
+        &=%
+        \DotProd{\cardin{\overline{S}}\ChartX{S}\Mtrx -
+           \cardin{S}\ChartX{\overline{S}}
+           \Mtrx\;}{\cardin{\overline{S}}\ChartX{S} -
+           \cardin{S}\ChartX{\overline{S}}} \\%
+        &=%        
+        \cardin{\overline{S}}^2 \DotProd{\ChartX{S} \Mtrx}{\ChartX{S}}
+        - 
+         \cardin{\overline{S}} \cdot \cardin{S}
+        \DotProd{\ChartX{S} \Mtrx}{\ChartX{\overline{S}}} 
+        - 
+        \cardin{S} \cdot \cardin{\overline{S}} 
+        \DotProd{\ChartX{\overline{S}} \Mtrx}{\ChartX{S}} 
+        + \cardin{S}^2
+        \DotProd{\ChartX{\overline{S}}\Mtrx}{\ChartX{\overline{S}}}\\
+        &=%        
+        \cardin{\overline{S}}^2 2e(S)
+        - 
+         \cardin{\overline{S}} \cdot \cardin{S}
+         e\pth{S, \overline{S}}
+%        \DotProd{\ChartX{S} \Mtrx}{\ChartX{\overline{S}}} 
+        - 
+        \cardin{S} \cdot \cardin{\overline{S}} 
+         e\pth{\overline{S}, S }
+        + \cardin{S}^2 2 e \pth{\overline{S}}\\
+        &=%
+        2 \pth{ 
+        \cardin{\overline{S}}^2 e(S)
+        - 
+        \cardin{S} \cdot \cardin{\overline{S}} 
+         e\pth{S,\overline{S} }
+        + \cardin{S}^2  e \pth{\overline{S}}
+        }.
+    \end{align*}
+    Now, $\Graph$ is $d$-regular, and as such, we have $e(S) = \pth{d
+       \cardin{S} - e\pth{S, \overline{S}}}/2$.  and
+    $e\pth{\overline{S}} = \pth{d \cardin{\overline{S}} -
+       e\pth{\overline{S}, S}}/2$. Thus, we have
+    \begin{align*}
+        \DotProd{ x \Mtrx}{x} %
+        &=%
+        2 \pth{ \cardin{\overline{S}}^2 e(S) - \cardin{S} \cdot
+           \cardin{\overline{S}} e\pth{S,\overline{S} }
+           + \cardin{S}^2  e \pth{\overline{S}}}\\
+        &=%
+        \cardin{\overline{S}}^2 \pth{d \cardin{S} - e\pth{S,
+              \overline{S}}} - 2 \cardin{S} \cdot
+        \cardin{\overline{S}} e\pth{S,\overline{S} } + \cardin{S}^2
+        \pth{d \cardin{\overline{S}} -
+           e\pth{\overline{S}, S}}\\
+        &= d \cardin{S} \cardin{\overline{S}} \pth{ \cardin{S} +
+           \cardin{\overline{S}}} - \pth[]{ \cardin{S} +
+           \cardin{\overline{S}}}^2 
+        e\pth{S, \overline{S}}.
+    \end{align*}
+
+
+    As such, we have
+   \[
+   \lambda_2 \pth{ \cardin{S} + \cardin{\overline{S}}} \cardin{S}
+   \cdot \cardin{\overline{S}} = \lambda_2 \DotProd{x}{x} \; \geq \;
+   \DotProd{x \Mtrx}{x} = d \cardin{S} \cardin{\overline{S}} \pth{
+      \cardin{S} + \cardin{\overline{S}}} - \pth[]{ \cardin{S} +
+      \cardin{\overline{S}}}^2 e\pth{S, \overline{S}}.
+   \]
+   Reordering, we have $\displaystyle \lambda_2 \cardin{S}
+   \cardin{\overline{S}} \geq d \cardin{S} \cardin{\overline{S}} -
+   \pth[]{ \cardin{S} + \cardin{\overline{S}}} e\pth{S,
+      \overline{S}}$. Since $\cardin{S} \leq n/2$, we have that
+   \[
+   e\pth{S, \overline{S}} \geq \pth{d -\lambda_2} \frac{\cardin{S}
+      \cardin{\overline{S}}}{ \cardin{S} + \cardin{\overline{S}}} \geq
+   \pth{d -\lambda_2} \frac{\cardin{S}(n/2)}{n}
+   = \frac{d -\lambda_2}{2d} d \cardin{S}.
+   \]
+   This implies that $\Graph$ is a $\delta$-expander, where 
+   $\delta \geq  \pth{1 -\lambda_2/d}/2$, see 
+   \Eqref{expand}.    
+\end{proof}
+}
+
+We state the following result but do not prove it since we do not need
+it for our nafarious purposes (however, we did prove the left side of
+the inequality).
+\begin{theorem}
+    Let $\Graph$ be a $\delta$-expander with adjacency matrix $\Mtrx$
+    and let $\lambda_2 = \lambda_2(\Graph)$ be the second-largest
+    eigenvalue of $\Mtrx$. Then 
+    \[
+    \frac{1}{2} \pth{1- \frac{\lambda_2}{d}} \leq \delta\leq
+    \sqrt{2\pth{1 - \frac{\lambda_2}{d}}}.
+    \]
+\end{theorem}
+
+What the above theorem says, is that the expansion of a
+\Expander{n}{d}{\delta} is a function of how far is its second
+eigenvalue (i.e., $\lambda_2$) from its first eigenvalue (i.e.,
+$d$). This is usually referred to as the \emphi{spectral gap}.
+
+We will start by explicitly constructing an expander that has ``many''
+edges, and then we will show to reduce its degree till it become a
+constant degree expander.
+
+
+
+\subsection{Explicit construction of a small expander}
+
+\subsubsection{A quicky reminder of fields}
+
+A \emphi{field} is a set $\Field$ together with two operations, called
+addition and multiplication, and denoted by $+$ and $\cdot$,
+respectively, such that the following axioms hold:
+\begin{compactenumi}
+    \item Closure: $\forall x,y \in \Field$, we have $x+y \in \Field$
+    and $x\cdot y \in \Field$.
+
+    \item Associativity: $\forall x,y,z \in \Field$, we have $x+(y+z)
+    = (x+y)+z$ and $(x \cdot y ) \cdot z =x \cdot (y\cdot z)$.
+
+    \item Commutativity: $\forall x,y \in \Field$, we have $x+y = y+x$
+    and $x\cdot y = y\cdot x$.
+
+    \item Identity: There exists two distinct special elements $0,1
+    \in \Field$. We have that $\forall x \in \Field$ it holds $x+0 =
+    a$ and $x\cdot 1 = x$.
+
+    \item Inverse: There exists two distinct special elements $0,1
+    \in \Field$, and we have that $\forall x \in \Field$ there exists an
+    element $-x \in \Field$, such that $x+ (-x)=0$.
+
+    Similarly, $\forall x \in \Field$, $x \ne 0$, there exists an
+    element $y= x^{-1} = 1/x \in \Field$ such that $x \cdot y = 1$.
+
+    \item Distributivity: $\forall x,y,z \in \Field$ we have
+    $x\cdot(y+z) = x\cdot y + x\cdot z$.
+\end{compactenumi}
+
+
+Let $q = 2^t$, and $r>0$ be an integer. Consider the finite field
+$\Field_{q}$. It is the field of polynomials of degree at most $t-1$,
+where the coefficients are over $\mathbb{Z}_2$ (i.e., all calculations
+are done modulus 2).  Formally, consider the polynomial 
+\[
+p(x) = x^t + x +1.
+\]
+It it irreducible over $\Field_2 =\brc{0,1}$ (i.e., $p(0) = p(1) \ne
+0$). We can now do polynomial arithmetic over polynomials (with
+coefficients from $\Field_2$), where we do the calculations modulus
+$p(x)$. Note, that any irreducible polynomial of degree $n$ yields the
+same field up to isomorphism. Intuitively, we are introducing the $n$
+distinct roots of $p(x)$ into $\Field$ by creating an extension field
+of $\Field$ with those roots.
+
+
+An element of $\Field_q=\Field_{2^t}$ can be interpreted as a binary
+string $b = b_0b_1\ldots,b_{t-1}$ of length $t$, where the
+corresponding polynomial is 
+\[
+\mathrm{poly}(b) =\sum_{i=0}^{t-1}
+b_i x^i.
+\]
+The nice property of $\Field_q$ is that addition can be interpreted as
+a {\ttfamily x{o}r} operation. That is, for any $x,y \in \Field_q$, we have
+that $x+y+y = x$ and $x-y -y = x$. The key properties of $\Field_q$ we
+need is that multiplications and addition can be computed in it in
+polynomial time in $t$, and it is a field (i.e., each non-zero element
+has a unique inverse).
+
+\paragraph{Computing multiplication in $\Field_q$.} Consider two
+elements $\alpha, \beta \in \Field_q$. Multiply the two polynomials
+$\mathrm{poly}(\alpha)$ by $\mathrm{poly}(\beta)$, let
+$\mathrm{poly}(\gamma)$ be the resulting polynomial (of degree at most
+$2t-2$), and compute the remainder $\mathrm{poly}(\beta)$ when
+dividing it by the irreducible polynomial $p(x)$. For this remainder
+polynomial, normalize the coefficients by computing their modules base
+$2$. The resulting polynomial is the product of $\alpha$ and $\beta$.
+
+\bigskip
+
+
+For more details on this field, see any standard text on abstract
+algebra.
+
+
+\subsubsection{The construction}
+
+
+Let $q = 2^t$, and $r>0$ be an integer. Consider the linear space
+$\LSpace = \Field_q^{\,r}$.  Here, a member $\alpha =
+(\alpha_0,\ldots, \alpha_r) \in \LSpace$ can be thought of as being a
+string (of length $r+1$) over $\Field_q$, or alternatively, as a
+binary string of length $n=t(r+1)$.
+
+
+For $\alpha  = (\alpha_0,\ldots, \alpha_r) \in \LSpace$, and $x,y \in
+\Field_q$, define the operator
+\[
+\rho(\alpha,x,y) = \alpha + y \cdot\pth{ 1, x, x^2, \ldots, x^r} =
+\pth{\alpha_0 + y, \alpha_1 + y x, \alpha_2 + y x^2, \ldots, \alpha_r+
+   y x^r} \in \LSpace.
+\]
+Since addition over $\Field_q$ is equivalent to a x{o}r operation we
+have that 
+\begin{align*}
+    \rho\pth{\MakeBig \rho(\alpha,x,y), x, y} &= \pth{\alpha_0 + y +
+       y, \alpha_1 + y x + yx, \alpha_2 + y x^2+yx^2, \ldots,
+       \alpha_r+ y
+       x^r+yx^r}\\
+    &= \pth{\alpha_0, \alpha_1, \alpha_2, \ldots, \alpha_r} = \alpha.
+\end{align*}
+Furthermore, if $(x,y) \ne (x',y')$ then $\rho(\alpha,x,y) \ne
+\rho(\alpha,x',y')$.
+
+We now define a graph $\LD{q}{r}=\pth{\LSpace, E}$, where
+\[
+E= \brc{ \alpha \beta \sep{ \begin{array}{l}
+          \alpha \in \LSpace, x, y \in \Field_q\\
+          \beta = \rho(\alpha,x,y)
+          \end{array}}}
+\]
+Note, that this graph is well defined, as $\rho(\beta,x,y)
+=\alpha$. The degree of a vertex of $\LD{q}{r}$ is
+$\cardin{\Field_q}^2 = q^2$, and $\LD{q}{r}$ has $N = \cardin{\LSpace}
+= q^{r+1} = 2^{t(r+1)}=2^n$ vertices.
+
+\begin{fragment}{\deflabel{explicit}}
+\begin{theorem}
+    For any $t > 0, r>0$ and $q = 2^t$, where $r<q$, we have that
+    $\LD{q}{r}$ is a graph with $q^{r+1}$ vertices. Furthermore,
+    $\lambda_1\pth{\LD{q}{r}} = q^2$, and $\lambda_i\pth{\LD{q}{r}}
+    \leq rq$, for $i=2,\ldots, n$.
+
+    In particular, if $r \leq q/2$, then $\LD{q}{r}$ is a
+    \Expander{\MakeBig q^{r+1}}{q^2}{\frac{1}{4}}.
+
+    \thmlab{explicit}
+\end{theorem}
+\end{fragment}
+
+\begin{proof}
+    Let $\Mtrx$ be the $N \times N$ adjacency matrix of
+    $\LD{q}{r}$. Let $L:\Field_q \rightarrow \brc{0,1}$ be a linear
+    map which is onto. It is easy to verify that $\cardin{L^{-1}(0)} =
+    \cardin{L^{-1}(1)}$\footnote{Indeed, if $Z = L^{-1}(0)$, and $L(x)
+       = 1$, then $L(y)=1$, for all $y \in U = \brc{x+z \sep{z \in
+             Z}}$. Now, its clear that $\cardin{Z} = \cardin{U}$.}
+
+    We are interested in the eigenvalues of the matrix $\Mtrx$. To
+    this end, we consider vectors in $\Re^N$. The $i$th row an $i$th
+    column of $\Mtrx$ is associated with a unique element $b_i \in
+    \LSpace$. As such, for a vector $v \in \Re^N$, we denote by
+    $\Entry{v}{b_i}$ the $i$th coordinate of $v$. In particular, for
+    $\alpha =\pth{\alpha_0, \ldots, \alpha_r} \in \LSpace$, let
+    $v_\alpha\in \Re^N$ denote the vector, where its $\beta
+    =\pth{\beta_0, \ldots, \beta_r} \in \LSpace$ coordinate is
+    \[
+    \Entry{v_{\alpha}}{\beta} = \pth{-1}^{L\pth[]{\sum_{i=0}^r
+          \alpha_i\, \beta_i}}.
+    \]
+    Let $V = \brc{v_\alpha \sep{ \alpha \in \LSpace}}$. For $\alpha
+    \ne \alpha' \in V$, observe that
+    \[
+    \DotProd{v_{\alpha}}{v_{\alpha'}} = \sum_{\beta\in \LSpace}
+    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i\, \beta_i}} \cdot
+    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i'\, \beta_i}} =
+    \sum_{\beta\in \LSpace} \pth{-1}^{L\pth[]{\sum_{i=0}^r
+          \pth{\alpha_i+\alpha_i'}\, \beta_i}}
+    = \sum_{\beta \in \LSpace} \Entry{v_{\alpha+\alpha'}}{\beta}.
+    \]
+    So, consider $\psi=\alpha+\alpha' \ne 0$. Assume, for the
+    simplicity of exposition that all the  coordinates of $\psi$ are
+    non-zero. We have, by the linearity of $L$ that 
+    \[
+    \DotProd{v_{\alpha}}{v_{\alpha'}} = \sum_{\beta \in \LSpace}
+    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i\, \beta_i}} =
+    \sum_{\beta_0 \in \Field_q, \ldots, \beta_{r-1} \in \Field_q} \;\;
+    \pth{-1}^{L\pth[]{ \psi_0\, \beta_0 + \cdots +
+          \psi_{r-1}\,\beta_{r-1}}} \sum_{\beta_r \in \Field_q}
+    \pth{-1}^{L\pth[]{ \psi_r\, \beta_r}}.
+    \]
+    However, since $\psi_r \ne 0$, the quantity $\brc{\psi_r
+       \beta_r\sep{ \beta_r \in \Field_q}} = \Field_q$.  Thus, the
+    summation $\sum_{\beta_r \in \Field_q} \pth{-1}^{L\pth[]{ \psi_r\,
+          \beta_r}}$ gets $\cardin{L^{-1}(0)}$ terms that are $1$, and
+    $\cardin{L^{-1}(0)}$ terms that are $-1$. As such, this summation
+    is zero, implying that $\DotProd{v_{\alpha}}{v_{\alpha'}} =
+    0$. Namely, the vectors of $V$ are orthogonal.
+
+    Observe, that for $\alpha,\beta,\psi \in \LSpace$, we have
+    $\Entry{v_\alpha}{\beta + \psi} =\Entry{v_\alpha}{\beta}
+    \Entry{v_\alpha}{\psi}$. For $\alpha \in \LSpace$, consider the
+    vector $\Mtrx v_\alpha$. We have, for $\beta \in \LSpace$, that
+    \begin{align*}
+        \Entry{\pth{\Mtrx v_\alpha}}{\beta} = \sum_{\psi \in \LSpace}
+        \Mtrx_{\beta \psi} \cdot \Entry{v_\alpha}{\psi} %
+        &=%
+        \sum_{\substack{x,y\; \in\; \Field_q\\ \psi =\rho(\beta,x,y)}}
+        \Entry{v_\alpha}{\psi} =%
+        \sum_{x,y\; \in\; \Field_q}
+        \Entry{v_\alpha}{\beta+ y(1,x,\ldots, x^r)}\\
+        &=%
+        \pth{\sum_{x,y\; \in\; \Field_q}
+           \Entry{v_\alpha}{y(1,x,\ldots, x^r)}} \cdot
+        \Entry{v_\alpha}{\beta}.
+    \end{align*}
+    Thus, setting $\lambda(\alpha) = \sum_{x,y\; \in\; \Field_q}
+    \Entry{v_\alpha}{y(1,x,\ldots, x^r)} \in \Re$, we have that $\Mtrx
+    v_\alpha = \lambda(\alpha) \cdot v_\alpha$. Namely, $v_\alpha$ is
+    an eigenvector, with eigenvalue $\lambda(\alpha)$.
+
+    Let $p_\alpha(x) =\sum_{i=0}^r \alpha_i x^i$, and let
+    \begin{align*}
+         \lambda(\alpha)&= \sum_{x,y\; \in\; \Field_q}
+        \Entry{v_\alpha}{y(1,x,\ldots, x^r)} \in \Re %
+        = \sum_{x,y \in \Field_q} \pth{-1}^{L(y p_\alpha(x))}\\ %
+        &= \sum_{\substack{x,y \in \Field_q\\p_\alpha(x)=0}}
+        \pth{-1}^{L(y\; p_\alpha(x))} %
+        + \sum_{\substack{x,y \in \Field_q\\p_\alpha(x)\ne 0}}
+        \pth{-1}^{L(y\; p_\alpha(x))} .
+    \end{align*}
+    If $p_\alpha(x) = 0$ then $(-1)^{L(y\;p_\alpha(x))} = 1$, for all
+    $y$. As such, each such $x$ contributes $q$ to $\lambda(\alpha)$.
+
+    If $p_\alpha(x) \ne 0$ then $y\;p_\alpha(x)$ takes all the values
+    of $\Field_q$, and as such, $L(y\;p_\alpha(x))$ is $0$ for half of
+    these values, and $1$ for the other half. Implying that these kind
+    terms contribute $0$ to $\lambda(\alpha)$. But $p_\alpha(x)$ is a
+    polynomial of degree $r$, and as such there could be at most $r$
+    values of $x$ for which the first term is taken. As such, if
+    $\alpha \ne 0$ then $\lambda(\alpha) \leq rq$. If $\alpha = 0$
+    then $\lambda(\alpha)=q^2$, which implies the theorem.
+\end{proof}
+
+
+\bigskip
+
+This construction provides an expander with constant degree only if
+the number of vertices is a constant.  Indeed, if we want an expander
+with constant degree, we have to take $q$ to be as small as possible.
+We get the relation $n = q^{r+1}\leq q^{q}$, since $r \leq r$, which
+implies that $q = \Omega( \log n /\log \log n)$. Now, the expander of
+\thmref{explicit} is $q^2$-regular, which means that it is not going
+to provide us with a constant degree expander.
+
+However, we are going to use it as our building block in a
+construction that would start with this expander and would inflate it
+up to the desired size.
+
+
+
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{\deflabel{expansion_lemma}}
+   \IncFragment{\deflabel{m_expander}}
+   \IncFragment{\deflabel{orthonormal_basis_d}}
+}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

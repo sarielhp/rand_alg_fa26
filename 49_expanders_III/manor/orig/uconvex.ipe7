@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20080510075135" modified="D:20081019061312"/>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<view layers="alpha gamma" active="alpha"/>
+<view layers="alpha beta" active="beta"/>
+<path layer="alpha" stroke="black" pen="normal" matrix="0.667612 0.74451 -0.74451 0.667612 629.812 168.514">
+76.1834 823.089 m
+46.7958 0 0 -46.7958 82.9623 776.787 124.704 755.633 a
+</path>
+<path stroke="black" dash="dashed" pen="normal" matrix="0.667612 0.74451 -0.74451 0.667612 629.812 168.514" arrow="normal" rarrow="normal">
+87.5104 823.361 m
+129.688 774.231 l
+</path>
+<path stroke="black" dash="dashed" pen="normal" matrix="0.667612 0.74451 -0.74451 0.667612 629.812 168.514" arrow="tiny" rarrow="tiny">
+107.84 799.68 m
+118.7 806.997 l
+</path>
+<text stroke="black" matrix="0.667612 0.74451 -0.74451 0.667612 629.812 168.514" pos="90.3846 802.97" type="label" transformations="translations" valign="baseline" size="normal">$\forall \varepsilon&gt;0$</text>
+<text layer="gamma" stroke="black" matrix="0.667612 0.74451 -0.74451 0.667612 642.812 161.514" pos="135.355 798.828" type="label" transformations="translations" valign="baseline" size="normal">$\exists\delta=\delta(\varepsilon)$</text>
+<path layer="alpha" stroke="black" pen="normal" matrix="0.667612 0.74451 -0.74451 0.667612 629.812 168.514" arrow="small">
+137.206 781.969 m
+130.4 789.034
+122.236 788.069
+117.334 794.371
+114.645 800.604 s
+</path>
+<text layer="beta" stroke="black" matrix="0.667612 0.74451 -0.74451 0.667612 642.812 161.514" pos="135.355 798.828" type="label" transformations="translations" valign="baseline" size="normal">$\exists\delta=\Omega(\varepsilon^p)$</text>
+<path layer="alpha" stroke="black" pen="normal" fill="black">
+2.60522 0 0 2.60522 106.873 748.873 e
+</path>
+<path stroke="black" pen="normal" matrix="1 0 0 1 33.0975 33.0809" fill="black">
+2.60522 0 0 2.60522 106.873 748.873 e
+</path>
+<path stroke="black" pen="normal" matrix="1 0 0 1 -31.6384 34.4795" fill="black">
+2.60522 0 0 2.60522 106.873 748.873 e
+</path>
+<use name="mark/cross(sx)" pos="64 816" size="tiny" stroke="black" fill="black"/>
+<use name="mark/cross(sx)" pos="64 736" size="tiny" stroke="black" fill="black"/>
+<use name="mark/cross(sx)" pos="192 736" size="tiny" stroke="black" fill="black"/>
+<use name="mark/cross(sx)" pos="192 816" size="tiny" stroke="black" fill="black"/>
+</page>
+</ipe>

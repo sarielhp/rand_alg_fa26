@@ -1,0 +1,389 @@
+% -------------------------------------------------------- max_cut
+%
+% --------------------------------------------------------
+
+\ifx\bookMode\undefined \input{../prefix} \fi
+
+
+% \Part{Approximate Max Cut}
+\Chapter{Approximate Max Cut}
+
+\ChapterPrefix{} \ChapterGen{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We had encountered in the previous lecture examples of using rounding
+techniques for approximating discrete optimization problems. So far,
+we had seen such techniques when the relaxed optimization problem is a
+linear program. Interestingly, it is currently known how to solve
+optimization problems that are considerably more general than linear
+programs. Specifically, one can solve \emphi{convex programming}. Here
+the feasible region is convex. How to solve such an optimization
+problems is outside the scope of this course. It is however natural to
+ask what can be done if one assumes that one can solve such general
+continuous optimization problems exactly.
+
+In the following, we show that (optimization problem) max cut can be
+relaxed into a weird continuous optimization problem. Furthermore,
+this semi-definite program can be solved exactly efficiently. Maybe
+more surprisingly, we can round this continuous solution and get an
+improved approximation.
+
+\section{Problem Statement}
+
+
+
+\newcommand{\WeightChar}{\omega}%
+
+Given an undirected graph $\Graph = (\Vertices, \Edges)$ and
+nonnegative weights $\WeightChar_{ij}$, for all $ij \in \Edges$, the
+\emphi{maximum cut problem} (\ProblemC{MAX CUT}) is that of finding
+the set of vertices $S$ that maximizes the weight of the edges in the
+cut $\bigl( S, \overline{S} \bigr)$; that is, the weight of the edges
+with one endpoint in $S$ and the other in $\overline{S}$. For
+simplicity, we usually set $\WeightChar_{ij}= O$ for
+$ij \notin \Edges$ and denote the weight of a cut
+$\pth[]{S, \overline{S}}$ by
+$\displaystyle w\pth{S, \overline{S}} = \sum_{i \in S, j \in
+   \overline{S}} \WeightChar_{ij}$.
+
+This problem is \NPComplete, and hard to approximate within a certain
+constant.
+
+
+
+
+Given a graph with vertex set $\Vertices = \brc {1,\ldots, n}$ and
+nonnegative weights $\WeightChar_{ij}$, the weight of the maximum cut
+$w(S, \overline{S})$ is given by the following integer quadratic
+program:
+\begin{align*}
+  \text{(Q)~~~~~~~~~~~~~~~} \max \text{~~~ }
+  & \frac{1}{2}\sum_{i < j} \WeightChar_{ij}(1 - y_i y_j )\\
+  \text{ subject to: ~~~} & y_i \in \brc{-1,1} & \forall i \in
+                                                 \Vertices.
+\end{align*}
+Indeed, set $S = \brc{ i \sep{ y_i = 1 } }$. Clearly,
+$\WeightX{S, \smash{\overline{S}} \bigr.} = \frac{1}{2}\sum_{i < j}
+\WeightChar_{ij}(1 - y_i y_j )$.
+
+Solving quadratic integer programming is of course \NPHard. Thus, we
+will relax it, by thinking about the numbers $y_i$ as unit vectors in
+higher dimensional space. If so, the multiplication of the two
+vectors, is now replaced by dot product. We have:
+\begin{align*}
+  \text{(P)~~~~~~~~~~~~~~~} \max \text{~~~ } \gamma = & \frac{1}{2}\sum_{i <
+                                                        j} \WeightChar_{ij} \;\pth{1
+                                                        - \DotProd{v_i}{v_j} }\\
+  \text{ ~subject to: ~~~} & v_i \in \Sphere{n} & \forall i \in V,
+\end{align*}
+where $\Sphere{n}$ is the $n$ dimensional unit sphere in $\Re^{n+1}$.
+This is an instance of semi-definite programming, which is a special
+case of convex programming, which can be solved in polynomial time
+(solved here means approximated within a factor of $(1+\eps)$ of
+optimal, for any arbitrarily small $\eps > 0$, in polynomial
+time). Namely, the solver finds a feasible solution with a the target
+function being arbitrarily close to the optimal solution.  Observe
+that (P) is a relaxation of (Q), and as such the optimal solution of
+(P) has value larger than the optimal value of (Q).
+
+The intuition is that vectors that correspond to vertices that should
+be on one side of the cut, and vertices on the other sides, would have
+vectors which are faraway from each other in (P). Thus, we compute the
+optimal solution for (P), and we uniformly generate a random vector
+$\vecRand$ on the unit sphere $\Sphere{n}$. This induces a hyperplane
+$\hyperplane$ which passes through the origin and is orthogonal to
+$\vecRand$. We next assign all the vectors that are on one side of
+$\hyperplane$ to $S$, and the rest to $\overline{S}$.
+
+Summarizing, the algorithm is as follows: First, we solve (P), next,
+we pick a random vector $\vecRand$ uniformly on the unit sphere
+$\Sphere{n}$. Finally, we set
+\begin{equation*}
+    S = \Set{ v_i }{\! \DotProd{v_i}{\vecRand  } \geq 0 }.
+\end{equation*}
+
+
+
+\subsection{Analysis}
+
+% \begin{wrapfigure}{r}{5cm}
+% \end{wrapfigure}
+
+The intuition of the above rounding procedure, is that with good
+probability, vectors in the solution of (P) that have large angle
+between them would be separated by this cut.
+
+
+\newcommand{\SDotProd}[2]{\DotProd{\smash{#1}}{\smash{#2}}}%
+\newcommand{\sign}{\mathrm{sign}}
+
+\begin{lemma}
+    \lemlab{angle:cut}%
+    %
+    We have
+    \begin{math}
+        \displaystyle \Prob{%
+           \sign \bigl( \SDotProd{v_i}{\vecRand} \bigr)%
+           \neq%
+           \sign \bigl( \SDotProd{v_j}{\vecRand} \bigr)%
+           \bigr.  }%
+        =%
+        \frac{1}{\pi} \arccos \bigl( \SDotProd{v_i}{v_j} \bigr).
+    \end{math}
+\end{lemma}
+
+
+\SaveIndent%
+% \begin{minipage}{0.6\linewidth}
+
+%     \parpic[r]{\includegraphics[width=4cm]{\File{figs/angle}}}
+
+\noindent\begin{proofnoqed}
+    Let us think about the vectors $v_i, v_j$ and $\vecRand$ as being
+    in the plane.
+
+    \noindent%
+    \begin{minipage}{0.8\linewidth}
+        \RestoreIndent%
+        To see why this is a reasonable assumption, consider the plane
+        $g$ spanned by $v_i$ and $v_j$, and observe that for the
+        random events we consider, only the direction of $\vecRand$
+        matter, which can be decided by projecting $\vecRand$ on $g$,
+        and normalizing it to have length $1$. Now, the sphere is
+        symmetric, and as such, sampling $\vecRand$ randomly from
+        $\Sphere{n}$, projecting it down to $g$, and then normalizing
+        it, is equivalent to just choosing uniformly a vector from the
+        unit circle.
+        \end{minipage}%
+    \begin{minipage}{0.2\linewidth}
+        \hfill \includegraphics{\File{figs/n_angle}}
+    \end{minipage}%
+
+    \smallskip%
+    Now,
+    $\sign \pth{ \SDotProd{v_i}{\vecRand}} \neq \sign \pth{
+       \SDotProd{v_j}{\vecRand}}$ happens only if $\vecRand$ falls in
+    the double wedge formed by the lines perpendicular to $v_i$ and
+    $v_j$. The angle of this double wedge is exactly the angle between
+    $v_i$ and $v_j$. Now, since $v_i$ and $v_j$ are unit vectors, we
+    have $\SDotProd{v_i}{v_j} = \cos( \tau )$, where
+    $\tau = \angle v_i v_j$.
+
+    Thus,
+    \begin{equation*}
+        \Prob{\Bigl.%
+           \sign \bigl( \SDotProd{v_i}{\vecRand}\bigr)
+           \neq%
+           \sign \bigl( \SDotProd{v_j}{\vecRand} \bigr) %
+        }%
+        =%
+        \frac{2 \tau}{2\pi}%
+        =%
+        \frac{1}{\pi} \arccos \pth{\bigl.\SDotProd{v_i}{v_j} },        
+    \end{equation*}
+    as claimed.\hfill \myqedsymbol{}
+\end{proofnoqed}
+
+\begin{theorem}
+    Let $W$ be the random variable which is the weight of the cut
+    generated by the algorithm. We have
+    \[
+        \Ex{W} = \frac{1}{\pi}\sum_{i<j} \WeightChar_{ij} \arccos
+        \pth{\SDotProd{v_i}{v_j} }.
+    \]
+\end{theorem}
+
+\begin{proof}
+    Let $X_{ij}$ be an indicator variable which is $1$ if and only if
+    the edge $ij$ is in the cut. We have
+    \begin{equation*}
+        \Ex{X_{ij}}%
+        =%
+        \Prob{\Bigl.\sign \pth{ \SDotProd{v_i}{\vecRand\;}}
+           \neq \sign \pth{ \SDotProd{v_j}{\vecRand\;}}}%
+        =%
+        \frac{1}{\pi}
+        \arccos \pth{ \SDotProd{v_i}{v_j} },        
+    \end{equation*}
+    by \lemref{angle:cut}.  Clearly,
+    $W = \sum_{i < j} \WeightChar_{ij} X_{ij}$, and by linearity of
+    expectation, we have
+    \begin{align*}
+      \Ex{W}%
+      =%
+      \sum_{i < j} \WeightChar_{ij} \Ex{X_{ij}}%
+      =%
+      \frac{1}{\pi} \sum_{i<j}\WeightChar_{ij} \arccos
+      \pth{\SDotProd{v_i}{v_j} }.
+    \end{align*}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{replacement}%
+    %
+    For $-1 \leq y \leq 1$, we have
+    $\displaystyle \frac{\arccos(y)}{\pi} \geq \alpha \cdot
+    \frac{1}{2} \pth{1-y}$, where
+    \begin{equation}
+        \alpha = \min_{0 \leq \psi \leq \pi} \frac{2}{\pi}
+        \frac{\psi}{1-\cos(\psi)} .
+        \eqlab{min:func:cut}
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Set $y = \cos( \psi)$. The inequality now becomes
+    $\frac{\psi}{\pi}\geq \alpha \frac{1}{2} \pth {1-\cos \psi }$.
+    Reorganizing, the inequality becomes
+    $\frac{2}{\pi} \frac{\psi}{1-\cos \psi} \geq \alpha$, which
+    trivially holds by the definition of $\alpha$.
+\end{proof}
+
+\begin{figure}[h]
+    \centerline{\includegraphics{\File{figs/cut_func}}}%
+    \caption{The function of \Eqref{min:func:cut}.}
+\end{figure}
+
+\begin{lemma}
+    $\alpha > 0.87856$.
+\end{lemma}
+\begin{proof}
+    Using simple calculus, one can see that $\alpha$ achieves its
+    value for $\psi = 2.331122...$, the nonzero root of
+    $\cos \psi + \psi \sin \psi = 1$.  \remove{ To formally prove the
+       bound of $0.87856$, we first observe that
+       \[
+           \frac{2}{\pi} \frac{\psi}{1- \cos \psi} \geq 1,
+       \]
+       for $0 < \psi \leq \pi / 2$. Indeed, we need to prove that
+       $(2/\pi)\psi \geq 1-\cos \psi$. The second derivative of the
+       right side is $\cos \psi \geq 0$, in this range, which implies
+       that it is a convex function. As such, it intersects a straight
+       line only in two points. Since, the line $y = (2/\pi)\psi$
+       meets the image of the function of the right side in two points
+       $0$ and $\pi/2$, the claim follows.
+
+       The concavity of $f(\psi) = 1 -\cos \psi$ in the range
+       $\pi/2 \leq \psi \leq \pi$ implies that, for any $\psi'$, we
+       have $f(\psi) \leq f( \psi') + (psi - \psi')f'(psi$.  }
+\end{proof}
+
+\begin{theorem}
+    The above algorithm computes in expectation a cut with total
+    weight $\alpha \cdot \mathrm{Opt} \geq 0.87856 \mathrm{Opt}$,
+    where $\mathrm{Opt}$ is the weight of the maximum weight cut.
+\end{theorem}
+\begin{proof}
+    Consider the optimal solution to $(P)$, and lets its value be
+    $\gamma \geq \mathrm{Opt}$.  We have
+    \[
+        \Ex{W} = \frac{1}{\pi}\sum_{i<j} \WeightChar_{ij} \arccos
+        \pth{\SDotProd{v_i}{v_j} } \geq \sum_{i<j} \WeightChar_{ij}
+        \alpha \frac{1}{2}\pth{ 1 - \SDotProd{v_i}{v_j} } = \alpha
+        \gamma \geq \alpha \cdot \mathrm{Opt},
+    \]
+    by \lemref{replacement}.
+\end{proof}
+
+
+\section{Semi-definite programming}
+
+Let us define a variable $x_{ij} = \SDotProd{v_{i}}{v_{j}}$, and
+consider the $n$ by $n$ matrix $M$ formed by those variables, where
+$x_{ii}=1$ for $i=1,\ldots, n$. Let $V$ be the matrix having
+$v_1,\ldots, v_n$ as its columns. Clearly, $M=V^T V$. In particular,
+this implies that for any non-zero vector $v \in \Re^n$, we have
+$v^T M v = v^T A^T A v = (A v)^T (A v) \geq 0$. A matrix that has this
+property, is called \emphi{positive semidefinite}. Interestingly, any
+positive semidefinite matrix $P$ can be represented as a product of a
+matrix with its transpose; namely, $P=B^T B$.  Furthermore, given such
+a matrix $P$ of size $n \times n$, we can compute $B$ such that
+$P = B^T B$ in $O(n^3)$ time. This is know as \emphi{Cholesky
+   decomposition}.
+
+Observe, that if a semidefinite matrix $P = B^T B$ has a diagonal
+where all the entries are one, then $B$ has columns which are unit
+vectors. Thus, if we solve (P) and get back a semi-definite matrix,
+then we can recover the vectors realizing the solution, and use them
+for the rounding.
+
+In particular, (P) can now be restated as
+\begin{align*}
+  (SD) \text{~~~~~~~~~~~~~}  \max \text{~~~~}& \frac{1}{2}\sum_{i < j} \WeightChar_{ij}(1 
+                                               - x_{ij} )\\
+  \text{ ~subject to: ~~~~~}&x_{ii}=1 & \text{for $i=1,\ldots, n$}\\
+                                             & \pth{\MakeSBig x_{ij}}_{i=1,\ldots, n,
+                                               j=1,\ldots,n} \text{ is a positive semi-definite matrix}.
+\end{align*}
+We are trying to find the optimal value of a linear function over a
+set which is the intersection of linear constraints and the set of
+positive semi-definite matrices.
+
+\begin{lemma}
+    Let $\EuScript{U}$ be the set of $n\times n$ positive semidefinite
+    matrices. The set $\EuScript{U}$ is convex.
+\end{lemma}
+
+\begin{proof}
+    Consider $A, B \in \EuScript{U}$, and observe that for any
+    $t \in [0,1]$, and vector $v \in \Re^n$, we have:
+    \[
+        v^T\pth{ \MakeSBig t A + (1-t)B } v = v^T\pth{ \MakeSBig t Av
+           + (1-t)Bv } = t v^T Av + (1-t) v^T B v \geq 0 + 0 \geq 0,
+    \]
+    since $A$ and $B$ are positive semidefinite.
+\end{proof}
+
+Positive semidefinite matrices corresponds to ellipsoids. Indeed,
+consider the set $x^T A x = 1$: the set of vectors that solve this
+equation is an ellipsoid. Also, the eigenvalues of a positive
+semidefinite matrix are all non-negative real numbers. Thus, given a
+matrix, we can in polynomial time decide if it is positive
+semidefinite or not (by computing the eigenvalues of the matrix).
+
+Thus, we are trying to optimize a linear function over a convex
+domain. There is by now machinery to approximately solve those
+problems to within any additive error in polynomial time. This is done
+by using the interior point method, or the ellipsoid method. See
+\cite{bv-co-04,gls-gaco-93} for more details. The key ingredient that
+is required to make these methods work, is the ability to decide in
+polynomial time, given a solution, whether its feasible or not. As
+demonstrated above, this can be done in polynomial time.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Bibliographical Notes}
+
+The approximation algorithm presented is from the work of Goemans and
+Williamson \cite{gw-iaamc-95}. \si{H{\r{a}}\si{stad}} \cite{h-soir}
+showed that MAX CUT can not be approximated within a factor of
+$16/17 \approx 0.941176$. Recently, Khot \etal \cite{kkmo-oirmc-04}
+showed a hardness result that matches the constant of Goemans and
+Williamson (i.e., one can not approximate it better than $\alpha$,
+unless $\ComplexityClass{P}=\NP$). However, this relies on two
+conjectures, the first one is the ``Unique Games Conjecture'', and the
+other one is ``Majority is Stablest''. The ``Majority is Stablest''
+conjecture was recently proved by Mossel \etal \cite{moo-nsfl-05}.
+However, it is not clear if the ``Unique Games Conjecture'' is true,
+see the discussion in \cite{kkmo-oirmc-04}.
+
+The work of Goemans and Williamson was quite influential and spurred
+wide research on using SDP for approximation algorithms.  For an
+extension of the MAX CUT problem where negative weights are allowed
+and relevant references, see the work by Alon and Naor
+\cite{an-acnge-04}.
+
+
+
+\ChapterEnd{}
+
+%
+% end of file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

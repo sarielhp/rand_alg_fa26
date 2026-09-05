@@ -1,0 +1,98 @@
+<ipe version="60028" creator="Ipe 6.0 preview 28">
+<info created="D:20070521120106" modified="D:20070521120106"/>
+<ipestyle>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<view layers="alpha" active="alpha"/>
+<path layer="alpha" matrix="1 0 0 1 240.498 305.498" fill="0.898039" dash="void" pen="0.4">
+-7.84151 16.507 m
+-7.84151 -13.3802 l
+20.0053 3.32787 l
+19.9468 16.9625 l
+h
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" pen="0.4">
+-93.396 -16.8486 m
+66.1516 52.2886 l
+66.1516 52.2886 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" pen="0.4">
+-93.396 33.6748 m
+66.1516 -54.0764 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" pen="0.4">
+66.1516 -11.5304 m
+-93.396 86.8573 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" pen="0.4">
+66.1516 31.0156 m
+-93.396 -64.7129 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" pen="0.4">
+-96.0551 15.0609 m
+66.1516 17.72 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-7.84151 -13.3802 m
+-7.84151 16.627 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+19.9468 16.9625 m
+19.9468 3.32963 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+5.37154 25.9506 m
+5.3996 16.627 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+31.1822 10.034 m
+31.1822 -34.7373 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+31.1822 10.034 m
+31.1822 17.4092 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-7.84151 -13.3802 m
+-7.88266 -64.1946 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-42.0163 5.4159 m
+-42.0163 -33.9179 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-42.0163 5.4159 m
+-42.0163 16.3629 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-16.7588 16.3608 m
+-16.7588 39.5977 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-60.6091 15.642 m
+-60.6091 -2.64098 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+-60.6091 15.642 m
+-60.6091 66.6387 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+43.3697 17.3465 m
+43.3697 42.4165 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+43.3697 17.3465 m
+43.3697 2.51841 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+19.9468 16.9625 m
+19.9468 32.2666 l
+</path>
+<path stroke="black" matrix="1 0 0 1 240.498 305.498" dash="[4] 0" pen="0.4">
+5.37154 25.9506 m
+5.37154 90.0721 l
+</path>
+<text stroke="black" matrix="1 0 0 1 240.498 305.498" pos="-0.97425 2.41402" type="label" valign="bottom" size="10">$\sigma$</text>
+</page>
+</ipe>

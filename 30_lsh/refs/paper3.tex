@@ -1,0 +1,1777 @@
+
+
+%------------------------------------------------------------------
+ % Title: sublinearity of LSH based on p-stable mapping
+
+%Introduction
+% Preliminaries: how the IM98 algo works and relation to LSH
+% Effectively a new LSH for l2
+% the algorithm : p-stable distribution
+% the analysis in terms of a general pdf
+% plots for l1 and l2 and improvement over 1/c
+% analysis for p < 1.
+% conclusion
+
+\newcommand{\remove}[1]{}
+
+\documentclass[12pt]{article}
+
+% All style files are available from 
+%   http://wwww.uiuc.edu/~sariel/research/latex/
+\usepackage[breaklinks]{hyperref}  % comment out if you do not have it
+\usepackage{graphicx}
+\usepackage[active]{srcltx} % comment out if you do not have it
+\usepackage{sariel,wide}
+
+%\addtolength{\topmargin}{-1.0cm}
+%\addtolength{\textheight}{2.4cm}
+%\addtolength{\oddsidemargin}{-0.75cm}
+%\addtolength{\evensidemargin}{-0.75cm}
+%\addtolength{\textwidth}{1.5cm}
+
+%\newcommand{\llabel}[1]{~\fbox{\scriptsize{\sf #1}}\label{#1}}
+\newcommand{\llabel}[1]{\label{#1}}
+\newcommand{\tw}{{\rm tw}}
+\newcommand{\ltw}{{\rm ltw}}
+%\newtheorem{fact}{Fact}
+
+\newcommand{\bm}[1]{\mbox{\boldmath$#1$}}
+
+%\newcommand{\eps}{\epsilon}
+\newcommand{\MS}{{\cal M}}
+
+%\newcommand{\remove}[1]{}
+%\newcommand{\remove}[1]{#1}
+\newcommand{\eop}{\hfill$\Box$}
+\renewcommand{\H}{\end{document}}
+%\def\baselinestretch{.97}
+%\mainmatter
+\pagestyle{plain}
+\begin{document}
+
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+%\newtheorem{lemma}{Lemma}
+
+%\remove{}
+%\setcounter{page}{0}
+
+\title{Locality-Sensitive Hashing Scheme Based on p-Stable Distributions}
+
+\author{Mayur Datar\thanks{Department of Computer Science,; Stanford
+      University; {\tt datar@cs.stanford.edu}}%
+   \and%
+   Nicole Immorlica\thanks{Laboratory for Computer Science, MIT;
+      {\tt nickle@theory.lcs.mit.edu}} %
+   \and%
+   Piotr Indyk\thanks{Laboratory for Computer Science, MIT; {\tt
+         indyk@theory.lcs.mit.edu} }
+   \and Vahab S. Mirrokni\thanks{Laboratory for Computer Science, MIT;
+   {\tt mirrokni@theory.lcs.mit.edu}}}
+
+\date{}
+
+%\begin{titlepage}
+\maketitle
+
+\begin{abstract}
+We present a novel Locality-Sensitive Hashing scheme for the Approximate 
+Nearest Neighbor Problem under $l_p$ norm, based on $p$-stable distributions.
+
+Our scheme improves the running time of the earlier algorithm for the case of the $l_2$ norm.
+It also yields the first known provably efficient approximate NN algorithm for 
+the case $p <1$.  We also show that the algorithm finds the {\em exact} near neigbhor in $O(\log n)$ time for data satisfying certain ``bounded growth'' condition.
+
+Unlike earlier schemes, our LSH scheme works directly on points 
+in the Euclidean space without embeddings. Consequently, the resulting 
+query time bound is free of large factors and is simple and easy to 
+implement. Our experiments (on synthetic data sets) show that the our data structure is up to 40 
+times faster than $kd$-tree.
+\end{abstract}
+
+\iffalse
+\vspace{2mm}
+\noindent {\bf Topic area:} core database technology
+
+\noindent {\bf Special Purpose DB Techn.:} Multidimensional Databases, Advanced Search, Query, and Approximation
+
+\noindent {\bf Paper ID:} 620
+\fi
+%\end{titlepage}
+
+\section{Introduction}
+A similarity search problem involves a collection of objects (documents,
+images, etc.) that are characterized by a collection of relevant features
+and represented as points in a high-dimensional attribute space; given
+queries in the form of points in this space, we are required to find
+the nearest (most similar) object to the query.
+A particularly interesting and well-studied instance is 
+$d$-dimensional Euclidean space.
+% under some $l_p$ norm.
+This problem
+is of major importance to a variety of applications;
+% usually involving
+%similarity searching.
+some examples are:
+data compression,
+databases and data mining,
+information retrieval,
+image and video databases,
+machine learning, 
+pattern recognition,  statistics and data analysis.
+Typically, the features of the objects of interest (documents, images, etc)
+are represented as points in $\Re^d$ and a distance metric is used to measure
+similarity of objects. The basic problem then is to perform indexing or
+similarity searching for query objects.
+The number of features (i.e., the
+dimensionality) ranges anywhere from tens to thousands. 
+\iffalse
+For example, in
+multimedia applications such as IBM's QBIC (Query by Image Content),
+the number of features could be several hundreds~\cite{fqbic,qbic}.
+In information
+retrieval for text documents, vector-space representations involve
+several thousands of dimensions, and it is often considered to be
+a dramatic improvement that the dimension-reduction techniques 
+%such as
+%LSI (latent semantic indexing)~\cite{BDS,BSMS,DDLFH},
+%principal components analysis~\cite{hotelling}
+%or the Karhunen-Lo\'eve transform~\cite{karhunen,loeve},
+can reduce the dimensionality to a mere few hundreds!
+
+%For $d=100$, we need $n$ larger than $2^{100}$ to make any of
+%the known algorithms appear better than brute-force search. 
+
+%Of late, there has been an increasing interest in avoiding the curse
+%of dimensionality by resorting to {\em approximate} nearest neighbor
+%searching~\cite{AM,Cl2,AMNSW,Cl3,Kl}. 
+\fi
+
+The low-dimensional case (say, for the dimensionality $d$ equal to 2 or 3) is well-solved,
+so the main issue is that of dealing with a large number of dimensions,
+the so-called ``curse of dimensionality''. Despite decades
+of intensive effort, the current solutions are not entirely satisfactory;
+in fact, for large enough $d$, in theory or in practice, they often provide little 
+improvement over a linear algorithm which compares a query to each point from the database.
+In particular, it was shown in~\cite{Web} (both empirically and theoretically) that {\em all} current indexing techniques (based on space partitioning) degrade to linear search for sufficiently high dimensions.
+
+In recent years, several researchers   proposed to avoid the running time bottleneck by using {\em approximation} (e.g.,~\cite{AMNSW,Kl,IM,KOR,HP}, see 
+also~\cite{NIPS}).
+This is due to the fact that, in many cases, approximate nearest neighbor is almost as good as the exact one; in particular, if the distance measure accurately captures the notion of user quality, then small differences in the distance should not matter.
+%Since the selection of features and the choice of a distance metric in the
+%applications is rather heuristic and merely an attempt to make mathematically
+%precise what is after all an essentially aesthetic notion of similarity,
+%it is unnecessary to insist on the absolute nearest neighbor.
+%In such cases, determining an {\em approximate} nearest neighbor,
+%for a reasonable approximation value, should suffice for most practical
+%purposes.
+In fact, in situations when the quality of the approximate nearest neighbor is much worse than the quality of  the actual nearest neighbor,
+then the nearest neighbor problem is {\em unstable}, and it is not clear if solving it is at all meaningful~\cite{BGRS,HAK}.
+
+\iffalse
+In addition, most of the approximate algorithms can be easily modified to report {\em all} approximate neighbors, including the exact one.
+Since it is quite common (e.g., see Figure 3 in~\cite{GIM}) that the number of, say, $2$-approximate nearest neighbors (see definition in the next section) is small, an efficient 
+approximate algorithm can report all such neighbors very quickly and then return the closest (exact) one.
+
+%
+%In most applications, it is much more important to keep the query time
+%down to sub-linear in the data size, and a natural way to achieve this goal is to allow the algorithm to output only
+%approximate nearest neighbors.
+\fi
+
+
+
+%What in many applications cannot be compromised is the query time.
+%Imagine for example a search engine which enables content-based image
+%retrieval on the World-Wide Web. If the system was to index a significant
+%fraction of the web, the number of images to index would be at least of
+%the order tens (if not hundreds) of million.
+%In order to be able to answer a few million queries per day (as it is currently the case 
+%for major {\em text-retrieval}  engines), the query time should be of the order of tens
+%%of microseconds.
+%Clearly, no indexing method exhibiting linear (or close to linear) dependence
+%on the data size could manage such a huge data set.
+
+
+
+In~\cite{IM,GIM}, the authors introduced an approximate high-dimensional similarity search scheme with provably sublinear dependence on the data size.
+Instead of using tree-like space partitioning, it relied on a new method called
+{\em locality-sensitive hashing (LSH)}.
+The key idea is to hash the points using several hash functions so as to
+ensure that, for each function, the probability of collision is much higher for
+objects which are close to each other than for those which are far apart.
+Then, one can determine near neighbors by hashing the query point and
+retrieving elements stored in buckets containing that point.
+In~\cite{IM,GIM} the authors provided such locality-sensitive hash functions for the case when the points live in binary Hamming space $\{0,1\}^d$.
+They showed experimentally that the data structure achieves large speedup over several tree-based data structures when the data is stored on disk.
+%
+\iffalse
+ that are simple and easy to implement;
+they can also be naturally extended to the {\em dynamic} setting, i.e., when insertion and deletion operations also need to be supported.
+%Another advantage of our scheme is that (as it is based on hashing) it can be naturally extended to the
+%{\em dynamic} setting, i.e., when insertion and deletion operations also
+%need to be supported.
+\fi
+%
+In addition,  since the LSH is a hashing-based scheme, 
+it can be naturally extended to the {\em dynamic} setting, i.e., when insertion and deletion operations also need to be supported.
+This avoids the complexity of dealing with tree structures when the data is dynamic.
+
+
+The LSH algorithm has been since used in numerous applied settings, 
+e.g., see~\cite{GIM,eight,HGI,Shiv,Buh,BT,Ya,Buh2,OMST,GSM}.
+However, it suffers from a fundamental drawback:
+it is fast and simple only when the input points live in the Hamming space (indeed, almost all of the above applications  involved binary data).
+As mentioned in~\cite{IM,GIM}, it is possible to extend the algorithm to the $l_2$ norm,
+by embedding $l_2$ space into $l_1$ space, and then $l_1$ space into Hamming space.
+However, it increases the query time and/or error by a large factor and complicates the algorithm.
+\iffalse
+Although the computation time is not crucial when the data is stored on disk 
+(as the I/O cost dominates the running time), 
+it is of crucial importance when the data is stored in main memory.
+The latter scenario occurs more and more often, as memory is cheap and easily available.
+\fi
+
+In this paper we present a novel version of the LSH algorithm.
+As with the previous schemes, it works for the $(R,c)$-Near Neighbor (NN) problem, where the goal is to report a point within distance $cR$ from a query $q$, if there is a point in the data set $P$ within distance $R$ from $q$.
+Unlike the earlier algorithm, our algorithm works directly on points in Euclidean space without embeddings. 
+As a consequence, it has the following advantages over the previous algorithm:
+\begin{itemize}
+\item For the $l_2$ norm, its query time is $O(d n^{\rho(c)}
+\log n)$, where $\rho(c)<1/c$  for $c \in (1,10]$ (the inequality is strict, see
+Figure~\ref{fig:l2_plot}). Thus, for large range of values of $c$, the query time exponent is better than the one in~\cite{IM,GIM}.
+\item It is simple and quite easy to implement.
+\item It works for any $l_p$ norm, as long as $p \in (0,2]$. Specifically, we show that for any $p \in (0,2]$ and $\gamma>0$ there exists an algorithm for $(R,c)$-NN under $l_d^p$
+which uses  $O(d n +  n^{1+\rho})$ space, with query time 
+$O(n^{\rho} \log_{1/\gamma} n)$, where where $\rho\le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right)$.
+To our knowledge, this is the only known {\em provable} algorithm for the high-dimensional nearest neighbor problem for the case $p<1$.
+Similarity search under such {\em fractional} norms have recently attracted interest~\cite{AHK,CIKM}.
+\end{itemize}
+
+
+Our algorithm also inherits two very convenient properties of LSH schemes.
+The first one is that it works well on data that is extremely high-dimensional but sparse.
+Specifically, the running time bound remains unchanged if $d$ denotes the maximum number of  non-zero elements in vectors.
+To our knowledge, this property is not shared by other known spatial data structures.
+Thanks to this property, we were able to use our new LSH scheme (specifically, the $l_1$ norm version) for fast color-based image similarity search~\cite{IT}.
+In that context, each image was represented by a point in roughly $100^3$-dimensional space, but only about 100 dimensions were non-zero per point.
+The use of our LSH scheme enabled achieving order(s) of magnitude speed-up over the linear scan.
+
+The second property is that our algorithm provably reports the {\em exact} near neighbor very quickly, if the data satisfies certain {\em bounded growth} property.
+Specifically, for a query point $q$, and $c \ge 1$,  let $N(q,c)$ be the number of $c$-approximate nearest neighbors of $q$ in $P$. 
+If $N(q,c)$ grows ``sub-exponentially'' as a function of $c$, then the
+LSH algorithm reports $p$, the nearest neighbor, with constant probability within time $O(d \log n)$, assuming it is given a constant factor approximation to the distance from $q$ to its nearest neighbor.
+In particular, we show that if $N(q,c)=O(c^b)$, then the running time is $O(\log n +2^{O(b)})$. 
+Efficient nearest neighbor algorithms for data sets with polynomial growth properties in general metrics have been recently a focus of several papers~\cite{Cl3,KRu,KLee}.
+LSH solves an easier problem (near neighbor under $l_2$ norm), while working under weaker assumptions about the growth function.
+It is also somewhat faster, due to the fact that the 
+$\log n$ factor in the query time of the earlier schemes is {\em multiplied} by a function of $b$, while in our case this factor is additive. 
+
+\iffalse
+The main contribution of the paper is a LSH scheme for the $(R,c)$-Point
+Location in Equal Balls (NN) problem\footnote{See Preliminaries for
+definition} in $\Re^d$ under $l_p$ norm for $p \in (0,2]$. To the best
+of our knowledge no LSH scheme was known earlier for $\Re^d$ under the
+$l_p$ norm. It may be of independent interest as a sketching technique
+for massive data sets, similar to the similarity estimation techniques
+introduced by Charikar\cite{Char}.
+\fi
+
+We complement our theoretical analysis with experimental evaluation of the algorithm on data with wide range of parameters.
+In particular, we compare our algorithm to an approximate version of 
+the $kd$-tree algorithm~\cite{AMexp}.
+We performed the experiments on synthetic data sets containing ``planted'' near neighbor (see section~\ref{Sec:expt} for more details); similar model was earlier used in~\cite{Yia2}.
+Our experiments indicate that the new LSH scheme achieves query time of up to 40 times better than the query time of the $kd$-tree algorithm.
+
+
+\subsection{Notations and problem definitions}
+We use $l^d_p$ to denote the space $\Re^d$ under the $l_p$ norm. For any point
+$\bm{v} \in \Re^d$, we denote by $||\vec{\bm{v}}||_p$ the $l_p$ norm of the vector
+$\vec{\bm{v}}$. Let $\MS=(X,d)$ be any metric space, and $v \in X$. The {\em ball} of radius $r$ centered at $v$ is defined as
+$B(v,r) = \{ q\in X \mid d(v,q) \leq r\}$.
+%\subsection{The Near Neighbor formulation}
+
+\iffalse
+In this paper we focus on the $(R,\epsilon)$-Point Location in Equal
+Balls (NN) problem.
+
+\begin{definition}[$(R,\epsilon)$-NN]
+\vspace*{-0.1in}
+Given $n$ radius-$R$ balls centered at
+$C=\{ c_1, \ldots, c_n \}$ in $\MS=(X,d)$, devise a data structure which for
+any query point $q \in X$ does the following:
+\vspace*{-0.1in}
+\begin{itemize}
+\item if there exists $c_i \in C$ with $q \in B(c_i,R)$ then return {\sc yes} and a point $c'_i$ such that $q \in B(c'_i,(1+\epsilon)R)$,
+\item if $q \notin B(c_i,(1+\epsilon)R)$ for all $c_i \in C$ then return {\sc no},
+\item if for the point $c_i$ closest to $q$ we have
+$R \le d(q,c_i) \le ((1+\epsilon)R$) then return either {\sc yes} or {\sc no}.
+\end{itemize}
+\end{definition}
+\fi
+
+Let $c=1+\epsilon$.
+In this paper we focus on the $(R,c)$-NN problem.
+Observe that $(R,c)$-NN is simply a decision version of the Approximate Nearest Neighbor problem.
+Although in many applications solving the decision version is good enough, one can also reduce the approximate NN problem to approximate NN via binary-search-like approach.
+In particular, it is known~\cite{IM,HP} that
+the $c$-approximate NN problem reduces  to
+%\footnote{The original reduction from \cite{IM}
+%was different and less efficient.  This was recently improved in \cite{HP}}
+$O(\log (n/\epsilon))$ instances of
+$(R,c)$-NN.
+Then, the complexity of $c$-approximate NN is the
+same (within log factor) as that of the $(R,c)$-NN problem.
+
+
+\iffalse
+
+\subsection{Formal statement of theoretical results}
+\label{ss:formal}
+
+%The main theoretical contribution of this paper is an analysis of an algorithm for solving the $(R,c)$-NN problem in $l_p^d$. 
+The formal guarantees for our algorithm is given by the following theorem.
+
+\begin{theorem}
+For any $p \in (0,2]$ and $\gamma>0$ there exists an algorithm for $(R,c)$-NN under $l_d^p$
+which uses  $O(d n +  n^{1+\rho})$ space, with query time 
+$O(n^{\rho} \log_{1/\gamma} n)$
+%evaluations of the hash function for each query,
+where $\rho\le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right)$.
+\end{theorem}
+
+
+The proof of this theorem is omitted due to lack of space. 
+We mention that it is somewhat challenging, due to the fact that there is no explicit formula that describes the density of $p$-stable distributions. Instead we use known properties of $p$-stable distributions (such as tail estimates, existence of first moments, etc.).
+
+Instead we provide (for $p=1,2$) a computational analysis of the exponent 
+$\rho=\rho(c)$ for $c \in [1,20]$.
+See section~\ref{s:comp} for details.
+
+\fi
+
+\iffalse
+It
+admits the first known $\epsilon$-approximate NN algorithm for $p <1$. In
+fact, for the special case of $p = 2$ (Euclidean norm) we show that the
+exponent $\rho$ is strictly smaller than $1/c$ over a large range of
+$c$. Thus, for this case it improves the previous best space and time
+bounds (\cite{IM}) that follow from embedding $l_2^d$ into a Hamming space
+(via embedding into $l_1^{O(d)}$).
+\fi
+
+\iffalse
+\subsection{Previous work}
+
+
+The nearest neighbor and its approximate versions are among the most extensively studied problems 
+in the fields of databases, computational geometry and algorithms, resulting in the
+discovery of
+many  efficient algorithms.
+In particular, for the case when the underlying metric space  is a low-dimensional
+Euclidean space $l_2^d$, 
+it is known how to construct data structures for the exact~\cite{Cl1,Me} or
+the approximate~\cite{AMNSW,Kl,IM,KOR,HP} NN problem.
+Unfortunately, those data structures have query time or space requirements
+that are exponential in $d$. This is a severe bottleneck, since most
+massive data sets (text documents, market-basket data, images etc.) that
+need to be analyzed contain data points from a high
+dimensional space. 
+More recently, several data structures using space (quasi)-polynomial in $n$ and $d$, 
+and query time 
+sublinear in $n$, have been developed for approximate NN under $l_1$ and
+$l_2$ ~\cite{KOR,IM} and $l_{\infty}$~\cite{I98} norms.
+However, most of those algorithms are only of theoretical interest, 
+since either the required space is too large, or the query time is significantly 
+sublinear in $n$ only for very large approximation factors.
+The only exception is the Locality-Sensitive Hashing (LSH) algorithm of~\cite{IM}, 
+that solves the $c$-approximate NN problem (more specifically, its {\em decision} version).
+
+
+There is considerable literature on the nearest neighbor problem in the database literature.
+Samet~\cite{samet} surveys a variety of data structures
+for nearest neighbors in geometric spaces, including variants of
+$kd$-trees, $R$-trees, and structures based on space-filling curves.
+The more recent results are surveyed in~\cite{SRF}; see also an excellent survey of~\cite{BK2}. 
+Those algorithms often exhibit exponential dependence on dimension in the worst case and
+usually in typical cases as well (e.g., see~\cite{AMN}).
+In general, even the average-case
+analysis of heuristics for points distributed over regions in $\Re^d$
+gives an exponential query time~\cite{bentley,FBF,samet}.
+\fi
+
+\section{Locality-sensitive hashing}
+\label{subsec:lsh}
+
+An important technique from \cite{IM}, to solve the
+$(R,c)$-NN problem is locality sensitive hashing or LSH.
+For a domain $S$ of the points set with distance measure $D$, an LSH family
+is defined as:
+\begin{defn}
+\label{defn:lsh}
+A family ${\cal H} = \{h: S \to U\}$ is called
+$(r_1,r_2,p_1,p_2)${\em-sensitive} for $D$  if for any $v, q \in S$
+\vspace*{-0.1in}
+\begin{itemize}
+\item if $v \in B(q,r_1)$ then $\Pr_{\cal H}[h(q)=h(v)] \ge p_1$,
+\item if $v \notin B(q,r_2)$ then $\Pr_{\cal H}[h(q)=h(v)] \le p_2$.
+\end{itemize}
+\end{defn}
+In order for a locality-sensitive hash (LSH) family to be useful, it has to satisfy
+inequalities $p_1>p_2$ and $r_1<r_2$.
+% when $D$ is a dissimilarity measure,
+%or $p_1>p_2$ and $r_1>r_2$ when $D$ is a similarity measure.
+
+We will briefly describe, from \cite{IM}, how a LSH family can be used to
+solve the $(R,c)$-NN problem: We choose $r_1=R$ and $r_2=c \cdot R$.
+Given a family ${\cal H}$ of hash functions with parameters
+$(r_1,r_2,p_1,p_2)$ as in Definition~\ref{defn:lsh}, we
+amplify the gap between the ``high'' probability $p_1$ and ``low''
+probability $p_2$ by concatenating several functions.  In particular, for
+$k$ specified later, define a function family ${\cal G} = \{g:S \to U^k\}$
+such that $g(v)=(h_1(v), \ldots ,h_k(v))$, where $h_i \in {\cal H}$. For
+an integer $L$ we choose $L$ functions $g_1, \ldots, g_L$ from ${\cal G}$,
+independently and uniformly at random.  During preprocessing, we store
+each $v \in P$ (input point set) in the bucket $g_j(v)$, for $j=1, \ldots,
+L$. Since the total number of buckets may be large, we retain only the
+non-empty buckets by resorting to hashing.
+%If any bucket
+%contains more than one element, we retain an arbitrary one.
+To process a query $q$, we search all buckets $g_1(q), \ldots, g_L(q)$; as
+it is possible (though unlikely) that the total number of points stored in
+those buckets is large, we interrupt search after finding first $3L$ points
+(including duplicates).  Let $v_1, \ldots, v_t$ be the points encountered
+therein.
+%For each $p_j$, we check whether $p_j \in B(q,r_2)$ and if that is the case,
+%we return {\sc yes} (together with $p_j$); if no such $p_j$ is found, we
+%return {\sc no}.
+For each $v_j$, if $v_j \in B(q,r_2)$ then we return {\sc yes} and $v_j$,
+else we return {\sc no}.
+
+%Let $W_b(q)=P - B(q,b)$, and $p^*$ be the point in $P$ closest to $q$.
+The parameters $k$ and $L$ are chosen so as to ensure that with a constant probability the following two properties hold:
+%there exists $g_j$ such that the following properties hold:
+\begin{enumerate}
+\item If there exists $v^* \in B(q,r_1)$ then $g_j(v^*)=g_j(q)$ for some $j=1 \ldots L$, and
+\item The total number of collisions of $q$ with points from $P - B(q,r_2)$ is less than $3L$, i.e.
+\[ \sum_{j=1}^L |(P-B(q,r_2)) \cap g_j^{-1}(g_j(q))| < 3L.\]
+%$g_j(p') \neq g_j(q)$, for all $p' \in P - B(q,r_2)$ and $j=1 \ldots
+\end{enumerate}
+
+Observe that if (1) and (2) hold, then the algorithm is correct.
+%{\bf Piotr: Verify this part}
+It follows (see \cite{IM} Theorem~5 for details) that if we set $k =
+\log_{1/p_2} n$, and $L = n^\rho$ where $\rho=\frac{\ln 1/p_1}{\ln 1/p_2}$
+then (1) and (2) hold with a constant probability.
+\iffalse
+ In order to boost this
+probability and get a high probability result we run $O(\log n)$ parallel
+instances of the algorithm. Moreover, each hash function evaluation
+requires $O(d)$ time.
+\fi
+Thus, we get following theorem (slightly different
+version of Theorem~5 in \cite{IM}), which relates the efficiency of
+solving $(R,c)$-NN problem to the sensitivity parameters of the LSH.
+\begin{theorem}
+\label{t:sens}
+Suppose there is a $(R,c R,p_1,p_2)$-sensitive family ${\cal H}$ for a
+distance measure $D$.
+Then there exists an algorithm for $(R,c)$-NN under measure $D$
+which uses  $O(d n +  n^{1+\rho})$ space, with query time dominated by
+$O(n^{\rho})$ distance computations, and $O(n^{\rho} \log_{1/p_2} n)$ evaluations of
+hash functions from ${\cal H}$,
+%evaluations of the hash function for each query,
+where $\rho=\frac{\ln 1/p_1}{\ln 1/p_2}$.
+\end{theorem}
+
+% besides
+% removing the polylog factors from the query time it strictly improves the
+% exponent of $n$ in space requirement and query time.
+
+
+\iffalse
+\section{Preliminaries}
+Dynamic $c$-approximate {\em near neighbor} problem: for a set of points $P$,
+construct a data structure that given any query point $q$:
+\begin{itemize}
+\item If there is a point $s$ within a predefined
+distance $R$ from $q$, report a (possibly different) point $p'$ within distance $cR$ from $q$
+\item If no such point exists, any answer is fine
+\end{itemize}
+
+Since we consider points in $l_p^d$, without loss of generality we can consider $R=1$,
+which we assume from now on.
+\fi
+
+\section{Our LSH scheme}
+
+
+ In this section, we present a LSH family based on
+$p$-stable distributions, that works for all $p \in (0,2]$. 
+
+Since we consider points in
+$l_p^d$, without loss of generality we can consider $R=1$, which we assume
+from now on.
+
+\iffalse
+We prove the
+following main theorem about the sensitivity parameters of this hash
+family:
+
+\begin{theorem}
+\label{thm:general_p}
+For any $p \in (0,2]$ there is a $(r_1,r_2,p_1,p_2)$-sensitive family
+${\cal H}$ for $l_p^d$ such that for any $\gamma > 0$,
+$$\rho=\frac{\ln 1/p_1}{\ln 1/p_2} \le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right).$$
+\end{theorem}
+
+Thus, using this hashing scheme we get a data structure for $(R,c)$-NN
+problem in $l_p^d$ whose space and query time has exponent $\rho$ which is
+arbitrarily close to $\max\left(\frac{1}{c^p}, \frac{1}{c}\right)$. 
+\fi
+
+
+\subsection{$p$-stable distributions}
+
+Stable distributions \cite{Zol} are defined as limits of normalized sums
+of independent identically distributed variables (an alternate definition
+follows).  The most well-known example of a stable distribution is
+Gaussian (or normal) distribution.  However, the class is much wider; for
+example, it includes heavy-tailed distributions.
+
+{\noindent \bf Stable Distribution:} A distribution ${\cal D}$ over $\Re$ is called {\em $p$-stable}, if there exists $p \ge 0$ such that for any $n$ real numbers $v_1 \ldots v_n$ and i.i.d. variables $X_1 \ldots X_n$ with distribution ${\cal D}$, the random variable $\sum_i v_i X_i$ has the same distribution as the variable $(\sum_i |v_i|^p)^{1/p} X$, where $X$ is a random variable with distribution ${\cal D}$.
+
+It is known~\cite{Zol} that stable distributions exist for any $p \in (0,2]$.
+In particular:
+\begin{itemize}
+\item a {\em Cauchy distribution} ${\cal D}_C$, defined by the density function
+$c(x)=\frac{1}{\pi} \frac{1}{1+x^2}$, is $1$-stable
+\item a {\em Gaussian (normal) distribution} ${\cal D}_G$, defined by the density function $g(x)= \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$, is $2$-stable
+\end{itemize}
+
+\iffalse
+While there are no closed form expressions for the density functions $f_p$
+and/or distribution functions $F_p$ of general $p$-stable distributions,
+there is an estimation for these functions known as the Pareto
+estimation~\cite{Nol}.  As per this estimation:
+
+\begin{tabular}{c}
+\hfill~\\
+$\forall\delta>0\ \exists x_0\mathrm{\ s.t.\ }\forall x\geq x_0,$\hfill~\\
+~~$C_px^{-p}(1-\delta)\leq F_p(x)\leq C_px^{-p}(1+\delta)$\hfill~\\
+\hfill~\\
+$\forall\delta>0\ \exists x_0\mathrm{\ s.t.\ }\forall x\geq x_0,$\hfill~\\
+~~$C_px^{-(p+1)}(1-\delta)\leq f_p(x)\leq C_px^{-(p+1)}(1+\delta)$\hfill~\\
+\hfill~\\
+\end{tabular}
+%$$\forall\delta>0\ \exists x_0\mathrm{\ s.t.\ }\forall x\geq x_0,
+%C_px^{-p}(1-\delta)\leq F_p(x)\leq C_px^{-p}(1+\delta)$$
+%$$\forall\delta'>0\ \exists x_0'\mathrm{\ s.t.\ }\forall x\geq x_0',
+%C_px^{-(p+1)}(1-\delta')\leq f_p(x)\leq C_px^{-(p+1)}(1+\delta')$$ 
+
+\noindent
+where $C_p=\frac{1}{\pi}\Gamma(p) \sin(\pi p/2)$.  From this
+estimation, it is clear that the expectation ($\int_0^{\infty} t f_p(t)dt$)
+is finite for $p>1$ and
+infinite for $p<1$.  These facts will become important later in our
+analysis.  Moreover, this implies that $p$-stable distributions do not
+have finite second moments or finite variances (except for $p=2$).
+\fi
+
+We note from a practical point of view, despite the lack of closed form
+density and distribution functions, it is known~\cite{CMS} that one can
+generate $p$-stable random variables essentially from two independent
+variables distributed uniformly over $[0,1]$.
+
+Stable distribution have
+found numerous applications in various fields (see the survey~\cite{Nol}
+for more details). In computer science, stable distributions were used for
+``sketching'' of high dimensional vectors by Indyk (\cite{I00b}) and since
+have found use in various applications.
+The main property of $p$-stable distributions mentioned in the definition
+above directly translates into a
+sketching technique for high dimensional vectors. The idea is to
+generate a random vector $\bm{a}$ of dimension $d$ whose each entry is
+chosen independently from a $p$-stable distribution. Given a vector
+$\bm{v}$ of dimension $d$, the dot product $\bm{a}.\bm{v}$ is a random variable
+which is distributed as $(\sum_i |v_i|^p)^{1/p} X$ (i.e., $||\bm{v}||_p
+X$), where $X$ is a random variable with $p$-stable distribution. A small
+collection of such dot products ($\bm{a}.\bm{v}$), corresponding to different
+$\bm{a}$'s, is termed as the sketch of the vector $\bm{v}$ and can be used to
+estimate $||\bm{v}||_p$ (see
+\cite{I00b} for details). It is easy to see that such a sketch is linearly
+composable, i.e. $\bm{a}.(\bm{v_1} -\bm{v_2}) = \bm{a}.\bm{v_1} - \bm{a}.\bm{v_2}$.
+
+\subsection{Hash family}
+\label{subsec:family}
+In this paper we use $p$-stable distributions in a slightly different
+manner. Instead of using the dot products ($\bm{a}.\bm{v}$) to estimate
+the $l_p$ norm we use them to assign a hash value to each vector
+$\bm{v}$. Intuitively, the hash function family should be locality
+sensitive, i.e. if two vectors ($\bm{v_1}, \bm{v_2}$) are close (small
+$||\bm{v_1}-\bm{v_2}||_p$) then they should collide (hash to the same
+value) with high probability and if they are far they should collide with
+small probability. The dot product $\bm{a}.\bm{v}$ projects each vector to the
+real line; It follows from $p$-stability that for two vectors
+($\bm{v_1},\bm{v_2}$) the distance between their projections
+($\bm{a}.\bm{v_1} - \bm{a}.\bm{v_2}$) is distributed as $||\bm{v_1}-\bm{v_2}||_p X$
+where $X$ is a $p$-stable distribution. If we ``chop'' the real line into
+equi-width segments of appropriate size $r$ and assign hash values to vectors
+based on which segment they project onto, then it is intuitively clear
+that this hash function will be locality preserving in the sense described
+above.
+
+Formally, each hash function $h_{\bm{a},b}(\bm{v}): {\cal R}^d \rightarrow
+{\cal N}$ maps a $d$ dimensional vector $\bm{v}$ onto the set of
+integers. Each hash function in the family is indexed by a choice of
+random $\bm{a}$ and $b$ where $\bm{a}$ is, as before, a $d$ dimensional
+vector with entries chosen independently from a $p$-stable
+distribution and $b$ is a real number chosen uniformly from the range
+$[0,r]$. For a fixed $\bm{a},b$ the hash function $h_{\bm{a},b}$ is given by
+$h_{\bm{a},b}(\bm{v})=\lfloor{\bm{a} \cdot \bm{v}+b\over r}\rfloor$
+
+Next, we compute the probability that two vectors $\bm{v_1}, \bm{v_2}$
+collide under a hash function drawn uniformly at random from this
+family. Let $f_p(t)$ denote the probability density function of the
+{\bf absolute value} of the $p$-stable distribution. We may drop the subscript
+$p$ whenever it is clear from the context.
+\iffalse
+ For example, the density
+functions for $p=1$ (Cauchy) and $p=2$ (Gaussian) are $f_1(t) =
+\frac{2}{\pi} \frac{1}{1+t^2}$ and $f_2(t) = \frac{2}{\sqrt{2\pi}}
+e^{-t^2/2}$ respectively. For a general $p$, there may not exist such a
+closed form expression for the density function.
+\fi
+ For the two vectors $\bm{v_1},
+\bm{v_2}$, let $c = ||\bm{v_1} - \bm{v_2}||_p$. For a random vector $\bm{a}$ whose entries are
+drawn from a $p$-stable distribution, $\bm{a}.\bm{v_1} -
+\bm{a}.\bm{v_2}$ is distributed as $c X$ where $X$ is a random variable
+drawn from a $p$-stable distribution. Since $b$ is
+drawn uniformly from $[0,r]$ it is easy to see that
+
+%\begin{eqnarray*}
+%\label{eq:prob}
+$$p(c)=Pr_{\bm{a},b} [h_{\bm{a},b}(\bm{v_1}) = h_{\bm{a},b}(\bm{v_2})] =
+%Pr_{\bm{a}}[|\bm{a}\cdot (\bm{v_1} - \bm{v_2})| =t]
+%Pr_b[h_{\bm{a},b}(\bm{v_1}) = h_{\bm{a},b}(\bm{v_2}) \mid |\bm{a}\cdot (\bm{v_1} - \bm{v_2})| =
+%t]
+%\cr &=&
+\int_0^r \frac{1}{c}
+f_p(\frac{t}{c}) (1-\frac{t}{r}) dt$$
+%\end{eqnarray*}
+
+For a fixed parameter $r$ the probability of collision decreases
+monotonically with $c=||\bm{v_1} - \bm{v_2}||_p$. Thus, as per
+Definition~\ref{defn:lsh} the family of hash functions above is $(r_1,
+r_2, p_1, p_2)$-sensitive for $p_1 = p(1)$ 
+%\int_0^r f_p(t) (1-\frac{t}{r}) dt$ 
+and $p_2 = p(c)$
+%\int_0^r \frac{1}{c} f_p(\frac{t}{c}) (1-\frac{t}{r}) dt$ 
+for $r_2/r_1 = c$.
+
+In what follows we will bound the ratio $\rho=\frac{\ln 1/p_1}{\ln
+1/p_2}$, which as discussed earlier is critical to the performance when
+this hash family is used to solve the $(R,c)$-NN problem.
+
+Note that we have not specified the parameter $r$, for it depends
+on the value of $c$ and $p$. For every $c$ we would like to choose a finite $r$ that
+makes $\rho$ as small as possible.
+\iffalse
+Note also, the way we have described the hash family it
+appears that we may require a large number (potentially infinite) of random
+bits to represent each function from this family: Each hash function is
+specified by a random vector $\bm{a}$ and real $b$. {\bf Piotr : Verify this}
+However, using techniques similar to those in Indyk \cite{I00b} and
+Engebretsen et al~\cite{EIO}, we can reduce the number of random bits
+required to $O(\log^2 n)$, where $n$ is the number of vectors in the data
+set. The techniques involve the use of Nisan's pseudorandom number
+generator for space bounded computation~\cite{Nis}.
+\fi
+
+\iffalse
+We want to solve the Near Neighbor problem for $l_p$ norms,
+$p\in(0,2]$, using the locality sensitive hashing
+approach.
+We use hash function $h_{a,b}(s)=\lfloor{a \cdot s+b\over r}\rfloor$ where $a$ is a
+$d$-dimensional vector drawn from a $p$-stable distribution and
+$b$ is chosen uniformly at random from $[0,r]$.
+
+\begin{defn}
+Let $E_c$ be the event that two close points $v_1$ and $v_2$ collide,
+i.e. $[h_{a,b}(v_1)=h_{a,b}(v_2)  : ||v_1-v_2||_p < 1],$ and $p_1=\Pr_{a,b}[E_c]$.
+Let $E_f$ be the event that two far points $v_1'$ and $v_2'$ collide,
+i.e. $[h_{a,b}(v_1') = h_{a,b}(v_2') : ||v_1'-v_2'||_p > c],$ and $p_2=\Pr_a[E_f]$.
+\end{defn}
+
+Now conditioning on the distance of points $s$ and $q$ in the projection
+onto line $a$, we see
+\begin{eqnarray}
+p_1
+&\equiv&
+\Pr_a[E_c]
+\cr&=&
+\int_0^r\Pr_a[E_c : |a\cdot(q-s)|=t]\Pr_a[|a\cdot(q-s)|=t]dt
+\cr&=&
+\int_0^r(1-\frac{t}{r})\Pr_a[|a\cdot(q-s)|=t]dt
+\end{eqnarray}
+As $a$ is drawn from a $p$-stable distribution, it is equivalent, in
+distribution, to the random variable $||s-q||_px$ where $x$ is again
+drawn according to a $p$-stable distribution.  Let $f(\cdot)$ be the
+density function of the absolute value of a $p$-stable random variable.
+Using the assumption
+that $||s-q||_p \le 1$
+% and the symmetry of the $p$-stable distributions around $x=0$,
+we see
+$$p_1>\int_0^r(1-\frac{t}{r})f(\frac{t}{1})dt.$$
+Similarly,
+$$p_2<\int_0^r(1-\frac{t}{r})\frac{1}{c}f(\frac{t}{c}) dt.$$
+\fi
+
+\section{Computational analysis of the ratio $\rho=\frac{\ln 1/p_1}{\ln 1/p_2}$}
+\label{s:comp}
+
+In this section we focus on the cases of $p=1,2$. In these cases the 
+ratio $\rho$ can be explicitly evaluated.
+We compute and plot this ratio
+and compare it with $1/c$. Note, $1/c$ is the best (smallest) known
+exponent for $n$ in the space requirement and query time that is achieved
+in \cite{IM} for these cases. 
+\iffalse
+For the case of $p=1/2$, we evaluate $\rho$
+numerically and compare it with $1/\sqrt{c}$ for various values of $r$
+and $c$.  
+For the general case we prove that there
+exists a value of $r$ for which the ratio $\rho$ is arbitrarily close to
+$\max\left(\frac{1}{c^p},
+\frac{1}{c}\right)$, thereby proving Theorem~\ref{thm:general_p}
+\fi
+
+\subsection{Computing the ratio $\rho$ for special cases} For the special
+cases $p=1,2$ we can compute the probabilities $p_1,p_2$, using the
+density functions mentioned before. A simple
+calculation shows that $p_2 = 2\frac{tan^{-1}({r/c})}{\pi} - \frac{1}{\pi
+(r/c)} \ln ({1 + (r/c)^2})$ for $p=1$ (Cauchy) and
+$p_2 = 1 - 2 norm(-r/c) -
+\frac{2}{\sqrt{2\pi}r/c}(1 - e^{-(r^2/2c^2)})$ for $p=2$ (Gaussian), where
+$norm(\cdot)$ is the cumulative distribution function (cdf) for
+a random variable that is distributed as $N(0,1)$.
+The value of $p_1$ can be obtained
+by substituting $c=1$ in the formulas above.
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[Optimal $\rho$ for $l_1$]{
+IncludeGraphics[width=7.5cm,height=5.6cm]{l1 plot.eps}
+\label{fig:l1_plot}
+} \quad
+subfigure Optimal $\rho$ for $l_2$]{
+includegrphics[width=7.5cm,height=.6cm]{l2 plot.eps}
+\label{fig:l2_plot}
+}
+}
+\caption{Optimal $\rho$ vs $c$}
+\label{fig:opt_rho}
+\end{center}
+\end{figure*}
+
+For $c$ values in the range $[1,10]$ (in increments of $0.05$) we compute
+the minimum value of $\rho$, $\rho(c) = min_r \log ({1/p_1})/\log
+({1/p_2})$, using {\em Matlab}. The plot of $c$ versus $\rho(c)$ is shown
+in Figure~\ref{fig:opt_rho}. The crucial observation for the case $p=2$ is
+that the curve corresponding to optimal ratio $\rho$ ($\rho(c)$) lies
+strictly below the curve $1/c$. As mentioned earlier, this is a strict
+improvement over the previous best known exponent $1/c$ from
+\cite{IM}. While we have computed here $\rho(c)$ for $c$
+in the range $[1,10]$, we believe that $\rho(c)$ is strictly less than
+$1/c$ for all values of $c$. 
+%Proving this is part of our plans for future work. 
+
+For the case $p=1$, we observe that $\rho(c)$ curve is very close to
+$1/c$, although it lies above it. The optimal $\rho(c)$ was
+computed using {\em Matlab} as mentioned before. The {\em Matlab} program
+has a limit on the number of iterations it performs to compute the minimum
+of a function. We reached this limit during the computations. If we
+compute the true minimum, then we suspect that it will be very close to
+$1/c$, possibly equal to $1/c$, and that this minimum might be reached at
+$r = \infty$.
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[$\rho$ vs $r$ for $l_1$]{
+includegrphics[width=5.6cm,height=7.5cm,angle=-90]{$r_var_l1.ps$}
+\label{Fig:r_var_l1}
+} \quad
+subfigure[$\rho$ vs $r$ for $l_2$]{
+includegrphics[width=5.6cm,height=7.5cm,angle=-90]{$r_var_l2.ps$}
+\label{Fig:r_var_l2}
+}
+}
+\caption{$\rho$ vs $r$}
+\label{fig:r_var}
+\end{center}
+\end{figure*}
+
+If one were to implement our LSH scheme, ideally they would want to know
+the optimal value of $r$ for every $c$.  For $p=2$, for a given value
+of $c$,
+% unless $c$ is very large (and hence not of practical interest),
+we can compute the value of $r$ that gives the optimal value of
+$\rho(c)$. This can be done using programs like {\em Matlab}.
+However, we
+observe that for a fixed $c$ the value of $\rho$ as a function of $r$
+is more or less stable after a certain point
+(see Figure~\ref{fig:r_var}).
+%Figure~\ref{fig:r_var} shows the value of $\rho$
+%as function of $r$ for some fixed values of $c$.
+Thus, we observe that
+$\rho$ is not very sensitive to $r$ beyond a certain point and as
+long we choose $r$ ``sufficiently'' away from $0$, the $\rho$ value will be
+close to optimal. Note, however that we should not choose an $r$ value that
+is too large. As $r$ increases, both $p_1$ and $p_2$ get closer to
+$1$. This increases the query time, since $k$, which is the
+``width'' of each hash function (refer to Subsection~\ref{subsec:lsh}),
+increases as $\log_{1/p_2} n$.
+
+We mention that for the $l_2$ norm, the optimal value of $r$ appears to be a
+(finite) function of $c$.
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[$\rho$ vs $c$ for $l_1$]{
+includegrphics[width=5.6cm,height=7.5cm,angle=-90]{$c_var_l1.ps$}
+\label{Fig:c_var_l1}
+} \quad
+subfigure[$\rho$ vs $c$ for $l_2$]{
+includegrphics[width=5.6cm,height=7.5cm,angle=-90]{$c_var_l2.ps$}
+\label{Fig:c_var_l2}
+}
+}
+\caption{$\rho$ vs $c$}
+\label{fig:c_var}
+\end{center}
+\end{figure*}
+
+We also plot $\rho$ as a function of $c$ for a few fixed $r$ values(See
+Figure~\ref{fig:c_var}). For $p=2$, we observe that for moderate $r$
+values the $\rho$ curve ``beats'' the $1/c$ curve over a large range of
+$c$ that is of practical interest. For $p=1$, we observe that as $r$
+increases the $\rho$ curve drops lower and gets closer and closer to the
+$1/c$ curve.
+
+\iffalse
+For general $p$, we can numerically calculate the density function from
+existing software~\cite{Nol1}.  Then, using Maple, we can compute $\rho$
+%the exponent in the performance of the algorithm based on
+for various settings of the parameters $c$ and $r$.  
+
+We provide two plots
+for the case $p=0.5$ (Figure~\ref{fig:levy}). In
+Figure~\ref{fig:r_p0.500} we plot $\rho$ as a function of $c$ for a few
+fixed values of $r$ and compare it to $1/\sqrt{c}$.  Notice for $r=1$,
+$\rho$ is worse than $1/\sqrt{c}$, (i.e. $\gamma>0$ in
+Theorem~\ref{thm:general_p}).  However, for $r=25$, $\rho$ is about
+$1/\sqrt{c}$, and if we allow $r=75$, we can beat $1/\sqrt{c}$ for this
+range of $c$ (for larger $c$, this might not be case).  In fact,
+for a fixed value of $c$ ($c=2$) we observe the tradeoff in
+performance as we increase $r$.  Figure~\ref{fig:c_p0.500} shows $\rho$ as
+a function of $r$ for $c=2$ and compares it to $1/\sqrt{c}$.  For this
+value of $c$, we note the performance matches $1/\sqrt{c}$ for relatively
+small $r\simeq25$.  As the plot shows, we can decrease $\rho$ by
+increasing $r$.
+\fi
+\iffalse
+ It is important to note the
+constants hidden in the big-$O$ notation of Theorem~\ref{t:sens} grow as
+$r$ grows, and so our performance can not be arbitrarily good.  This
+suggests that there is some optimal $r$ which appropriately balances the
+constants and the $n^\rho$ terms in the query time.  Unfortunately, we
+can not calculate this for general $p$ as we do not know the density
+function and thus do not know how the constants depend on $r$.
+\fi
+
+\iffalse
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[$\rho$ vs $c$ for $l_{1/2}$]{
+includegrphics[width=5.6cm,height=7.5cm]{p05001.eps}
+\label{fig:r_p0.500}
+} \quad
+subfigure[$\rho$ vs $r$ for $l_{1/2}$]{
+includegrphics[width=5.6cm,height=7.5cm]{p05002.eps}
+\label{fig:c_p0.500}
+}
+}
+\caption{$\rho$ for $l_{1/2}$}
+\label{fig:levy}
+\end{center}
+\end{figure*}
+\fi
+
+\section{Empirical Evaluation of our Technique}
+\label{Sec:expt} 
+\iffalse
+We feel that our locality sensitive hashing based
+technique for near neighbor queries will be an attractive choice
+for implementing a nearest neighbor data structures. The two main
+advantages of our technique, over all other previously known
+techniques, are its generality and simplicity. As mentioned
+earlier, our technique is the only one that is known to work for
+high-dimensional nearest neighbor problem over $l_p$ norms with $p
+< 1$. Similarity search under such {\em fractional} norms have
+recently attracted interest~\cite{AHK,CIKM}.
+\fi
+
+In this section we present an experimental evaluation of our novel LSH
+scheme.  We focus on the Euclidean norm case, since this occurs most
+frequently in practice.  Our data structure is implemented for main
+memory.  
+%In our experiments we observed that our technique is an order
+%of magnitude faster than the previously best known main memory
+%implementation for nearest neighbor search based on the $kd$-tree
+%data structure~\cite{AMexp}.
+
+In what follows, we briefly discuss some of the issues pertaining to the
+implementation of our technique.  We then report some preliminary
+performance results based on an empirical comparison of our technique to
+the $kd$-tree data structure.
+
+{\noindent \bf Parameters and Performance Tradeoffs:} The three
+main parameters that affect the performance of our algorithm are:
+number of projections per hash value ($k$), number of hash tables
+($l$) and the width of the projection ($r$).
+In general, one could also introduce another parameter (say $T$),
+such that the query procedure stops after retrieving $T$ points.
+In our analysis, $T$ was set to $3l$. 
+In our experiments, however, the query procedure retrieved {\em all} 
+points colliding with the query (i.e., we used $T=\infty$).
+This reduces the number of parameters and simplifies the choice of the
+optimal.
+
+\iffalse
+%({\bf I am using 'r' and
+%not 'w' to be consistent with SOCG write up. If you change to 'w'
+%make sure to change that as well}).
+ As we increase the value of
+$k$ the probability of two points colliding decreases
+exponentially. This decreases the number of false positives per
+hash tables, i.e. points that are not near neighbors but hash into
+the same bucket as the query point. At the same time, increasing
+$k$ also increases the number of false negatives, i.e. points that
+are true near neighbors but do not hash into the same bucket as
+the query point. If we increase $k$, we also have to increase $l$
+in order to maintain the fraction of false negatives below a
+certain threshold. As a result, not only does the time to compute
+a single hash function increase, but we also need to evaluate more
+hash functions per query point. However, the total number of data
+points that collide with the query point over {\bf all} the hash
+functions, i.e. candidate near neighbors, is reduced. Effectively,
+we spend more time doing hashing and less time checking distances
+with the candidate near neighbors. Thus, in applications where it
+is costly to do distance computations, our algorithm provides a
+tradeoff of increased hashing time for decreased distance
+computation time. Such a scenario can occur if the data points
+reside on disk or if the dimensionality of the data set is too
+high. In contrast, data structures like $R$-trees or
+$kd$-trees do not provide such tradeoff and spend all their
+time doing distance computations with data points.
+\fi
+
+For a given value of $k$, it is easy to find the optimal value of $l$
+which will guarantee that the fraction of false negatives are no more than
+a user specified threshold. This process is exactly the same as in an
+earlier paper by Cohen et al. (\cite{eight}) that uses locality sensitive
+hashing to find similar column pairs in market-basket data, with the
+similarity exceeding a certain user specified threshold. In our
+experiments we tried a few values of $k$ (between $1$ and $10$) and below
+we report the $k$ that gives the best tradeoff for our scenario. The
+parameter $k$ represents a tradeoff between the time spent in computing
+hash values and time spent in pruning false positives, i.e. computing
+distances between the query and candidates; a bigger $k$ value 
+increases the number of hash computations. In general we could do a binary
+search over a large range to find the optimal $k$ value. This binary
+search can be avoided if we have a good model of the relative times of
+hash computations to distance computations for the application at hand.
+
+Decreasing the width of the projection ($r$) decreases the probability
+of collision for any two points. Thus, it has the same effect as
+increasing $k$. As a result, we would like to set $r$ as small as
+possible and in this way decrease the number of projections we need to
+make.  However, decreasing $r$ below a certain threshold increases the
+quantity $\rho$, thereby requiring us to increase $l$. Thus we cannot
+decrease $r$ by too much. For the $l_2$ norm we found the optimal value
+of $r$ using Matlab which we used in our experiments.
+
+\iffalse
+With the right set of parameters, as described above, we found
+that the query processing time for our algorithm is an order of
+magnitude faster than the best main memory implementation of
+$kd$-tree (available at {\tt http://www.cs.umd.edu/~mount/ANN/})
+against which we compared it.
+ Moreover, the advantage of our
+algorithm increases by a lot with increasing number of data points
+and dimensionality. Thus it scales much better than $kd$-tree. We
+feel that our algorithm will be an attractive choice of
+implementation for massive and high dimensional data sets. 
+\fi
+Before
+we report our performance numbers we will next describe the data
+set and query set that we used for testing.
+
+{\noindent \bf Data Set:} We used synthetically generated data sets and
+query points to test our algorithm. The dimensionality of the underlying
+$l_2$ space was varied between $20$ and $500$. We considered generating
+all the data and query points independently at random. Thus, for a data
+point (or query point) its coordinate along every dimension would be
+chosen independently and uniformly at random from a certain range $[-a,
+a]$. However, if we did that, given a query point all the data points
+would be sharply concentrated at the same distance from the query point
+as we are operating in high dimensions. Therefore, approximate
+nearest neighbor search would not make sense on such a data set. Testing
+approximate nearest neighbor requires that for every query point $q$,
+there are few data points within distance $R$ from $q$ and most of the
+points are at a distance no less than $(1+ \epsilon) R$.  We call this a
+``planted nearest neighbor model''.
+
+
+In order to ensure this property we generate our points as follows 
+(a similar approach was used in~\cite{Yia2}). We
+first generate the query points at random, as above. We then generate
+the data points in such a way that for every query point, we guarantee
+at least a single point within distance $R$ and all other points are
+distance no less than $(1+ \epsilon) R$.  This novel way of
+generating data sets ensures every query point has a
+%is appropriate for testing near neighbor data structures. 
+few (in our case, just one) approximate nearest neighbors, while most
+points are far from the query.
+
+The resulting data set has several interesting properties. Firstly, it 
+constitutes the worst-case input to LSH (since there is only one 
+correct nearest neighbor, and all other points are ``almost'' correct
+nearest neighbors). Moreover, it captures the typical situation occurring in real life similarity search applications, in which there are few points that are relatively close to the query point, and most of the database points lie quite far from the query point.
+
+
+
+For our experiments the range $[-a, a]$ was set to $[-50, 50]$.
+%so that each dimension could be stored as a char. 
+The total number of data points was varied between $10^4$ and
+$10^5$. Both our algorithm and the $kd$-tree take as input the
+approximation factor $c = (1+ \epsilon)$. However, in addition to $c$
+our algorithm also requires as input the value of the distance $R$
+(upper bound) to the nearest neighbor. This can be avoided by guessing
+the value of $R$ and doing a binary search.  We feel that for most real
+life applications it is easy to guess a range for $R$ that is not too
+large. As a result the additional multiplicative overhead of doing a
+binary search should not be much and will not cancel the gains that we
+report.
+
+{\bf Experimental Results:} We did three sets of experiments to evaluate
+the performance of our algorithm versus that of $kd$-tree: we
+increased the number $n$ of data points, the dimensionality $d$ of the data
+set, and the approximation factor $c=(1+ \epsilon)$. In each set of
+experiments we report the average query processing times for our
+algorithm and the $kd$-tree algorithm, and also the ratio of the two
+((average query time for $kd$-tree)/( average query time for our
+algorithm)), i.e. the speedup achieved by our algorithm.  We ran our
+experiments on a Sun workstation with 650 MHz UltraSPARC-IIi, 512KB L2
+cache processor, having no special support for vector computations, with
+512 MB of main memory.
+
+
+ For all our experiments we set the parameters $k=10$ and $\ell =
+30$. Moreover, we set the percentage of false negatives that we can
+tolerate up to $10\%$ and indeed for all the experiments that we report
+below we did not get the more than $7.5\%$ false negatives, in fact less
+in most cases.
+
+
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[query time vs $n$]{
+%includegrphics[width=7.5cm,height=5.6cm]{n_time.eps}
+\label{Fig:n-speedup1}
+} \quad
+subfigure[speedup vs $n$]{
+%includegrphics[width=7.5cm,height=5.6cm]{$n_speedup.eps$}
+\label{Fig:n-speedup2}
+}
+}
+\caption{Gain as data size varies}
+\label{Fig:n-speedup}
+\end{center}
+\end{figure*}
+
+For all the query time graphs that we present, the curve that lies above
+is that of $kd$-tree and the one below is for our algorithm.
+
+For the first experiment we fixed $\epsilon = 1$, $d = 100$
+and $r = 4$ (the width of projection).  We varied the number of data points from $10^4$ to
+$10^5$. Figures~\ref{Fig:n-speedup1}~and~\ref{Fig:n-speedup2} show
+the processing times and speedup respectively as $n$ is varied. As
+we see from the Figures, the speedup seems to increase linearly
+with $n$.
+% Thus, our algorithm scales much better than the
+%$kd$-tree algorithm.
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[query time vs dimension]{
+includegrphics[width=7.5cm,height=5.6cm]{$dim_time.eps$}
+\label{Fig:dim-speedup1}
+} \quad
+subfigure[speedup vs dimension]{
+includegrphics[width=7.5cm,height=5.6cm]{$dim_speedup.eps$}
+\label{Fig:dim-speedup2}
+}
+}
+\caption{Gain as dimension varies}
+\label{Fig:dim-speedup}
+\end{center}
+\end{figure*}
+
+For the second experiment we fixed $\epsilon = 1$, $n = 10^5$ and
+$r = 4$. We varied the dimensionality of the data set from $20$ to
+$500$. Figures~\ref{Fig:dim-speedup1}~and~\ref{Fig:dim-speedup2}
+show the processing times and speedup respectively as $d$ is
+varied. As we see from the Figures, the speedup seems to increase
+with the dimension. 
+%Again, this suggests that out algorithm scales
+%better than $kd$-tree with the number of dimensions.
+
+\begin{figure*}[t]
+\begin{center}
+\mbox{
+subfigure[query time vs $\epsilon$]{
+includegrphics[width=7.5cm,height=5.6cm]{$eps_time.eps$}
+\label{Fig:eps-speedup1}
+} \quad
+subfigure[speedup vs $\epsilon$]{
+includegrphics[width=7.5cm,height=5.6cm]{$eps_speedup.eps$}
+\label{Fig:eps-speedup2}
+}
+}
+\caption{Gain as $\epsilon$ varies}
+\label{Fig:eps-speedup}
+\end{center}
+\end{figure*}
+
+For the third experiment we fixed $n = 10^5$ and $d = 100$. The
+approximation factor $(1+\epsilon)$ was varied from $1.5$ to $4$.
+The width $r$ was set appropriately as a function of $\epsilon$.
+Figures~\ref{Fig:eps-speedup1}~and~\ref{Fig:eps-speedup2} show the
+processing times and speedup respectively as $\epsilon$ is varied.
+%As we see from the Figures, the speedup mostly increases with $\epsilon$.
+%({\bf this is incorrect as of now. I am hoping it will change}).
+
+{\noindent \bf Memory Requirement:} The memory requirement for our
+algorithm equals the memory to store the data points themselves
+and the memory required to store the hash tables. From our
+experiments, typical values of $k$ and $l$ 
+are $10$ and $30$ respectively. If we insert each point
+in the hash tables along with their hash values and a pointer to
+the data point itself, it will require $l\cdot(k+1)$ words (int)
+of memory, which for our typical $k,l$ values evaluates to $330$
+words. We can reduce the memory requirement by not storing the
+hash value explicitly as concatenation of $k$ projections, but
+instead hash these $k$ values in turn to get a single word for the
+hash. This would reduce the memory requirement to $l\cdot 2$, i.e.
+$60$ words per data point. If the data points belong to a high
+dimensional space (e.g., with $500$ dimension or more), then
+the overhead of maintaining the hash table is not much (around
+$12\%$ with the optimization above) as compared to storing the
+points themselves. Thus, the memory overhead of our algorithm is
+small. 
+%Figure~\ref{Fig:mem} shows the memory requirement of our
+%algorithm as $n$ is varied. ({\bf I dont know if we can get such a
+%figure and if we should since our numbers dont seem to conform
+%with above discussion. Take a decision and edit accordingly}).
+
+%({\bf I feel that the discussion about ``stop when 3L'' should be
+%in the section that describes the algorithm.})
+
+\section{Conclusions}
+
+In this paper we present a new LSH scheme for the similarity search in high-dimensional spaces.
+The algorithm is easy to implement, and generalizes to arbitrary $l_p$ norm, for $p \in [0,2]$.
+We provide theoretical, computational and experimental evaluations of the algorithm.
+
+Although the experimental comparison of LSH and kd-tree-based algorithm suggests that the former outperforms the latter, there are several caveats that one needs to keep in mind:
+\begin{itemize}
+\item We used the kd-tree structure ``as is''. Tweaking its parameters would likely improve its performance.
+\item LSH solves the decision version of the nearest neighbor problem, while kd-tree solves the optimization version.
+Although the latter reduces to the former, the reduction overhead increases the running time.
+\item One could run the approximate kd-tree algorithm with approximation parameter $c$ that is much larger than the intended approximation.
+Although the resulting algorithm would provide very weak guarantee on the quality of the returned neighbor, typically the actual error is much smaller than the guarantee.
+\end{itemize}
+
+
+
+\bibliographystyle{plain}
+
+{\footnotesize
+
+\bibliography{paper.bib}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\appendix
+
+
+\section{Growth-restricted data sets}
+
+In this section we focus exclusively on data sets living in the $l_2^d$ norm.
+
+Consider a data set $P$, query $q$, and let $p$ be the closest point in $P$ to $q$.
+Assume we know the distance $\|p-q\|$, in which case we can assume that it is equal to $1$, by scaling\footnote{Similar guarantees can be proved when we only know a constant approximation to the distance.}.
+For $c \ge 1$, let $P(q,c)=P \cap B(q,c)$ and let $N(q,c)=|P(q,c)|$.
+
+
+We consider a ``single shot'' LSH algorithm, i.e., one that uses only $L=1$ indices, but examines all points in the bucket containing $q$.
+We use the parameters $k=r= T \log n$, for some constant $T>1$.
+This implies that the hash function can be evaluated in time $O(\log n)$.
+%Combined with the theorem below, this gives an algorithm with query time $O(d \log n + d 2^{O(b)})$.
+
+\begin{theorem}
+If $N(q,c)=O(c^b)$ for some $b>1$, then the ``single shot'' LSH algorithm finds $p$ with constant probability in expected time $d (\log n + 2^{O(b)})$. 
+\end{theorem}
+
+\noindent{\bf Proof:} For any point $p'$ such that $\|p'-q\|=c$, 
+the probability that $h(p')=h(q)$ is equal to $p(c)=\int_0^r \frac{1}{c}
+f_2(\frac{t}{c}) (1-\frac{t}{r}) dt$, where $f_2(x)=\frac{2}{\sqrt{2 \pi}} e^{-x^2/2}$.
+Therefore
+\begin{eqnarray*}
+p(c) & = &  \frac{2}{\sqrt{2 \pi}} \int_0^r \frac{1}{c} e^{-(\frac{t}{c})^2/2}  dt  -  \frac{2}{\sqrt{2 \pi}} \int_0^r \frac{1}{c} e^{-(\frac{t}{c})^2/2} \frac{t}{r} dt\\
+&      = & S_1(c) - S_2(c)
+\end{eqnarray*}
+
+Note that $S_1(c) \le 1$. Moreover
+\begin{eqnarray*}
+&     S_2(c)=& \frac{2}{\sqrt{2 \pi}} \cdot \frac{c}{r} \int_0^r  e^{-(\frac{t}{c})^2/2} \frac{t}{c^2} dt\\
+&     S_2(c) = & \frac{2}{\sqrt{2 \pi}} \cdot  \frac{c}{r} \int_0^{r^2/(2c^2)} e^{-y} dy\\
+&     S_2(c) = & \frac{2}{\sqrt{2 \pi}}  \frac{c}{r} [1-e^{-r^2/(2c^2)}]
+\end{eqnarray*}
+
+We have $p(1)= S_1(1)-S_2(1) \ge 1-e^{r^2/2} -\frac{2}{\sqrt{2\pi}r} \ge 1-A/r$, for some constant $A>0$.
+This implies that the probability that $p$ collides with $q$ is at least $(1-A/r)^k \approx e^{-A}$. 
+Thus the algorithm is correct with constant probability.
+
+
+If $c^2 \le r^2/2$, then we have 
+\[  p(c) \le 1- \frac{2}{\sqrt{2 \pi}}\frac{c}{r} (1-1/e) \]
+or equivalently $p(c) \le 1-B c/r$, for proper constants $B>0$.
+
+
+
+Now consider the expected number of points colliding with $q$.
+Let $C$ be a multiset containing all values of $c=\|p'-q\|/\|p-q\|$ over $p' \in P$.
+We have
+\begin{eqnarray*}
+E[|P \cap g^{-1}(q)|] & = & \sum_{c \in C} p(c)^k\\
+& = &  \sum_{c \in C, c \le r/\sqrt{2}} p(c)^k +  \sum_{c \in C, c > r/\sqrt{2}} p(c)^k\\
+& \le &  \sum_{c \in C, c \le r/\sqrt{2}} (1- B c/r)^k + (1- \frac{B}{\sqrt{2}})^r n\\
+%& \le &  _{r/\sqrt{2}}^{\infty} p(c)^k [N(q,c)-N(q,c-dc)] dc\\
+& \le  & \int_1^{r/\sqrt{2}} (1-B c/r)^k N(q,c+1) dc + O(1)\\
+& \le  & \int_1^{r/\sqrt{2}} e^{-Bc} N(q,c+1) dc + O(1)
+\end{eqnarray*}
+
+If $N(q,t)=O(c^b)$, then we have 
+\[ E[|P \cap g^{-1}(q)|] =  O \left (\int_1^{r/\sqrt{2}} e^{-Bc} (c+1)^b dc\right ) = 2^{O(b)} \]  
+
+
+%\hfill $\Box$
+
+\section{Asymptotic Analysis for the General Case}
+
+
+\begin{theorem}
+\label{thm:general_p}
+For any $p \in (0,2]$ there is a $(r_1,r_2,p_1,p_2)$-sensitive family
+${\cal H}$ for $l_p^d$ such that for any $\gamma > 0$,
+$$\rho=\frac{\ln 1/p_1}{\ln 1/p_2} \le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right).$$
+\end{theorem}
+
+
+We prove that for the general case ($p \in (0,2]$) the ratio $\rho(c)$
+gets arbitrarily close to $\max\left(\frac{1}{c^p},
+\frac{1}{c}\right)$.
+%Thus, for the case $p=\{1,2\}$, our algorithm matches the best previously
+%known $\rho=\frac{1}{c}$.
+For the case $p<1$, our algorithm is the
+first algorithm to solve this problem, and so there is no existing ratio
+against which we can compare our result.  However, we show that for this
+case $\rho$ is arbitrarily close to $\frac{1}{c^p}$.
+%Note, no algorithm was previously known for the case
+%$p <1$, against which we can compare the ratio $\rho(c)$, which for this
+%case is arbitrarily close to $\frac{1}{c^p}$.
+The proof follows from the
+following two Lemmas, which together imply Theorem~\ref{thm:general_p}.
+
+Let $l=\frac{1-p_2}{1-p_1}$, $x=1-p_1$.  Then
+$\rho=\frac{\log(1-x)}{\log(1-lx)}\leq\frac{1-p_1}{1-p_2}$ by the
+following lemma.
+
+\begin{lemma}
+For $x\in[0,1)$ and $l\geq 1$ such that $1 - lx > 0$,
+$$\frac{\log(1-x)}{\log(1-lx)}\leq\frac{1}{l}.$$
+\end{lemma}
+
+\noindent{\bf Proof:} Noting $\log (1-lx) < 0$, the claim is equivalent to
+$l\log(1-x)\geq\log(1-lx)$.
+This in turn is equivalent to
+%Raising each side of the claim to the power of $2$, we
+%see an equivalent statement is
+$$g(x)\equiv(1-lx)-(1-x)^l\leq0.$$
+This is trivially true for $x=0$.  Furthermore, taking the derivative, we see
+$g'(x)=-l+l(1-x)^{l-1}$, which is non-positive for $x\in[0,1)$ and $l\geq1$.
+Therefore, $g$ is non-increasing in the region in which we are interested,
+and so $g(x)\leq0$ for all values in this region.
+
+
+Now our goal is to upper bound $\frac{1-p_1}{1-p_2}$.
+
+\begin{lemma}
+\label{lemma:general_p}
+For any $\gamma >0$, there is $r=r(c,p,\gamma)$ such that
+$$\frac{1-p_1}{1-p_2} \le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right).$$
+\end{lemma}
+
+\noindent{\bf Proof:} Using the values of $p_1, p_2$ calculated in
+Sub-section~\ref{subsec:family}, followed by a change of variables, we get
+
+\begin{eqnarray*}
+\frac{1-p_1}{1-p_2}
+&=&
+\frac{1-\int_0^r(1-\frac{t'}{r})f(t')dt'}
+     {1-\int_0^r(1-\frac{t'}{r})\frac{1}{c}f(\frac{t'}{c})dt'}
+\cr&=&
+\frac{1-\int_0^r(1-\frac{t}{r})f(t)dt}
+     {1-\int_0^{r/c}(1-\frac{tc}{r})f(t)dt}
+\cr&=&
+\frac{(1-\int_0^rf(t)dt)+\frac{1}{r}\int_0^rtf(t)dt}
+     {(1-\int_0^{r/c}f(t)dt)+\frac{c}{r}\int_0^{r/c}tf(t)dt}.
+\end{eqnarray*}
+Setting
+$$F(x)=1-\int_0^xf(t)dt$$
+and
+$$G(x)=\frac{1}{x}\int_0^xtf(t)dt$$
+we see
+\begin{eqnarray*}
+\frac{1-p_1}{1-p_2} 
+&=& \frac{F(r)+G(r)}{F(r/c)+G(r/c)}\cr
+&\leq& \max\left(\frac{F(r)}{F(r/c)},\frac{G(r)}{G(r/c)}\right).
+\end{eqnarray*}
+
+First, we consider $p \in (0,2)-\{1\}$ and discuss the special
+cases $p=1$ and $p=2$ towards the end.
+We bound $F(r)/F(r/c)$.  Notice $F(x)=\Pr_a[a>x]$ for $a$
+drawn according to the absolute value of
+a $p$-stable distribution with density function
+$f(\cdot)$.  To estimate $F(x)$, we can use the Pareto estimation
+(\cite{Nol}) for the cumulative distribution function, which holds for $0
+< p < 2$,
+
+\begin{tabular}{c}
+\hfill~\\
+$\forall\delta>0\ \exists x_0\mathrm{\ s.t.\ }\forall x\geq x_0,$\hfill~\\
+~~$C_px^{-p}(1-\delta)\leq F(x)\leq C_px^{-p}(1+\delta)$\hfill~\\
+\hfill~\\
+\end{tabular}
+
+\noindent
+where $C_p=\frac{2}{\pi}\Gamma(p)\sin(\pi p/2)$. Note that the extra factor 2 is due to the fact that
+the distribution function is for the absolute value of the $p$-stable
+distribution. Fix $\delta =
+\min(\gamma/4,1/2)$. For this value of $\delta$ let $r_0$ be the $x_0$ in the
+equation above.
+
+%Find the $r_0$ corresponding to $\delta\leq\min(\gamma/4,1/2)$ for the
+%$\gamma$ in the theorem statement and choose $r\geq r_0$ (notice
+%we have the power to set $r$ as we please).  Then
+
+If we set $r>r_0$ we get
+\begin{eqnarray*}
+\frac{F(r)}{F(r/c)} &\leq&
+\frac{C_pr^{-p}(1+\delta)}{C_p(r/c)^{-p}(1-\delta)} \cr&\leq&
+\frac{r^{-p}(1+\delta)(1+2\delta)}{(r/c)^{-p}} \cr&\leq&
+\left(\frac{1}{c}\right)^p\left(1+4\delta\right) \cr&\leq&
+\left(\frac{1}{c}\right)^p\left(1+\gamma\right).
+\end{eqnarray*}
+
+Now we bound $G(r)/G(r/c)$.  We break the proof down into two
+cases based on the value of $p$.  
+
+\ \\{\bf Case 1:} $p>1$.  For these
+$p$-stable distributions, $\int_0^{\infty}tf(t)dt$ converges to,
+say, $k_p$ (since the random variables drawn from those distributions have finite expectations).  As $tf(t)$ is non-negative on $[0,\infty)$,
+$\int_0^xtf(t)dt$ is a monotonically increasing function of $x$
+which converges to $k_p$. Thus, for every $\delta' > 0$ there is some $r_0'$
+such that
+$$(1-\delta')k_p\leq\int_0^{r_0'}tf(t)dt.$$
+Set $\delta'=\min(\gamma/2,1/2)$ and choose $r'>cr_0'$.
+Then
+\begin{eqnarray}
+\frac{G(r')}{G(r'/c)} &=& \frac{\frac{1}{r'}\int_0^{r'}tf(t)dt}
+     {\frac{c}{r'}\int_0^{r_0'}tf(t)dt+\frac{c}{r'}\int_{r_0'}^{r'/c}tf(t)dt}
+\cr&\leq& \frac{\frac{1}{r'}\int_0^\infty tf(t)dt}
+     {\frac{c}{r'}\int_0^{r_0'}tf(t)dt}
+\cr&\leq& \frac{\frac{1}{r'}k_p}
+     {\frac{c}{r'}(1-\delta')k_p}
+\cr&\leq& \frac{1}{c}(1+2\delta') \cr&\leq&
+\frac{1}{c}(1+\gamma).
+\end{eqnarray}
+
+{\noindent \bf Case 2:} $p<1$. For this case we will choose our parameters
+so that we can use the Pareto estimation for the density function.  Choose
+$x_0$ large enough so that the Pareto estimation is accurate to within a
+factor of $(1\pm\delta)$ for $x>x_0$.  Then for $x>x_0$,
+
+\begin{tabular}{c}
+\hfill~\\
+$G(x) =
+\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1}{x}\int_{x_0}^xtf(t)dt$\hfill~\\
+\hfill~\\
+~~~~~~~$<\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1+\delta}{x}\int_{x_0}^xpC_pt^{-p}dt$\hfill~\\
+\hfill~\\
+~~~~~~~$=\frac{1}{x}\int_0^{x_0}tf(t)dt\ +$\hfill~\\
+~~~~~~~~~~$(\frac{pC_p}{x(1-p)}x^{-p+1}-\frac{pC_p}{x(1-p)}{x_0}^{-p+1})(1+\delta)$\hfill~\\
+\hfill~\\
+~~~~~~~$=\frac{1}{x}(\int_0^{x_0}tf(t)dt-\frac{pC_p(1+\delta)}{(1-p)}{x_0}^{-p+1})\
++$\hfill~\\
+~~~~~~~~~~$\frac{1}{x^p}(\frac{pC_p}{(1-p)}(1+\delta)).$\hfill~\\
+\hfill~\\
+\end{tabular}
+
+%% \begin{eqnarray*}
+%% G(x) &=&
+%% \frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1}{x}\int_{x_0}^xtf(t)dt
+%% \cr&<&\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1+\delta}{x}\int_{x_0}^xpC_pt^{-p}dt
+%% \cr&=&
+%% \frac{1}{x}\int_0^{x_0}tf(t)dt+\left(\frac{pC_p}{x(1-p)}x^{-p+1}-\frac{pC_p}{x(1-p)}{x_0}^{-p+1}\right)\left(1+\delta\right)
+%% \cr&=&
+%% \frac{1}{x}\left(\int_0^{x_0}tf(t)dt-\frac{pC_p(1+\delta)}{(1-p)}{x_0}^{-p+1}\right)+\frac{1}{x^p}\left(\frac{pC_p}{(1-p)}(1+\delta)\right).
+%% \end{eqnarray*}
+
+\noindent
+Since $x_0$ is a constant that depends on $\delta$, the first term
+decreases as $1/x$ while the second term decreases as $1/x^p$ where $p<1$.
+%the first term of $G(x)$ is inversely linear in $x$
+%while the second term is inversely sublinear in $x$.
+Thus for every $\delta'$ there is some $x_1$ such that for all $x>x_1$,
+the first term is at most $\delta'$ times the second term.  We
+choose $\delta'=\delta$. Then for $x>\max(x_1,x_0)$,
+$$G(x)<(1+\delta)^2\left(\frac{pC_p}{(1-p)x^p}\right).$$
+\iffalse
+To lower bound $G(x)$, we again begin with the Pareto estimation.
+Using the same parameters as in the upper bound, we see for
+$x>x_0$,
+\begin{eqnarray*}
+G(x) &=&
+\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1}{x}\int_{x_0}^xtf(t)dt
+\cr&>&\frac{1-\delta}{x}\int_{x_0}^xpC_pt^{-p}dt \cr&=&
+\left(\frac{pC_p}{x(1-p)}x^{-p+1}-\frac{pC_p}{x(1-p)}{x_0}^{-p+1}\right)(1-\delta)
+\cr&=&
+\frac{1}{x^p}\left(\frac{pC_p(1-\delta)}{(1-p)}\right)-\frac{1}{x}\left(\frac{pC_p(1-\delta)}{(1-p)}{x_0}^{-p+1}\right)
+\end{eqnarray*}
+As $p<1$, the first term of $G(x)$ is inversely sublinear in $x$
+while the second term is inversely linear in $x$.  Thus for every
+$\delta'$ there is some $r_0^2$ such that for all $r>r_0^2$, the
+second term is at most $\delta'$ times the first term.  We choose
+$\delta'=\delta$.  Then for $r>\max(r_0^2,x_0)$,
+\fi
+In the same way we obtain
+$$G(x)>(1-\delta)^2\left(\frac{pC_p}{(1-p)x^p}\right).$$
+Using these two bounds, we see for $r>c\max(x_1,x_0)$,
+\begin{eqnarray*}
+\frac{G(r)}{G(r/c)} &<&
+\frac{(1+\delta)^2\left(\frac{pC_p}{(1-p)r^p}\right)}
+     {(1-\delta)^2\left(\frac{pC_p}{(1-p)(r/c)^p}\right)}
+\cr&\leq& \frac{1}{c^p}(1+9\delta) \cr&\leq&
+\frac{1}{c^p}(1+\gamma)
+\end{eqnarray*}
+for $\delta<\min(\gamma/9,1/2)$.
+
+We now consider the special cases of $p \in \{1,2\}$.
+For the case of $p=1$, we have the Cauchy distribution and we can
+compute directly $G(r)={\ln (r^2+1)\over \pi r}$ and $F(r)=1-{2\over
+\pi}\tan^{-1} (r)$.
+In fact for the ratio $F(r)\over F(r/c)$, the previous analysis for
+general $p$ works here.  As for the ratio
+${G(r)\over G(r/c)}$, we can prove the upper bound of $1\over c$ using
+L'Hopital rule, as follows:
+
+\begin{eqnarray*}
+\lim_{r\rightarrow \infty}{G(r)\over G({r\over c})} 
+&=& 
+\lim_{r\rightarrow \infty}{\ln(r^2+1)\over c\ln((r/c)^2+1)} 
+\cr&=& 
+\lim_{r\rightarrow \infty}{{2r\over (r^2+1)}\over c({2r\over c^2(r^2/c^2
++1)})}
+\cr&=& 
+\lim_{r\rightarrow \infty}{c^2(r^2/c^2+1)\over c(r^2+1)} 
+\cr&=& 
+\lim_{r\rightarrow \infty}{c^2(2r/c^2)\over 2cr} 
+\cr&=& {1\over c}.
+\end{eqnarray*}
+
+Also for the case $p=2$, i.e. the normal distribution, the computation is
+straightforward. We use the fact that for this case $F(r)\simeq f(r)/r$
+and $G(r) = {2\over \sqrt{2\pi}}{1-e^{{-{r^2}}\over 2} \over r}$, where
+$f(r)$ is the normal density function. For large values of $r$, $G(r)$
+clearly dominates $F(r)$, because $F(r)$ decreases exponentially
+($e^{-r^2/2}$) while $G(r)$ decreases as $1/r$. Thus, we need to approximate
+${G(r)\over G(r/c)}$ as $r$ tends to infinity, which is clearly $1\over c$.
+
+$$\lim_{r\rightarrow \infty}{G(r)\over G({r\over c})} =
+\lim_{r\rightarrow \infty} {1-e^{{-{r^2}}\over 2}\over c(1-e^{-{{r^2\over 2c^2}}})} =
+{1\over c}$$
+
+Notice that similar to the
+previous parts, we can find the appropriate $r(c,p,\gamma)$ such that
+$\frac{1-p_1}{1-p_2}$ is at most
+most $(1+\gamma){1\over c}$.
+
+
+
+
+\end{document}
+
+\subsection{Asymptotic Analysis for the General Case}
+We prove that for the general case ($p \in (0,2]$) the ratio $\rho(c)$
+gets arbitrarily close to $\max\left(\frac{1}{c^p},
+\frac{1}{c}\right)$. Note, no algorithm was previously known for the case
+$p <1$, against which we can compare the ratio $\rho(c)$, which for this
+case is arbitrarily close to $\frac{1}{c^p}$. The proof follows from the
+following two Lemmas, which together imply Theorem~\ref{thm:general_p}.
+
+Let $l=\frac{1-p_2}{1-p_1}$, $x=1-p_1$.  Then
+$\rho=\frac{\log(1-x)}{\log(1-lx)}\leq\frac{1-p_1}{1-p_2}$ by the
+following lemma.
+
+\begin{lemma}
+For $x\in[0,1)$ and $l\geq 1$ such that $1 - lx > 0$,
+$$\frac{\log(1-x)}{\log(1-lx)}\leq\frac{1}{l}.$$
+\end{lemma}
+
+\noindent{\bf Proof:} Noting $\log (1-lx) < 0$, the claim is equivalent to
+$l\log(1-x)\geq\log(1-lx)$.
+This in turn is equivalent to
+%Raising each side of the claim to the power of $2$, we
+%see an equivalent statement is
+$$g(x)\equiv(1-lx)-(1-x)^l\leq0.$$
+This is trivially true for $x=0$.  Furthermore, taking derivative, we see
+$g'(x)=-l+l(1-x)^{l-1}$, is non-positive for $x\in[0,1)$ and $l\geq1$.
+Therefore, $g$ is non-increasing in the region in which we are interested,
+and so $g(x)\leq0$ for all values in this region.
+
+
+Now our goal is to upper bound $\frac{1-p_1}{1-p_2}$.
+
+\begin{lemma}
+\label{lemma:general_p}
+For an arbitrarily small $\gamma$, there is $r=r(c,p,\gamma)$ such that
+$$\frac{1-p_1}{1-p_2} \le (1+\gamma)\cdot\max\left(\frac{1}{c^p}, \frac{1}{c}\right).$$
+\end{lemma}
+
+\noindent{\bf Proof:} From the bounds on $p_1$ and $p_2$ calculated above,
+along with a change of variables, we see
+
+\begin{eqnarray}
+\frac{1-p_1}{1-p_2}
+&=&
+\frac{1-\int_0^r(1-\frac{t'}{r})f(t')dt'}
+     {1-\int_0^r(1-\frac{t'}{r})\frac{1}{c}f(\frac{t'}{c})dt'}
+\cr&=&
+\frac{1-\int_0^r(1-\frac{t}{r})f(t)dt}
+     {1-\int_0^{r/c}(1-\frac{tc}{r})f(t)dt}
+\cr&=&
+\frac{(1-\int_0^rf(t)dt)+\frac{1}{r}\int_0^rtf(t)dt}
+     {(1-\int_0^{r/c}f(t)dt)+\frac{c}{r}\int_0^{r/c}tf(t)dt}.
+\end{eqnarray}
+Setting
+$$F(x)=1-\int_0^xf(t)dt$$
+and
+$$G(x)=\frac{1}{x}\int_0^xtf(t)dt$$
+we see
+$$\frac{1-p_1}{1-p_2}\leq\frac{F(r)+G(r)}{F(r/c)+G(r/c)}\leq
+\max\left(\frac{F(r)}{F(r/c)},\frac{G(r)}{G(r/c)}\right).$$
+
+First, consider the special cases of $p \in \{1,2\}$.
+For the case of $p=1$, we have the Cauchy distribution and we can
+compute directly $G(r)={\ln (r+1)\over r}$ and $F(r)=1-{2\over
+\pi}\tan^{-1} (r)$ implying $\frac{1-p_1}{1-p_2}$ is at most $1/c$
+as $r$ tends to infinity. Also for normal distribution, the
+computation is straightforward.  We see $F(r)=f(r)/r$ and $G(r) =
+{1-e^{-{r^2}} \over r}$ and so $\frac{1-p_1}{1-p_2}$ is again at
+most $1/c$ as $r$ tends to infinity.
+{\bf PIOTR: Elaborate ? Also, do we need $r$ going to infinity ?}
+
+It remains to consider $p \in (0,2)-\{1\}$.
+We first bound $F(r)/F(r/c)$.  Notice $F(x)=\Pr_a[a>x]$ for $a$
+drawn according to a $p$-stable distribution with density function
+$f(\cdot)$.  To estimate $F(x)$, we can use the Pareto estimation
+(\cite{Nol}) which claims
+$$\forall\delta>0\ \exists x_0\mathrm{\ s.t.\ }\forall x\geq x_0,\ C_px^{-p}(1-\delta)\leq F(x)\leq C_px^{-p}(1+\delta)$$
+where $C_p=\frac{1}{\pi}\Gamma(p)\frac{\sin(\pi p)}{2}$. Fix $\delta =
+\min(\gamma/4,1/2)$. For this value of $\delta$ let $r_0$ be the $x_0$ in
+the equation above.
+%Find the $r_0$ corresponding to $\delta\leq\min(\gamma/4,1/2)$ for the
+%$\gamma$ in the theorem statement and choose $r\geq r_0$ (notice
+%we have the power to set $r$ as we please).  Then
+If we set $r>r_0$ we get
+\begin{eqnarray}
+\frac{F(r)}{F(r/c)} &\leq&
+\frac{C_pr^{-p}(1+\delta)}{C_p(r/c)^{-p}(1-\delta)} \cr&\leq&
+\frac{r^{-p}(1+\delta)(1+2\delta)}{(r/c)^{-p}} \cr&\leq&
+\left(\frac{1}{c}\right)^p\left(1+4\delta\right) \cr&\leq&
+\left(\frac{1}{c}\right)^p\left(1+\gamma\right).
+\end{eqnarray}
+
+Now we bound $G(r)/G(r/c)$.  We break the proof down into two
+cases based on the value of $p$.  First suppose $p>1$.  For these
+$p$-stable distributions, $\int_0^{\infty}tf(t)dt$ converges to,
+say, $k_p$ (since the random variables drawn from those distributions have finite expectations).  As $tf(t)$ is non-negative on $[0,\infty)$,
+$\int_0^xtf(t)dt$ is a monotonically increasing function of $x$
+which converges to $k_p$. Thus, for every $\delta' > 0$ there is some $r_0'$
+such that
+$$(1-\delta')k_p\leq\int_0^{r_0'}tf(t)dt.$$
+Set $\delta'=\min(\gamma/2,1/2)$ and choose $r'>cr_0'$.
+Then
+\begin{eqnarray}
+\frac{G(r')}{G(r'/c)} &=& \frac{\frac{1}{r'}\int_0^{r'}tf(t)dt}
+     {\frac{c}{r'}\int_0^{r_0'}tf(t)dt+\frac{c}{r'}\int_{r_0'}^{r'/c}tf(t)dt}
+\cr&\leq& \frac{\frac{1}{r'}\int_0^\infty tf(t)dt}
+     {\frac{c}{r'}\int_0^{r_0'}tf(t)dt}
+\cr&\leq& \frac{\frac{1}{r'}k_p}
+     {\frac{c}{r'}(1-\delta')k_p}
+\cr&\leq& \frac{1}{c}(1+2\delta') \cr&\leq&
+\frac{1}{c}(1+\gamma).
+\end{eqnarray}
+
+If $p<1$, we will choose our parameters so that we can use the
+Pareto estimation for the density function.  Choose $x_0$ large
+enough so that the Pareto estimation is accurate to within a
+factor of $(1\pm\delta)$ for $x>x_0$.  Then for $x>x_0$,
+\begin{eqnarray}
+G(x) &=&
+\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1}{x}\int_{x_0}^xtf(t)dt
+\cr&<&\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1+\delta}{x}\int_{x_0}^xpC_pt^{-p}dt
+\cr&=&
+\frac{1}{x}\int_0^{x_0}tf(t)dt+\left(\frac{pC_p}{x(1-p)}x^{-p+1}-\frac{pC_p}{x(1-p)}{x_0}^{-p+1}\right)\left(1+\delta\right)
+\cr&=&
+\frac{1}{x}\left(\int_0^{x_0}tf(t)dt-\frac{pC_p(1+\delta)}{(1-p)}{x_0}^{-p+1}\right)+\frac{1}{x^p}\left(\frac{pC_p}{(1-p)}(1+\delta)\right).
+\end{eqnarray}
+Since $x_0$ is constant that that depends on $\delta$, the first term
+decreases as $1/x$ while the second term decreases as $1/x^p$ where $p<1$.
+%the first term of $G(x)$ is inversely linear in $x$
+%while the second term is inversely sublinear in $x$.
+Thus for every $\delta'$ there is some $x_1$ such that for all $x>x_1$,
+the first term is at most $\delta'$ times the second term.  We
+choose $\delta'=\delta$. Then for $x>\max(x_1,x_0)$,
+$$G(x)<(1+\delta)^2\left(\frac{pC_p}{(1-p)x^p}\right).$$
+
+\iffalse
+To lower bound $G(x)$, we again begin with the Pareto estimation.
+Using the same parameters as in the upper bound, we see for
+$x>x_0$,
+\begin{eqnarray}
+G(x) &=&
+\frac{1}{x}\int_0^{x_0}tf(t)dt+\frac{1}{x}\int_{x_0}^xtf(t)dt
+\cr&>&\frac{1-\delta}{x}\int_{x_0}^xpC_pt^{-p}dt \cr&=&
+\left(\frac{pC_p}{x(1-p)}x^{-p+1}-\frac{pC_p}{x(1-p)}{x_0}^{-p+1}\right)(1-\delta)
+\cr&=&
+\frac{1}{x^p}\left(\frac{pC_p(1-\delta)}{(1-p)}\right)-\frac{1}{x}\left(\frac{pC_p(1-\delta)}{(1-p)}{x_0}^{-p+1}\right)
+\end{eqnarray}
+As $p<1$, the first term of $G(x)$ is inversely sublinear in $x$
+while the second term is inversely linear in $x$.  Thus for every
+$\delta'$ there is some $r_0^2$ such that for all $r>r_0^2$, the
+second term is at most $\delta'$ times the first term.  We choose
+$\delta'=\delta$.  Then for $r>\max(r_0^2,x_0)$,
+\fi
+In the same way we obtain
+$$G(x)>(1-\delta)^2\left(\frac{pC_p}{(1-p)x^p}\right).$$
+Using these two bounds, we see for $r>c\max(x_1,x_0)$,
+\begin{eqnarray}
+\frac{G(r)}{G(r/c)} &<&
+\frac{(1+\delta)^2\left(\frac{pC_p}{(1-p)r^p}\right)}
+     {(1-\delta)^2\left(\frac{pC_p}{(1-p)(r/c)^p}\right)}
+\cr&\leq& \frac{1}{c^p}(1+9\delta) \cr&\leq&
+\frac{1}{c^p}(1+\gamma)
+\end{eqnarray}
+for $\delta<\min(\gamma/9,1/2)$.
+
+
+\section{Conclusions and Open Problems}
+
+In this paper we presented a simple and general algorithm for Approximate
+Nearest Neighbor, based on Locality-Sensitive Hashing.
+The algorithm appears to be a promising tool for high-performance proximity search in
+high dimensions.
+Experimental evaluation is under way, and will be reported in the final version of this paper.
+
+It remains open to prove that the optimal ratio $\rho(c)$ is strictly less
+than $1/c$ for the case $p=2$. It would be interesting to prove
+Lemma~\ref{lemma:general_p} for $r$ values that are bounded.
+
+Achlioptas~\cite{Ach} proved that for the purpose of dimensionality
+reduction (under $l_2$ norm) taking the projection of vector with a random
+vector whose entries are uniform $\{-1,1\}$ is as efficient as taking the
+projection with a random vector whose entries are $N(0,1)$. It is worth
+exploring if that technique leads to an efficient LSH scheme.
+
+LaTeX Warning: Label `Fig:n-speedup1' multiply defined.
+
+
+LaTeX Warning: Label `Fig:n-speedup2' multiply defined.
+
+
+LaTeX Warning: Label `Fig:n-speedup' multiply defined.
+
+LaTeX Warning: Reference `Fig:eps-speedup1' on page 8 undefined on input line 1
+091.
+
+
+LaTeX Warning: Reference `Fig:eps-speedup2' on page 8 undefined on input line 1
+091.
+
+
+LaTeX Warning: Reference `Fig:mem' on page 8 undefined on input line 1113.
+%\addtolength{\baselineskip}{1mm}
+\begin{abstract}
+We present a novel Locality-Sensitive Hashing scheme for the
+decision version of the Approximate Nearest Neighbor Problem
+%$(R,c)$-Point Location in Equal Balls (NN) problem\footnote{See
+%Preliminaries}
+in $l_p^d$ for $p \in (0,2]$, based on $p$-stable distributions.
+% and analyze its performance in solving the $\epsilon$-approximate NN problem.
+In particular, this gives the first known approximate NN algorithm for the case $p <1$.
+Moreover, unlike earlier schemes, our LSH scheme
+works directly on points in $\Re^d$ without embeddings. Consequently, the
+resulting query time bound is free of large polylogarithmic factors and is
+simple and easy to implement. For the important case $p=2$ (Euclidean norm), it
+strictly improves the known exponent of $n$ in the space requirement and query
+time.
+\end{abstract}

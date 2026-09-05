@@ -1,0 +1,10 @@
+#! /bin/bash
+
+DIRS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+. $DIRS/directories
+
+cd $SRC
+
+dir_renumber mv
+
+$DIRS/publish_to_web rebuild

@@ -1,0 +1,11 @@
+#! /usr/bin/tcsh -f
+
+if  ( $1 == $2 ) then
+    echo Nothing to do for $1
+    exit
+endif
+
+    
+#gi $1 book.tex
+replacer $1 $2 book.tex
+mv $1 $2

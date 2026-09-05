@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70000" creator="ipe6upgrade">
+<info created="D:20081007074836" modified="D:20081009111941"/>
+<ipestyle name="ipe6">
+<color name="red" value="1 0 0"/>
+<color name="green" value="0 1 0"/>
+<color name="blue" value="0 0 1"/>
+<color name="yellow" value="1 1 0"/>
+<color name="gray1" value="0.125"/>
+<color name="gray2" value="0.25"/>
+<color name="gray3" value="0.375"/>
+<color name="gray4" value="0.5"/>
+<color name="gray5" value="0.625"/>
+<color name="gray6" value="0.75"/>
+<color name="gray7" value="0.875"/>
+<dashstyle name="dashed" value="[4] 0"/>
+<dashstyle name="dotted" value="[1 3] 0"/>
+<dashstyle name="dash dotted" value="[4 2 1 2] 0"/>
+<dashstyle name="dash dot dotted" value="[4 2 1 2 1 2] 0"/>
+<pen name="heavier" value="0.8"/>
+<pen name="fat" value="1.2"/>
+<pen name="ultrafat" value="2"/>
+<textsize name="large" value="\large"/>
+<textsize name="Large" value="\Large"/>
+<textsize name="LARGE" value="\LARGE"/>
+<textsize name="huge" value="\huge"/>
+<textsize name="Huge" value="\Huge"/>
+<textsize name="small" value="\small"/>
+<textsize name="footnote" value="\footnotesize"/>
+<textsize name="tiny" value="\tiny"/>
+<symbolsize name="small" value="2"/>
+<symbolsize name="tiny" value="1.1"/>
+<symbolsize name="large" value="5"/>
+<arrowsize name="small" value="5"/>
+<arrowsize name="tiny" value="3"/>
+<arrowsize name="large" value="10"/>
+<symbol name="mark/circle(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path></symbol>
+<symbol name="mark/disk(sx)" transformations="translations">
+<path fill="sym-stroke">
+0.6 0 0 0.6 0 0 e
+</path></symbol>
+<symbol name="mark/fdisk(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+0.6 0 0 0.6 0 0 e 0.4 0 0 0.4 0 0 e
+</path><path fill="sym-fill">
+0.4 0 0 0.4 0 0 e
+</path></group></symbol>
+<symbol name="mark/box(sx)" transformations="translations">
+<path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h -0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></symbol>
+<symbol name="mark/square(sx)" transformations="translations">
+<path fill="sym-stroke">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h</path></symbol>
+<symbol name="mark/fsquare(sfx)" transformations="translations">
+<group><path fill="sym-stroke" fillrule="eofill">
+-0.6 -0.6 m 0.6 -0.6 l 0.6 0.6 l -0.6 0.6 l h-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path><path fill="sym-fill">
+-0.4 -0.4 m 0.4 -0.4 l 0.4 0.4 l -0.4 0.4 l h</path></group></symbol>
+<symbol name="mark/cross(sx)" transformations="translations">
+<group><path fill="sym-stroke">
+-0.43 -0.57 m 0.57 0.43 l 0.43 0.57 l -0.57 -0.43 l h</path><path fill="sym-stroke">
+-0.43 0.57 m 0.57 -0.43 l 0.43 -0.57 l -0.57 0.43 l h</path>
+</group></symbol>
+<textstyle name="center" begin="\begin{center}"
+end="\end{center}"/>
+<textstyle name="itemize" begin="\begin{itemize}"
+end="\end{itemize}"/>
+<textstyle name="item" begin="\begin{itemize}\item{}"
+end="\end{itemize}"/>
+</ipestyle>
+<page>
+<layer name="alpha"/>
+<layer name="xi"/>
+<layer name="beta"/>
+<layer name="gamma"/>
+<layer name="mu"/>
+<layer name="delta"/>
+<layer name="epsilon"/>
+<layer name="nu"/>
+<layer name="zeta"/>
+<layer name="eta"/>
+<layer name="theta"/>
+<layer name="iota"/>
+<layer name="kappa"/>
+<layer name="lambda"/>
+<view layers="alpha" active="alpha"/>
+<view layers="alpha delta xi" active="xi"/>
+<view layers="alpha xi beta delta lambda" active="beta"/>
+<view layers="alpha xi beta delta" active="gamma"/>
+<view layers="alpha xi beta mu delta epsilon" active="mu"/>
+<view layers="alpha xi beta mu delta zeta" active="delta"/>
+<view layers="alpha xi beta delta zeta theta" active="epsilon"/>
+<view layers="alpha xi beta delta nu theta kappa" active="nu"/>
+<view layers="alpha xi beta delta nu theta iota" active="zeta"/>
+<view layers="alpha xi beta delta eta theta iota" active="eta"/>
+<view layers="alpha xi beta delta eta theta" active="theta"/>
+<view layers="alpha xi gamma delta eta theta" active="iota"/>
+<path layer="xi" stroke="black" pen="normal" matrix="1 0 0 1 37 -81" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="eta" stroke="red" pen="normal" matrix="1 0 0 1 13.5718 -61.5173" fill="red">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="xi" stroke="black" pen="normal" matrix="1 0 0 1 -47 -65" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="beta" stroke="black" dash="dotted" pen="normal">
+49 735 m
+133 719 l
+</path>
+<path layer="gamma" stroke="black" pen="normal">
+49 735 m
+69 748
+110 742
+133 719 s
+</path>
+<path layer="delta" stroke="black" pen="normal" fill="black">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="zeta" stroke="red" dash="dashed" pen="normal">
+96 800 m
+91.9054 744.202 l
+</path>
+<path layer="epsilon" stroke="blue" dash="dashed" pen="normal" matrix="1 0 0 1 -3 0">
+96 800 m
+90.6783 727.061 l
+</path>
+<path layer="theta" stroke="red" pen="normal" matrix="1 0 0 1 -4.0946 -55.7976" fill="red">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="iota" stroke="red" dash="dashed" pen="normal">
+96 800 m
+109.572 738.483 l
+</path>
+<path layer="kappa" stroke="blue" dash="dashed" pen="normal" matrix="1 0 0 1 3 0">
+96 800 m
+113.884 722.641 l
+</path>
+<path layer="lambda" stroke="black" dash="dotted" pen="normal">
+96 800 m
+49 735 l
+</path>
+<path stroke="black" dash="dotted" pen="normal">
+96 800 m
+133 719 l
+</path>
+<path layer="mu" stroke="red" pen="normal" matrix="1 0 0 1 -8.3217 -72.939" fill="red">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<path layer="nu" stroke="red" pen="normal" matrix="1 0 0 1 20.884 -77.359" fill="red">
+4.12311 0 0 4.12311 96 800 e
+</path>
+<text layer="lambda" stroke="gray4" pos="41 706.123" type="label" transformations="translations" valign="baseline" size="normal">Euclidean distances</text>
+<use name="mark/cross(sx)" pos="32 800" layer="alpha" matrix="1 0 0 1 0 8" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="32 704" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="144 704" size="tiny" stroke="gray4"/>
+<use name="mark/cross(sx)" pos="144 800" matrix="1 0 0 1 0 8" size="tiny" stroke="gray4"/>
+</page>
+</ipe>

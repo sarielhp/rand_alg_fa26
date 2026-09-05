@@ -1,0 +1,146 @@
+#! /bin/bash
+
+DST=~/rand_alg/web/lec/notes/
+DSTOLD=~/rand_alg/web/lec/notes/old/
+HTMLINDEX=~/rand_alg/web/lec/index.html 
+
+
+source ~/bin/misc/bash_utils
+
+TDIR=/tmp/sariel/publish_on_web/
+mkdir -p $TDIR >& /dev/null
+TFL=$TDIR/list.txt
+TFLA=$TDIR/file_title.txt
+TFLB=$TDIR/file_title_2.txt
+TIDX=$TDIR/tmp_index.html
+NEWHTML=$TDIR/new_html.txt
+FLDESC=$TDIR/description.txt
+TFLCLEAN=$TDIR/clean.txt
+
+TMPHTML=$TDIR/html_index_copy.txt
+
+
+DIRS="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+. $DIRS/directories
+
+cd $SRC
+
+function  build_all() {
+    dir_renumber mv
+    scripts/reinput_chapters
+
+    bookit clean
+    chmod a+x /tmp/sariel/bookit//chapter_clean 
+    /tmp/sariel/bookit//chapter_clean 
+
+    echo "Generating chapters..."
+    bookit chaps
+}    
+
+
+function  clean_file()
+{
+  sed '/^$/q'  $1 |\
+      sed 's/\\Description//g' | \
+      sed 's/\\Chapter//g' | \
+      sed 's/\\TPDF//g' | \
+      sed 's/%.*//' | \
+      sed 's/[}{]//g'>& $TFLCLEAN
+  mv $TFLCLEAN $1
+}
+
+
+function  usage()
+{
+    echo "publish_to_web : publish to web"
+    echo "publish_to_web rebuild : rebuilds and publish to web"
+    exit
+}
+
+if  [[ $1 == "help" ]]; then
+    usage
+fi
+
+if  [[ "$1" == "rebuild" ]]; then
+    build_all
+else
+    if  (( $# > 0 )); then
+        usage
+    fi
+fi
+
+DBOOK=$DST"book.pdf"
+if ! [[ -e $DBOOK ]]; then
+    m574   
+fi
+
+
+find . -maxdepth 2 | gi pdf | grep "[0-9][0-9]_*" | sort -n >& $TFL
+
+sed '/MANUAL END/q'  $HTMLINDEX >& $TMPHTML
+
+rm -r -f $TIDX >& /dev/null
+
+mkdir -p $DSTOLD
+mv $DST/*.pdf $DSTOLD >& /dev/null
+
+while IFS= read -r line
+do    
+  echo "$line"
+  NUM=$(echo "$line" | grep -oh "[0-9][0-9]")
+  TEX=$(change_filename_suffix  $line ".tex")
+
+  ISDESC=$(grep "[\]Description" $TEX  | wc -l)
+  grep -v \ChapterPrefix $TEX | \
+      grep -v \ChapterGen | \
+      grep -A 2 "\Chapter[{]" >& $TFLA
+
+  clean_file $TFLA
+
+  if  (( $ISDESC > 0 )); then
+      grep -A 10 "[\]Description" $TEX | sed '/^$/q' >& $FLDESC
+      clean_file $FLDESC
+      sed -i -e 's/^/        /' $FLDESC
+      #cat $FLDESC
+      #exit
+  else
+      rm $FLDESC >& /dev/null
+  fi
+  
+  DFL=$NUM"_"$(basename $line)
+
+  # Copy the file...
+  cp $line $DST"$DFL"
+  
+  
+  FEXIST=$(grep "notes/$DFL" $TMPHTML | wc -l )
+  if  (( $FEXIST > 0 )); then
+      continue;
+  fi
+  
+  echo "" >> $TIDX
+  echo -n "    <li>L$NUM: " >> $TIDX
+  cat $TFLA  >> $TIDX
+  echo "        [<a href=\"notes/$DFL\">Notes</a>]." >> $TIDX
+  if  [[ -e $FLDESC ]]; then
+      echo "      </br>" >> $TIDX
+      echo -n "        <font size=-2>" >> $TIDX
+      cat $FLDESC >> $TIDX
+      echo "       </font>" >> $TIDX
+  fi
+  echo "    </li>" >> $TIDX
+          
+  #cp $line $DST"$DFL"
+  
+  #echo $TEX
+done < "$TFL"
+
+cat $HTMLINDEX | sed -n '1,/AUTOGEN START/p' > $NEWHTML
+echo "<hr>" >> $NEWHTML
+cat $TIDX >>  $NEWHTML
+cat $HTMLINDEX | sed -n '/AUTOGEN END/,$p' >> $NEWHTML
+cp $NEWHTML $HTMLINDEX
+
+
+
+
