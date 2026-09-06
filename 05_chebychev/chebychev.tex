@@ -6,13 +6,12 @@
 \fi
 
 
-\ChapterNumPage{5}{34}
-
-
-\Chapter{Chebychev, Sampling and Selection}
+\Chapter{Chebyshev, Sampling and Selection}
 
 \ChapterPrefix{}
 \ChapterGen{}
+
+\medskip
 
 \QuotePExt{%
    \indent%
@@ -23,7 +22,6 @@
    in writing, six weeks before it breaks out.”  }%
 {Dead Funny: Humor in Hitler's Germany}%
 {Rudolph Herzog}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,12 +34,19 @@
 
 \section{Chebyshev's inequality}
 
+Here, we discuss Chebyshev's inequality, sometimes written as Chebychev's
+inequality using the Frechet spelling of Chebyshev\footnote{\emph{Pafnuty
+      Lvovich Chebyshev} (Russian: \SpellIgnore{Пафну́тий Льво́вич
+         Чебышёв}), (16 May, 1821--8 December, 1894) was a Russian
+      mathematician and considered to be the founding father of Russian
+      mathematics (wikipedia).}.
+
+
 \subsection{Example: A better inequality via moments}
 
 
-Let $X_i \in \brc{-1,+1}$ with probability half for each value, for
-$i=1,\ldots, n$ (all picked independently). Let $Y= \sum_i X_i$. We
-have that
+Let $X_i \in \brc{-1,+1}$ each with probability $1/2$, for
+$i=1,\ldots, n$ (mutually independent). Let $Y= \sum_i X_i$. We have that
 \begin{equation*}
     \Ex{Y\bigr.}%
     \EQ%
@@ -76,48 +81,52 @@ A more interesting quantity is
 \end{align*}
 
 \begin{lemma}
-    Let $X_i \in \brc{-1,+1}$ with probability half for each value,
-    for $i=1,\ldots, n$ (all picked independently).  We have that
-    $\Prob{ \cardin{\sum_i X_i} > t \sqrt{n}}  < 1/t^2$.
+    Let $X_i \in \brc{-1,+1}$ each with probability $1/2$, for
+    $i=1,\ldots, n$ (mutually independent). For any $t > 0$, we have that
+    \begin{equation*}
+        \Prob{ \cardin{\sum_i X_i} \geq t \sqrt{n}} \leq 1/t^2
+    \end{equation*}
 \end{lemma}
 
 \begin{proof}
-    Let $Y= \sum_i X_i$ and $Z =Y^2$.
-    We have
-    \begin{equation*}
-        \Prob{ \cardin{\Bigl.\smash{\sum_i} X_i} > t \sqrt{n}}%
+    Let $Y= \sum_i X_i$ and $Z =Y^2$. Notice that $Z \geq 0$ with
+    $\Ex{Z} = n$.  We have
+    \begin{align*}
+        \Prob{ \cardin{\Bigl.\smash{\sum_i} X_i} \geq t \sqrt{n}}%
+        &=%
+        \Prob{ \smash{ \Bigl(\sum_i X_i\Bigr)^2 \geq t^2 n} \Bigr.}%
         =%
-        \Prob{ \smash{ \Bigl(\sum_i X_i\Bigr)^2 > t^2 n} \Bigr.}%
-        =%
-        \Prob{ Y^2 > t^2 \Ex{Y^2} \Bigr.} %
-        =%
-        \Prob{ Z > t^2 \Ex{Z}} %
+        \Prob{ Y^2 \geq t^2 \Ex{Y^2} \Bigr.} %
+        \\&=%
+        \Prob{ Z \geq t^2 \Ex{Z}} %
         \leq%
-        1/t^2,
-    \end{equation*}
+        \frac{1}{t^2},
+    \end{align*}
     by Markov's inequality.
 \end{proof}
 
 
-\subsection{Chebychev's inequality}
+\subsection{Chebyshev's inequality}
 
 As a reminder, the variance of a random variable $X$ is
-$\Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2$.
+\begin{equation*}
+    \Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2,
+\end{equation*}
+where $\mu_X = \Ex{X}$.
 
 
 
 
-\begin{fragment}{\deflabel{Chebychev}}
+\begin{fragment}{\deflabel{Chebyshev}}
     \begin{theorem}[Chebyshev's inequality]
-        \thmlab{Chebychev:inequality}%
+        \thmlab{Chebyshev:inequality}%
         %
         Let $X$ be a real random variable, with $\mu_X = \Ex{X}$, and
         $\sigma_X = \sqrt{\Var{X}}$. Then, for any $t > 0$, we have
-        \begin{math}
-            \ds%
+        \begin{equation*}
             \Prob{\bigl. \cardin{X - \mu_X} \geq t \sigma_X} \leq
-            {1}/{t^2}.
-        \end{math}
+            \frac{1}{t^2}.
+        \end{equation*}
         % where $\mu_X = \Ex{\bigl. X}$ and
         % $\sigma_X = \sqrt{\Var{ X}}$.
     \end{theorem}
@@ -149,21 +158,20 @@ $\Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2$.
     by \thmrefY{Markov's inequality}{Markov}.
 \end{proof}
 
-\begin{example}[Variance of a binomial distribution.]
-    Let $Y = \sum_{i=1}^m Y_i$, where $Y_1, \ldots, Y_m$ are
-    independent random $0/1$ variables that are each one with
-    probability $p$.  The variable $Y$ is a binomial distribution with
-    probability $p$, and $m$ samples. That is,
-    $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
-    $\Ex{Y_i} = p$, and
-    $\Var{Y_i} = \Ex{Y_i^2} - \Ex{Y_i}^2 = p - p^2 = p(1-p)$. Since
-    the variance is additive for independent variables, we have
-    \begin{math}
+\begin{example}[Variance of a binomial distribution]
+    Let $Y = \sum_{i=1}^m Y_i$,\hfil\break where $Y_1, \ldots, Y_m$ are
+    independent random $0/1$ variables that are each one with probability
+    $p$. The random variable $Y$ has a binomial distribution with
+    probability $p$, and $m$ trials.  That is, $Y \sim
+    \DistBinom{m}{p}$. Thus, for all $i$, we have $\Ex{Y_i} = p$, and
+    $\Var{Y_i} = \Ex{Y_i^2} - \Ex{Y_i}^2 = p - p^2 = p(1-p)$. Since the
+    variance is additive for independent variables, we have
+    \begin{equation*}
         \Var{Y} = \Var{\Bigl. \smash{\sum_i Y_i}} =
-        \smash{\sum_{i=1}^m \Var{T_i}} = m p (1-p). \Biggr.
-    \end{math}
+        \smash{\sum_{i=1}^m \Var{Y_i}} = m p (1-p).
+    \end{equation*}
     This also implies that
-    $\Ex{\smash{Y^2}} = \Var{Y} + \Ex{Y}^2 = m p (1-p) + m^2 p^2$.
+    $\Ex{\smash{Y^2}} = \Var{Y} + \pth{\Ex{Y}}^2 = m p (1-p) + m^2 p^2$.
 \end{example}
 
 
@@ -182,23 +190,22 @@ $\Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2$.
 
 \Section{Estimation via sampling}
 
-One of the big advantages of randomized algorithms, is that they
-sample the world; that is, learn how the input looks like without
-reading all the input. For example, consider the following problem: We
-are given a set of $U$ of $n$ objects $u_1, \ldots, u_n$. and we want
-to compute the number of elements of $U$ that have some property.
-Assume, that one can check if this property holds, in constant time,
-for a single object, and let $\propertyX{u}$ be the function that
-returns $1$ if the property holds for the element $u$. and zero
-otherwise.  Now, let $\numC$ be the number of objects in $U$ that have
-this property. We want to reliably estimate $\numC$ without computing
-the property for all the elements of $U$.
+One of the main advantages of randomized algorithms is that they sample
+the world---that is, learn what the input looks like without reading all
+the input. For example, consider the following problem: We are given a
+set $U$ of $n$ objects $u_1, \ldots, u_n$, and we want to compute the number
+of elements of $U$ that have some property. Assume that one can check if
+this property holds, in constant time, for a single object, and let
+$\propertyX{u}$ be the function that returns $1$ if the property holds
+for the element $u$, and $0$ otherwise.  Now, let $\numC$ be the number
+of objects in $U$ that have this property. We want to reliably estimate
+$\numC$ without computing the property for all the elements of $U$.
 
-A natural approach, would be to pick a random sample $\Sample$ of $m$
-objects, $r_1, \ldots, r_m$ from $U$ (with replacement), and compute
-$Y = \sum_{i=1}^m \propertyX{r_1}$. The estimate for $\numC$ is
-$\beta = (n/m) Y$. It is natural to ask how far is $\beta$ from the
-true value $\numC$.
+A natural approach is to pick a random sample $\Sample$ of $m$ objects,
+$r_1, \ldots, r_m$ from $U$ (with replacement), and compute
+$Y = \sum_{i=1}^m \propertyX{r_i}$.  The estimate for $\numC$ is
+$Z = (n/m) Y$. It is natural to ask how far $Z$ is from the true value
+$\numC$.
 
 
 \begin{lemma}
@@ -206,10 +213,10 @@ true value $\numC$.
     %
     Let $U$ be a set of $n$ elements, with $\numC$ of them having a
     certain property $\propertyC$. Let $\Sample$ be a uniform random
-    sample from $U$ (with repetition) of size $m$, and let $Y$ be the
-    number of elements in $\Sample$ that have the property
-    $\propertyC$, and let $Z = (n/m)Y$ be the estimate for $\numC$.
-    Then, for any $t\geq 1$, we have that
+    sample from $U$ (with replacement) of size $m$, and let $Y$ be the
+    number of elements in $\Sample$ that have the property $\propertyC$,
+    and let $Z = (n/m)Y$ be the estimate for $\numC$.  Then, for any
+    $t\geq 1$, we have that
     \begin{equation*}
         \Prob{ \Bigl. \smash{\numC - t \frac{n}{2\sqrt{m}}%
               \leq%
@@ -220,11 +227,10 @@ true value $\numC$.
         1- \frac{1}{t^2}.
     \end{equation*}
     Similarly, we have that
-    \begin{math}
-        \ds%
+    \begin{equation*}
         \Prob{ \Ex{Y} - t \sqrt{m}/2 \leq Y \leq \Ex{Y} + t \sqrt{m}/2
-        } \geq 1- {1}/{t^2}.
-    \end{math}
+        } \geq 1- \frac{1}{t^2}.
+    \end{equation*}
 \end{lemma}
 
 \begin{proof}
@@ -268,30 +274,31 @@ true value $\numC$.
         =%
         \frac{n}{m} \frac{m}{n} \numC = \numC.
     \end{equation*}
-    By Chebychev's inequality, we have that
-    \begin{math}
+    By Chebyshev's inequality, we have that
+    \begin{equation*}
         \Prob{\bigl. \cardin{Y - \Ex{Y} } \geq t \sigma_Y }%
         \leq%
         {1}/{t^2}.
-    \end{math}
+    \end{equation*}
     Since $(n/m)\Ex{Y} = \Ex{Z} = \numC$, this implies that
     \begin{align*}
       \Prob{\bigl. \cardin{Z - \numC } \geq t \frac{n}{2\sqrt{m}} }%
       &=
         \Prob{\bigl. \cardin{Z - \numC } \geq
         \frac{n}{m}t \cdot \frac{\sqrt{m}}{2} }%
+      \\&
         \leq
         \Prob{\bigl. \cardin{Z - \numC } \geq
         \frac{n}{m}t \sigma_Y }%
+      \\&
         =
         \Prob{\bigl. \cardin{\frac{n}{m}Y - \frac{n}{m} \Ex{Y} } \geq
         \frac{n}{m}t \sigma_Y }%
       \\&%
       =%
-      % \\&% =
       \Prob{\bigl. \cardin{Y - \Ex{Y} } \geq t \sigma_Y }%
       \leq
-      \frac{1}{t^2}
+      \frac{1}{t^2}.
     \end{align*}
 \end{proof}
 
@@ -299,15 +306,14 @@ true value $\numC$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\Section{Randomized selection -- Using sampling to %
-   learn the world}
+\Section{Rand{.} selection---learning via sampling}
 
 
 \SubSection{Inverse estimation}
 
-We are given a set $U = \brc{u_1,\ldots, u_n}$ of $n$ distinct
-numbers. Let $\EBRY{U}{i}$ denote the $i$\th smallest number in $U$ --
-that is $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
+We are given a set $U = \brc{u_1,\ldots, u_n}$ of $n$ distinct numbers. Let
+$\EBRY{U}{i}$ denote the $i$\th smallest number in $U$---that is,
+$\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
 
 \begin{lemma}
     \lemlab{good:interval}%
@@ -316,13 +322,14 @@ that is $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
     $t \geq 1$ and $m \geq 1$, one can compute, in $O(m \log m)$ time,
     two numbers $r_{-}, r_+ \in U$, such that:
     \begin{compactenumA}
-        \smallskip%
+        \medskip%
         \item The number of rank $k$ in $U$ is in the interval
         $\Interval = [r_-, r_+]$.  \smallskip%
-        \item There are at most $8 t {n}/ \sqrt{m}$ numbers of $U$ in
+        \smallskip%
+        \item There are at most $8 t {n}/ \sqrt{m}$ elements of $U$ in
         $\Interval$.
     \end{compactenumA}
-    \smallskip%
+    \medskip%
     The above two properties hold with probability $\geq 1-3/t^2$.
 
     (Namely, as $t$ increases, the interval $\Interval$ becomes
@@ -339,8 +346,11 @@ that is $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
         \qquad \text{and} \qquad%
         \ell_{+} = \ceil{m \frac{k}{n} + t \sqrt{m}/2 }+1.
     \end{equation*}
-    Set $r_{-} = \Sample[ \ell_{-}]$ and
-    $r_+ = \Sample[ \ell_{+}]$.
+    Set $r_{-} = \Sample[ \ell_{-}]$ and $r_+ = \Sample[ \ell_{+}]$ (one needs
+    to take care of boundary conditions\footnote{Boundary condition if
+       you must: If $\ell_- < 1$, we set $r_- = -\infty$ (or the minimum
+       element of $U$); similarly, if $\ell_+ > m$, we set
+       $r_+ = +\infty$ (or the maximum element of $U$).})
 
     Let $Y$ be the number of elements in the sample $\Sample$ that are
     $\leq \EBRY{U}{k}$.  By \lemref{estimate:chebyshev}, we have
@@ -349,42 +359,45 @@ that is $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
         \Prob{ \Ex{Y} - t \sqrt{m}/2 \leq Y \leq \Ex{Y} + t \sqrt{m}/2
         } \geq 1- {1}/{t^2}.
     \end{equation*}
-    In particular, if this happens, then
-    $r_- \leq \EBRY{U}{k} \leq r_+$. %
+    In particular, if this happens, then since $\Sample$ is sorted and
+    $\ell_- < Y < \ell_+$, we have $r_- \leq \EBRY{U}{k} \leq r_+$. %
 
     \bigskip%
     \noindent
     \textbf{(B)} Let $g= k - t \frac{n}{\sqrt{m}} -3\frac{n}{m}$, and
     let $g^{}_\Sample$ be the number of elements in $\Sample$ that are
     smaller than $\EBRY{U}{g}$. Arguing as above, we have that
-    \begin{math}
+    \begin{equation*}
         \Prob{ g^{}_\Sample \leq \frac{g}{n} m + t \sqrt{m}/2 } \geq
         1- {1}/{t^2}.
-    \end{math}
+    \end{equation*}
     Now
-    \begin{equation*}
+    \begin{align*}
       \frac{g}{n} m + t \sqrt{m}/2 %
-      =
+      &=
       \frac{m}{n}\pth{
       k - t \frac{n}{\sqrt{m}} -3\frac{n}{m} }  +  t \sqrt{m}/2
-      =
+      \\&=
       k \frac{m}{n} - t \sqrt{m}  -3 +  t \sqrt{m}/2
-      =
+      \\&=
       k \frac{m}{n} - t \sqrt{m}/2  -3
       < \ell_{-}.
-    \end{equation*}
+    \end{align*}
     This implies that the $g$ smallest numbers in $U$ are outside the
     interval $[r_-,r_+]$ with probability $\geq 1-1/t^2$.
 
     Next, let $h= k + t \frac{n}{\sqrt{m}} +3\frac{n}{m}$. A similar
-    argument, shows that all the $n-h$ largest numbers in $U$ are too
-    large to be in $[r_-,r_+]$. This implies that
+    argument shows that all the $n-h$ largest elements in $U$ are
+    strictly larger than $r_+$ (and hence outside $[r_-, r_+]$).  This
+    implies that
     \begin{equation*}
-      \cardin{[r_-, r_+] \cap U} \leq h-g + 1 = 6 \frac{n}{m} + 2t
+      \cardin{[r_-, r_+] \cap U} \leq h-g = 6 \frac{n}{m} + 2t
       \frac{n}{\sqrt{m}}%
       \leq%
       8 \frac{tn}{\sqrt{m}}.
   \end{equation*}
+  In words, since ranks $1,\dots,g$ and $h+1,\dots,n$ are excluded, at
+  most $h-g$ candidate elements remain in $\{g+1,\dots,h\}$.
 \end{proof}
 
 \subsubsection{Inverse estimation -- intuition}
@@ -392,6 +405,17 @@ that is $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
 Here we are trying to give some intuition to the proof of the previous
 lemma. Feel free to skip this part if you feel you already understand
 what is going on.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics[width=0.95\linewidth]{\File{figs/inverse_estimation}}
+    \caption{Inverse estimation via sampling: Sample pivots $r_-,
+      r_+ \in \Sample$ are chosen around the expected rank $\mu$,
+      bracketing the rank-$k$ element $s_k$ in the interval $I = [r_-,
+      r_+]$ in $U$. See \lemref{good:interval} for details.}
+    \figlab{inverse:estimation}
+\end{figure}
+
 
 Given $k$, we are interested in estimating $s_k = \EBRY{U}{k}$
 quickly. So, let us take a sample $\Sample$ of size $m$. Let
@@ -424,39 +448,36 @@ Namely, how many elements are there in $\Interval(k) \cap U$?
 
 To this end, consider the interval of ranks, \emph{in the sample},
 that might contain the $k$\th element. By the above, this is
-\begin{math}
+\begin{equation*}
   \IntervalA(k, t)%
   =%
   k \frac{m}{n} + \pbrc[]{ -t \sqrt{m}/2 -1, t
   \sqrt{m}/2 +1}.
-\end{math}
-In particular, consider the maximum $\nu\leq k$, such that
+\end{equation*}
+In particular, consider the maximum $\nu\leq k$ such that
 $\IntervalA(\nu, t)$ and $\IntervalA(k, t)$ are disjoint. We have the
 condition that
-\begin{math}
+\begin{equation*}
     \nu \frac{m}{n}  +t
     \sqrt{m}/2 +1 \leq k \frac{m}{n} -t\sqrt{m}/2 -1%
     %
     \implies%
     %
     \nu  \leq k  - t \frac{n}{\sqrt{m}} -2\frac{n}{m}.
-\end{math}
+\end{equation*}
 Let
-\begin{math}
+\begin{equation*}
     g= k - t \frac{n}{\sqrt{m}} -2\frac{n}{m}
-\end{math}
-and
-\begin{math}
+    \qquad\text{and}\qquad
     h = k + t \frac{n}{\sqrt{m}} +2\frac{n}{m}.
-\end{math}
+\end{equation*}
 We have that $\IntervalA(g, t)$, $\IntervalA(k, t)$ and
-$\IntervalA(h, t)$ are all disjoint with probability $\geq 1 -3/t^2$.
+$\IntervalA(h, t)$ are all disjoint, with probability $\geq 1 - 3/t^2$.
 
-To this end, let $g = k - \ceil{2\pth{t \frac{n}{2\sqrt{m}}}}$ and
-$h = k + \ceil{2\pth{t \frac{n}{2\sqrt{m}}}}$. It is easy to verify
-(using the same argumentation as above) that with probability at least
-$1-3/t^2$, the three confidence $\Interval(g), \Interval(k)$ and
-$\Interval(h)$ do not intersect. As such, we have
+It is easy to verify (using the same argumentation as above) that with
+probability at least $1-3/t^2$, the three confidence intervals
+$\Interval(g), \Interval(k)$ and $\Interval(h)$ do not intersect. As
+such, we have
 \begin{math}
   \cardin{\big.\ts \Interval(k) \cap U\ts}%
   \leq%
@@ -482,73 +503,130 @@ $\Interval(h)$ do not intersect. As such, we have
 
 \subsection{Randomized selection}
 
-\subsubsection{The algorithm}
-Given an array $S$ of $n$ numbers, and the rank $k$. The algorithm
-needs to compute $\EBRY{S}{k}$. To this end, set $t= \ceil{n^{1/8}}$,
-and $m = \ceil{n^{3/4}}$.
-
-Using the algorithm of \lemref{good:interval}, in $O( m \log m)$ time,
-we get two numbers $r_{-}$ and $r_+$, such that
-$\EBRY{S}{k} \in [r_i, r_{+}]$, and
+\subsubsection{The algorithm.}
+Given an array $S$ of $n$ numbers and a rank $k$, the algorithm needs to
+compute $\EBRY{S}{k}$. To this end, it sets
 \begin{equation*}
-    \cardin{ \smash{\underbrace{S \cap (r_i, r_{+})}_{S_m}} }%
+    t= \ceil{n^{1/8}}
+    \qquad\text{ and }\qquad%
+    m = \ceil{n^{3/4}}.
+\end{equation*}
+Using the algorithm of \lemref{good:interval}, in $O( m \log m)$ time,
+the algorithm gets two numbers $r_{-}$ and $r_+$, such that
+$\EBRY{S}{k} \in [r_{-}, r_{+}]$, and
+\begin{equation*}
+    \cardin{ \smash{\underbrace{S \cap (r_{-}, r_{+})}_{S_m}} }%
     =%
     O\bigl(tn /\sqrt{m}\,\bigr)%
     =%
-    O\pth{ n^{1/8} n / m^{3/8}} = O(n^{3/4}).\Bigr.
+    O\pth{ n^{1/8+ 1}  / n^{3/8}}%
+    =%
+    O(n^{3/4}),
 \end{equation*} %
-
-\bigskip%
-\noindent%
-To this end, we break $S$ into three sets:
+and this happens with good probability (more on that later).
+%\bigskip%
+%\noindent%
+To this end, the algorithm breaks $S$ into three sets:
 \begin{compactenumi}
+    \smallskip%
     \item $S_< = \Set{ s \in S}{s \leq r_{-}}$,
-    \item $S_m = \Set{ s \in S}{r_{-} < s < r_{+}}$,
+    \smallskip%
+    \item $S_m = \Set{ s \in S}{r_{-} < s < r_{+}}$, and
+    \smallskip%
     \item $S_> = \Set{ s \in S}{ r_{+} \leq s}$.
 \end{compactenumi}%
-This three way partition can be done using $2n$ comparisons and in
-linear time.  We now can readily compute the rank of $r_-$ in $S$ (it
-is $\cardin{S_<}$) and the rank of $r_{+}$ in $S$ (it is
-$\cardin{S_<} + \cardin{S_m} + 1$). If $\rankY{r_{-}}{ S} > k$ or
-$\rankY{r_{+}}{S} < k $ then the algorithm failed.  The other
-possibility for failure is that $S_m$ is too large. That is, larger
-than $8 t {n}/ \sqrt{m} = O( n^{3 / 4})$.  If any of these failures
-happen, then we rerun this algorithm from scratch.
+% \medskip% This happens with probability $\geq 1 - 3/t^2 \geq 1 - 4/n^{1/4}$.  \snark{$3$ became $4$ because of floor nonsense---you shouldn't care.}
+\medskip%
+This three-way partition can be done using $2n$ comparisons and in linear
+time.  The algorithm computes the rank of $r_-$ in $S$ (it is
+$\cardin{S_<}$) and the rank of $r_{+}$ in $S$ (it is
+$\cardin{S_<} + \cardin{S_m} + 1$). There are several cases: \smallskip%
+\begin{compactitem}
+    \item If $\rankY{r_{-}}{ S} > k$ or $\rankY{r_{+}}{S} < k $ then the
+    algorithm failed.
 
-Otherwise, the algorithm need to compute the element of rank
-$k - \cardin{S_<}$ in the set $S_m$, and this can be done in
-$O( \cardin{S_m} \log \cardin{S_m}) = O( n^{3/4} \log n)$ time by
-using sorting.
+    \item $\cardin{S_m} > 8 t {n}/ \sqrt{m} = O( n^{3 / 4})$. This is bad
+    as the set $S_m$ is too large.
+\end{compactitem}
+\medskip%
+If any of these failures happen, then the algorithm restart from scratch.
+\begin{compactitem}
+    \smallskip%
+    \item if $k = \cardin{S_<}$, the algorithm returns $r_-$ as the
+    desired answer.
 
-\subsubsection{Analysis}
+    \smallskip%
+    \item If $k = \cardin{S_<} + \cardin{S_m} + 1$, then 
+    $r_+$ is returned.
 
-The correctness is easy -- the algorithm clearly returns the desired
-element. As for running time, observe that by \lemref{good:interval},
-by probability $\geq 1-1/n^{1 /4}$, we succeeded in the first try, and
-then the running time is $O(n + (m \log m)) = O(n)$. More generally,
-the probability that the algorithm failed in the first $\alpha$ tries
-to get a good interval $[r_{-}, r_{+}]$ is at most $1/n^{\alpha /4}$.
+    \smallskip%
+    \item Otherwise, $\cardin{S_<} < k \leq \cardin{S_<} + \cardin{S_m}$,
+    and the algorithm needs to compute the element of rank
+    $\Delta = k - \cardin{S_<}$ in the set $S_m$. This is done by sorting
+    $S_m$ and returning the element of rank $\Delta$ in the sorted
+    subarray.
+    % , and this can be done in
+    % $O( \cardin{S_m} \log \cardin{S_m}) = O( n^{3/4} \log n)$ time by
+    % using sorting.
+\end{compactitem}
+
+\subsubsection{Analysis.}
+
+For the sake of simplicity of exposition we ignore any floors/ceilings in
+the calculations here\footnote{It is easy to verify the floor function
+   only introduce tedium and anxiety in carrying out (essentially) the
+   same calculations.}.  The correctness is intuitively easy---the
+algorithm clearly returns the desired element (the analysis below shows
+that its probability of running an infinite number of routs is
+zero. Implying the algorithm always terminates [so not so easy after
+all]).
+
+\paragraph*{Running time.}
+By (previously mysterious, but now hopefully clear)
+\lemref{good:interval}, with probability $\geq 1-3/n^{1 /4}$, it succeeded
+in the first try.  The running time per round is
+$O(n + |S_m| \log |S_m|) = O(n)$, as $\cardin{S_m} = O(n^{3/4})$.
+
+
+
+
+\subparagraph*{Not too many rounds.}
+
+More generally, the probability that the algorithm fails in the first
+$\alpha$ tries to get a good interval $[r_{-}, r_{+}]$ is at most
+$(3/n^{1/4})^\alpha = O(3^\alpha /n^{\alpha /4})$. Let $Y$ be the expected number of
+rounds the algorithm performs. The running time of the algorithm is
+$ O(Yn)$.  The variable $Y$ is a geometric variable and has
+\begin{equation}
+    \mu = \Ex{Y} \leq  \frac{1}{  1- 3/n^{1/4}} \leq 1 + 4/n^{1/4},
+    \eqlab{q-s-few-rounds}
+\end{equation}
+for $n$ sufficiently large, as $Y$ is a geometric variable with
+probability $p \geq 3/n^{1/4}$.  Thus, the expected runing time of the
+algorithm is $O(n)$.
+
+\subsubsection{Doing better.}
 
 One can slightly improve the number of comparisons performed by the
 algorithm using the following modifications.
 \begin{lemma}
     Given the numbers $r_{-}, r_{+}$, one can compute the sets
-    $S_<, S_m, S_>$ using in expectation (only!) $1.5n + O(n^{3/4})$
-    comparisons.
+    $S_<$, $S_m$, and $S_>$ using in expectation (only!)
+    $1.5n + O(n^{3/4})$ comparisons.
 \end{lemma}
 \begin{proof}
     We need to compute the sets $S_{<}, S_m, S_>$. Namely, we need to
     compare all the numbers of $S$ to $r_{-}$ and $r_{+}$. Since only
-    $O(n^{3/4})$ numbers fall in $S_m$, almost all of the numbers are
-    in either $S_<$ or $S_>$. If a number of is in $S_<$
-    (resp. $S_>$), then comparing it $r_-$ (resp. $r_+$) is enough to
-    verify that this is indeed the case. Otherwise, perform the other
-    comparison and put the element in its proper set (in this case we
-    had to perform two comparisons to handle the element).
+    $O(n^{3/4})$ numbers fall in $S_m$, almost all of the numbers are in
+    either $S_<$ or $S_>$. If a number is in $S_<$ (resp. $S_>$), then
+    comparing it to $r_-$ (resp. $r_+$) is enough to verify that this is
+    indeed the case. Otherwise, perform the other comparison and put the
+    element in its proper set (in this case we had to perform two
+    comparisons to handle the element).
 
-    So let us guess, by a coin flip, for each element of $S$ whether
-    they are in $S_<$ or $S_>$. If we are right, then the algorithm
-    would require only one comparison to put them into the right
+    So let us guess, by a coin flip, for each element of $S$ whether it
+    is in $S_<$ or $S_>$. If we are right, then the algorithm would
+    require only one comparison to put them into the right
     set. Otherwise, it would need two comparisons. Let $X_s$ be the
     random variable that is the number of comparisons used by this
     algorithm for an element $s \in S$. We have that if
@@ -556,8 +634,8 @@ algorithm using the following modifications.
     $s \in S_m$ then both comparisons will be performed, and thus
     $\Ex{X_s}=2$ in this case.
 
-    Thus, the expected numbers of comparisons for all the elements of
-    $S$, by linearity of expectations, is
+    Thus, the expected number of comparisons for all the elements of $S$,
+    by linearity of expectation, is
     $\tfrac{3}{2}(n-|S_m|) + 2 |S_m| = (3/2)n + |S_m|/2$.
 \end{proof}
 
@@ -568,14 +646,27 @@ algorithm using the following modifications.
     $1.5 n + O( n^{3/4} \log n)$ comparisons.
 \end{theorem}
 \begin{proof}
-    Let $X$ be the random variable that is the number of iteration
-    till the interval is good. We have that $X$ is a geometric
-    variable with probability of success $\geq 1 - 1/n^{1/4}$. As
-    such, the expected number of rounds till success is
-    $\leq 1/p \leq 1+ 2/n^{1/4}$. As such, the expected number of
-    comparisons performed by the algorithm is
-    $\Ex{ X \cdot \pth{ 1.5 n + O( n^{3/4} \log n)} } = 1.5n +
-    O(n^{3/4} \log n)$.
+    By \Eqref{q-s-few-rounds},  the expected number of rounds $Y$ performed by the algorithm is $1 + 4/n^{1/4}$. We have that the number of comparisons performed by the algorithm has the recurrence
+    \begin{equation*}
+        C(n) \leq 1.5Yn + O(n^{3/4} \log n^{3/4}) + C(n^{3/4}).
+    \end{equation*}
+    Setting $D(n) = \Ex{C(n)}$, and using linearity of expecation on the
+    above expression, we have the recurrence
+    \begin{align*}
+        D(n)
+        &\leq
+        1.5n(1+4/n^{1/4}) + O(n^{3/4} \log n^{3/4}) + D(n^{3/4})
+        \\&
+        \leq
+        1.5n + O(n^{3/4} \log n) + D(n^{3/4} )
+        \\&%
+        \leq
+        1.5n + O(n^{3/4}\log n )
+        \tag{by easy but tedious induction}%
+        \\&
+        =%
+        1.5n + o(n).
+    \end{align*}
 \end{proof}
 
 
@@ -598,3 +689,4 @@ algorithm using the following modifications.
 % mode: latex
 % TeX-master: t
 % End:
+

@@ -48,8 +48,6 @@
 
 \NotCCCMode{%
    \begin{figure}%
-       \centering
-       \setlength{\tabcolsep}{2pt}%
        \begin{tabular}{cccc}
          {\IncludeGraphics[width=0.22\linewidth]%
          {\File{figs/bin_8}}}%
@@ -94,8 +92,6 @@
 
 \NotCCCMode{%
 \begin{figure}%
-    \centering
-    \setlength{\tabcolsep}{2pt}%
     \begin{tabular}{c c c c}
       {\IncludeGraphics[width=0.22\linewidth]{\File{figs/bin_mid_16}}}%
       & {\IncludeGraphics[width=0.22\linewidth]{\File{figs/bin_mid_32}}}%
@@ -142,279 +138,304 @@
     }%
     \arrayrulecolor{rulecolor}
     \begin{center}
-        \begin{tabular}{ll}
+        \hfill%
+        \begin{minipage}{0.47\linewidth}
+            \begin{tabularx}{\linewidth}{ll}
+              \toprule
+              \rowcolor{red!10}
+              \multicolumn{2}{p{\dimexpr\linewidth -2\tabcolsep\relax}}
+              {
+              $\Bigl.X_i \in \brc{-1,+1}$%
+              \hfill %
+              $\Prob{X_i=-1} = %
+              \Prob{X_i=1} = 1/2\Bigr.$%
+              }
+              \\
+              \midrule
+              $\Prob{\bigl.Y \geq \Delta} \leq \exp\pth{-\tfrac{\Delta^2}{2n}}\Big.$%
+              &
+                \thmref{Chernoff:special}
+              \\
+              \rowcolor{gray!25}
+              $\Prob{\bigl.Y \leq -\Delta} \leq \exp\pth{-\tfrac{\Delta^2}{2n}}\Big.$%
+              &
+                \thmref{Chernoff:special}%\\
+              \\
+              $\Prob{\bigl.\cardin{Y - {n}/{2}} \geq \Delta
+              } \leq 2\exp\pth{-\tfrac{2\Delta^2}{n}} \Bigr.$
+              &
+                \corref{Chernoff:0:1}%
+                \\
+              \bottomrule
+            \end{tabularx}
+        \end{minipage}
+        \hfill\null{} 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \NotCCCMode{\bigskip}%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \\
+    \begin{minipage}[t]{0.47\linewidth}
+        \rowcolors{3}{white}{gray!25}
+        \begin{tabular}{l l l}
           \toprule
           \rowcolor{red!10}
-          \multicolumn{2}{c}{%
-          $\Bigl.X_i \in \brc{-1,+1}$%
-          \qquad\qquad %
-          $\Prob{X_i=-1} = %
-          \Prob{X_i=1} = 1/2\Bigr.$%
+          \multicolumn{3}{p{\dimexpr\linewidth}}
+          {
+          $X_i \in \brc{0,1}$
+          \hfill%
+          $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
+          $\Prob{ X_i = 0 } =1-p_i$
           }
           \\
+          \midrule          
+          $\delta \geq 0$\quad
+          &
+            \multicolumn{2}{l}{
+            \begin{math}
+                P=\Prob{\bigl. Y > (1+\delta)\mu }%
+                <%
+                \pth{\NiceFrac{e^\delta}{(1+\delta)^{1+\delta}} }^\mu
+            \end{math}
+        }\\
+      &
+      & \thmref{Chernoff:simplified}%
+      \\%
+      % -----------------------------------------------------------
+      $\delta \in (0,1)$
+      &
+        ${\rule[-.2cm]{0cm}{0.7cm}} P < \exp \pth{-\mu
+        \delta^2 / 3}$
+      &
+        \lemref{chernoff:small:delta:1}\\%
+      %-----------------------------------------------------------
+      % -----------------------------------------------------------
+          $\delta \in (0,4)$
+          &
+            $P < \exp \pth{-
+            {\mu \delta^2 }/{4} }$
+      &
+        \lemref{chernoff:small:delta}\\%
+      %-----------------------------------------------------------
+      % -----------------------------------------------------------
+      $\delta \in (0,6)$
+      &
+        ${\rule[-.2cm]{0cm}{0.7cm}}P < \exp \pth{-\mu
+        \delta^2 / 5}$
+      &
+        \lemref{chernoff:delta:gap}\\%
+        % -----------------------------------------------------------
+      % -----------------------------------------------------------
+      $\delta \geq 2e - 1$
+      &
+        ${\rule[-.2cm]{0cm}{0.7cm}}P < 2^{-\mu (1+\delta)}$
+      &
+        \lemref{chernoff:delta:big}%
+      \\
+      % -----------------------------------------------------------
+      % -----------------------------------------------------------
+      $\delta \geq e^2$%
+      &%
+        $P<
+        \exp \pth{ \bigl. -
+        \tfrac{1}{2}\mu \delta \ln \delta }$
+      &
+        \lemref{chernoff:delta:r:big}%
+        \\
           \midrule
-          $\Prob{\bigl.Y \geq \Delta} \leq \exp\pth{-\tfrac{\Delta^2}{2n}}\Big.$%
-          &
-            \thmref{Chernoff:special}
-          \\
-          \rowcolor{gray!25}
-          $\Prob{\bigl.Y \leq -\Delta} \leq \exp\pth{-\tfrac{\Delta^2}{2n}}\Big.$%
-          &
-            \thmref{Chernoff:special}%\\
-          \\
-          $\Prob{\bigl.\cardin{Y - {n}/{2}} \geq \Delta
-          } \leq 2\exp\pth{-\tfrac{2\Delta^2}{n}} \Bigr.$
-          &
-            \corref{Chernoff:0:1}%
-            \\
-          \bottomrule
-        \end{tabular}
-
-        \medskip
-
-        \resizebox{\linewidth}{!}{%
-        \begin{tabular}[t]{@{}l@{\qquad}l@{}}
-          {\rowcolors{3}{white}{gray!25}%
-          \begin{tabular}[t]{l l l}
-            \toprule
-            \rowcolor{red!10}
-            \multicolumn{3}{c}{%
-            $X_i \in \brc{0,1}$
-            \qquad\qquad%
-            $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
-            $\Prob{ X_i = 0 } =1-p_i$
-            }
-            \\
-            \midrule          
-            $\delta \geq 0$\quad
-            &
-              \multicolumn{2}{l}{
-              \begin{math}
-                  P=\Prob{\bigl. Y > (1+\delta)\mu }%
-                  <%
-                  \pth{\NiceFrac{e^\delta}{(1+\delta)^{1+\delta}} }^\mu
-              \end{math}
-          }\\
-        &
-        & \thmref{Chernoff:simplified}%
-        \\%
-        % -----------------------------------------------------------
-        $\delta \in (0,1)$
-        &
-          ${\rule[-.2cm]{0cm}{0.7cm}} P < \exp \pth{-\mu
-          \delta^2 / 3}$
-        &
-          \lemref{chernoff:small:delta:1}\\%
-        %-----------------------------------------------------------
-        % -----------------------------------------------------------
-            $\delta \in (0,4)$
-            &
-              $P < \exp \pth{-
-              {\mu \delta^2 }/{4} }$
-        &
-          \lemref{chernoff:small:delta}\\%
-        %-----------------------------------------------------------
-        % -----------------------------------------------------------
-        $\delta \in (0,6)$
-        &
-          ${\rule[-.2cm]{0cm}{0.7cm}}P < \exp \pth{-\mu
-          \delta^2 / 5}$
-        &
-          \lemref{chernoff:delta:gap}\\%
-          % -----------------------------------------------------------
-        % -----------------------------------------------------------
-        $\delta \geq 2e - 1$
-        &
-          ${\rule[-.2cm]{0cm}{0.7cm}}P < 2^{-\mu (1+\delta)}$
-        &
-          \lemref{chernoff:delta:big}%
-        \\
-        % -----------------------------------------------------------
-        % -----------------------------------------------------------
-        $\delta \geq e^2$%
-        &%
-          $P<
-          \exp \pth{ \bigl. -
-          \tfrac{1}{2}\mu \delta \ln \delta }$
-        &
-          \lemref{chernoff:delta:r:big}%
-          \\
-            \midrule
-            $\BadProb \in (0,1]$
-        &
-          \multicolumn{2}{l}{%}
-          $\biggl.\Prob{ \bigl. Y > (1+\delta)\mu
-          + \smash{\displaystyle \frac{3\ln
-          \BadProb^{-1}}{\delta^2}} \biggr.}
-          < \BadProb$.
-          }
-          \\
-            \rowcolor{white}
-        & &
-            \lemref{chandra:wanted:it}%
-        \\
-            \bottomrule
-          \end{tabular}}%
-          &
-          \begin{tabular}[t]{l l l}
-            \toprule 
-            \rowcolor{red!10}
-            \multicolumn{3}{c}{%
-            $X_i \in \brc{0,1}$
-            \qquad\qquad%
-            $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
-            $\Prob{ X_i = 0 } =1-p_i$
-            }
-            \\
-            \midrule 
-            $\delta \geq 0\Bigl.$%
-            &
-              \multicolumn{2}{l}{
-              $\Prob{ Y < (1-\delta)\mu } < \Bigl(
-              \NiceFrac{e^{-\delta}}{(1-\delta)^{1-\delta}}
-              \Bigr)^\mu \Biggr.$}
-              \\&
-            &
-              \thmref{Chernoff:2}
-            \\
-            \rowcolor{gray!25}
-              % ----------------------------------------------------------
-            &
-              \multicolumn{2}{l}{$ \displaystyle \Prob{ Y < (1-\delta)\mu } < \exp
-              \pth{-\mu\delta^2/2}\Bigr. $}
-              \\
-            \rowcolor{gray!25}
-            &&
-              \lemref{chernoff:2:s}
-            \\
-            \midrule 
-              % ----------------------------------------------------------
-              % ----------------------------------------------------------
-            $\Delta \geq 0$
-            &
-              \multicolumn{2}{l}{
-                  \begin{math}%
-                      \ds%
-                      \Prob{\bigl.\,Y - \mu \geq \Delta\, }%
-                      \leq%
-                      \exp\pth{ -2 \Delta^2/n}
-                  \end{math}}
-            \\%
-            &
-              \multicolumn{2}{l}{
-              \begin{math}%
-                      \ds%
-                      \Prob{\bigl.\, Y - \mu \leq -\Delta \, }%
-                      \leq%
-                      \exp\pth{ -2 \Delta^2/n}
-                  \end{math}
-              }
-              \\
-            & &
-              \corref{useful:chernoff:2}%
-            \\%
-            % ----------------------------------------------------------
-            % ----------------------------------------------------------
-            \midrule
-            $\tau \geq 1$
-            &
-              \multicolumn{2}{l}{%
-              $\bigg.\Prob{ Y < \mu/\tau } < \exp\Bigl(- \Bigl[1 -
-              \displaystyle
-              \frac{1 + \ln \tau}{\tau}\Bigr]\, \mu\Bigr)$
-              }
-            \\
-            &
-            &
-              \thmref{Chernoff:2}\\
-            \bottomrule 
-          \end{tabular}
-        \end{tabular}%
+          $\BadProb \in (0,1]$
+      &
+        \multicolumn{2}{l}{%}
+        $\biggl.\Prob{ \bigl. Y > (1+\delta)\mu
+        + \smash{\displaystyle \frac{3\ln
+        \BadProb^{-1}}{\delta^2}} \biggr.}
+        < \BadProb$.
         }
-
-        \medskip
-
-        \begin{tabular}{lll}
-          \toprule
-          \rowcolor{red!10}
-          \multicolumn{3}{c}{%
-          $X_i \in [0,1]\Bigr.$
-          \qquad
-          Arbitrary independent distributions
+        \\
+          \rowcolor{white}
+      & &
+          \lemref{chandra:wanted:it}%
+      \\
+          \bottomrule
+    \end{tabular}
+\end{minipage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\\[1cm]
+\hfill
+\begin{minipage}[t]{0.47\linewidth}
+    \begin{tabular}{l p{0.4\linewidth} l}
+      \toprule 
+      \rowcolor{red!10}
+          \multicolumn{3}{p{\dimexpr\linewidth -2\tabcolsep\relax}}
+          {
+          $X_i \in \brc{0,1}$
+          \hfill%
+          $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
+          $\Prob{ X_i = 0 } =1-p_i$
           }
-          \\
-          \midrule%      
-          % ----------------------------------------------------------
-          $\delta \in [0,1]$
-          &
+      \\
+      \midrule 
+      $\delta \geq 0\Bigl.$%
+      &
+        \multicolumn{2}{l}{
+        $\Prob{ Y < (1-\delta)\mu } < \Bigl(
+        \NiceFrac{e^{-\delta}}{(1-\delta)^{1-\delta}}
+        \Bigr)^\mu \Biggr.$}
+        \\&
+      &
+        \thmref{Chernoff:2}
+      \\
+      \rowcolor{gray!25}
+        % ----------------------------------------------------------
+      &
+        \multicolumn{2}{l}{$ \displaystyle \Prob{ Y < (1-\delta)\mu } < \exp
+        \pth{-\mu\delta^2/2}\Bigr. $}
+        \\
+      \rowcolor{gray!25}
+      &&
+        \lemref{chernoff:2:s}
+      \\
+      \midrule 
+        % ----------------------------------------------------------
+        % ----------------------------------------------------------
+      $\Delta \geq 0$
+      &
+        \multicolumn{2}{l}{
             \begin{math}%
                 \ds%
-                \Prob{\bigl.{Y} \geq (1+\delta) \mu }%
+                \Prob{\bigl.\,Y - \mu \geq \Delta\, }%
                 \leq%
-                \exp\ts\pth{ -\delta^2 \mu / 4}
+                \exp\pth{ -2 \Delta^2/n}
+            \end{math}}
+%        \\
+%      & &
+%        \corref{useful:chernoff:2}%
+      \\%
+%      $\Delta \geq 0$
+      &
+        \multicolumn{2}{l}{
+        \begin{math}%
+                \ds%
+                \Prob{\bigl.\, Y - \mu \leq -\Delta \, }%
+                \leq%
+                \exp\pth{ -2 \Delta^2/n}
             \end{math}
-          &%
-            \thmref{special:h:i:e}%
-          \\%
-          \addlinespace[3pt]
-          \rowcolor{gray!25}
-          &
-          \begin{math}%
-              \ds%
-              \Prob{\bigl. Y \leq (1-\delta) \mu }%
-              \leq%
-              \exp\ts\mleft( - \delta^2 \mu/2 \mright)  
-          \end{math}
-            &
-            \\
-          \midrule
-          $\Delta \geq 0$
-          &
-                \begin{math}%
-                    \ds%
-                    \Prob{\bigl.\,Y - \mu \geq \Delta\, }%
-                    \leq%
-                    \exp\pth{ -2 \Delta^2/n}
-                \end{math}
-          &
-            \corref{useful:chernoff:2}%
-          \\%
-          \addlinespace[3pt]
-          \rowcolor{gray!25}
-          &
+        }
+        \\
+      & &
+        \corref{useful:chernoff:2}%
+      \\%
+      % ----------------------------------------------------------
+      % ----------------------------------------------------------
+      \midrule
+      $\tau \geq 1$
+      &
+        \multicolumn{2}{l}{%
+        $\bigg.\Prob{ Y < \mu/\tau } < \exp\Bigl(- \Bigl[1 -
+        \displaystyle
+        \frac{1 + \ln \tau}{\tau}\Bigr]\, \mu\Bigr)$
+        }
+      \\
+      &
+      &
+        \thmref{Chernoff:2}\\
+      \bottomrule 
+    \end{tabular}
+\end{minipage}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \NotCCCMode{\bigskip}%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %XXXX
+    \begin{minipage}{0.6\linewidth}
+    \begin{tabular}{l p{0.5\linewidth} l}
+      \toprule
+      \rowcolor{red!10}
+      \multicolumn{3}{p{\dimexpr\linewidth -2\tabcolsep\relax}}%
+      {
+      $X_i \in [0,1]\Bigr.$
+      \hfill
+      Arbitrary independent distributions
+      }
+      \\
+      \midrule%      
+      % ----------------------------------------------------------
+      $\delta \in [0,1]$
+      &
+        \begin{math}%
+            \ds%
+            \Prob{\bigl.{Y} \geq (1+\delta) \mu }%
+            \leq%
+            \exp\ts\pth{ -\delta^2 \mu / 4}
+        \end{math}
+      &%
+        \thmref{special:h:i:e}%
+      \\%
+      \addlinespace[3pt]
+      \rowcolor{gray!25}
+      &
+      \begin{math}%
+          \ds%
+          \Prob{\bigl. Y \leq (1-\delta) \mu }%
+          \leq%
+          \exp\ts\mleft( - \delta^2 \mu/2 \mright)  
+      \end{math}
+        &
+        \\
+      \midrule
+      $\Delta \geq 0$
+      &
             \begin{math}%
-                    \ds%
-                    \Prob{\bigl.\, Y - \mu \leq -\Delta \, }%
-                    \leq%
-                    \exp\pth{ -2 \Delta^2/n}.
-                \end{math}
-          &
-            \\
-          \bottomrule
-        \end{tabular}
+                \ds%
+                \Prob{\bigl.\,Y - \mu \geq \Delta\, }%
+                \leq%
+                \exp\pth{ -2 \Delta^2/n}
+            \end{math}
+%            \smallskip%
+%        \end{minipage}%
+      &
+        \corref{useful:chernoff:2}%
+      \\%
+      \addlinespace[3pt]
+      \rowcolor{gray!25}
+      &
+        \begin{math}%
+                \ds%
+                \Prob{\bigl.\, Y - \mu \leq -\Delta \, }%
+                \leq%
+                \exp\pth{ -2 \Delta^2/n}.
+            \end{math}
+      &
+        \\
+      \bottomrule
+    \end{tabular}
+    \end{minipage}
 
-        \medskip
+    \bigskip%
 
-        \begin{tabular}{@{}l l l@{}}
-          \toprule 
-          \rowcolor{red!10}
-          \multicolumn{3}{c}{%
-          $X_i \in [a_i,b_i]\Bigr.$
-          \qquad
-          Arbitrary independent distributions
-          }
-          \\
-          \midrule
-          $\Delta \geq 0$
-          &
-                $ \Biggl.\Prob{\bigl. \cardin{ Y - \mu} \,\geq\, \Delta }
-                \leq 2\exp \pth{\ds - \frac{2\,\Delta^2}{\sum_{i=1}^n (b_i
-                      - a_i)^2} }$%
-          &
-            \thmref{Hoeffding:inequality}
-          \\
-          \bottomrule      
-        \end{tabular}
+    \begin{minipage}{0.65\linewidth}
+    \begin{tabular}{l p{0.6\linewidth} l}
+      \toprule 
+      \rowcolor{red!10}
+      \multicolumn{3}{p{\dimexpr\linewidth -2\tabcolsep\relax}}%
+      {
+      $X_i \in [a_i,b_i]\Bigr.$
+      \hfill
+      Arbitrary independent distributions
+      }
+      \\
+      \midrule
+      $\Delta \geq 0$
+      &
+            $ \Biggl.\Prob{\bigl. \cardin{ Y - \mu} \,\geq\, \Delta }
+            \leq 2\exp \pth{\ds - \frac{2\,\Delta^2}{\sum_{i=1}^n (b_i
+                  - a_i)^2} }$%
+      &
+        \thmref{Hoeffding:inequality}
+      \\
+      \bottomrule      
+    \end{tabular}%
+    \end{minipage}
     \captionof{table}{Summary of Chernoff type inequalities%
        \NotCCCMode{ covered}. Here we have $n$ independent random
        variables $X_1, \ldots, X_n$, $Y =\sum_i X_i$ and
@@ -561,19 +582,19 @@ the player has, in the end of the game, is
     Y_n%
     &\geq%
     (1-\beta)^{n-M} (1+\beta)^M%
-    \\&=%
+    =%
     (1-\beta)^{n/2 -(\delta/2)n} (1+\beta)^{n/2 +(\delta/2)n}%
-    \\&=%
+    =%
     \pth[]{\Big. (1-\beta)(1+\beta)}^{n/2 -(\delta/2)n}
     (1+\beta)^{\delta n}%
     \\&%
     =%
     \pth[]{\Big. 1-\beta^2 }^{n/2 -(\delta/2)n} (1+\beta)^{\delta n}%
-    \\&%
+    % \\&%
     \geq%
     {\Big. \exp\pth{ -2\beta^2} }^{n/2 -(\delta/2)n}
     {\exp\pth{\beta/2}}^{\delta n}%
-    \\&%
+    % \\&%
     =%
     \exp\pth{ \pth[]{ -\beta^2 +\beta^2 \delta + \beta \delta /2 } n
     }.
@@ -640,18 +661,18 @@ many other people have to be poor. We are thus ready for the kill.
     amount of money in the end of the $i$\th round.  Here $X_i=1$
     indicates that the player won the $i$\th round.  We have, by
     \lemref{chernoff:games} and Markov's inequality, that
-    \begin{align*}
+    \begin{equation*}
         \ProbLTR \Bigl[{ \sum_i X_i \geq (1+\delta)\frac{n}{2}} \Bigr]%
-        &\leq %
+        \leq %
         \ProbLTR \Bigl[{ Y_n \geq \exp \Bigl( {\frac{n \delta^2}{16}}
            \Bigr)
         } \Bigr] %
         \leq%
         \frac{\Ex{Y_n}\bigl. }{\bigl. \exp\pth{n \delta^2 / 16}}%
-        \\&=%
+        =%
         \frac{1}{\bigl.  \exp\pth{n \delta^2 / 16}} =
         \exp \Bigl( -\frac{\delta^2}{ 16} n  \Bigr).
-    \end{align*}
+    \end{equation*}
 \end{proof}
 
 \medskip%
@@ -726,7 +747,7 @@ Above, we used the following well known facts.
     \begin{theorem}
         \thmlab{Chernoff:special}%
         %
-        Let $X_1, \ldots, X_n$ be $n$ independent random variables,\newline
+        Let $X_1, \ldots, X_n$ be $n$ independent random variables,
         such that $\Prob{X_i =1} =\Prob{X_i=-1} = \frac{1}{2}$, for
         $i=1,\ldots, n$. Let $Y = \sum_{i=1}^n X_i$. Then, for any
         $\Delta >0$, we have
@@ -777,13 +798,12 @@ Above, we used the following well known facts.
     independence of the $X_i$s, we have
     \begin{align*}
         \Ex{\exp \pth{t Y}}%
-        &=%
+        =%
         \Ex{\exp \pth{\sum_i t X_i}}%
         =%
-        \Ex{\prod_i \exp\pth{t X_i}} \\
-        &=%
-        \prod_{i=1}^{n} \Ex{\exp\pth{t X_i}}
-        \leq%
+        \Ex{\prod_i \exp\pth{t X_i}}%
+        =%
+        \prod_{i=1}^{n} \Ex{\exp\pth{t X_i}} \leq%
         \prod_{i=1}^{n} e^{t^2/2}%
         =%
         e^{n t^2/2}.
@@ -834,18 +854,18 @@ By the symmetry of $Y$, we get the following:
 \begin{proof}
     Consider the random variables $Z_i = 2X_i -1 \in \{-1, +1\}$. We
     have that
-    \begin{align*}
+    \begin{equation*}
         \Prob{\cardin{Y - {n}/{2}} \geq \Delta }
-        &=%
+        =%
         \Prob{\cardin{2Y - {n}} \geq 2\Delta }
         =
         \Prob{\cardin{\Bigl.\smash{\sum_{i=1}^n} (2X_i - 1)} \geq 2\Delta }
-        \\&=
+        =
         \Prob{\cardin{\Bigl.\smash{\sum_{i=1}^n} Z_i} \geq 2\Delta }
         \leq
         2\exp \pth{-2\Delta^2/n},
-    \end{align*}
-    by \corref{Chernoff:special} applied to the independent random\newline
+    \end{equation*}
+    by \corref{Chernoff:special} applied to the independent random
     variables $Z_1, \ldots, Z_n$.
 \end{proof}
 
@@ -858,9 +878,9 @@ By the symmetry of $Y$, we get the following:
     approximately the standard deviation of $X$ if $p_i = 1/2$).  We
     have by
     \begin{align*}
-        \Prob{\cardin{Y - \frac{n}{2}} \geq \Delta }
-        &\leq 2\exp \pth{-2\Delta^2/n} = 2\exp \pth{-2(t\sqrt{n})^2/n} \\
-        &= 2\exp \pth{-2 t^2}.
+        \Prob{\cardin{Y - \frac{n}{2}} \geq \Delta } \leq 2\exp
+        \pth{-2\Delta^2/n} = 2\exp \pth{-2(t\sqrt{n})^2/n} = 2\exp
+        \pth{-2 t^2}.
     \end{align*}
     Thus, Chernoff inequality implies exponential decay (i.e., $\leq
     2^{-t}$) with $t$ standard deviations, instead of just polynomial
@@ -891,9 +911,14 @@ Here we present the Chernoff bound in a more general settings.
         \index{Chernoff inequality}%
         \index{Chernoff inequality!simplified form}%
         %
-        Let $X_1, \ldots, X_n$ be $n$ independent\newline
-        variables, where $\Prob{ \bigl. X_i = 1 } =p_i$
-        and $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$,
+        Let $X_1, \ldots, X_n$ be $n$ independent variables, where
+        \begin{math}
+            \Prob{ \bigl. X_i = 1 } =p_i
+        \end{math}
+        and
+        \begin{math}
+            \Prob{ \bigl. X_i = 0 } =q_i = 1-p_i,
+        \end{math}
         for all $i$.  Let $X = \sum_{i=1}^{b} X_i$.
         $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta > 0$, we
         have
@@ -942,10 +967,10 @@ Here we present the Chernoff bound in a more general settings.
     \end{align*}
     Namely,
     \begin{align*}
-        \Prob{ X > (1+\delta)\mu }
-        &< \frac{\prod_{i=1}^n \Ex{e^{t X_i}}}{e^{t(1+\delta)\mu}}
-        = \frac{\prod_{i=1}^n \pth{ (1-p_i)e^0 + p_i e^{t }}} {e^{t(1+\delta)\mu}} \\
-        &= \frac{\prod_{i=1}^n \pth{ 1+ p_i(e^{t} -1 ) }}
+        \Prob{ X > (1+\delta)\mu } < \frac{\prod_{i=1}^n \Ex{e^{t
+                 X_i}}}{e^{t(1+\delta)\mu}} = \frac{\prod_{i=1}^n
+           \pth{ (1-p_i)e^0 + p_i e^{t }}} {e^{t(1+\delta)\mu}} =
+        \frac{\prod_{i=1}^n \pth{ 1+ p_i(e^{t} -1 ) }}
         {e^{t(1+\delta)\mu}}.
     \end{align*}
     Let $y = p_i (e^{t} - 1 )$. We know that $1+y < e^y$ (since $y >
@@ -962,11 +987,9 @@ Here we present the Chernoff bound in a more general settings.
         =%
         \frac{\exp \pth{ (e^{t} -1 )\sum_{i=1}^n p_i }}
         {e^{t(1+\delta)\mu}} = \frac{\exp \pth{ (e^{t} -1 )\mu }}
-        {e^{t(1+\delta)\mu}}
-        \\&%
-        =%
-        \pth{\frac{\exp \pth{ e^{t} -1 }}
+        {e^{t(1+\delta)\mu}} = \pth{\frac{\exp \pth{ e^{t} -1 }}
            {e^{t(1+\delta)}}}^\mu%
+        \\&%
         =%
         \pth{\frac{\exp \pth{ \delta }}
            {(1+\delta)^{(1+\delta)}}}^\mu,
@@ -1009,18 +1032,18 @@ We need the following low level lemma.
 \begin{proof}
     For $x \in [0,1)$, we have, by the Taylor expansion, that
     $\ln (1-x) = - \sum_{i=1}^\infty ({x^i}/{i})$. As such, we have
-    \begin{align*}
+    \begin{equation*}
         (1-x)\ln(1-x) %
-        &=%
+        =%
         - (1-x) \sum_{i=1}^\infty \frac{x^i}{i}
         =%
         -  \sum_{i=1}^\infty \frac{x^i}{i}
         +  \sum_{i=1}^\infty \frac{x^{i+1}}{i}
-        \\&=%
+        =%
         -x + \sum_{i=2}^\infty \pth{\frac{x^i}{i-1} -\frac{x^i}{i}}%
         =%
         -x + \sum_{i=2}^\infty \frac{x^i}{i(i-1)}.
-    \end{align*}
+    \end{equation*}
     This implies that $(1-x)\ln(1-x) \geq -x + x^2/2$, which implies
     the claim by exponentiation.
 \end{proof}
@@ -1028,10 +1051,13 @@ We need the following low level lemma.
 \begin{theorem}
     \thmlab{Chernoff:2}%
     %
-    Let $X_1, \ldots, X_n$ be $n$ independent\newline
-    random variables, where
-    $\Prob{ \bigl. X_i = 1 } =p_i$ and
-    $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$,
+    Let $X_1, \ldots, X_n$ be $n$ independent random variables, where
+    \begin{math}
+        \Prob{ \bigl. X_i = 1 } =p_i,
+    \end{math}
+    \begin{math}
+        \Prob{ \bigl. X_i = 0 } =q_i = 1-p_i,
+    \end{math}
     for all $i$.
     For $X = \sum_{i=1}^{n} X_i$, its expectation is
      $\mu = \Ex{\bigl. X} = \sum_i p_i$.  We have that
@@ -1043,11 +1069,11 @@ We need the following low level lemma.
      \end{equation*}
 
     For any positive $\tau > 1$, we have that
-    \[
+    \begin{math}
       \Prob{ X < \mu/\tau \bigr.} %
       \leq%
       \exp\pth{-\pth{1 - \frac{1 + \ln \tau}{\tau}} \mu}.
-    \]
+  \end{math}
 \end{theorem}
 
 
@@ -1069,26 +1095,30 @@ We need the following low level lemma.
     \begin{align*}
       \Prob{ X < (1-\delta)\mu \bigr.} %
       &=%
-        \Prob{ -X > -(1-\delta)\mu \bigr.} \\
-      &= %
-        \Prob{ \exp( -t X)  > \exp\pth{-t(1-\delta)\mu} \bigr.} \\
-      &\leq %
-        \frac{\prod_{i=1}^n \Ex{\exp( -t X_i)}}{\exp\pth{-t(1-\delta)\mu}}%
+        \Prob{ -X > -(1-\delta)\mu \bigr.} %
+        = %
+        \Prob{ \exp( -t X)  > \exp\pth{-t(1-\delta)\mu} \bigr.}
+        \leq %
+        \frac{\prod_{i=1}^n \Ex{\exp( -t X_i)}}{\exp\pth{-t(1-\delta)\mu}}\\
+      &
         \leq%
         \frac{\exp\pth{-\sum_{i=1}^n  p_i\delta}}
-        {\exp\pth{-t(1-\delta)\mu}}  \\
-      &=%
-        \Bigl[  \frac{e^{-\delta}}{(1-\delta)^{1-\delta}} \Bigr]^\mu.
+        {\exp\pth{-t(1-\delta)\mu}}  %
+        =%
+        % \\
+        % &
+            \Bigl[  \frac{e^{-\delta}}{(1-\delta)^{1-\delta}} \Bigr]^\mu.
     \end{align*}
     For the last inequality, set $\delta = 1-1/\tau$, and observe that
     \begin{align*}
       \Prob{ X < (1-\delta)\mu \bigr.} %
-      &\leq%
+      &
+        \leq%
         \Bigl[  \frac{e^{-\delta}}{(1-\delta)^{1-\delta}} \Bigr]^\mu
         =%
         \Bigl[  \frac{\exp\pth{-1 + 1/\tau}}
-        {(1/\tau)^{1/\tau}} \Bigr]^\mu \\
-      &=%
+        {(1/\tau)^{1/\tau}} \Bigr]^\mu
+        =%
         \exp\pth{-\pth{1 - \frac{1 + \ln \tau}{\tau}} \mu}.
     \end{align*}
 \end{proof}
@@ -1128,7 +1158,8 @@ We need the following low level lemma.
 
 
 
-\subsection[A more convenient form of Chernoff's inequality]{A more convenient form of\\ Chernoff's inequality}
+\subsection{A more convenient form of Chernoff's %
+   inequality}
 \seclab{simplified}
 
 
@@ -1159,13 +1190,13 @@ We need the following low level lemma.
     \begin{align*}
       & \pth{ \frac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu \leq
         \exp\pth{- \frac{\mu \delta^2}{c} }
-      \\
-      &\iff
+        \iff
         \mu \bigl( \delta -(1+\delta) \ln(1+\delta) \bigr)
         \leq
         - \mu \delta^2/c
       \\[0.2cm]
-      &\iff
+      \iff
+      &
         f(\delta) = \delta^2/c + \delta -(1+\delta) \ln(1+\delta)
         \leq 0.
     \end{align*}
@@ -1333,9 +1364,9 @@ We need the following low level lemma.
     Observe that
     \begin{align}
         \Prob{\Bigl. X > (1+\delta)\mu }%
-        &<%
-        \pth{ \frac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu \nonumber \\
-        &=%
+        <%
+        \pth{ \frac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu%
+        =%
         \exp \pth{ \Bigl.\ts \mu \delta - \mu\pth{1+\delta}\ln \pth{
               1+\delta}}.%
         \eqlab{c:imply}%
@@ -1345,11 +1376,11 @@ We need the following low level lemma.
         \Prob{\Bigl. X > (1+\delta)\mu }%
         &<%
         \exp \pth{ \Bigl. - \mu\pth{1+\delta} \pth{ \bigl. \ln \pth{
-                 1+\delta} - 1 }} \\
-        &\leq %
+                 1+\delta} - 1 }}%
+        \leq %
         \exp \pth{ \Bigl. - \mu \delta { \bigl. \ln {
                  \frac{1+\delta}{e}} }}%
-        \\&%
+        % \\&%
         \leq %
         \exp \pth{ \Bigl. - \frac{\mu \delta \ln \delta}{2}},
     \end{align*}
@@ -1422,18 +1453,18 @@ We need the following low level lemma.
         \BadProb,
     \end{equation*}
     since
-    \begin{align*}
+    \begin{equation*}
         - \frac{\mu}{5} \xi^2%
-        &=%
+        =%
         - \frac{\mu}{5} \pth{  \delta + \frac{3 \ln \BadProb^{-1}}{\mu
               \delta^2} }^2%
-        \\&>%
+        >%
         - \frac{\mu}{5} \pth{ 2 \cdot  \delta \cdot \frac{3 \ln \BadProb^{-1}}{\mu
               \delta^2} }%
         =%
         -\frac{6}{5} \cdot \frac{\ln \BadProb}{\delta} >
         -\ln \BadProb.
-    \end{align*}
+    \end{equation*}
 \end{proof}
 
 \begin{example}
@@ -1505,14 +1536,14 @@ We need the following low level lemma.
     By calculations, see \lemref{technical} below, one can show that
     $\Ex{s^{X_1}} \leq 1 + (s-1)\Ex{X_i}$. As such, by the AM-GM
     inequality\footnote{The inequality between arithmetic and
-       geometric means:\hfill\break
+       geometric means:
        $(\sum_{i=1}^n x_i) /n \geq \sqrt[n]{x_1\cdots x_n}$.}, we have
     that
     \begin{align*}
         \prod_{i=1}^n \Ex{s^{X_i}}%
-        &\leq%
+        \leq%
         \prod_{i=1}^n \pth{\Bigl. 1 + (s-1)\Ex{X_i}}%
-        \\&\leq%
+        \leq%
         \pth{\frac{1}{n}\sum_{i=1}^n \pth{\Bigl. 1 +
               (s-1)\Ex{X_i}}}^n%
         =%
@@ -1541,7 +1572,7 @@ We need the following low level lemma.
         =%
         1 +%
         \frac{\eta }{n - \mu - \eta } %
-        \\&=%
+        =%
         \frac{ n- \mu}{n-\mu - \eta}.%
     \end{align*}
     As such, we have that
@@ -1552,7 +1583,7 @@ We need the following low level lemma.
         =%
         \pth{\frac{\mu(n-\mu - \eta)}{ (\mu + \eta )(n-\mu)}}^{\mu +
            \eta} \pth{\frac{ n- \mu}{n-\mu - \eta}}^n%
-        \\&%
+        %\\&%
         =%
         \pth{\frac{\mu}{ (\mu + \eta )}}^{\mu + \eta} \pth{\frac{ n-
               \mu}{n-\mu - \eta}}^{n-\mu -\eta}.
@@ -1604,15 +1635,19 @@ We need the following low level lemma.
     Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random
     variables, let $\overline{X} = (\sum_{i=1}^n X_i)/n\bigl.$, and
     let $p = \Ex{X}$. We have that
-    \begin{align*}
-        \Prob{\bigl.\,\overline{X} - p \geq t\, }
-        &\leq
+    \begin{math}%
+        \ds%
+        \Prob{\bigl.\,\overline{X} - p \geq t\, }%
+        \leq%
         \exp\pth{ -2 n t^2}
-        \qquad\text{and} \\
-        \Prob{\bigl.\, \overline{X} - p \leq -t \, }
-        &\leq
+    \end{math}
+    and
+    \begin{math}%
+        \ds%
+        \Prob{\bigl.\, \overline{X} - p \leq -t \, }%
+        \leq%
         \exp\pth{ -2 n t^2}.
-    \end{align*}
+    \end{math}
 \end{theorem}
 \begin{proof}
     Let $p = \mu/n$, $q =1-p$, and let $f(t)$ be the function from
@@ -1623,11 +1658,11 @@ We need the following low level lemma.
         &=%
         \ln \frac{p}{p+t}%
         + (p+t) \frac{p+t}{p} \pth{-\frac{p}{(p+t)^2}}%
-        \\&\phantom{=}%
         - \ln \frac{q}{q-t}%
         - (q-t)\frac{q-t}{q}\frac{q}{(q-t)^2}%
-        \\&=%
+        =%
         \ln \frac{p}{p+t} - \ln \frac{q}{q-t}%
+        \\&%
         =%
         \ln \frac{p(q-t)}{q(p+t)}. %
     \end{align*}
@@ -1638,8 +1673,8 @@ We need the following low level lemma.
         &=%
         \frac{q\bcancel{(p+t)}}{p(q-t)} %
         \cdot \frac{p}{q} \cdot%\\
-        \frac{(p+t)(-1) - (q-t) } {(p+t)^{\bcancel{2}}} %
-        \\&=%
+        \frac{(p+t)(-1) - (q-t) } {(p+t)^{\bcancel{2}}}. %
+        =%
         \frac{-p-t - q+t } {(q-t)(p+t)} %
         =%
         - \frac{1 } {(q-t)(p+t)} %
@@ -1728,28 +1763,32 @@ We need the following low level lemma.
     Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random
     variables, let $X= (\sum_{i=1}^n X_i)$, and let $\mu = \Ex{X}$. We
     have that
-    \begin{align*}
-        \Prob{\bigl.{X} - \mu \geq \eps \mu }
-        &\leq
+    \begin{math}%
+        \ds%
+        \Prob{\bigl.{X} - \mu \geq \eps \mu }%
+        \leq%
         \exp\pth{ -\eps^2 \mu / 4}
-        \qquad\text{and} \\
-        \Prob{\bigl. X - \mu \leq -\eps \mu }
-        &\leq
+    \end{math}
+    and
+    \begin{math}%
+        \ds%
+        \Prob{\bigl. X - \mu \leq -\eps \mu }%
+        \leq%
         \exp\pth{ - \eps^2 \mu/2}.
-    \end{align*}
+    \end{math}
 \end{theorem}
 \begin{proof}
     Let $p = \mu /n$, and let $g(x) = f(px)$, for $x \in [0,1]$ and
     $xp < q$. As before, computing the derivative of $g$, we have
     \begin{align*}
         g'(x)%
-        &=%
+        =%
         p f'(xp)%
         =%
         p\ln \frac{p(q-xp)}{q(p+xp)} %
         =%
-        p\ln \frac{q-xp}{q(1+x)} \\
-        &\leq%
+        p\ln \frac{q-xp}{q(1+x)} %
+        \leq%
         p\ln \frac{1}{1+x}%
         \leq%
         - \frac{px}{2}, %
@@ -1786,9 +1825,9 @@ We need the following low level lemma.
         % \Prob{\Bigl.{X} - \mu \geq \eps \mu }%
         % =%
         \Prob{\Bigl.\overline{X} - p \geq \eps p }%
-        &\leq%
-        \exp\pth{ \bigl. nf(\eps p)} = \exp\pth{ \Bigl. n g(\eps)} \\
-        &\leq%
+        \leq%
+        \exp\pth{ \bigl. nf(\eps p)} = \exp\pth{ \Bigl. n g(\eps)}
+        \leq%
         \exp\pth{ \bigl. - p n\eps^2 /4}%
         =%
         \exp\pth{ \bigl. - \mu\eps^2 /4}.
@@ -1802,8 +1841,8 @@ We need the following low level lemma.
         =%
         -p\ln \frac{p(q+xp)}{q(p-xp)} %
         =%
-        p\ln \frac{q(1-x)}{q+xp} \\
-        &=%
+        p\ln \frac{q(1-x)}{q+xp} %
+        =%
         p\ln \frac{q-xq}{q+xp} %
         =%
         p\ln\pth{ 1 - x\frac{p+q}{q+xp}} %
@@ -1818,19 +1857,21 @@ We need the following low level lemma.
     since $1-x \leq e^{-x}$.  By integration, as before, we conclude
     that $h(x) \leq -p x^2/2$.  Now, plugging into \corref{easy:form},
     we get
-    \begin{align*}
+    \begin{math}%
+        \ds%
         \Prob{\bigl.{X} - \mu \leq -\eps \mu }%
-        &=%
+        =%
         \Prob{\bigl.\overline{X} - p \leq -\eps p }%
         \leq%
         \exp\pth{ \bigl. n f(-\eps p)}%
         \leq%
         \exp\pth{ \bigl. n h(\eps )}%
-        \\&\leq%
+        \leq%
         \exp\pth{ \bigl. -n p \eps^2/2}%
+        %\\&%
         \leq%
         \exp\pth{ \bigl. - \mu \eps^2/2}.
-    \end{align*}
+    \end{math}
 \end{proof}
 
 \subsection{Some technical lemmas}
@@ -1928,8 +1969,8 @@ here for the sake of completeness.
         &=%
         (1-p+p e^{s(b-a)}) e^{-ps(b-a)} \\%
         &=%
-        \exp \pth{ -ps(b-a) + \ln\pth{ 1-p+p e^{s(b-a)} }} \\
-        &= \exp \pth{ -p u + \ln\pth{ 1-p+p e^{u} }},
+        \exp \pth{ -ps(b-a) + \ln\pth{ 1-p+p e^{s(b-a)} }}
+        = \exp \pth{ -p u + \ln\pth{ 1-p+p e^{u} }},
     \end{align*}
     for $u = s(b-a)$. Setting
     \begin{align*}
@@ -1967,12 +2008,11 @@ here for the sake of completeness.
     \frac{\pth{ 1-p}pe^u }{4\pth{ 1-p}pe^u} = \frac{1}{4}.
     \]
     Plugging this into \Eqref{phi:u}, we get that
-    \begin{align*}
-        \phi(u) &\leq \frac{1}{8}u^{2} = \frac{1}{8}\pth{s(b-a)}^{2}
-        \qquad\text{and} \\
-        \Ex{e^{sX}} &\leq \exp \pth{ \phi(u) } \leq
-        \exp\pth{ \frac{1}{8}\pth{s(b-a)}^{2}},
-    \end{align*}
+    \[
+    \phi(u) \leq \frac{1}{8}u^{2} = \frac{1}{8}\pth{s(b-a)}^{2} \;\;\;
+    \text{ and } \;\;\; \Ex{e^{sX}} \leq \exp \pth{ \phi(u) } \leq
+    \exp\pth{ \frac{1}{8}\pth{s(b-a)}^{2}},
+    \]
     as claimed.
 \end{proof}
 
@@ -2027,21 +2067,20 @@ here for the sake of completeness.
     \end{align*}
     by Markov's inequality. Arguing as in the proof of Chernoff's
     inequality, we have
-    \begin{align*}
-    \Ex{\MakeSBig\! \ts \exp\pth{sZ}\ts }
-    &= \Ex[]{ \prod_{i=1}^{n} \exp\pth{sZ_i}}%
+    \[
+    \Ex{\MakeSBig\! \ts \exp\pth{sZ}\ts } = \Ex[]{ \prod_{i=1}^{n}
+       \exp\pth{sZ_i}}%
     =%
-    \prod_{i=1}^{n} \Ex{ \MakesBig\! \exp\pth{sZ_i}} \\
-    &\leq
+    \prod_{i=1}^{n} \Ex{ \MakesBig\! \exp\pth{sZ_i}} \leq
     \prod_{i=1}^{n} \exp \pth{ \frac{s^{2}(b_{i}-a_{i})^{2}}{8}},
-    \end{align*}
+    \]
     since the $Z_i$s are independent and by
     \lemref{exponent:blowup}. This implies that
     \begin{align*}
         \Prob{ Z \geq \eta \MakesBig } %
-        &\leq%
-        \exp(-s\eta) \prod_{i=1}^{n} e^{s^{2}(b_{i}-a_{i})^{2}/8} \\
-        &=%
+        \leq%
+        \exp(-s\eta) \prod_{i=1}^{n} e^{s^{2}(b_{i}-a_{i})^{2}/8} %
+        =%
         \exp\pth{ \frac{s^{2}}{8}\sum_{i=1}^{n}(b_{i}-a_{i})^{2} -
            s\eta }.
     \end{align*}
@@ -2213,7 +2252,6 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
 {10}%
 {Chernoff:tight:2}%
 {%
-   \leavevmode\hfill\break\noindent
    For this question use only basic argumentation -- do not use
    Stirling's formula, Chernoff inequality or any similar ``heavy''
    machinery.
@@ -2256,9 +2294,7 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
         \item Let $X$ be the number of heads in $2n$ coin flips.
         Prove that for any integer $t > 0$ and any $\delta >0$
         sufficiently small, it holds that
-        \[
-            \Prob{ X < (1- \delta) n} \geq \exp \pth{-c''\delta^2 n },
-        \]
+        $\Prob{ X < (1- \delta) n} \geq \exp \pth{-c''\delta^2 n }$,
         where $c''$ is some constant. Namely, the Chernoff inequality
         is tight in the worst case.
     \end{compactenumA}

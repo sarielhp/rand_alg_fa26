@@ -18,6 +18,7 @@
 % Typography, Fonts & Math Packages
 %-----------------------------------------------------------------------------
 \usepackage{mathtools}
+\PassOptionsToPackage{warnings-off={mathtools-overbracket,mathtools-colon}}{unicode-math}
 \usepackage{newcomputermodern}   % Loads fontspec & unicode-math
 
 % OpenType math aliases and fixes
@@ -1468,6 +1469,16 @@ backend=biber]{biblatex}
 \providecommand{\sqcupplus}{\sqcup^+}
 
 \newcommand{\AlgorithmI}[1]{{\protect\color{RedViolet}{#1}}}
+
+\usepackage{marginnote}
+\usepackage{ragged2e} 
+% Short, subtle snark macro
+\setlength{\marginparwidth}{1.5in}
+\setlength{\marginparsep}{10pt}
+\newcommand{\snark}[1]{%
+   \marginnote{\raggedright\scriptsize\sffamily\color{gray}#1}%
+}
+
 
 \MakePerPage{footnote} % Resets footnote counter on every page
 
