@@ -5,9 +5,7 @@
     \input{prefix}%
 \fi
 
-
 \ChapterNumPage{5}{34}
-
 
 \Chapter{Chebyshev, Sampling and Selection}
 
@@ -40,20 +38,26 @@
 Here, we discuss Chebyshev's inequality, sometimes written as Chebychev's
 inequality using the French spelling of Chebyshev\footnote{\emph{Pafnuty
       Lvovich Chebyshev} (Russian: \SpellIgnore{Пафну́тий Льво́вич
-      Чебышёв}), (May 16, 1821--December 8, 1894) was a Russian
+      Чебышёв}; May 16, 1821--December 8, 1894) was a Russian
    mathematician and is considered to be the founding father of Russian
    mathematics; see~\cite{b-pct-99}. The Russian letter \emph{ё} in
    \SpellIgnore{Чебышёв} is pronounced ``yo'', making the native
-   pronunciation ``\SpellIgnore{Cheby-SHOV}''{},{} rhyming with
-   ``shove''.}
+   pronunciation ``\SpellIgnore{Cheby-SHOV}'', rhyming with ``shove''.}
+% \remX{Historical priority: The inequality was first discovered and
+%    published in 1853 by the French mathematician Ir{\'e}n{\'e}e-Jules
+%    Bienaym{\'e}~\cite{b-cadld-1853}, fourteen years before Chebyshev
+%    published it independently in 1867~\cite{c-dvm-1867}. Andrei Markov
+%    later acknowledged Bienaym{\'e}'s priority, which is why it is often
+%    called the Bienaym{\'e}--Chebyshev inequality; see Butzer and
+%    Jongmans~\cite{b-pct-99}.}
 
 
 \subsection{Example: A better inequality via moments}
 
 
-Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be mutually independent random
-variables, each taking value $\pm 1$ with equal probability $1/2$. Let
-$Y= \sum_i X_i$. We have that
+Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be mutually independent random variables,
+each taking each value in $\brc{-1,+1}$ with equal probability $1/2$. Let
+$Y= \sum_{i=1}^n X_i$. We have that
 \begin{equation*}
     \Ex{Y\bigr.}%
     \EQ%
@@ -94,12 +98,12 @@ A more interesting quantity is
     inequality over higher-moment techniques (e.g., Chernoff's
     inequality). This comment might make sense only later in the
     course---put differently, Chebyshev is NOT strictly dominated by
-    tools we would see later on.
+    other tools.
 \end{remark}
 
 \begin{lemma}
-    Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be mutually independent random
-    variables, each taking $\pm 1$ with probability $1/2$. For any
+    Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be independent random variables, each
+    taking each value in $\brc{-1, +1}$ with probability $1/2$. For any
     $t > 0$, we have that
     \begin{equation*}
         \Prob{ \cardin{\sum_i X_i} \geq t \sqrt{n}} \leq 1/t^2.
@@ -187,11 +191,12 @@ where $\mu_X = \Ex{X}$.
     $0/1$ variables that are each one with probability $p$ (i.e., a
     single $Y_i$ is a Bernoulli random variable taking value $1$ with
     probability $p$ and $0$ with probability $1-p$). The random variable
-    $Y$ has a binomial distribution with probability $p$, and $m$ trials.
-    That is, $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
+    $Y$ has a binomial distribution with parameters $m$ and $p$.  That
+    is, $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
     $\Ex{Y_i} = p$, and
     $\Var{Y_i} = \Ex{Y_i^2} - \pth{\Ex{Y_i}}^2 = p - p^2 = p(1-p)$. Since
-    the variance is additive for independent variables, we have
+    variance is additive for pairwise independent random variables, we
+    have
     \begin{equation}
         \Var{Y} = \Var{\Bigl. \smash{\sum_i Y_i}} =
         \smash{\sum_{i=1}^m \Var{Y_i}} = m p (1-p).
@@ -238,11 +243,11 @@ $\numC$.
 \begin{lemma}
     \lemlab{Chebyshev-1}
     %
-    Let $U$ be a set of elements, with $p$ fraction of them having a
-    certain property $\propertyC$. Let $\Sample$ be a uniform random
-    sample from $U$ (with replacement) of size $m$. Let $Y$ be the number
-    of elements in $\Sample$ that have the property $\propertyC$. We have
-    that
+    Let $U$ be a set of elements, where a fraction $p$ of the elements
+    have a certain property $\propertyC$. Let $\Sample$ be a uniform
+    random sample from $U$ (with replacement) of size $m$. Let $Y$ be the
+    number of elements in $\Sample$ that have the property
+    $\propertyC$. We have that
     \begin{equation*}
         \Prob{ \Bigl. \Ex{Y} - t \sqrt{m}/2 \leq Y \leq \Ex{Y} + t \sqrt{m}/2
         } \GEQ 1- \frac{1}{t^2}.
@@ -260,8 +265,9 @@ $\numC$.
     For the random variable $Y = \sum_{i=1}^m Y_i$, by linearity of
     expectation and \Eqref{var-bionomial}, we have $\Ex{Y} = mp$ and
     $\Var{Y} = m p (1-p) \leq m/4$, implying that
-    $\sigma_Y = \sqrt{\Var{Y}} \leq \sqrt{m}/2$. Thus, by
-    \thmrefY{Chebyshev's inequality}{Chebyshev:inequality} we have that
+    $\sigma_Y = \sqrt{\Var{Y}} \leq \sqrt{m}/2$. Since
+    $t \sigma_Y \leq t \sqrt{m}/2$, by \thmrefY{Chebyshev's
+       inequality}{Chebyshev:inequality} we have that
     \begin{equation*}
         \Prob{ \cardin{Y - \Ex{Y}} \geq t \sqrt{m}/2
            \Bigr.
@@ -269,8 +275,13 @@ $\numC$.
         \LEQ
         \Prob{\Bigl. \cardin{Y - \Ex{Y}} \geq t \sigma_Y}
         \LEQ
-        1- \frac{1}{t^2}.
+        \frac{1}{t^2}.
     \end{equation*}
+    Taking the complement yields
+    \begin{equation*}
+        \Prob{ \cardin{Y - \Ex{Y}} \leq t \sqrt{m}/2 } \geq 1 - \frac{1}{t^2},
+    \end{equation*}
+    which is equivalent to the stated bound.
 \end{proof}
 
 \begin{example}[Numerical example---skip if you hate numbers.]
@@ -278,8 +289,8 @@ $\numC$.
     property and as such $p=1/2$. Let us sample $m=4\cdot 10^6$ elements---this
     is completely equivalent to flipping a coin $m$ times. The above says
     that the number of $1$s (i.e., heads) we get is concentrated. Indeed,
-    $\sigma_Y = \sqrt{m}/2 = 1000$ and $\Ex{Y}=m/2$, and by the
-    \lemrefY{above lemma}{Chebyshev-1} that
+    $\sigma_Y = \sqrt{m}/2 = 1000$ and $\Ex{Y}=m/2$, and by the \lemrefY{above
+       lemma}{Chebyshev-1} that, we have that
     \begin{equation*}
         \Prob{ \cardin{Y - 2\cdot 10^6} \leq t 1000 }
         \geq 1 - \frac{1}{t^2}.
@@ -289,16 +300,16 @@ $\numC$.
     \begin{equation*}
         [2,000,000 - 10,000, 2,000,000 + 10,000]
     \end{equation*}
-    with probability of $99\%$. That is pretty crazy---flipping a coin is a
-    totally random process for each coin flip, but in the aggregate it is
-    pretty predictable.
+    with probability at least $99\%$. That is pretty crazy---flipping a
+    coin is a totally random process for each coin flip, but in the
+    aggregate it is pretty predictable.
 \end{example}
 
 \begin{example}
     If the size of $U$ is known, and you do not know $p$, then a natural
     estimate for $p$ is to compute how many of the $m$ samples have this
-    property. That is $\widehat{p} = Y/m$ is an estimate of $p$ (i.e., it
-    is the fraction of the sample that has the desired property). In
+    property.  That is, $\widehat{p} = Y/m$ is an estimate of $p$ (i.e.,
+    the fraction of the sample that has the desired property). In
     particular, we can now estimate how many elements in $U$ have the
     property---that is $\widehat{p} n = \tfrac{n}{m} Y$.
 \end{example}
@@ -307,9 +318,9 @@ $\numC$.
 \begin{lemma}
     \lemlab{estimate:chebyshev}%
     %
-    In the settings of \lemref{Chebyshev-1}, let $n= \cardin{U}$ and
+    In the setting of \lemref{Chebyshev-1}, let $n= \cardin{U}$ and
     assume that $\numC$ of them have the property (i.e.,
-    $p=\tfrac{m}{n}$). Let $Z = \tfrac{n}{m}Y$ be the estimate for
+    $p=\tfrac{\numC}{n}$). Let $Z = \tfrac{n}{m}Y$ be the estimate for
     $\numC$.  Then, for any $t\geq 1$, we have that
     \begin{equation*}
         \Prob{ \Bigl. \smash{\numC - t \frac{n}{2\sqrt{m}}%
@@ -342,6 +353,7 @@ $\numC$.
         \leq
         \frac{1}{t^2}.
     \end{align*}
+    Taking the complement completes the proof.
 \end{proof}
 
 
@@ -356,7 +368,7 @@ $\numC$.
 
 We are given a set $U = \brc{u_1,\ldots, u_n}$ of $n$ distinct numbers. Let
 $\EBRY{U}{i}$ denote the $i$\th smallest number in $U$---that is,
-$\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
+$\EBRY{U}{i}$ is the element of \emphi{rank} $i$ in $U$.
 
 \begin{lemma}
     \lemlab{good:interval}%
@@ -366,7 +378,7 @@ $\EBRY{U}{i}$ is the number of \emphi{rank} $i$ in $U$.
     $O(m \log m)$ time, two numbers $r_{-}, r_+ \in U$, such that:
     \begin{compactenumA}
         \medskip%
-        \item The number of rank $k$ in $U$ is in the interval
+        \item The element of rank $k$ in $U$ is in the interval
         $\Interval = [r_-, r_+]$.  \smallskip%
         \smallskip%
         \item There are at most $8 t {n}/ \sqrt{m}$ elements of $U$ in
@@ -513,19 +525,20 @@ Let
     \qquad\text{and}\qquad
     h = k + t \frac{n}{\sqrt{m}} +2\frac{n}{m}.
 \end{equation*}
-We have that $\IntervalA(g, t)$, $\IntervalA(k, t)$ and
-$\IntervalA(h, t)$ are all disjoint, with probability $\geq 1 - 3/t^2$.
+By construction, the sample rank intervals $\IntervalA(g, t)$,
+$\IntervalA(k, t)$, and $\IntervalA(h, t)$ are deterministically pairwise
+disjoint.
 
 It is easy to verify (using the same argumentation as above) that with
 probability at least $1-3/t^2$, the three confidence intervals
 $\Interval(g), \Interval(k)$ and $\Interval(h)$ do not intersect. As
 such, we have
 \begin{math}
-  \cardin{\big.\ts \Interval(k) \cap U\ts}%
-  \leq%
-  h-g%
-  \leq%
-  4\pth[]{t \frac{n}{2\sqrt{m}}}.
+    \cardin{\big.\ts \Interval(k) \cap U\ts}%
+    \leq%
+    h-g%
+    \leq%
+    2 t \frac{n}{\sqrt{m}} + 4 \frac{n}{m} \leq 6 t \frac{n}{\sqrt{m}}.
 \end{math}
 
 
@@ -587,8 +600,8 @@ $\cardin{S_<} + \cardin{S_m} + 1$). There are several cases: \smallskip%
     \item If $\rankY{r_{-}}{ S} > k$ or $\rankY{r_{+}}{S} < k $ then the
     algorithm fails.
 
-    \item $\cardin{S_m} > 8 t {n}/ \sqrt{m} = O( n^{3 / 4})$. This is bad
-    as the set $S_m$ is too large.
+    \item If $\cardin{S_m} > 8 t {n}/ \sqrt{m} = \Theta( n^{3 / 4})$,
+    then the set $S_m$ is too large, and the algorithm fails.
 \end{compactitem}
 \medskip%
 If either failure occurs, the algorithm restarts from scratch.
@@ -613,30 +626,31 @@ If either failure occurs, the algorithm restarts from scratch.
 \end{compactitem}
 
 \begin{remark}
-    Crucially for our analysis this algorithm is not recursive---it
+    Crucially for the analysis, this algorithm is not recursive---it
     performs some rounds of sampling followed by partition, and then a
     single sorting of the interval of interest and extracting the desired
     element from this sorted subset. It is thus fundamentally different
-    than \AlgorithmI{QuickSelect}.
+    from \AlgorithmI{QuickSelect}.
 \end{remark}
 
 \subsubsection{Analysis.}
 
-For the sake of simplicity of exposition we ignore any floors/ceilings in
-the calculations here\footnote{It is easy to verify the floor function
+For the sake of simplicity of exposition, we ignore any floors/ceilings
+in the calculations here\footnote{It is easy to verify the floor function
    only introduces tedium and anxiety in carrying out (essentially) the
    same calculations.}.  The correctness is intuitively easy---the
 algorithm clearly returns the desired element (the analysis below shows
 that the probability of running an infinite number of rounds is zero,
 which implies that the algorithm terminates almost surely\footnote{In
    probability, \emphi{almost surely} means it happens with probability
-   $1$, so there is really no almost about it. It is probability way
+   $1$, so there is really no almost about it. It is probability's way of
    politely stating there is no escape---for example, almost surely we are
    all going to regret writing/reading this footnote.}).
 
+
 \paragraph*{Running time.}
-By \lemref{good:interval}, with probability $\geq 1-3/n^{1 /4}$, it
-succeeded in the first try.  The running time per round is
+By \lemref{good:interval}, with probability $\geq 1-3/n^{1 /4}$, the
+algorithm succeeds on the first try.  The running time per round is
 $O(n + |S_m| \log |S_m|) = O(n)$, as $\cardin{S_m} = O(n^{3/4})$.
 
 
@@ -654,17 +668,21 @@ $ O(Yn)$.  The variable $Y$ is a geometric variable and has
     \eqlab{q-s-few-rounds}
 \end{equation}
 for $n$ sufficiently large, since $Y$ is a geometric random variable with
-success probability $p \geq 1 - 3/n^{1/4}$. Thus, the expected running time
-of the algorithm is $O(n)$.
+success probability
+\begin{equation}
+    p \geq 1 - 3/n^{1/4}.
+    \eqlab{s-p-r-selection}
+\end{equation}
+Thus, the expected running time of the algorithm is $O(n)$.
 
 \subsubsection{Doing better.}
 
 One can slightly improve the number of comparisons performed by the
 algorithm using the following modifications.
 \begin{lemma}
-    Given the numbers $r_{-}, r_{+}$, one can compute the sets $S_<$,
-    $S_m$, and $S_>$ using in expectation (strikingly only)
-    $1.5n + O(n^{3/4})$ comparisons.
+    Given the numbers $r_{-}, r_{+}$ computed by \lemref{good:interval},
+    one can compute the sets $S_<$, $S_m$, and $S_>$ using in expectation
+    (strikingly only) $1.5n + |S_m|/2$ comparisons.
 \end{lemma}
 \begin{proof}
     We need to compute the sets $S_{<}, S_m, S_>$. Namely, we need to
@@ -678,18 +696,37 @@ algorithm using the following modifications.
 
     So let us guess, by a coin flip, for each element of $S$ whether it
     is in $S_<$ or $S_>$. If we are right, then the algorithm would
-    require only one comparison to put them into the right
-    set. Otherwise, it would need two comparisons. Let $X_s$ be the
-    random variable that is the number of comparisons used by this
-    algorithm for an element $s \in S$. We have that if
-    $s \in S_< \cup S_>$ then $\Ex{X_s} = 1(1/2) + 2(1/2) = 3/2$. If
-    $s \in S_m$ then both comparisons will be performed, and thus
-    $\Ex{X_s}=2$ in this case.
+    require only one comparison to put it into the right set. Otherwise,
+    it would need two comparisons. Let $X_s$ be the random variable that
+    is the number of comparisons used by this algorithm for an element
+    $s \in S$. We have that if $s \in S_< \cup S_>$ then
+    $\Ex{X_s} = 1(1/2) + 2(1/2) = 3/2$. If $s \in S_m$ then both
+    comparisons will be performed, and thus $\Ex{X_s}=2$ in this case.
 
     Thus, the expected number of comparisons for all the elements of $S$,
     by linearity of expectation, is
     $\tfrac{3}{2}(n-|S_m|) + 2 |S_m| = (3/2)n + |S_m|/2$.
 \end{proof}
+
+
+\paragraph*{Expected number of comparisons in a round.}
+A round is successful with probability
+$\geq 1- 3/n^{1/4}$, see \Eqref{s-p-r-selection}. Thus, in expectation the
+algorithm performs
+\begin{align*}
+    \xi
+    &\EQ
+    p\cdot \Bigl(1.5n + O(n^{3/4})\Bigr) + (1-p)2n
+    \\&
+    \LEQ
+    1.5n +  O(n^{3/4}) + (3/n^{1/4}) \cdot 2n
+    \\&
+    \EQ
+    1.5n + O(n^{3/4})
+\end{align*}
+comparisons per round. 
+
+
 
 \begin{theorem}
     Given an array $S$ with $n$ numbers and a rank $k$, one can compute
@@ -698,35 +735,63 @@ algorithm using the following modifications.
     $1.5 n + O( n^{3/4} \log n)$ comparisons.
 \end{theorem}
 \begin{proof}
-    By \Eqref{q-s-few-rounds}, the expected number of rounds is
-    $\Ex{Y} \leq 1 + 4/n^{1/4}$. We have that the number of comparisons
-    performed by the algorithm is
+    The intuitive argument is obvious---the algorithm performs $Y$ rounds,
+    and each round takes in expectation $\xi$ comparisons. As the
+    expectation of $Y$ is $\Ex{Y} = \frac{1}{1-p} = 1 + O(1/n^{3/4})$, it
+    follows the expected number of comparisons is $\Ex{Y} \xi$ which is the
+    desired quantity as an easy calculation shows. This argument is
+    correct, but formalizing it requires some tedious work.
+
+    Let $F$ be the expected number of comparisons performed by the
+    algorithm. Consider the first round, with probability $p$ it
+    performed $1.5n + O(n^{3/4})$ comparisons, and with probability $1-p$
+    it is a lost round, and the algorithm has to restart. In case of such
+    a failure it had to perform (at most) $2n$ comparisons in this round,
+    and whatever comparisons the algorithm performs later on. However,
+    since the process is memoryless, the expected number of remaining
+    comparisons the algorithm has to perform is $F$. Namely, we have that
     \begin{equation*}
-        C = 1.5Yn + O(n^{3/4} \log n^{3/4}).
-    \end{equation*}
-    By linearity of expectation, on the above expression, we have
-    \begin{align*}
-        \Ex{C}
-        &\LEQ
-        1.5n(1+4/n^{1/4}) + O(n^{3/4} \log n^{3/4})
-         \\&
+        F
         \LEQ
-        1.5n + O(n^{3/4} \log n)
-        \\&
+        1.5n + O(n^{3/4}) + (1-p)(2n + F)
+        \LEQ  1.5n + O(n^{3/4}) +(1-p) F.
+    \end{equation*}
+    This implies that
+    \begin{align*}
+        F
+        &\LEQ
+        \frac{1.5 n + O(n^{3/4}) }{p}
+        \LEQ
+        \pth{ 1 + \frac{6}{n^{3/4}}}
+        \cdot \pth{1.5 n + O(n^{3/4}) }
+        \\&%
         \LEQ%
-        1.5n + o(n).
+        1.5n + O(n^{3/4}),
     \end{align*}
+    using \Eqref{s-p-r-selection} Wald's identity yields
+    $\Ex{C} \leq \Ex{Y}(1.5n + O(n^{3/4} \log n)) = 1.5n + 6n^{3/4} +
+    O(n^{3/4} \log n) = 1.5n + O(n^{3/4} \log n) = 1.5n + o(n)$.
 \end{proof}
 
+The above implicitly proves a special case of the following.
 
+\begin{theorem}[Wald's Equation]
+    Let $(X_n)_{n \ge 1}$ be a sequence of independent and identically
+    distributed (i.i.d.) real-valued random variables with
+    $\mathbb{E}[|X_1|] < \infty$. Let $Y$ be an integer-valued stopping time
+    with respect to the filtration generated by $(X_n)_{n \ge 1}$ such that
+    $\mathbb{E}[Y] < \infty$.  Then
+    \begin{math}
+        \Ex{ \sum_{i=1}^{Y} X_i } = \Ex{Y} \,
+        \Ex{X_1}.
+    \end{math}
+\end{theorem}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 
 
