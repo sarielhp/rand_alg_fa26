@@ -56,7 +56,7 @@ inequality using the French spelling of Chebyshev\footnote{\emph{Pafnuty
 
 
 Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be mutually independent random variables,
-each taking each value in $\brc{-1,+1}$ with equal probability $1/2$. Let
+each {taking value} in $\brc{-1,+1}$ with equal probability $1/2$. Let
 $Y= \sum_{i=1}^n X_i$. We have that
 \begin{equation*}
     \Ex{Y\bigr.}%
@@ -97,16 +97,31 @@ A more interesting quantity is
     independence. This property is a principal advantage of Chebyshev's
     inequality over higher-moment techniques (e.g., Chernoff's
     inequality). This comment might make sense only later in the
-    course---put differently, Chebyshev is NOT strictly dominated by
-    other tools.
+    course---put differently, Chebyshev is NOT strictly dominated by other
+    tools.
+\end{remark}
+
+\begin{remark}[Looking forward: pairwise independence.]
+    Chebyshev's inequality only requires pairwise cancellation of
+    cross-terms $\Ex{X_i X_j} = \Ex{X_i}\Ex{X_j}$, for $i \neq j$, which is
+    provided by \emphw{pairwise-independence}. This provides significant
+    algorithmic utility in scenarios where full mutual independence is
+    impossible or computationally costly to construct, such as universal
+    hashing and streaming algorithms.  Without going into this here, a
+    group of variables $X_1, \ldots, X_n$ are \emphi{mutually independent}
+    (i.e., independent) if knowing the value of all variables except one,
+    does not provide any information about the value of this singleton
+    variable. Pairwise independence on the other hand requires this
+    property only hold only for subsets of two two variables. 
 \end{remark}
 
 \begin{lemma}
-    Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be independent random variables, each
-    taking each value in $\brc{-1, +1}$ with probability $1/2$. For any
-    $t > 0$, we have that
+    Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be independent\footnote{But really
+       pairwise independent, more on that concept later on.}  random
+    variables, each taking value in $\brc{-1, +1}$ with probability
+    $1/2$. For any $t > 0$, we have that
     \begin{equation*}
-        \Prob{ \cardin{\sum_i X_i} \geq t \sqrt{n}} \leq 1/t^2.
+        \Prob{ \cardin{\sum\nolimits_i X_i} \geq t \sqrt{n}} \leq 1/t^2.
     \end{equation*}
 \end{lemma}
 
@@ -181,7 +196,7 @@ where $\mu_X = \Ex{X}$.
     by \thmrefY{Markov's inequality}{Markov}.
 \end{proof}
 
-\begin{exercise}[Not too interesting]
+\begin{exercise}[Not too interesting, skip]
     Consider the case that $\sigma_X = \Var{X} = 0$, what happens then
     with Chebyshev's inequality?
 \end{exercise}
@@ -290,7 +305,7 @@ $\numC$.
     is completely equivalent to flipping a coin $m$ times. The above says
     that the number of $1$s (i.e., heads) we get is concentrated. Indeed,
     $\sigma_Y = \sqrt{m}/2 = 1000$ and $\Ex{Y}=m/2$, and by the \lemrefY{above
-       lemma}{Chebyshev-1} that, we have that
+       lemma}{Chebyshev-1}, we have that
     \begin{equation*}
         \Prob{ \cardin{Y - 2\cdot 10^6} \leq t 1000 }
         \geq 1 - \frac{1}{t^2}.
@@ -311,7 +326,7 @@ $\numC$.
     property.  That is, $\widehat{p} = Y/m$ is an estimate of $p$ (i.e.,
     the fraction of the sample that has the desired property). In
     particular, we can now estimate how many elements in $U$ have the
-    property---that is $\widehat{p} n = \tfrac{n}{m} Y$.
+    property---that is, $\widehat{p} n = \tfrac{n}{m} Y$.
 \end{example}
 
 
@@ -404,7 +419,7 @@ $\EBRY{U}{i}$ is the element of \emphi{rank} $i$ in $U$.
        maximum element of $U$).}).
 
     Let $Y$ be the number of elements in the sample $\Sample$ that are
-    $\leq \EBRY{U}{k}$.  By \lemref{estimate:chebyshev}, we have
+    $\leq \EBRY{U}{k}$.  By \lemref{Chebyshev-1}, we have
     \begin{equation*}
         \ds%
         \Prob{\Bigl. \Ex{Y} - t \sqrt{m}/2 \leq Y \leq \Ex{Y} + t \sqrt{m}/2
@@ -478,8 +493,7 @@ are $\leq s_k$. For $Y = \cardin{\Sample_{\leq s_k}}$, we have that
 \begin{math}
   \mu = \Ex{Y} = m \frac{k}{n}.
 \end{math}
-Furthermore, for any $t\geq 1$, \lemref{estimate:chebyshev} implies
-that
+Furthermore, for any $t\geq 1$, \lemref{Chebyshev-1} implies that
 \begin{math}
     \ds%
     \Prob{ \mu - t \sqrt{m}/2 \leq Y \leq \mu + t \sqrt{m}/2 } \geq 1-
@@ -600,8 +614,8 @@ $\cardin{S_<} + \cardin{S_m} + 1$). There are several cases: \smallskip%
     \item If $\rankY{r_{-}}{ S} > k$ or $\rankY{r_{+}}{S} < k $ then the
     algorithm fails.
 
-    \item If $\cardin{S_m} > 8 t {n}/ \sqrt{m} = \Theta( n^{3 / 4})$,
-    then the set $S_m$ is too large, and the algorithm fails.
+    \item If $\cardin{S_m} > 8 t {n}/ \sqrt{m} = O(n^{3/4})$, then the
+    set $S_m$ is too large, and the algorithm fails.
 \end{compactitem}
 \medskip%
 If either failure occurs, the algorithm restarts from scratch.
@@ -737,7 +751,7 @@ comparisons per round.
 \begin{proof}
     The intuitive argument is obvious---the algorithm performs $Y$ rounds,
     and each round takes in expectation $\xi$ comparisons. As the
-    expectation of $Y$ is $\Ex{Y} = \frac{1}{1-p} = 1 + O(1/n^{3/4})$, it
+    expectation of $Y$ is $\Ex{Y} = 1/p \leq 1 + O(1/n^{1/4})$, it
     follows the expected number of comparisons is $\Ex{Y} \xi$ which is the
     desired quantity as an easy calculation shows. This argument is
     correct, but formalizing it requires some tedious work.
@@ -762,18 +776,31 @@ comparisons per round.
         &\LEQ
         \frac{1.5 n + O(n^{3/4}) }{p}
         \LEQ
-        \pth{ 1 + \frac{6}{n^{3/4}}}
+        {\pth{ 1 + \frac{4}{n^{1/4}}}}
         \cdot \pth{1.5 n + O(n^{3/4}) }
         \\&%
         \LEQ%
         1.5n + O(n^{3/4}),
     \end{align*}
-    using \Eqref{s-p-r-selection} Wald's identity yields
-    $\Ex{C} \leq \Ex{Y}(1.5n + O(n^{3/4} \log n)) = 1.5n + 6n^{3/4} +
-    O(n^{3/4} \log n) = 1.5n + O(n^{3/4} \log n) = 1.5n + o(n)$.
+    The recurrence above cleanly accounts for the expected
+    $1.5n + O(n^{3/4})$ comparisons performed in partitioning across
+    \emphw{all} rounds. In addition, sorting the sample $\Sample$ takes
+    $O(m \log m) = O(n^{3/4} \log n)$ comparisons per round, and sorting
+    $S_m$ in the \emphw{final} successful round takes
+    \begin{equation*}
+        O(|S_m| \log |S_m|) = O(n^{3/4} \log n)
+    \end{equation*}
+    comparisons. Since the expected number of rounds is
+    \[
+        \Ex{Y} = 1 + O(1/n^{1/4}) \leq 2,
+    \]
+    summing the partitioning and sorting costs yields the claimed total
+    of $1.5n + O(n^{3/4} \log n)$ expected comparisons.
 \end{proof}
 
-The above implicitly proves a special case of the following.
+The above implicitly proves a special case of the following---this more
+general result is stated here for the record, but is outside the scope of
+the material covered here (i.e., no need to read it).
 
 \begin{theorem}[Wald's Equation]
     Let $(X_n)_{n \ge 1}$ be a sequence of independent and identically
