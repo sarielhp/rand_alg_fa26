@@ -55,6 +55,9 @@
 \def\leadsto{\rightsquigarrow}
 \providecommand{\llbracket}{\lBrack}
 \providecommand{\rrbracket}{\rBrack}
+\DeclareTextCommand{\textcircled}{TU}[1]{%
+  \mbox{\ooalign{\hfil\raise0.1ex\hbox{#1}\hfil\crcr\char"25EF}}%
+}
 
 \usepackage{alphabeta}
 \usepackage[normalem]{ulem} % Provides \sout
