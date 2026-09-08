@@ -56,8 +56,7 @@ auto/
 frag_probe.tmp
 *.tmp
 log.txt
-err_*
-*tex}{}
+
 
 # --- Editor Caches, Lock Files & Backups ---
 *~
@@ -274,3 +273,6 @@ snapshot/
 does_not_work/
 junk/old/
 junk/junk/
+styles/junk/
+styles/junk/old/
+styles/junk/junk/

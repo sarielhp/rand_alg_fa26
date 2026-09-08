@@ -299,32 +299,40 @@ shrinks by a constant factor, leading to a linear time algorithm.
     We conclude that 
     \begin{align*}
       \ExCond{ n_{i+1}}{ n_i}%
-      &\leq %
+      &\LEQ %
         \Prob{\MakeBig y_i\text{ in the middle}} \frac{3}{4} n_i +
         \Prob{\MakeBig y_i\text{ not in the middle}}
         n_i\\
-      &\leq%
+        &\LEQ%
         \alpha \frac{3}{4}n_i + \pth[]{1-\alpha} n_i%
-        =%
+        \EQ%
         n_i \pth{ 1 - \alpha / 4}%
-        \leq%
+        \\&
+        \LEQ%
         n_i \pth{ 1 - (1/2) / 4}%
-        = %
+        \\&
+        \EQ %
         (7/8) n_i.
     \end{align*}
     Now, we have that 
     \begin{align*}
       m_{i+1}%
-      &=%
+      &\EQ%
         \Ex{n_{i+1}\MakeBig}%
-        =%}
+        \EQ%}
         \Ex{\ExCond{ n_{i+1}}{ n_i}}%
-        \leq%
+        \LEQ%
         \Ex{(7/8)n_i}%
-        = %
-        (7/8) \Ex{n_i} = (7/8) m_i\\
-      & =%
-        (7/8)^i m_0 = (7/8)^i n,
+        \\&
+        \EQ %
+        (7/8) \Ex{n_i}
+        \EQ%
+        (7/8) m_i
+        \EQ%
+        (7/8)^i m_0
+        \\&%
+        \EQ
+        (7/8)^i n,
     \end{align*}
     since for any two random variables we have that $\Ex{X} =
     \Ex{\Ex{X \sep{ Y} }}$. In particular, the expected running time

@@ -16,7 +16,7 @@
 \ChapterPrefix{}
 \ChapterGen{}
 
-\QuoteExt{%
+\QuotePExt{%
    I built on the sand\\
    And it tumbled down,\\
    I built on a rock\\
@@ -31,25 +31,31 @@
 \section{Some needed math}
 
 
-\begin{fragment}{\deflabel{d:approx:basic}}
+\begin{fragment}{d:approx:basic}
 \begin{lemma}
     \lemlab{approximation:basic}%
     %
     For any positive integer $n$, we have:
     \begin{compactenumi}
-        \item $1+x \leq e^x$ and $1-x \leq e^{-x}$, for all $x$.
+        \medskip%
+        \item $1+x \leq e^x$ \;\;and\;\; $1-x \leq e^{-x}$, for all $x$.
 
-        \item $(1+1/n)^n \leq e \leq \bigl(1+1/n\bigr)^{n+1}$.
+        \medskip
+        \item $(1+1/n)^n \LEQ e \LEQ \bigl(1+1/n\bigr)^{n+1}$.
 
+        \medskip
         \item $(1-1/n)^n \leq \frac{1}{e} \leq (1-1/n)^{n-1} $.
 
-        \item $(n/e)^n \leq n! \leq (n+1)^{n+1} / e^n$.
+        \medskip
+        \item $(n/e)^n \LEQ n! \LEQ (n+1)^{n+1} / e^n$.
 
         \item For any $k \leq n$, we have:
         \begin{math}
             \ds%
-            \pth[]{\frac{n}{k}}^k \leq \binom{n}{k}%
-            \leq%
+            \pth[]{\frac{n}{k}}^k
+            \LEQ%
+            \binom{n}{k}%
+            \LEQ%
             \pth[]{\frac{n e}{k}}^k.
         \end{math}
     \end{compactenumi}
@@ -202,42 +208,59 @@ This seems weird, but is it the truth?
 \begin{proof}
     Let $\Event_i$ be the event that $X_i$ is distinct from all the
     values in $X_1, \ldots, X_{i-1}$.  Let
-    $\EventB_i = \cap_{k=1}^i \Event_k = \EventB_{i-1} \cap \Event_i$
+    \begin{equation*}
+        \EventB_k
+        \EQ
+        \Event_1 \cap \Event_2 \cap \cdots \cap \Event_k
+%        \cap_{k=1}^i \Event_k
+        \EQ \EventB_{k-1} \cap \Event_k
+    \end{equation*}
     be the event that all of $X_1, \ldots, X_i$ are distinct.
     Clearly, we have
-    \begin{equation*}
+    \begin{align*}
         \ProbCond{\Event_i}{\EventB_{i-1}}
-        =%
+        &\EQ%
         \ProbCond{\Event_i}{\Event_1 \cap \cdots \cap \Event_{i-1}}
-        =%
+        \EQ%
         \frac{m-(i-1)}{m}
-        =%
+        \\&
+        \EQ%
         1 - \frac{i-1}{m}
-        \leq
+        \\&
+        \LEQ
         \exp\pth{ - \frac{i-1}{m}}.
-    \end{equation*}
+    \end{align*}
 
     Observe that
     \begin{align*}
-      \Prob{\EventB_i}
-      &=
+        \Prob{\EventB_i}
+        &\EQ
+        \Prob{\Bigl.\,\smash{\overbrace{\Bigl.\Event_1 \cap \Event_2 \cap \cdots \cap \Event_{i-1}}^{\EventB_{i-1}} \cap \Event_i}}%
+        \\&
+        \EQ%
         \Prob{\EventB_{i-1}}
         \frac{\Prob{ \Event_i \cap \EventB_{i-1} }}{\Prob{\EventB_{i-1}}}
-        =%
+        \\[0.1cm]&
+        \EQ%
         \Prob{\EventB_{i-1}}
         \ProbCond{\Event_i }{\EventB_{i-1}}
-        \leq%
+        \tag{By def of cond. prob}
+        \\&
+        \LEQ%
         \exp\pth{ - \frac{i-1}{m}}\Prob{\EventB_{i-1}}
-        \leq
+        \\&
+        \LEQ
         \prod_{k=1}^i
         \exp\pth{ - \frac{k-1}{m}}.
-      \\&
-      =%
-      \exp\pth{-\sum_{k=1}^i \frac{k-1}{m}}
-      =%
-      \exp\pth{ -\frac{i(i-1)}{2} \frac{1}{m}}
-      =%
-      \exp\pth{ -\binom{i}{2}/m}.
+        \\&
+        \EQ%
+        \exp\pth{-\sum_{k=1}^i \frac{k-1}{m}}
+        \\&
+        \EQ%
+        \exp\pth{ -\frac{i(i-1)}{2} \frac{1}{m}}
+        \\&
+        \EQ%
+        \exp\pth{ -\binom{i}{2}/m}.
     \end{align*}
     Which implies the desired claim for $i=n$.
 \end{proof}
@@ -247,7 +270,7 @@ This seems weird, but is it the truth?
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Occupancy Problems}
+\section{Occupancy problems}
 
 \begin{problem}
     We are throwing $m$ balls into $n$ bins randomly (i.e., for every
@@ -261,6 +284,27 @@ This seems weird, but is it the truth?
         bins are non-empty, with reasonable probability?
     \end{compactenumA}
 \end{problem}
+
+\begin{example}
+    Consider throwing $n$ into $n$ bins, and consider a specific
+    ball. What is the probability that this ball all alone in its own bin
+    in the end of the process? Well, we might as well think about throwing this ball first, and all ball later (by symmetry). Then, all it needs is that all other balls avoid its bin. The probability for that is
+    \begin{equation*}
+        p \EQ \pth{1- \frac{1}{n}}^{n-1} \;\approx\; \frac{1}{e}.
+    \end{equation*}
+    Thus, if $X_i$ is an indicator variable for the $i$\th ball being
+    lonely, then the expected number of empty balls is
+    \begin{equation*}
+        \Ex{\sum_{i=1}^n X_i}
+        \EQ%
+        \sum_{i=1}^n \Ex{X_i}
+        \EQ
+        np
+        \;\approx\;
+        \frac{n}{e}.
+    \end{equation*}
+    Namely, a constant fraction of the balls are lonely.
+\end{example}
 
 \begin{theorem}
     With probability at least $1- 1/n$, no bin has more than
@@ -277,33 +321,40 @@ This seems weird, but is it the truth?
     by linearity of expectation.  The probability that the first bin has
     exactly $i$ balls is
     \begin{align*}
-      \binom{n}{i}\, \pth{\frac{1}{n}}^i \pth[]{ 1 -
+        p_i
+        &\EQ
+        \binom{n}{i}\, \pth{\frac{1}{n}}^i \pth[]{ 1 -
       \frac{1}{n}}^{n-i}%
-      \leq%
+      \LEQ%
       \binom{n}{i}\, \pth[]{\frac{1}{n}}^i%
-      \leq%
-      \, \pth[]{\frac{n e}{i}}^i \pth[]{\frac{1}{n}}^i%
-      =%
-      \,\pth[]{\frac{e}{i}}^{i}
+      \\&%
+      \LEQ%
+      \pth[]{\frac{n e}{i}}^i \pth[]{\frac{1}{n}}^i%
+      \EQ%
+      \pth[]{\frac{e}{i}}^{i}
     \end{align*}
     This follows by \lemref{approximation:basic} (iv).
 
-    Let $C_j(k)$ be the event that the $j$\th bin has $k$ or more
+    Let $C(k)$ be the event that the first bin (but really any specific
+    bin, as they all behave in the same way by symmetry) has $k$ or more
     balls in it. Then,
     \begin{align*}
-      \Prob{\bigl. C_1(k)}%
-      \leq%
+      \Prob{\bigl. C(k)}%
+      &\LEQ%
+      \sum_{i=k}^{n} p_i%
+      \LEQ
       \sum_{i=k}^{n} \pth[]{\frac{e}{i}}^{i}%
-      \leq%
+      \LEQ%
       \pth[]{\frac{e}{k}}^{k} \pth{1 + \frac{e}{k} + \frac{e^2}{k^2} +
       \ldots }%
-      =%
+   \\&
+   \EQ%
       \pth[]{\frac{e}{k}}^k \frac{1}{1-e/k}.
     \end{align*}
 
     For $k^* = c \ln{n} /\ln \ln n$, we have
     \begin{align*}
-      \Prob{\bigl. C_1\pth{k^*}}%
+      \Prob{\bigl. C\pth{k^*}}%
       &\leq%
         \pth{\bigl.\frac{e}{k^*}}^{k^*} \frac{1}{1-e/{k^*}}%
         \leq%
@@ -318,34 +369,48 @@ This seems weird, but is it the truth?
       \leq %
       2 \exp \pth{ - \frac{c \ln{n}}{4 } }
       \leq %
-      \frac{1}{n^2},
+      \frac{1}{n^{c/4}},
+      \leq %
+      \frac{1}{n^{2}},
     \end{align*}
     % \bigskip%
-    for $n$ and $c$ sufficiently large.
-    \bigskip%
+    for $n$ and $c\geq 8$. % \bigskip%
 
     Let us redo this calculation more carefully (yuk!). For
-    $k^* = \ceil{(3 \ln{n})/\ln \ln n}$, we have
+    \begin{math}
+        k^* = \ceil{
+           \tfrac{3 \ln n }{\ln \ln n}
+           },
+    \end{math}
+    we have
     \begin{align*}
-      \Prob{\bigl. C_1\pth{k^*}}%
-      &\leq%
+        \Prob{\bigl. C\pth{k^*}}%
+        &\LEQ%
         \pth{\frac{e}{k^*}}^{k^*} \frac{1}{1-e/{k^*}}%
-        \leq%
+        \\&
+        \LEQ%
         2 \pth[]{\frac{e}{(3 \ln{n})/\ln \ln n}}^{k^*}%
-        =%
+        \\&
+        \EQ%
         2  \,{ \bigl. \exp\pth{\Bigl.
-        \smash{\underbrace{1- \ln 3}_{<0}} - \ln \ln {n} + \ln \ln
-        \ln {n}}}^{k^*}%
-      \\&%
-      \leq%
-      2 \bigl.\exp \pth{\bigl. \pth{ - \ln \ln {n} + \ln \ln \ln
-      {n}}{k^*}} \\&%
-      \leq%
-      2 \exp \pth{-3 \ln n + {6 \ln n} \frac{\ln \ln \ln n}{\ln \ln n}}
-      \leq 2\exp \pth{ -2.5 \ln n} \leq \frac{1}{n^2},
+              \smash{\underbrace{1- \ln 3}_{<0}} - \ln \ln {n} + \ln \ln
+              \ln {n}}}^{k^*}%
+        \\&%
+        \LEQ%
+        2 \bigl.\exp \pth{\bigl. \pth{ - \ln \ln {n} + \ln \ln \ln
+              {n}}{k^*}}
+        \\&
+        \LEQ%
+        2 \exp \pth{-3 \ln n + {6 \ln n} \frac{\ln \ln \ln n}{\ln \ln n}}
+        \\&%
+        \LEQ%
+        2\exp \pth{ -2.5 \ln n}
+        \\&
+        \LEQ%
+        \frac{1}{n^2},
     \end{align*}
-    for $n$ large enough. We conclude, that since there are $n$ bins
-    and they have identical distributions that
+    for $n$ large enough. We conclude, by the union bound, that since
+    there are $n$ bins and they have identical distributions that
     \begin{equation*}
         \Prob{\MakeBig \text{any bin contains more than $k^*$
               balls}} %
@@ -364,7 +429,7 @@ This seems weird, but is it the truth?
 
 
 
-\subsection{The Probability of all bins to %
+\subsection{Probability of all bins to %
    have exactly one ball}
 
 Next, we are interested in the probability that all $m$ balls fall in
@@ -455,22 +520,26 @@ expectation and variance of $X_i$ are
     we have
     \begin{align*}
       \Var{ X}%
-      &=%
-        \sum_{i=0}^{n-1} \Var{ X_i}%
-        =%
+      &\EQ%
+        \sum_{i=0}^{n-1} \Var{ X_i}%        
+        \\&
+        \EQ%
         \sum_{i=0}^{n-1} \frac{1-p_i}{p_i^2}%
-        =%
+        \\&
+        \EQ%
         \sum_{i=0}^{n-1} \frac{1-(n-i)/n}{\pth{\frac{n-i}{n}}^2}%
-        =%
+        \EQ%
         \sum_{i=0}^{n-1} \frac{i/n}{\pth[]{\frac{n-i}{n}}^2}%
-        =%
+        \\&
+        \EQ
         \sum_{i=0}^{n-1} \frac{i}{n} \pth{\frac{n}{n-i}}^2%
       \\&%
-      =%
+      \EQ%
       n \sum_{i=0}^{n-1} \frac{i}{(n-i)^2}%
       =%
       n \sum_{i=1}^{n} \frac{n-i}{i^2}%
-      =%
+      \\&
+      \EQ% 
       n \pth[]{ \sum_{i=1}^{n} \frac{n}{i^2} - \sum_{i=1}^{n}
       \frac{1}{i}}%
       =%

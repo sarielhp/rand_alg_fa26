@@ -436,7 +436,20 @@ backend=biber]{biblatex}
       }%
    }%
 }
-\newcommand{\FragmentName}[1]{\RootFile{fragment/#1.tex}}
+\makeatletter
+\def\FragNormKey#1{%
+  \frag@norm@check#1def_\relax{#1}%
+}
+\def\frag@norm@check#1def_#2\relax#3{%
+  \if\relax\detokenize{#1}\relax
+    #3%
+  \else
+    def_#3%
+  \fi
+}
+\makeatother
+
+\newcommand{\FragmentName}[1]{\RootFile{fragment/\FragNormKey{#1}.tex}}
 
 \newwrite\FragOutHandle
 \newwrite\FragProbeOut
@@ -476,17 +489,32 @@ backend=biber]{biblatex}
 }
 
 \DeclareDocumentEnvironment{fragment}{m +b}{%
-   \immediate\openout\FragOutHandle=\FragWritePrefix#1.tex
+   \immediate\openout\FragOutHandle=\FragWritePrefix\FragNormKey{#1}.tex
    \immediate\write\FragOutHandle{\unexpanded{#2}}%
    \immediate\closeout\FragOutHandle
    #2%
 }{}
 
 \makeatletter
+\AtBeginDocument{%
+   \let\real@latex@label\label
+   \def\label#1{%
+      \global\@namedef{all@labels@seen@#1}{1}%
+      \real@latex@label{#1}%
+   }%
+}
+
 \DeclareDocumentCommand{\IncFragment}{m}{%
    \begingroup
-      \let\label\@gobble
-      \InputExt{\FragmentName{#1}}%
+      \def\label##1{%
+         \@ifundefined{all@labels@seen@##1}{%
+            \global\@namedef{all@labels@seen@##1}{1}%
+            \real@latex@label{##1}%
+         }{}%
+      }%
+      \IfFileExists{\FragmentName{#1}}%
+         {\InputExt{\FragmentName{#1}}}%
+         {\InputExt{\RootFile{fragment/#1.tex}}}%
    \endgroup
 }
 \makeatother
@@ -658,7 +686,7 @@ backend=biber]{biblatex}
 \providecommand{\si}[1]{#1}
 \providecommand{\myParagraph}[1]{\noindent\textbf{#1}}
 \providecommand{\DefName}[1]{#1}
-\providecommand{\deflabel}[1]{def_#1}
+\providecommand{\deflabel}[1]{#1}
 \providecommand{\Description}[1]{}
 
 %-----------------------------------------------------------------------------

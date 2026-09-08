@@ -126,7 +126,7 @@ where $\mu_X = \Ex{X}$.
 
 
 
-\begin{fragment}{\deflabel{Chebyshev}}
+\begin{fragment}{Chebyshev}
     \begin{theorem}[Chebyshev's inequality]
         \thmlab{Chebyshev:inequality}%
         %
@@ -168,18 +168,22 @@ where $\mu_X = \Ex{X}$.
     by \thmrefY{Markov's inequality}{Markov}.
 \end{proof}
 
-\begin{remark}[Looking forward: pairwise independence.]
-    Chebyshev's inequality only requires pairwise cancellation of
-    cross-terms $\Ex{X_i X_j} = \Ex{X_i}\Ex{X_j}$, for $i \neq j$, which is
-    provided by \emphw{pairwise-independence}. This provides significant
-    algorithmic utility in scenarios where full mutual independence is
-    impossible or computationally costly to construct, such as universal
-    hashing and streaming algorithms.  Without going into this here, a
-    group of variables $X_1, \ldots, X_n$ are \emphi{mutually independent}
-    (i.e., independent) if knowing the value of all variables except one,
-    does not provide any information about the value of this singleton
+\begin{remark}[Aside: pairwise independence.]
+    Note, that Chebyshev's inequality only requires pairwise cancellation of
+    cross-terms 
+    \begin{equation*}
+        \Ex{X_i X_j} = \Ex{X_i}\Ex{X_j},
+    \end{equation*}
+     for $i \neq j$, which is provided by
+    \emphw{pairwise-independence}. This provides significant algorithmic
+    utility in scenarios where full mutual independence is impossible or
+    computationally costly to construct, such as universal hashing and
+    streaming algorithms.  Without going into this here, a group of
+    variables $X_1, \ldots, X_n$ are \emphi{mutually independent} (i.e.,
+    independent) if knowing the value of all variables except one, does
+    not provide any information about the value of this singleton
     variable. Pairwise independence on the other hand requires this
-    property only hold only for subsets of two two variables. 
+    property only hold only for subsets of two two variables.
 \end{remark}
 
 
@@ -190,12 +194,12 @@ where $\mu_X = \Ex{X}$.
 \end{exercise}
 
 \begin{example}[Variance of a binomial distribution]
-    Let $Y = \sum_{i=1}^m Y_i$, where $Y_1, \ldots, Y_m$ are independent random
-    $0/1$ variables that are each one with probability $p$ (i.e., a
-    single $Y_i$ is a Bernoulli random variable taking value $1$ with
-    probability $p$ and $0$ with probability $1-p$). The random variable
-    $Y$ has a binomial distribution with parameters $m$ and $p$.  That
-    is, $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
+    Let $Y_1, \ldots, Y_m$ are independent random $0/1$ variables that are
+    each one with probability $p$ (i.e., a single $Y_i$ is a
+    \emphi{Bernoulli random variable} taking value $1$ with probability
+    $p$ and $0$ with probability $1-p$).  Let $Y = \sum_{i=1}^m Y_i$, and
+    observe that $Y$ has a binomial distribution with parameters $m$ and
+    $p$.  That is, $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
     $\Ex{Y_i} = p$, and
     $\Var{Y_i} = \Ex{Y_i^2} - \pth{\Ex{Y_i}}^2 = p - p^2 = p(1-p)$. Since
     variance is additive for pairwise independent random variables, we
@@ -237,7 +241,7 @@ of objects in $U$ that have this property. We want to reliably estimate
 $\numC$ without computing the property for all the elements of $U$.
 
 A natural approach is to pick a random sample $\Sample$ of $m$ objects
-$r_1, \ldots, r_m \in U$ (with replacement), and compute
+from $U$: $r_1, \ldots, r_m$ (with replacement), and compute
 $Y = \sum_{i=1}^m \propertyX{r_i}$.  The estimate for $\numC$ is
 $Z = (n/m) Y$. It is natural to ask how far $Z$ is from the true value
 $\numC$.
@@ -764,12 +768,12 @@ comparisons per round.
     $1.5 n + O( n^{3/4} \log n)$ comparisons.
 \end{theorem}
 \begin{proof}
-    The intuitive argument is obvious---the algorithm performs $Y$ rounds,
-    and each round takes in expectation $\xi$ comparisons. As the
-    expectation of $Y$ is $\Ex{Y} = 1/p \leq 1 + O(1/n^{1/4})$, it
-    follows the expected number of comparisons is $\Ex{Y} \xi$ which is the
-    desired quantity as an easy calculation shows. This argument is
-    correct, but formalizing it requires some tedious work.
+    Intuitively, the algorithm performs $Y$ rounds, and each round takes
+    in expectation $\xi$ comparisons. As the expectation of $Y$ is
+    $\Ex{Y} = 1/p \leq 1 + O(1/n^{1/4})$, it follows the expected number of
+    comparisons is $\Ex{Y} \xi$ which is the desired quantity as an easy
+    calculation shows. This argument is correct, but formalizing it
+    requires some tedious work.
 
     Let $F$ be the expected number of comparisons performed by the
     algorithm. Consider the first round, with probability $p$ it
@@ -792,6 +796,7 @@ comparisons per round.
         F
         &\LEQ
         \frac{1.5 n + O(n^{3/4} \log n) }{p}
+        \\&
         \LEQ
         {\pth{ 1 + \frac{4}{n^{1/4}}}}
         \cdot \pth{1.5 n + O(n^{3/4}\log n) }
@@ -837,6 +842,15 @@ the material covered here (i.e., no need to read it).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\StandAloneMode{
+   \section{Tools from previous lecture}
+   
+   
+   \IncFragment{Markov}
+   
+
+}
 
 
 \ChapterEnd{}

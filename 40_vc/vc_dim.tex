@@ -113,7 +113,7 @@ notion of \VC dimension (named after Vapnik and Chervonenkis
 space.
 
 
-\begin{fragment}{\deflabel{v_c_dimension}}
+\begin{fragment}{v_c_dimension}
     \begin{defn}
         \deflab{v:c:dimension}%
         %
@@ -323,7 +323,7 @@ To see what the \VC dimension of halfspaces in $\Re^\hdim$ is, we need
 the following result of Radon. (For a reminder of the formal
 definition of convex hulls, see \defref{convex:hull}.)
 
-\begin{fragment}{\deflabel{radon}}
+\begin{fragment}{radon}
 \begin{theorem}[Radon's theorem]
     Let $\PntSet = \brc{\pnt_1, \ldots, \pnt_{\hdim+2}}$ be a set of
     $\hdim+2$ points in $\Re^\hdim$. Then, there exist two disjoint
@@ -446,7 +446,7 @@ have $\Growth{\Dim}{n} = \Growth{\Dim}{n-1} +
    element in these subsets, but then there are only $\Dim-1$ elements
    left to pick (i.e., $\Growth{\Dim-1}{n-1}$).}.
 
-\begin{fragment}{\deflabel{Sauer_lemma}}
+\begin{fragment}{Sauer_lemma}
     \begin{lemma}[Sauer's lemma]
         \lemlab{Sauer}%
         %
@@ -510,10 +510,10 @@ Next, we show pretty tight bounds on $\Growth{\Dim}{n}$.  The proof is
 technical and not very interesting, and it is delegated to
 \secref{growth:improved}.
 
-% \begin{fragment}{\deflabel{sum:of:binomial:coefficients:x}}
+% \begin{fragment}{sum:of:binomial:coefficients:x}
 % \end{fragment}
 
-% \IncFragment{\deflabel{sum:of:binomial:coefficients:x}}
+% \IncFragment{sum:of:binomial:coefficients:x}
 
 \providecommand{\LemmaGrowthImproved}{%
    For $n \geq 2\Dim$ and $\Dim \geq 1$, we have 
@@ -527,7 +527,7 @@ technical and not very interesting, and it is delegated to
    \end{math}
    where $\ds\Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}$.}
 
-\begin{fragment}{\deflabel{sum_of_binomial_coefficients}}
+\begin{fragment}{sum_of_binomial_coefficients}
     \providecommand{\LemmaGrowthImproved}{%
        For $n \geq 2\Dim$ and $\Dim \geq 1$, we have
        \begin{math}
@@ -547,7 +547,7 @@ technical and not very interesting, and it is delegated to
 \end{fragment}
 
 
-\begin{fragment}{\deflabel{shattering_d}}
+\begin{fragment}{shattering_d}
     \begin{defn}[\DefName{Shatter function}]
         \deflab{shatter:function}%
         %
@@ -642,7 +642,7 @@ is left as an exercise.
 Interestingly, one can prove a considerably more general result with
 tighter bounds. The required computations are somewhat more painful.
 
-\begin{fragment}{\deflabel{v_c_combining}}
+\begin{fragment}{v_c_combining}
     \begin{theorem}
         Let
         $\RangeSpace_1 = \pth{\GroundSet,\RangeSet^1}, \ldots,
@@ -743,7 +743,7 @@ tighter bounds. The required computations are somewhat more painful.
     we have that $\VCDim( \widehat{\RangeSpace} ) = O( \Dim + \DimA)$.
 \end{corollary}
 
-\begin{fragment}{\deflabel{v_c_combine}}
+\begin{fragment}{v_c_combine}
     \begin{corollary}
         Any finite sequence of combining range spaces with finite \VC
         dimension (by intersecting, complementing, or taking their
@@ -805,7 +805,7 @@ questions, by just asking the people in the sample.
 The natural question of course is how to find such a subset of small
 (or minimal) size.
 
-\begin{fragment}{\deflabel{epsilon_sample_original}}
+\begin{fragment}{epsilon_sample_original}
     \begin{theorem}[$\eps$-sample theorem, \cite{vc-ucrfe-71}]
         \thmlab{epsilon:sample}%
         \index{sample!sample@$\eps$-sample!sample
@@ -850,7 +850,7 @@ our sample that is in this range.
 % The $\eps$-net notion is somewhat weaker as it has to stab only the
 % heavy sets. But fortunately, considerably smaller $\eps$-nets exist.
 
-\begin{fragment}{\deflabel{epsilon_net_theorem}}
+\begin{fragment}{epsilon_net_theorem}
     \begin{theorem}[$\eps$-net theorem, \cite{hw-ensrq-87}]
         \index{random sample}%
         \index{net!theorem@$\varepsilon$-net theorem|textbf}%
@@ -879,7 +879,7 @@ our sample that is in this range.
 The proofs of the above theorems are somewhat involved and we first
 turn our attention to some applications before presenting the proofs.
 
-\begin{fragment}{\deflabel{epsilon_net_s}}
+\begin{fragment}{epsilon_net_s}
     \begin{remark}
         \remlab{epsilon:net:s}%
         %
@@ -1007,7 +1007,7 @@ In this section, we prove \lemref{growth:improved}. Since the
 proof is straightforward but tedious, the reader can safely skip
 reading this section.
 
-\begin{fragment}{\deflabel{a_basic_binomial}}
+\begin{fragment}{a_basic_binomial}
     \begin{lemma}
         \lemlab{a:basic:binomial}%
         %
@@ -1083,7 +1083,7 @@ reading this section.
 
 
 \section{Some required definitions}
-\begin{fragment}{\deflabel{convex_hull}}
+\begin{fragment}{convex_hull}
     \begin{defn}[\DefName{Convex hull}]
         The \emphi{convex hull} of a set $\PntSetC \subseteq
         \Re^\hdim$ is the set of all convex combinations of points of
@@ -1105,13 +1105,13 @@ reading this section.
 \StandAloneMode{
    % \section{From previous lectures}
    
-   % \IncFragment{\deflabel{convex:hull}}
-   % \IncFragment{\deflabel{Chebychev}}
-   % \IncFragment{\deflabel{Chernoff:1}}
-   % \IncFragment{\deflabel{chernoff:small}}
-   % \IncFragment{\deflabel{Chernoff:below}}
-   % \IncFragment{\deflabel{t:Chernoff:special}} 
-   % \IncFragment{\deflabel{epsilon:sample:stronger}}
+   % \IncFragment{convex:hull}
+   % \IncFragment{Chebychev}
+   % \IncFragment{Chernoff:1}
+   % \IncFragment{chernoff:small}
+   % \IncFragment{Chernoff:below}
+   % \IncFragment{t:Chernoff:special} 
+   % \IncFragment{epsilon:sample:stronger}
 %
 }
 
