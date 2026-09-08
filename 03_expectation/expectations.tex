@@ -52,8 +52,9 @@ Here we recall some definitions about probability. The reader already
 familiar with these definitions can happily skip this section.
 
 
-\subsection{Formal basic definitions: Sample space, %
-   $\sigma$-algebra, and probability}
+\subsection{Formal basic definitions}
+
+\paragraph*{Sample space, $\sigma$-algebra, and probability.}
 
 A \emphi{sample space} $\Omega$ is the set of all possible outcomes of an
 experiment. We also have a family of events $\Family$, where every member
@@ -93,8 +94,10 @@ As a concrete example, if we are rolling a die\footnote{Formally, a dice
    can be either singular or plural, so one should use die formally to
    make clear when referring to a single dice. You are never going to get
    back the time you spend reading this footnote.}, then
-$\Omega=\brc{1,2,3,4,5,6}$ and $\Family$ would be the power set of all
-possible subsets of $\Omega$.
+\begin{equation*}
+    \Omega=\brc{1,2,3,4,5,6}\
+\end{equation*}
+and $\Family$ would be the power set of all possible subsets of $\Omega$.
 
 \begin{defn}
     A \emphi{probability measure} is a mapping $\ProbLTR:\Family
@@ -179,7 +182,7 @@ value $x$, by $\Prob{X=x}$ (or sometimes $\Prob{x}$, if we are lazy).
 
 
 
-\begin{defn}[Conditional Probability.]
+\begin{defn}%[Conditional Probability.]
     The \emphi{conditional probability} of the event $X=x$ given event
     $Y=y$ is the probability that $X=x$ given that $Y=y$, provided
     $\Prob{Y=y} > 0$. We denote this quantity by $\ProbCond{X=x}{ Y=y}$.
@@ -247,24 +250,28 @@ we have that
 \begin{lemma}[Linearity of expectation]
     \lemlab{linearity:expectation}%
     %
-    For any random variables $X$ and $Y$, we have
+    For any two random var\-iables $X$ and $Y$, not necessarily
+    independent, we have
     \begin{math}
         \Ex{X+Y} = \Ex{X} + \Ex{Y}.
     \end{math}
 \end{lemma}
 
 \begin{proof}
-    \begin{math}
+    We have that
+    \begin{align*}
         \ds \Ex{\bigl. X+Y}%
-        =%
+        &\EQ%
         \sum_{\omega \in \Omega} \Prob{ \omega} \pth{ \bigl. X(\omega)
            + Y(\omega)}%
-        =%
+        \\&
+        \EQ%
         \sum_{\omega \in \Omega} \Prob{\omega} X(\omega) +
         \sum_{\omega \in \Omega} \Prob{\omega} Y(\omega) %
-        =%
+        \\&
+        \EQ%
         \Ex{\bigl. X} + \Ex{\bigl. Y}.
-    \end{math}
+    \end{align*}
 \end{proof}
 
 
@@ -339,15 +346,16 @@ we have that
     We have that $\Ex{ X} = 1\cdot p + 0 \cdot(1-p) = p$, and
     \begin{align*}
         \Var{\bigl. X}%
-        \!\EQ%
+        &\EQ%
         \Ex{X^2} - \mu_X^2%
-        \!\EQ%
+        \EQ%
         \Ex{X^2} - p^2%
-        \!\EQ%
+        \EQ%
         p - p^2
-        \!\EQ%
+        \\&
+        \EQ%
         p \ts (1-p)%
-        \!\EQ%
+        \EQ%
         p q.
     \end{align*}
 \end{defn}
@@ -388,8 +396,8 @@ we have that
 \begin{lemma}
     \lemlab{expectation:geometric}%
     %
-    For a variable $X \sim \DistGeom{p}$, we have, for all
-    $i \in \{1, 2, \ldots\}$, that
+    For a variable $X \sim \DistGeom{p}$, for 
+    $i \in \{1, 2, \ldots\}$, we have that
     \begin{math}
         \Prob{ X = i} = (1-p)^{i-1} p.
     \end{math}
@@ -402,13 +410,14 @@ we have that
     observe that $f'(x) = \sum_{i=1}^\infty i x^{i-1} = (1-x)^{-2}$. As such, we
     have
     \begin{align*}
-         \Ex{ X}%
-         &\EQ%
-      \sum_{i=1}^\infty i\, (1-p)^{i-1} p
-      \EQ%
-      p f'(1-p)%
-      \EQ%
+        \Ex{ X}%
+        &\EQ%
+        \sum_{i=1}^\infty i\, (1-p)^{i-1} p
+        \EQ%
+        p f'(1-p)%
+        \EQ%
         \frac{p}{\pth[]{1 - (1-p)}^2}%
+        \\&
         \EQ%
         \frac{1}{p},
 %    \end{align*}
@@ -741,8 +750,7 @@ Markov's inequality is tight, as the following exercise testifies.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\subsection{Example: A good approximation to $k$SAT with good
-   probability}
+\subsection{Example: Approximating  \TPDF{$k$}{k}SAT}
 
 In \secref{k:sat:expectation} we saw a surprisingly simple algorithm
 that, for a formula $F$ that is $3$SAT with $n$ variables and $m$

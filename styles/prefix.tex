@@ -512,12 +512,15 @@ backend=biber]{biblatex}
 }
 
 \newcommand{\QuotePExt}[3]{%
+   \bigskip%
    \hfill%
    \begin{minipage}{0.95\linewidth}%
        \footnotesize {#1}%
+
        \rule{\linewidth}{0.3mm}%
        \hfill #2, #3%
    \end{minipage}%
+   \bigskip%
 }
 
 \epigraphfontsize{\small\itshape}
