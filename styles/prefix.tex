@@ -19,7 +19,33 @@
 %-----------------------------------------------------------------------------
 \usepackage{mathtools}
 \PassOptionsToPackage{warnings-off={mathtools-overbracket,mathtools-colon}}{unicode-math}
-\usepackage{newcomputermodern}   % Loads fontspec & unicode-math
+\usepackage{fontspec}
+\usepackage{unicode-math}
+
+% New Computer Modern OpenType text and math fonts
+\setmainfont{NewCM10-Book.otf}[
+  BoldFont          = NewCM10-Bold.otf,
+  ItalicFont        = NewCM10-BookItalic.otf,
+  BoldItalicFont    = NewCM10-BoldItalic.otf,
+  SlantedFont       = NewCM10-Book.otf,
+  SlantedFeatures   = {FakeSlant = 0.25},
+  BoldSlantedFont   = NewCM10-Bold.otf,
+  BoldSlantedFeatures = {FakeSlant = 0.25},
+  SmallCapsFeatures = {Letters = SmallCaps}
+]
+\setsansfont{NewCMSans10-Book.otf}[
+  BoldFont          = NewCMSans10-Bold.otf,
+  ItalicFont        = NewCMSans10-BookOblique.otf,
+  BoldItalicFont    = NewCMSans10-BoldOblique.otf
+]
+\setmonofont{NewCMMono10-Book.otf}[
+  BoldFont          = NewCMMono10-Bold.otf,
+  ItalicFont        = NewCMMono10-BookItalic.otf,
+  BoldItalicFont    = NewCMMono10-BoldOblique.otf
+]
+
+\setmathfont{NewCMMath-Book.otf}
+\setmathfont{NewCMMath-Bold.otf}[version=bold]
 
 % OpenType math aliases and fixes
 \providecommand{\square}{\mdlgwhtsquare}
