@@ -20,7 +20,8 @@
    in Berlin issued the following order to its representatives on the
    ground: ``The natives are to be instructed that on pain of harsh
    penalties, every rebellion must be announced, in writing, six weeks
-   before it breaks out.''}%
+   before it breaks out.''
+}%
 {Dead Funny: Humor in Hitler's Germany}%
 {Rudolph Herzog}
 
@@ -40,16 +41,9 @@ inequality using the French spelling of Chebyshev\footnote{\emph{Pafnuty
       Lvovich Chebyshev} (Russian: \SpellIgnore{Пафну́тий Льво́вич
       Чебышёв}; May 16, 1821--December 8, 1894) was a Russian
    mathematician and is considered to be the founding father of Russian
-   mathematics; see~\cite{b-pct-99}. The Russian letter \emph{ё} in
-   \SpellIgnore{Чебышёв} is pronounced ``yo'', making the native
-   pronunciation ``\SpellIgnore{Cheby-SHOV}'', rhyming with ``shove''.}
-% \remX{Historical priority: The inequality was first discovered and
-%    published in 1853 by the French mathematician Ir{\'e}n{\'e}e-Jules
-%    Bienaym{\'e}~\cite{b-cadld-1853}, fourteen years before Chebyshev
-%    published it independently in 1867~\cite{c-dvm-1867}. Andrei Markov
-%    later acknowledged Bienaym{\'e}'s priority, which is why it is often
-%    called the Bienaym{\'e}--Chebyshev inequality; see Butzer and
-%    Jongmans~\cite{b-pct-99}.}
+   mathematics. The Russian letter \emph{ё} in \SpellIgnore{Чебышёв} is
+   pronounced ``yo'', making the native pronunciation
+   ``\SpellIgnore{Cheby-SHOV}'', rhyming with ``shove''.}
 
 
 \subsection{Example: A better inequality via moments}
@@ -91,29 +85,7 @@ A more interesting quantity is
   n.
 \end{align*}
 
-\begin{remark}[Maybe skip for now]
-    Note that the last step in the above derivation requires only
-    pairwise independence of $X_1, \ldots, X_n$, rather than full mutual
-    independence. This property is a principal advantage of Chebyshev's
-    inequality over higher-moment techniques (e.g., Chernoff's
-    inequality). This comment might make sense only later in the
-    course---put differently, Chebyshev is NOT strictly dominated by other
-    tools.
-\end{remark}
 
-\begin{remark}[Looking forward: pairwise independence.]
-    Chebyshev's inequality only requires pairwise cancellation of
-    cross-terms $\Ex{X_i X_j} = \Ex{X_i}\Ex{X_j}$, for $i \neq j$, which is
-    provided by \emphw{pairwise-independence}. This provides significant
-    algorithmic utility in scenarios where full mutual independence is
-    impossible or computationally costly to construct, such as universal
-    hashing and streaming algorithms.  Without going into this here, a
-    group of variables $X_1, \ldots, X_n$ are \emphi{mutually independent}
-    (i.e., independent) if knowing the value of all variables except one,
-    does not provide any information about the value of this singleton
-    variable. Pairwise independence on the other hand requires this
-    property only hold only for subsets of two two variables. 
-\end{remark}
 
 \begin{lemma}
     Let $X_1, \ldots, X_n \in \brc{-1,+1}$ be independent\footnote{But really
@@ -196,9 +168,25 @@ where $\mu_X = \Ex{X}$.
     by \thmrefY{Markov's inequality}{Markov}.
 \end{proof}
 
+\begin{remark}[Looking forward: pairwise independence.]
+    Chebyshev's inequality only requires pairwise cancellation of
+    cross-terms $\Ex{X_i X_j} = \Ex{X_i}\Ex{X_j}$, for $i \neq j$, which is
+    provided by \emphw{pairwise-independence}. This provides significant
+    algorithmic utility in scenarios where full mutual independence is
+    impossible or computationally costly to construct, such as universal
+    hashing and streaming algorithms.  Without going into this here, a
+    group of variables $X_1, \ldots, X_n$ are \emphi{mutually independent}
+    (i.e., independent) if knowing the value of all variables except one,
+    does not provide any information about the value of this singleton
+    variable. Pairwise independence on the other hand requires this
+    property only hold only for subsets of two two variables. 
+\end{remark}
+
+
 \begin{exercise}[Not too interesting, skip]
-    Consider the case that $\sigma_X = \Var{X} = 0$, what happens then
-    with Chebyshev's inequality?
+    Consider the case that the standard deviation and variance are both
+    zero (i.e., $\sigma_X = \Var{X} = 0$), what happens then with
+    Chebyshev's inequality?
 \end{exercise}
 
 \begin{example}[Variance of a binomial distribution]
@@ -580,8 +568,35 @@ compute $\EBRY{S}{k}$. To this end, it sets
     \qquad\text{ and }\qquad%
     m = \ceil{n^{3/4}}.
 \end{equation*}
+
 Using the algorithm of \lemref{good:interval}, in $O( m \log m)$ time,
-the algorithm gets two numbers $r_{-}$ and $r_+$, such that
+the algorithm gets two numbers $r_{-}$ and $r_+$.
+
+\medskip%
+\centerline{%
+   \begin{minipage}{0.9\linewidth}
+       \footnotesize
+       \begin{remark}
+           For the sake of self containment, here is this part described
+           in detail.  The algorithm now samples $m$ elements into a set
+           $\Sample$ with replacement from $S$. The algorithm then sorts
+           the sample, let $\Sample_s$ be the sorted array containing the
+           sample, and it compute the two numbers:
+           \begin{align*}
+               &\ell_{-}
+               \EQ
+               \floor{\frac{k}{n^{1/4}} - \frac{t }{2} \sqrt{n} }-1
+               %\\
+               \qquad\text{and} \qquad%
+                \ell_{+} \EQ \floor{\frac{k}{n^{1/4}} + \frac{t }{2} \sqrt{n} }+1.
+           \end{align*}
+
+\end{remark}
+\end{minipage}
+}
+\bigskip%
+
+We have that property that that
 $\EBRY{S}{k} \in [r_{-}, r_{+}]$, and
 \begin{equation*}
     \cardin{ \smash{\underbrace{S \cap (r_{-}, r_{+})}_{S_m}} }%
@@ -730,13 +745,13 @@ algorithm performs
 \begin{align*}
     \xi
     &\EQ
-    p\cdot \Bigl(1.5n + O(n^{3/4})\Bigr) + (1-p)2n
+    p\cdot \Bigl(1.5n + O(n^{3/4}) \log n \Bigr) + (1-p)2n
     \\&
     \LEQ
-    1.5n +  O(n^{3/4}) + (3/n^{1/4}) \cdot 2n
+    1.5n +  O(n^{3/4} \log n) + (3/n^{1/4}) \cdot 2n
     \\&
     \EQ
-    1.5n + O(n^{3/4})
+    1.5n + O(n^{3/4} \log n)
 \end{align*}
 comparisons per round. 
 
@@ -764,26 +779,28 @@ comparisons per round.
     and whatever comparisons the algorithm performs later on. However,
     since the process is memoryless, the expected number of remaining
     comparisons the algorithm has to perform is $F$. Namely, we have that
-    \begin{equation*}
+    \begin{align*}
         F
-        \LEQ
-        1.5n + O(n^{3/4}) + (1-p)(2n + F)
-        \LEQ  1.5n + O(n^{3/4}) +(1-p) F.
-    \end{equation*}
+        &\LEQ
+        1.5n + O(n^{3/4} \log n) + (1-p)(2n + F)
+        \\&%
+        \LEQ%
+        1.5n + O(n^{3/4} \log n) +(1-p) F.
+    \end{align*}
     This implies that
     \begin{align*}
         F
         &\LEQ
-        \frac{1.5 n + O(n^{3/4}) }{p}
+        \frac{1.5 n + O(n^{3/4} \log n) }{p}
         \LEQ
         {\pth{ 1 + \frac{4}{n^{1/4}}}}
-        \cdot \pth{1.5 n + O(n^{3/4}) }
+        \cdot \pth{1.5 n + O(n^{3/4}\log n) }
         \\&%
         \LEQ%
-        1.5n + O(n^{3/4}),
+        1.5n + O(n^{3/4} \log n),
     \end{align*}
     The recurrence above cleanly accounts for the expected
-    $1.5n + O(n^{3/4})$ comparisons performed in partitioning across
+    $1.5n + O(n^{3/4} \log n)$ comparisons performed in partitioning across
     \emphw{all} rounds. In addition, sorting the sample $\Sample$ takes
     $O(m \log m) = O(n^{3/4} \log n)$ comparisons per round, and sorting
     $S_m$ in the \emphw{final} successful round takes

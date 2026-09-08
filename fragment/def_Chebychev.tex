@@ -1,1 +1,13 @@
-\begin {theorem}[Chebyshev's inequality] \thmlab {Chebychev:inequality}Let $X$ be a real random variable, with $\mu _X = \Ex {X}$, and $\sigma _X = \sqrt {\Var {X}}$. Then, for any $t > 0$, we have \begin {math} \ds \Prob {\bigl . \cardin {X - \mu _X} \geq t \sigma _X} \leq {1}/{t^2}. \end {math} \end {theorem}
+    \begin{theorem}[Chebyshev's inequality]
+        \thmlab{Chebychev:inequality}%
+        %
+        Let $X$ be a real random variable, with $\mu_X = \Ex{X}$, and
+        $\sigma_X = \sqrt{\Var{X}}$\newX{, assuming $\sigma_X > 0$}. Then, for any $t > 0$, we have
+        \begin{math}
+            \ds%
+            \Prob{\bigl. \cardin{X - \mu_X} \geq t \sigma_X} \leq
+            {1}/{t^2}.
+        \end{math}
+        % where $\mu_X = \Ex{\bigl. X}$ and
+        % $\sigma_X = \sqrt{\Var{ X}}$.
+    \end{theorem}

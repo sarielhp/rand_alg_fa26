@@ -25,7 +25,9 @@
 
    She was born in spring, but I was born too late.
 
-   Blame it on a simple twist of fate.  }%
+   Blame it on a simple twist of fate.
+
+}%
 {A little twist of fate}%
 {Bob Dylan}
 
@@ -112,25 +114,29 @@ unpredictable.
 
 \subsection{Back to randomized algorithms}
 
+Advantages of randomized algorithms:
 \begin{compactenumA}
     \item \textbf{Best.} There are cases where only randomized
     algorithms are known or possible, especially for games. For
     example, consider the 3 coins example given above.
     
-    
+    \smallskip%
     \item \textbf{Speed.} In some cases randomized algorithms are
     considerably faster than any deterministic algorithm.
         
+    \smallskip%
     \item \textbf{Simplicity.} Even if a randomized
     algorithm is not faster, often it is considerably simpler than its
     deterministic counterpart.
     
     
+    \smallskip%
     \item \textbf{Derandomization.}  Some deterministic algorithms
     arises from derandomizing the randomized algorithms, and this are
     the only algorithm we know for these problems (i.e., discrepancy).
     
     
+    \smallskip%
     \item \textbf{Adversary arguments and lower bounds.}  %
     The standard worst case analysis relies on the idea that the
     adversary can select the input on which the algorithm performs
@@ -140,7 +146,7 @@ unpredictable.
     and break the adversary lower bound.
 
     Namely, randomness makes the algorithm vs. adversary game a more
-    balanced game, by giving the algorithm additional power against
+    balanced game, by giving the algorithm additional power aga\-inst
     the adversary.
 \end{compactenumA}
 
@@ -398,8 +404,11 @@ The following result is quite surprising.
     with probability $\geq 2/n^2$. 
 \end{theorem}
 
-In particular, it turns out that if you run the above algorithm
-$O(n^2 \log n)$ times, and returns the smallest cut computed, then
+It turns out that if you run the above algorithm
+\begin{math}
+    O(n^2 \log n)
+\end{math}
+ times, and returns the smallest cut computed, then
 with probability $\geq 1-1/n^{O(1)}$, the returned cut is the minimum
 cut! This  algorithm has running time (roughly) $O(n^4)$ -- it can be
 made faster, but this is already pretty good.
