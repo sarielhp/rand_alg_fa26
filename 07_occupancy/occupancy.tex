@@ -31,11 +31,17 @@
 \section{Some needed math}
 
 
+% Keep review annotations out of the shared fragment export.
+\begingroup
+\RenewDocumentEnvironment{fragment}{m +b}{#2}{}
 \begin{fragment}{d:approx:basic}
 \begin{lemma}
     \lemlab{approximation:basic}%
     %
-    For any positive integer $n$, we have:
+    For any positive integer $n$, we have the following bounds%
+    \footnote{Nitty-picky: In (iii), assume $n\geq2$; in (v), $k$ is an
+       integer with $1\leq k\leq n$. (Nitpicking is the official english word,
+       but nitty-picky is so much nicer.)}.
     \begin{compactenumi}
         \medskip%
         \item $1+x \leq e^x$ \;\;and\;\; $1-x \leq e^{-x}$, for all $x$.
@@ -47,9 +53,10 @@
         \item $(1-1/n)^n \leq \frac{1}{e} \leq (1-1/n)^{n-1} $.
 
         \medskip
-        \item $(n/e)^n \LEQ n! \LEQ (n+1)^{n+1} / e^n$.
+        \item \itemlab{n_factory_bound}
+        $(n/e)^n \LEQ n! \LEQ (n+1)^{n+1} / e^n$.
 
-        \item For any $k \leq n$, we have:
+        \item \itemlab{binomial_2} For any $k \leq n$, we have:
         \begin{math}
             \ds%
             \pth[]{\frac{n}{k}}^k
@@ -61,10 +68,11 @@
     \end{compactenumi}
 \end{lemma}
 \end{fragment}
+\endgroup
 
 \begin{proof}
     \textbf{(i)} Let $h(x) = e^x - 1 - x$. Observe that
-    $h'(x) = e^x - 1$, and $h''(x) = e^x > 0$, for all $x$. That is
+    $h'(x) = e^x - 1$, and $h''(x) = e^x > 0$, for all $x$. That is,
     $h(x)$ is a convex function. It achieves its minimum at
     $h'(x) = 0$ $\implies$ $e^x = 1$, which is true for $x=0$. For
     $x=0$, we have that $h(0) =e^0- 1-0 = 0$. That is, $h(x) \geq 0$
@@ -74,29 +82,37 @@
 
     \begin{figure}[t]
         \centerline{\includegraphics{\File{figs/exp_linear}}}%
-        \caption{}
+        \caption{The tangent line $y=1+x$ lies below the convex curve
+           $y=e^x$.}
         \figlab{exp:1:plus:x}
     \end{figure}
 
     \medskip%
     \noindent%
+
     \textbf{(ii, iii)} Indeed, $1+1/n\leq \exp \pth{1/n}$ and
-    $(1-1/n)^n \leq \exp(-1/n)$, by (i). As such
-    \begin{equation*}
-        (1+1/n)^n \leq \exp\pth{n(1/n)} = e
-        \qquad\text{ and }\qquad%
-        (1-1/n)^n \leq \exp\pth{n(-1/n)} = \frac{1}{e},
-    \end{equation*}
+    $(1-1/n) \leq \exp(-1/n)$, by (i). As such
+    \begin{align*}
+        &(1+1/n)^n
+        \LEQ
+        \exp\pth{n(1/n)} \EQ e,%
+        \\
+        \text{and}\qquad&(1-1/n)^n \LEQ \exp\pth{n(-1/n)}
+        \EQ
+        \frac{1}{e},
+    \end{align*}
     which implies the left sides of (ii) and (iii).  These are
     equivalent to
     \begin{equation*}
-        \frac{1}{e} \leq \pth{\frac{n}{n+1}}^n%
-        =%
+        \frac{1}{e}
+        \LEQ
+        \pth{\frac{n}{n+1}}^n%
+        \EQ%
         \pth{ 1 - \frac{1}{n+1}}^n
         \qquad\text{ and }\qquad%
-        e  \leq \pth{1 + \frac{1}{n-1}}^n,
+        e  \LEQ \pth{1 + \frac{1}{n-1}}^n\!,
     \end{equation*}
-    which are the right side of (iii) [by replacing $n+1$ by $n$], and
+    which are the right sides of (iii) [by replacing $n+1$ by $n$], and
     the right side of (ii) [by replacing $n$ by $n+1$].
 
 
@@ -109,20 +125,22 @@
     by the Taylor expansion of $e^x = \sum_{i=0}^\infty
     \frac{x^i}{i!}$. This implies that $(n/e)^n \leq n!$, as required.
 
-    As for the righthand side. The claim holds for $n=0$ and
+    As for the right-hand side, the claim holds for $n=0$ and
     $n=1$. Let $f(n) = (n+1)^{n+1}/e^n$, and observe that by (ii), we
     have
-    \begin{equation*}
+    \begin{align*}
         \frac{f(n)}{f(n-1)}
-        =%
+        &\EQ%
         \frac{(n+1)^{n+1} / e^n}{n^n / e^{n-1}}
-        =%
+        \EQ%
         \frac{n}{e}\pth{\frac{n+1}{n}}^{n+1}
-        =%
+        \!\!\!\!
+        \EQ%
         \frac{n}{e}\pth{1 + \frac{1}{n}}^{n+1}
-        \geq
+        \\&%
+        \GEQ%
         n \frac{e}{e} = n.
-    \end{equation*}
+    \end{align*}
     Thus, we have
     \begin{equation*}
         \frac{(n+1)^{n+1}}{e^n}
@@ -133,31 +151,33 @@
         \frac{f(n-1)}{f(n-2)} \cdots
         \frac{f(1)}{f(0)}
         \geq
-        n \cdot n-1 \cdots 1 = n!
+        n \cdot (n-1) \cdots 1 = n!
     \end{equation*}
 
 
     \medskip%
     \noindent%
-    \textbf{(v)} For any $k \leq n$, we have
-    $\frac{n}{k} \leq \frac{n-1}{k-1}$ since
+    \textbf{(v)} For $k=1$, the lower bound is an equality.  For the next
+    comparison, assume $2\leq k\leq n$.  For any $k\leq n$ in this range, we
+    have $\frac{n}{k} \leq \frac{n-1}{k-1}$ since
     $kn -n = n(k-1) \leq k(n-1) = kn - k$. As such,
-    $\frac{n}{k} \leq \frac{n-i}{k-i}$, for $1 \leq i \leq k-1$. As
-    such,
+    $\frac{n}{k} \leq \frac{n-i}{k-i}$, for $1 \leq i \leq k-1$. As such,
     \begin{align*}
         \pth{\frac{n}{k}}^k \leq \frac{n}{k} \cdot \frac{n-1}{k-1}
         \cdots \frac{n-i}{k-i} \cdots \frac{n-k+1} {1} =
         \frac{n!}{(n-k)! k!} = \binom{n}{k}.
     \end{align*}
-    As for the other direction, we have
-    \begin{math}
+    As for the other direction, by \itemref{n_factory_bound}, we have
+    \begin{equation*}
         \ds
-      \binom{n}{k} \leq \frac{n^k}{k!} \leq
-      \frac{n^k}{\pth{{k}/{e}}^{k}} = \pth{ \frac{n e}{k} }^k,
-    \end{math}
+        \binom{n}{k}
+        \LEQ
+        \frac{n^k}{k!}
+        \LEQ
+        \frac{n^k}{\pth{{k}/{e}}^{k}} = \pth{ \frac{n e}{k} }^k.
+    \end{equation*}
     %\begin{align*}
     %\end{align*}
-    by (iii).
 \end{proof}
 
 
@@ -167,18 +187,25 @@
 \section{The birthday paradox}
 
 Consider a group of $n$ people, and assume their birthdays are
-uniformly distributed no the dates in the year (this assumption is not
-quite true, but close enough). We are interested in the question of
-how large $n$ has to be  till we get a collision -- that is, two
-people with the same birthday. Intuitively, since the year has $m=364$
-days, the probability of person to land on a specific birthday is
-$p=1/364$. So the natural guess would be that $n$ needs to be
-approximately $364$. Surprisingly, the answer is much smaller.
+independently and uniformly distributed over the dates in the year (this
+assumption is not quite true, but close enough). We are interested in the
+question of how large $n$ has to be till we get a collision -- that is,
+two people with the same birthday. Intuitively, since the year has
+$m=365$ days\footnote{Leap years have $366$ days (every four years,
+   roughly). Moon years have $354$ days, which means you have to add a
+   leap month roughly every $19/7$ years, which is what the Jewish
+   calendar does. If you do not do this, then the calendar is not
+   synchronized with the weather (this is what the Islamic calendar
+   does). Stick to the Gregorian calendar kids---it is much better.} , the
+probability of a person to land on a specific birthday is $p=1/365$. So
+the natural guess would be that $n$ needs to be approximately
+$365$. Surprisingly, the answer is much smaller.
 
 \begin{lemma}
-    Let $X_1, \ldots, X_n$ be $n$ variables picked uniformly, randomly
-    and independently from $\IRX{m}=\{1,\ldots, m\}$. Then, the
-    expected number of collisions is $\binom{n}{2}/m$.
+    Let $X_1, \ldots, X_n$ be $n$ variables picked uniformly, randomly and
+    independently from $\IRX{m}=\{1,\ldots, m\}$. Then, the expected number of
+    collisions is $\binom{n}{2}/m$, where a \emphi{collision} is an
+    unordered pair of indices with equal values.
 \end{lemma}
 \begin{proof}
     Let $Y_{i,j}=1$ $\iff$ $X_i = X_j$. We have that $\Ex{Y_{i,j}} =
@@ -192,13 +219,23 @@ approximately $364$. Surprisingly, the answer is much smaller.
         \binom{n}{2} \frac{1}{m}.
     \end{equation*}
 \end{proof}
-As such, for birthdays, for $m=364$, and $n=28$, we have that the
-expected number of collisions is
-\begin{equation*}
-    \binom{28}{2} \frac{1}{364} = \frac{378}{364} > 1.
-\end{equation*}
 
-This seems weird, but is it the truth?
+\begin{remark}
+    (A) For birthdays, for $m=365$, and $n=28$, we have that the expected
+    number of collisions is
+    \begin{equation*}
+        \binom{28}{2} \frac{1}{365} = \frac{378}{365} > 1.
+    \end{equation*}
+    Namely, in expectation, in a room with 28 people we expect at least
+    one pair of people to share a birthday.
+
+    \smallskip (B) If a value is repeated $k > 1$ times, then there are
+    $\binom{k}{2}$ associated collisions.
+\end{remark}
+
+An expected count above
+one does not by itself establish a large probability of a collision.
+The next lemma bounds that probability by bounding its complement.
 \begin{lemma}
     Let $X_1, \ldots, X_n$ be $n$ variables picked uniformly, randomly
     and independently from $\IRX{m}=\{1,\ldots, m\}$. Then, the
@@ -206,8 +243,12 @@ This seems weird, but is it the truth?
     $\exp\pth{ - \binom{n}{2}/m }$.
 \end{lemma}
 \begin{proof}
-    Let $\Event_i$ be the event that $X_i$ is distinct from all the
-    values in $X_1, \ldots, X_{i-1}$.  Let
+    If $n>m$, a collision is certain by the pigeonhole principle, and the
+    bound is immediate. Hence assume $1\leq n\leq m$, and let $\EventB_0$ be
+    the sure event (i.e., it is an empty event that always happens, and
+    its probability is one). All conditioning events below then have
+    positive probability.  Let $\Event_i$ be the event that $X_i$ is
+    distinct from all the values in $X_1, \ldots, X_{i-1}$.  Let
     \begin{equation*}
         \EventB_k
         \EQ
@@ -215,7 +256,7 @@ This seems weird, but is it the truth?
 %        \cap_{k=1}^i \Event_k
         \EQ \EventB_{k-1} \cap \Event_k
     \end{equation*}
-    be the event that all of $X_1, \ldots, X_i$ are distinct.
+    be the event that all of $X_1, \ldots, X_k$ are distinct.
     Clearly, we have
     \begin{align*}
         \ProbCond{\Event_i}{\EventB_{i-1}}
@@ -262,7 +303,7 @@ This seems weird, but is it the truth?
         \EQ%
         \exp\pth{ -\binom{i}{2}/m}.
     \end{align*}
-    Which implies the desired claim for $i=n$.
+    This implies the desired claim for $i=n$.
 \end{proof}
 
 
@@ -274,26 +315,33 @@ This seems weird, but is it the truth?
 
 \begin{problem}
     We are throwing $m$ balls into $n$ bins randomly (i.e., for every
-    ball we randomly and uniformly pick a bin from the $n$ available
-    bins, and place the ball in the bin picked).
-    There are many natural questions one can ask here:
+    ball we randomly and uniformly pick a bin independently of all other
+    balls from the $n$ available bins, and place the ball in the bin
+    picked).  There are many natural questions one can ask here:
     \begin{compactenumA}
-        \item What is the maximum number of balls in any bin?
+        \smallskip%
+        \item \itemlab{heavy_bin} What is the maximum number of balls in any bin?
+        \smallskip%
         \item What is the number of bins which are empty?
+        \smallskip%
         \item How many balls do we have to throw, such that all the
         bins are non-empty, with reasonable probability?
     \end{compactenumA}
 \end{problem}
 
 \begin{example}
-    Consider throwing $n$ into $n$ bins, and consider a specific
-    ball. What is the probability that this ball all alone in its own bin
-    in the end of the process? Well, we might as well think about throwing this ball first, and all ball later (by symmetry). Then, all it needs is that all other balls avoid its bin. The probability for that is
+    Consider throwing $n$ balls into $n$ bins, with $n\geq2$, and
+    consider a specific ball. What is the probability that this ball is
+    all alone in its own bin at the end of the process? Well, we might as
+    well think about throwing this ball first, and all other balls later
+    (by symmetry). Then, all it needs is that all other balls avoid its
+    bin. The probability for that is
     \begin{equation*}
         p \EQ \pth{1- \frac{1}{n}}^{n-1} \;\approx\; \frac{1}{e}.
     \end{equation*}
     Thus, if $X_i$ is an indicator variable for the $i$\th ball being
-    lonely, then the expected number of empty balls is
+    lonely, then the expected number of lonely balls (and thus the number
+    of bins with exactly on ball) is
     \begin{equation*}
         \Ex{\sum_{i=1}^n X_i}
         \EQ%
@@ -303,20 +351,126 @@ This seems weird, but is it the truth?
         \;\approx\;
         \frac{n}{e}.
     \end{equation*}
-    Namely, a constant fraction of the balls are lonely.
+    Namely, a constant fraction of the balls are lonely in expectation.
 \end{example}
 
+\subsection{Understanding pileups}
+
+The \emphi{load} of a bin is the number of balls in the bin. Here we are
+interested in the maximum load---what is the maximum number of balls in a
+single bin?
+
+\subsubsection{Intuition}
+
+\begin{observation}
+    \obslab{empty_bin}%
+    % 
+    An alternative interesting question is how many bins are not empty
+    (in expectation). The probability of a bin to be empty is
+    $(1-1/n)^n \leq 1/e$, so by linearity of expectation the expected number
+    of empty bins is $\leq n/e$.
+\end{observation}
+
+To understand the process better, imagine throwing in the balls. When we
+throw a ball and it falls into a non-empty bin, we mark it as ``reject''
+and put it into a set of rejected balls $R_1$. We do this until all balls
+have been thrown. We now take all the rejected balls and throw them into
+the bins, but restrict them to bins that contain at least one ball.
+Again, if a ball falls into a bin that already has two balls, it is
+rejected into a set $R_2$. In the $i$\th iteration of this process, all
+the balls in $R_{i-1}$ are thrown into the bins that have exactly $i-1$
+balls in them (no bin has more balls, since such balls were rejected into
+$R_{i-1}$). Again, the process rejects all the balls that try to be put
+into bins that already have exactly $i$ balls, putting them into the set
+$R_i$. It is important at this point to convince yourself that this
+process is indeed equivalent to the original process.
+
+We are going to simplify things a bit---and thus get a loose bound, which
+is intuitively correct (it is formally correct, but arguing its
+correctness in detail is not worth the energy at this point).
+Imagine that we are always throwing the $R_{i-1}$ balls into
+$Y_{i-1}=|R_{i-1}|$ bins (the real number of bins being used would
+typically be much bigger). By the above, we have
+\begin{equation*}
+\ExCond{Y_i}{Y_{i-1}}
+\LEQ
+Y_{i-1}/e.
+\end{equation*}
+To see the intuition behind this, observe that the number of bins that
+still have only $i-1$ balls at the end of this process is, in expectation,
+at most $Y_{i-1}/e$, by \obsref{empty_bin} (since all the bins under
+consideration already have $i-1$ balls). Thus, in expectation, at least
+\begin{equation*}
+    \Delta_i \EQ (1-1/e)Y_{i-1}    
+\end{equation*}
+balls are used in creating the $i$\th layer, and hence
+\begin{equation*}
+    Y_i
+    \LEQ
+    Y_{i-1}-\Delta_i
+    \EQ
+    Y_{i-1}/e.    
+\end{equation*}
+Important! These calculations are really statements about expectations,
+and we are being fast and loose with the math to keep the discussion
+clear.  Thus,
+\begin{align*}
+    \Ex{Y_i}%
+    &\EQ%
+    \Ex{\Bigl.\ExCond{Y_i}{Y_{i-1}}}
+    \LEQ
+    \Ex{Y_{i-1}/e}
+    \EQ
+    \frac{1}{e}\Ex{Y_{i-1}}
+    \&
+    \LEQ
+    \frac{1}{e^i}n.
+\end{align*}
+Namely, after $O(\log n)$ iterations, the expected number of rejected
+balls becomes arbitrarily small. With high probability, after $O(\log n)$
+iterations there are no rejected balls left. In other words, all bins
+have load at most $O(\log n)$.
+
+
+\subsubsection{Just doing the math}
+
+One can prove a better bound, but that requires doing the exact calculations.
+
+\begin{example}[Heavy times.]
+    A ball is \emphi{$k$-heavy} if it there are $k-1$ or more balls that
+    collide with it.  What is the expected number of $k$-heavy balls? For
+    this to happen, there must be $k-1$ balls that ``conspire'' to
+    collide with this ball.  The probability for that is $1/n^{k-1}$ for
+    this specific group of $k-1$ balls, and if so, it creates one
+    $k$-heavy ball. There are at most $\binom{n-1}{k-1}$ such groups, so
+    by the union bound, the probability of a specific ball to be
+    $k$-heavy is at most
+    \begin{equation*}
+        p_{k-1} = \frac{\binom{n-1}{k-1}}{n^{k-1}}.
+    \end{equation*}
+\end{example}
+
+For problem
+\itemlab{heavy_bin}, the above question suggests the bound 
+XXX
+
+Suppose $n$ balls are placed independently and uniformly into $n$ bins,
+with $n$ sufficiently large.  How many ball
+
+
 \begin{theorem}
+    Suppose $n$ balls are placed independently and uniformly into
+    $n$ bins, with $n$ sufficiently large.
     With probability at least $1- 1/n$, no bin has more than
     $\displaystyle k^* = \ceil{\frac{3\ln{n}}{\ln \ln n}}\;$ balls in
     it.
 \end{theorem}
 \begin{proof}
-    Let $X_i$ be the number of balls in the $i$\th bins, when we throw $n$
+    Let $X_i$ be the number of balls in the $i$\th bin, when we throw $n$
     balls into $n$ bins (i.e., $m=n$). Clearly,
     \begin{equation*}
         \Ex{ X_i } = \sum_{j=1}^{n} \Prob{ \bigl. \text{The $j$\th
-              ball fall in $i$\th bin}} = n \cdot \frac{1}{n} = 1,
+              ball falls in the $i$\th bin}} = n \cdot \frac{1}{n} = 1,
     \end{equation*}
     by linearity of expectation.  The probability that the first bin has
     exactly $i$ balls is
@@ -333,7 +487,8 @@ This seems weird, but is it the truth?
       \EQ%
       \pth[]{\frac{e}{i}}^{i}
     \end{align*}
-    This follows by \lemref{approximation:basic} (iv).
+    This follows by \lemref{approximation:basic}
+    \itemref{binomial_2}.
 
     Let $C(k)$ be the event that the first bin (but really any specific
     bin, as they all behave in the same way by symmetry) has $k$ or more
@@ -357,7 +512,7 @@ This seems weird, but is it the truth?
       \Prob{\bigl. C\pth{k^*}}%
       &\leq%
         \pth{\bigl.\frac{e}{k^*}}^{k^*} \frac{1}{1-e/{k^*}}%
-        \leq%
+        \\&\leq%
         2 \exp \pth{\Bigl. k^* \pth{1  - \ln k^* }}
         \leq%
         2 \exp \pth{ - \frac{k^*\ln k^*}{2} }
@@ -366,15 +521,16 @@ This seems weird, but is it the truth?
       2 \exp \pth{ - \frac{c \ln{n}}{2 \ln \ln n}
       \smash{\underbrace{\ln
       \frac{c \ln{n}}{\ln \ln n}}_{\approx \ln \ln n}}}
+      \\[0.35cm]&
       \leq %
       2 \exp \pth{ - \frac{c \ln{n}}{4 } }
       \leq %
-      \frac{1}{n^{c/4}},
+      \frac{2}{n^{c/4}},
       \leq %
       \frac{1}{n^{2}},
     \end{align*}
     % \bigskip%
-    for $n$ and $c\geq 8$. % \bigskip%
+    for sufficiently large $n$ and $c\geq 8$. % \bigskip%
 
     Let us redo this calculation more carefully (yuk!). For
     \begin{math}
@@ -410,15 +566,16 @@ This seems weird, but is it the truth?
         \frac{1}{n^2},
     \end{align*}
     for $n$ large enough. We conclude, by the union bound, that since
-    there are $n$ bins and they have identical distributions that
+    there are $n$ bins with identical distributions,
     \begin{equation*}
         \Prob{\MakeBig \text{any bin contains more than $k^*$
               balls}} %
         \leq%
         \sum_{i=1}^{n} C_{i}\pth{k^*}%
         \leq%
-        \frac{1}{n}.
+        \frac{1}{n},
     \end{equation*}
+    where $C_i(k)$ is the event that bin $i$ contains at least $k$ balls.
 \end{proof}
 
 
@@ -433,13 +590,14 @@ This seems weird, but is it the truth?
    have exactly one ball}
 
 Next, we are interested in the probability that all $m$ balls fall in
-distinct bins. Let $X_i$ be the event that the $i$\th ball fell in a
+distinct bins.  Let $X_i$ be the event that the $i$\th ball fell in a
 distinct bin from the first $i-1$ balls. We have:
 \begin{align*}
   \Prob{\cap_{i=2}^{m} X_i }%
   &=%
     \Prob{X_2} \prod_{i=3}^{m} \ProbCond{X_i}{ \cap_{j=2}^{i-1}
     X_j}%
+    \\&
     \leq%
     \prod_{i=2}^{m} \pth{\frac{n-i + 1}{n}}%
     \leq%
@@ -453,27 +611,27 @@ distinct bin from the first $i-1$ balls. We have:
 thus for $m=\ceil{\smash{\sqrt{2n}} + 1}$, the probability that all
 the $m$ balls fall in different bins is smaller than $1/e$.
 
-This is sometime referred to as the \emphw{birthday paradox}, which
-was already mentioned above. You have $m=30$ people in the room, and
-you ask them for the date (day and month) of their birthday (i.e.,
-$n=365$). The above shows that the probability of all birthdays to be
-distinct is $\exp( -30\cdot 29/730 ) \leq 1/e$. Namely, there is more
-than $50\%$ chance for a birthday collision, a simple but
-counter-intuitive phenomena.
+This is sometimes referred to as the \emphw{birthday paradox}, which was
+already mentioned above. You have $m=30$ people in the room, and you ask
+them for the date (day and month) of their birthday (i.e., $n=365$). The
+above shows that the probability of all birthdays to be distinct is at
+most $\exp( -30\cdot 29/730 ) \leq 1/e$. Namely, there is more than
+$50\%$ chance for a birthday collision, a simple but counter-intuitive
+phenomenon.
 
 \section{The Coupon Collector's Problem}
 
 There are $n$ types of coupons, and at each trial one coupon is picked
-in random. How many trials one has to perform before picking all
-coupons?  Let $m$ be the number of trials performed. We would like to
-bound the probability that $m$ exceeds a certain number, and we still
-did not pick all coupons.
+independently and uniformly at random. How many trials does one have to
+perform before picking all coupons?  Let $m$ be the number of trials
+performed. We would like to bound the probability that $m$ exceeds a
+certain number, and we still did not pick all coupons.
 
 Let $C_i \in \brc{\bigl. 1, \ldots, n}$ be the coupon picked in the
 $i$\th trial. The $j$\th trial is a success, if $C_j$ was not picked
-before in the first $j-1$ trials. Let $X_i$ denote the number of
-trials from the $i$\th success, till after the $(i+1)$\th
-success. Clearly, the number of trials performed is
+before in the first $j-1$ trials. Let $X_i$ denote the number of trials
+strictly after the $i$\th success, up to and including the $(i+1)$\th
+success.  Let $X_0=1$.  Clearly, the number of trials performed is
 \begin{align*}
     X = \sum_{i=0}^{n-1} X_i.
 \end{align*}
@@ -489,7 +647,7 @@ expectation and variance of $X_i$ are
 
 
 \begin{lemma}
-    Let $X$ be the number of rounds till we collection all $n$
+    Let $X$ be the number of rounds till we collect all $n$
     coupons. Then, $\Var{ X} \approx \pth{{\pi^2 }/{6}} n^2$ and its
     standard deviation is $\sigma_X \approx ( \pi / \sqrt{6} ) n$.
 \end{lemma}
@@ -497,9 +655,7 @@ expectation and variance of $X_i$ are
     The probability of $X_i$ to succeed in a trial is
     $p_i = \nfrac{(n-i)}{n}$, and $X_i$ has the geometric distribution
     with probability $p_i$. As such $\Ex{ X_i} = 1/p_i$, and
-    $\Var{ X_i} = q/p^2 = (1-p_i)/p_i^2$.
-
-    Thus,
+    $\Var{ X_i} = (1-p_i)/p_i^2$.  Thus,
     \begin{equation*}
         \Ex{ X}%
         =%
@@ -513,9 +669,10 @@ expectation and variance of $X_i$ are
         =%
         n \ln n + O(n),
     \end{equation*}
-    where $H_n = \sum_{i=1}^{n} \nfrac{1}{i}$ is the $n$\th Harmonic
+    where $H_n = \sum_{i=1}^{n} \nfrac{1}{i}$ is the $n$\th harmonic
     number.
 
+ 
     As for variance, using the independence of $X_0,\ldots, X_{n-1}$,
     we have
     \begin{align*}
@@ -554,8 +711,8 @@ expectation and variance of $X_i$ are
     \frac{\pi^2}{6}$.
 \end{proof}
 
-This implies a weak bound on the concentration of $X$, using Chebyshev
-inequality, we have
+This implies a weak bound on the concentration of $X$, using Chebyshev's
+inequality. We have
 \begin{align*}
   \Prob{ X \geq n \ln n + n + t \cdot n \smash{\frac{\pi}{\sqrt{6}}}\Bigr. }%
   \leq%
@@ -563,13 +720,11 @@ inequality, we have
   \frac{1}{t^2},
 \end{align*}
 
-Note, that this is somewhat approximate, and hold for $n$ sufficiently
-large.
 
 \section{Notes}
 
-The material in this note covers parts of \cite[sections
-3.1,3.2,3.6]{mr-ra-95}
+The material in this note covers parts of~\cite[sections
+3.1, 3.2, 3.6]{mr-ra-95}.
 
 \ChapterEnd{}
 
