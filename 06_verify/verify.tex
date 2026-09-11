@@ -14,10 +14,10 @@
 \ChapterPrefix{}
 \ChapterGen{}
 
-\QuoteExt{The events of September 8 prompted Foch to draft the later
-   legendary signal: ``My \si{centre} is giving way, my right is in
-   retreat, situation excellent. I attack.'' It was probably never
-   sent.%
+\QuotePExt{%
+   The events of September 8 prompted Foch to draft the later legendary
+   signal: ``My \si{centre} is giving way, my right is in retreat,
+   situation excellent. I attack.'' It was probably never sent.%
 }{John Keegan}{The first world war}
 
 
@@ -40,9 +40,9 @@ their dot-product is $\DotProd{\vecA}{\vecB} = \sum_{i=1}^n v_i u_i$
 $2$, is \;$\DotProd{\vecA}{\vecB} \bmod 2$\; (i.e., it is $1$ if
 $\DotProd{\vecA}{\vecB}$ is odd and $0$ otherwise).
 
-Naturally, we could the use the black-box to read the vectors (using
+Naturally, we could use the black-box to read the vectors (using
 $2n$ calls), but since we are interested only in deciding if they are
-equal or not, this should require less calls to the black-box (which
+equal or not, this should require fewer calls to the black-box (which
 is expensive).
 
 \begin{lemma}
@@ -70,13 +70,18 @@ is expensive).
     two dot-products $\DotProd{\vecA}{\vecRand}$ and
     $\DotProd{\vecB}{\vecRand}$.
     \begin{compactenumA}
+        \smallskip%
+        \medskip
         \item If $\DotProd{\vecA}{\vecRand} \equiv
-        \DotProd{\vecA}{\vecRand} \bmod 2$ $\quad\Rightarrow\quad$ the
+        {\DotProd{\vecB}{\vecRand}} \bmod 2$ $\quad\Rightarrow\quad$ the
         algorithm returns `$\boldsymbol =$'.
+
+        \smallskip%
         \item If $\DotProd{\vecA}{\vecRand} \nequiv
-        \DotProd{\vecA}{\vecRand} \bmod 2$ $\quad\Rightarrow\quad$ the
+        {\DotProd{\vecB}{\vecRand}} \bmod 2$ $\quad\Rightarrow\quad$ the
         algorithm returns `$\boldsymbol \ne$'.
     \end{compactenumA}
+    \smallskip%
     Clearly, if the `$\boldsymbol \ne$' is returned then
     $\vecA \neq \vecB$.
 
@@ -85,10 +90,11 @@ is expensive).
     assume that they differ on the $n$\th bit: $u_n \neq v_n$. We then
     have that
     \begin{align*}
-        \alpha = \DotProd{\vecA}{\vecRand} =
+        &\alpha = \DotProd{\vecA}{\vecRand} =
         \overbrace{\sum_{i=1}^{n-1} v_i r_i}^{=\alpha'} \quad+\quad
         v_n r_n%
-        \text{\qquad and\qquad }%
+        \\&
+        \text{and\qquad }%
         \beta = \DotProd{\vecB}{\vecRand} =
         \overbrace{\sum_{i=1}^{n-1} u_i r_i}^{=\beta'} \quad+\quad u_n
         r_n.
@@ -97,11 +103,11 @@ is expensive).
     \begin{compactenumA}
         \smallskip%
         \item If $\alpha' \nequiv \beta' \bmod 2$, then, with
-        probability half, we have $r_i = 0$, and as such $\alpha
+        probability half, we have \chgY{$r_i$}{$r_n$} = 0, and as such $\alpha
         \nequiv \beta \bmod 2$.
         \smallskip%
         \item If $\alpha' \equiv \beta' \bmod 2$, then, with
-        probability half, we have $r_i = 1$, and as such $\alpha
+        probability half, we have \chgY{$r_i$}{$r_n$} = 1, and as such $\alpha
         \nequiv \beta \bmod 2$.
     \end{compactenumA}
     \smallskip%
@@ -110,9 +116,9 @@ is expensive).
 \end{proof}
 
 \newcommand{\RetEq}{\ensuremath{\text{`$\boldsymbol =$'}}\xspace}
-\newcommand{\RetNEq}{\ensuremath{\text{`$\boldsymbol =$'}}\xspace}
+\newcommand{\RetNEq}{\ensuremath{\text{`$\boldsymbol \ne$'}}\xspace}
 
-\subsubsection{Amplification}
+\subsubsection{Amplification.}
 
 Of course, this is not a satisfying algorithm -- it returns the
 correct answer only with probability half if the vectors are
@@ -122,11 +128,11 @@ $t$ executions returns that the vectors are different, then we know
 that they are different.
 \begin{align*}
   \Prob{ \bigl. \text{Algorithm fails}}%
-  &=%
+  &\EQ%
     \Prob{ \bigl. \vecA \neq \vecB, \text{ but all $t$ executions
     return `$\boldsymbol =$'}}%
   \\
-  &=%
+  &\EQ%
     \Bigl.\Prob{ \bigl.%
     \pth[]{\bigl. T_1 = \RetEq}%
     \cap%
@@ -137,14 +143,16 @@ that they are different.
     \pth[]{\bigl. T_t = \RetEq}%
     }%
   \\%
-  &=%
+  &\EQ%
     \Prob{ \bigl.%
     {\bigl. T_1 = \RetEq}%
     }%
     \Prob{ {\bigl. T_2 = \RetEq} }%
     \cdots%
     \Prob{ {\bigl. T_t = \RetEq} }%
-    \leq \prod_{i=1}^t \frac{1}{2} = \frac{1}{2^t}.
+    \\&
+    \LEQ%
+    \prod_{i=1}^t \frac{1}{2} = \frac{1}{2^t}.
 \end{align*}
 
 We thus get the following result.
@@ -159,7 +167,7 @@ We thus get the following result.
         \item[\qquad$\boldsymbol \ne$:] Then $\vecA \neq \vecB$.
 
         \item[\qquad $\boldsymbol =$:] Then, with probability
-        $\geq 1-\delta$, we have $\vecA \neq \vecB$.
+        $\geq 1-\delta$, we have $\vecA = \vecB$.
     \end{compactenumA}
     The running time of the algorithm is
     $ O\pth{ \bigl. \ts (n + B(n)) \ln \delta^{-1} }$, where $B(n)$ is
@@ -215,7 +223,7 @@ $O(n^{2})$ time (and this algorithm is simple).
     are equal then return \RetEq.
 
     The algorithm fails only if $\MatrixB \MatrixC \neq \MatrixD$, but
-    then, assume the $i$\th row in two matrices $\MatrixB \MatrixC$
+    then, assume the $i$\th rows in the two matrices $\MatrixB \MatrixC$
     and $\MatrixD$ are different. The probability that the algorithm
     would not detect that these rows are different is at most $1/2$,
     by \lemref{verify:vectors:1:2}. As such, the probability that all
@@ -229,22 +237,25 @@ $O(n^{2})$ time (and this algorithm is simple).
 \subsubsection{The Schwartz–Zippel lemma}
 
 Let $\Field$ be a field (i.e., real numbers). Let
-$\Field[x_1, \ldots, X_n]$ denote the set of polynomials over the $n$
-variables $x_1, \ldots, x_n$ over $\Field$. Such a polynomial is a sum
-of monomial, where a \emphi{monomial} has the form
+$\Field[x_1, \ldots, x_n]$ denote the set of polynomials over the $n$
+variables $x_1, \ldots, x_n$ over $\Field$. Such a polynomial is a sum of
+monomial, where a \emphi{monomial} has the form
 $c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}$, where
 $c \in \Field$. The \emphi{degree} of this monomial is
-$\degreeX{c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}} = i_1 +
-i_2 +\cdots + i_n$. Thus, a polynomial of degree $d$ over $n$
-variables has potentially up to $d n^d$ monomials (the exact bound is
-messier, but an easy lower bound on this quantity is $\binom{n}{d}$).
+$\degreeX{c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}} = i_1 + i_2 +\cdots +
+i_n$. Thus, a polynomial of degree $d$ over $n$ variables has potentially
+up to $d n^d$ monomials (the exact bound is messier, but an easy lower
+bound on this quantity is $\binom{n}{d}$).
 
-For a polynomial $f \in \Field[x_1, \ldots, X_n]$, the \emphi{zero
-   set} of $f$, is the set
-$Z_f = \Set{ (x_1, \ldots, x_n) }{f(x_1, \ldots, x_n) =
-   0}$. Intuitively, the zero set $Z_f = \Field^n$ only if
-$f(x_1,\ldots, x_n ) =0$ (and then it is the \emphi{zero} polynomial),
-but otherwise (i.e., $f \neq 0$) $Z_f$ should be much ``smaller''.
+For a polynomial $f \in \Field[x_1, \ldots, x_n]$, the \emphi{zero set}
+of $f$, is the set
+\begin{equation*}
+    Z_f = \Set{ (x_1, \ldots, x_n) }{f(x_1, \ldots, x_n) = 0}.
+\end{equation*}
+ Intuitively, the zero
+set $Z_f = \Field^n$ only if $f(x_1,\ldots, x_n ) =0$ (and then it is the
+\emphi{zero} polynomial), but otherwise (i.e., $f \neq 0$) $Z_f$ should be
+much ``smaller''.
 
 
 Specifically, a polynomial in a single variable of degree $d$ is
@@ -272,7 +283,7 @@ the values from the right set of values.
     $\mathsf{r} = (r_1, \ldots, r_n)$ be randomly and uniformly chosen
     from $S^n$. Then
     \begin{equation*}
-        \Prob{ f( \mathsf{r} ) = 0 } \leq \frac{d}{|S|}.
+        \Prob{ \Bigl.f( \mathsf{r} ) = 0 } \leq \frac{d}{|S|}.
     \end{equation*}
     Equivalently, we have $|Z_f \cap S^n| \leq d |S|^{n-1}$.
 \end{lemma}
@@ -288,22 +299,22 @@ the values from the right set of values.
         \sum_{i=0}^d x_1^i f_i(x_2, \ldots, x_n),
     \end{equation*}
     where $\degreeX{f_i} \leq d-i$.  Since $f$ is not zero, one of the
-    $f$s must be non-zero, and let $i$ the maximum value such that
+    $f_i$s must be non-zero, and let $i$ the maximum value such that
     $f_i \neq 0$.
 
     Now, we randomly choose the values $r_2, \ldots, r_n \in S$
     (independently and uniformly). And consider the polynomial in the
     single variable $x$, which is
     \begin{equation*}
-        g(x) = \sum_{j=0}^d f_j(r_2, \ldots,r_n) x^i.
+        g(x) = \sum_{j=0}^d f_j(r_2, \ldots,r_n) x^j.%
     \end{equation*}
     Let $\EventF$ be the event that $f_i(r_2, \ldots, r_n) = 0$.  Let
-    $\EventG$ be the event that $g(x) = 0$.  By induction, we have
-    $\Prob{\EventF} \leq (d-i)/|S|$. More interestingly if $\EventF$
-    does not happen, then $\degreeX{g} = i$. As such, by induction, we
-    have that
+    $\EventG$ be the event that $g(r_1) = 0$.  By induction, we have
+    $\Prob{\EventF} \leq (d-i)/|S|$. More interestingly if $\EventF$ does
+    not happen, then $\degreeX{g} = i$. As such, by induction, we have
+    that
     \begin{equation*}
-        \ProbCond{ \EventG}{\smash{\overline{\EventF}}} = \ProbCond{ g(x)
+        \ProbCond{ \EventG}{\smash{\overline{\EventF}}} = \ProbCond{ g(r_1)
            = 0}{\smash{\overline{\EventF}}}%
         \leq%
         \frac{i}{|S|}.
@@ -333,8 +344,7 @@ the values from the right set of values.
     that there relatively few grid points that are in the zero set.
 \end{remark}
 
-\subsubsection{Applications}
-
+\subsubsection{Applications.}
 \paragraph{Checking if a polynomial is the zero polynomial.}
 
 Let $f$ be a polynomial of degree $d$, with $n$ variables, over the
@@ -348,15 +358,15 @@ answer.
 \paragraph{Checking if two polynomials are equal.}
 
 Given two polynomials $f$ and $g$, one can now check if they are equal
-by checking if $f(r)=g(r)$, for some random input. The proof of
-correctness follows from the above, as one interpret the algorithm as
+by checking if $f(\mathsf{r})=g(\mathsf{r})$, for some random input $\mathsf{r}$. The proof of
+correctness follows from the above, as one interprets the algorithm as
 checking if $f-g$ is the zero polynomial.
 
 \paragraph{Verifying  polynomials product.}
 
 Given three polynomials $f,g$, and $h$, one can now check if
-$f g = h$. Again, one randomly pick a value $r$, and check if
-$f(r)g(r)=h(r)$. The proof of correctness follows from the above, as
+$f g = h$. Again, one randomly picks a value $\mathsf{r}$, and checks if
+$f(\mathsf{r})g(\mathsf{r})=h(\mathsf{r})$. The proof of correctness follows from the above, as
 one interprets the algorithm as checking if $fg - h$ is the zero
 polynomial.
 
@@ -377,15 +387,13 @@ $\pi:\IRX{n}\rightarrow \IRX{n}$, such that for all $i$, we have
 $u_i v_{\pi(i)} \in \Edges$. For such a permutation $\pi$, consider
 the monomial
 \begin{equation*}
-    f_\pi = \mathrm{sign}(\pi) \prod_{i=1}^n M[i,j],
+    f_\pi = \prod_{i=1}^n M[i,\pi(i)].
 \end{equation*}
-where $\mathrm{sign}$ is the \emphi{sign} of the permutation (it is
-either $-1$ or $+1$ -- for our purpose here we do not care about the
-exact definition of this quantity).  It is either a polynomial of
-degree exactly $n$, or it is zero. Furthermore, observe that for any
-two different permutation $\pi,\sigma \in \Pi$, we have that if
-$f_\pi$ and $f_\sigma$ are both non-zero, then $f_\pi \neq f_\sigma$
-and $f_\pi \neq -f_\sigma$.
+It is either a polynomial of degree exactly $n$, or it is
+zero. Furthermore, observe that for any two different permutation
+$\pi,\sigma \in \Pi$, we have that if $f_\pi$ and $f_\sigma$ are both non-zero, then
+$f_\pi \neq f_\sigma$ and $f_\pi \neq -f_\sigma$.
+
 
 Consider the following ``crazy'' polynomial over the set of variables
 $\mathcal{V}$:
@@ -396,18 +404,22 @@ $\mathcal{V}$:
     \det(M)
     =%
     \sum_{\pi \in \Pi}
-    \mathrm{sign}(\pi) f_\pi.
+    \mathrm{sign}(\pi) f_\pi,
 \end{equation*}
-If there is perfect matching in $\Graph$, then there is a permutation
+where $\mathrm{sign}(\pi)$ is the \emphi{sign} of the permutation (it is
+either $-1$ or $+1$---for our purpose here we do not care about the exact
+definition of this quantity).
+
+If there is a perfect matching in $\G$, then there is a permutation
 $\pi$ such that $f_\pi \neq 0$. But this implies that $\psi \neq 0$
-(since it has a non-zero monomials, and the monomials can not cancel
+(since it has a non-zero monomial, and the monomials cannot cancel
 each other).
 
 In the other direction, if there is no perfect matching in $\G$, then
 $f_\pi = 0$ for all permutation $\pi$. This implies that
 $\psi=0$. Thus, deciding if $\G$ has a perfect matching is equivalent
 to deciding if $\psi \neq 0$. The polynomial $\psi$ is defined via a
-determinant of a matrix that variables as some of the entries (and
+determinant of a matrix that has variables as some of the entries (and
 zeros otherwise). By the above, all we need to do is to evaluate
 $\psi$ over some random values. If we use exact arithmetic, we would
 just pick a random number in $[0,1]$ for each variable, and evaluate
@@ -434,12 +446,12 @@ number).
 
 \begin{defn}
     A \emphic{Las Vegas algorithm}{algorithm!Las Vegas} is a
-    randomized algorithms that {\em always} return the correct result.
-    The only variant is that it's running time might change between
+    randomized algorithm that {\em always} returns the correct result.
+    The only variation is that its running time might change between
     executions.
 \end{defn}
 
-An example for a Las Vegas algorithm is the \Algorithm{QuickSort}
+An example of a Las Vegas algorithm is the \Algorithm{QuickSort}
 algorithm.
 
 \begin{defn}
@@ -465,9 +477,11 @@ basic text on complexity theory\footnote{There is also the internet.}.
 \begin{defn}\index{Complexity!\CClass{P}}
     The class \CClass{P} consists of all languages $L$ that have a
     polynomial time algorithm $\Algorithm{Alg}$, such that for any
-    input $\Sigma^{*}$, we have
+    input \chgY{$\Sigma^{*}$}{$x \in \Sigma^*$}, we have
     \begin{compactenumA}
+        \smallskip%
         \item $x \in L \Rightarrow \Algorithm{Alg}(x)$ accepts,
+        \smallskip%
         \item $x \notin L \Rightarrow \Algorithm{Alg}(x)$ rejects.
     \end{compactenumA}
 \end{defn}
@@ -475,13 +489,13 @@ basic text on complexity theory\footnote{There is also the internet.}.
 \begin{defn}\index{Complexity!\CClass{NP}}
     The class \CClass{NP} consists of all languages $L$ that have a
     polynomial time algorithm \Alg, such that for any input
-    $\Sigma^{*}$,  we have:
+    \chgY{$\Sigma^{*}$}{$x \in \Sigma^*$}, we have:
     \begin{compactenumi}
-        \item If $x \in L \Rightarrow$ then $\exists y \in \Sigma^*$,
+        \item If $x \in L$, then $\exists y \in \Sigma^*$,
         $\Alg(x,y)$ accepts, where $|y|$ (i.e. the length of $y$) is
         bounded by a polynomial in $|x|$.
      
-        \item If $x \notin L \Rightarrow$ then $ \forall y \in
+        \item If $x \notin L$, then $ \forall y \in
         \Sigma^* \Alg(x,y)$ rejects.
     \end{compactenumi}
 \end{defn}
@@ -492,7 +506,7 @@ basic text on complexity theory\footnote{There is also the internet.}.
     is in the class $\CX$. That is 
     \begin{equation*}
         \coCClass{\CX} = \Set{L}{\bigl.\smash{\overline{L}} \in \CX},
-    \end{equation*}4
+    \end{equation*}
     where $\overline{L} = \Sigma^* \setminus L$.
 \end{defn}
 
@@ -511,7 +525,7 @@ false.)
         \item If $x \in L$ then $\Prob{\Alg(x) \text{
               accepts}} \geq 1/2$.
      
-        \item $x \notin L$ then $\Prob{\Alg(x) \text{
+        \item If $x \notin L$ then $\Prob{\Alg(x) \text{
               accepts}} = 0 $.
     \end{compactenumi}
 \end{defn}
@@ -550,12 +564,12 @@ The class \CClassPP is not very useful. Why?
     Provide a \CClassPP algorithm for 3SAT.
 \end{exercise}
 
-Consider the mind-boggling stupid randomized algorithm that returns
+Consider the mind-bogglingly stupid randomized algorithm that returns
 either yes or no with probability half. This algorithm is almost in
-\CClassPP, as it return the correct answer with probability half. An
+\CClassPP, as it returns the correct answer with probability half. An
 algorithm is in \CClassPP needs to be \emph{slightly} better, and be
 correct with probability better than half. However, how much better
-can be made to be arbitrarily close to $1/2$. In particular, there is
+can be made to be arbitrarily close to $0$ (i.e., probability arbitrarily close to $1/2$). In particular, there is
 no way to do effective amplification with such an algorithm.
 
 \begin{fragment}{b_p_p}
