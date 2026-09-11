@@ -125,6 +125,25 @@ All repository scripts MUST be written in **Ruby** (`tools/*.rb`). Standalone ex
   ./tools/clean -n             # Dry-run preview
   ```
 
+### 4. `tools/gen_pdf_all_chapters`
+- **Purpose**: Compiles all chapter standalone PDFs in parallel using `l -no-env -s`, ensuring all chapter directories contain up-to-date `.pdf` files.
+- **Usage**:
+  ```bash
+  ./tools/gen_pdf_all_chapters             # Full multi-pass compilation (parallel)
+  ./tools/gen_pdf_all_chapters -u          # Fast single-pass compilation
+  ./tools/gen_pdf_all_chapters -j 8        # Set concurrency (default: 8)
+  ./tools/gen_pdf_all_chapters 01 02 vc    # Update specific matching chapters
+  ```
+
+### 5. `tools/post_to_webpage`
+- **Purpose**: Copies compiled chapter PDFs from `notes/` to their corresponding lecture bundles in `webpage/content/lectures/`, normalizes front matter references, rebuilds the site with Hugo, and deploys it to the server.
+- **Usage**:
+  ```bash
+  ./tools/post_to_webpage                  # Post all updated chapter PDFs to webpage & deploy
+  ./tools/post_to_webpage --dry-run        # Preview changes without modifying files
+  ./tools/post_to_webpage 03 04            # Post specific lectures only
+  ```
+
 ---
 
 ## 5. Environment Isolation & LaTeX Compilation
