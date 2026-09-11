@@ -30,7 +30,7 @@ notes_test/
 │   ├── sync_chapters_info   # Symlink -> sync_numbers.rb (syncs chapter/page numbers)
 │   ├── test_chapters_standalone # Symlink -> test_all_chaps.rb (runs l -no-env suite)
 │   ├── clean                # Symlink -> clean_latex.rb (book.fls-based deep cleaner)
-│   ├── score                # LaTeX error/warning log analyzer
+│   ├── score                # LaTeX error/alert/warning log analyzer
 │   └── detect_unused_macros.rb # Macro reference auditor
 └── 01_intro/ ... 58_prereq/ # 58 individual chapter directories
 ```

@@ -14,6 +14,7 @@ class ChapterScorer
     :file,
     :path,
     :errors,
+    :alerts,
     :warnings,
     :success,
     :exit_code,
@@ -37,7 +38,7 @@ class ChapterScorer
       exit 1
     end
 
-    puts "Scoring #{chapters.size} chapters using #{@jobs} workers with 'l -score'...\n\n" unless @quiet || @json
+    puts "Scoring #{chapters.size} chapters using #{@jobs} workers with 'l -u -score'...\n\n" unless @quiet || @json
 
     results = execute_scoring(chapters)
     sort_results!(results)
@@ -115,6 +116,7 @@ class ChapterScorer
         file: chap[:file],
         path: chap[:path],
         errors: 999,
+        alerts: 999,
         warnings: 999,
         success: false,
         exit_code: 1,
@@ -122,18 +124,23 @@ class ChapterScorer
       )
     end
 
-    cmd = ["l", "-score", chap[:file]]
+    cmd = ["l", "-u", "-score", chap[:file]]
     stdout, stderr, status = Open3.capture3(*cmd, chdir: chap_dir)
     combined = "#{stdout}\n#{stderr}".strip
 
     errors = 0
+    alerts = 0
     warnings = 0
     matched = false
 
-    # Standard l -score output format: "Errors: X, Warnings: Y"
-    if combined =~ /Errors:\s*(\d+),\s*Warnings:\s*(\d+)/i
-      errors = Regexp.last_match(1).to_i
-      warnings = Regexp.last_match(2).to_i
+    # Standard l -score output format: "Errors: X, Alerts: A, Warnings: Y, Whatevers: W"
+    err_match = combined.match(/Errors:\s*(\d+)/i)
+    alert_match = combined.match(/Alerts:\s*(\d+)/i)
+    warn_match = combined.match(/Warnings:\s*(\d+)/i)
+    if err_match && warn_match
+      errors = err_match[1].to_i
+      alerts = alert_match ? alert_match[1].to_i : 0
+      warnings = warn_match[1].to_i
       matched = true
     end
 
@@ -142,6 +149,7 @@ class ChapterScorer
       file: chap[:file],
       path: chap[:path],
       errors: matched ? errors : 999,
+      alerts: matched ? alerts : 999,
       warnings: matched ? warnings : 999,
       success: matched && errors.zero? && status.success?,
       exit_code: status.exitstatus,
@@ -151,41 +159,47 @@ class ChapterScorer
 
   def print_progress(res, current, total)
     err_str = res.errors.zero? ? "0 errors" : "#{res.errors} ERRORS"
+    alert_str = res.alerts.zero? ? "0 alerts" : "#{res.alerts} ALERTS"
     warn_str = "#{res.warnings} warnings"
     status_label = res.success ? "PASS" : "FAIL"
-    printf("[%2d/%2d] %-42s ... %s (%s, %s)\n", current, total, res.path, status_label, err_str, warn_str)
+    printf("[%2d/%2d] %-42s ... %s (%s, %s, %s)\n", current, total, res.path, status_label, err_str, alert_str, warn_str)
   end
 
   def sort_results!(results)
     results.sort_by! do |r|
       multiplier = @reverse ? -1 : 1
-      [multiplier * r.errors, multiplier * r.warnings, r.path]
+      [multiplier * r.errors, multiplier * r.alerts, multiplier * r.warnings, r.path]
     end
   end
 
   def output_table(results)
     puts "\n"
     puts "=" * 80
-    sort_dir = @reverse ? "Errors ↓, Warnings ↓" : "Errors ↑, Warnings ↑"
+    sort_dir = @reverse ? "Errors ↓, Alerts ↓, Warnings ↓" : "Errors ↑, Alerts ↑, Warnings ↑"
     puts " LaTeX Chapter Score Report (Sorted by #{sort_dir})"
     puts "=" * 80
-    printf(" %-5s  %-44s  %7s  %9s  %-8s\n", "Rank", "Chapter", "Errors", "Warnings", "Status")
+    printf(" %-5s  %-40s  %6s  %6s  %8s  %-6s\n", "Rank", "Chapter", "Errors", "Alerts", "Warnings", "Status")
     puts "-" * 80
 
     results.each_with_index do |r, idx|
       status_desc = if !r.success && r.errors == 999
                       "ERROR"
+                    elsif !r.success && r.errors.zero?
+                      "FAIL"
                     elsif r.errors.positive?
                       "ERRORS"
+                    elsif r.alerts.positive?
+                      "ALERTS"
                     else
                       "OK"
                     end
 
       printf(
-        " %4d.  %-44s  %7d  %9d  %-8s\n",
+        " %4d.  %-40s  %6d  %6d  %8d  %-6s\n",
         idx + 1,
         r.path,
         r.errors,
+        r.alerts,
         r.warnings,
         status_desc
       )
@@ -195,13 +209,15 @@ class ChapterScorer
     total_chapters = results.size
     zero_err_count = results.count { |r| r.errors.zero? }
     total_errors = results.sum(&:errors)
+    total_alerts = results.sum(&:alerts)
     total_warnings = results.sum(&:warnings)
 
     puts format(
-      "Total Chapters: %d | Clean (0 Errors): %d | Total Errors: %d | Total Warnings: %d",
+      "Total Chapters: %d | Clean (0 Errors): %d | Total Errors: %d | Alerts: %d | Warnings: %d",
       total_chapters,
       zero_err_count,
       total_errors,
+      total_alerts,
       total_warnings
     )
     puts "=" * 80
@@ -214,6 +230,7 @@ class ChapterScorer
         dir: r.dir,
         file: r.file,
         errors: r.errors,
+        alerts: r.alerts,
         warnings: r.warnings,
         success: r.success,
         exit_code: r.exit_code
@@ -239,7 +256,7 @@ def main
       options[:jobs] = v
     end
 
-    opts.on("-r", "--reverse", "Sort in descending order (highest errors/warnings first)") do
+    opts.on("-r", "--reverse", "Sort in descending order (highest errors/alerts/warnings first)") do
       options[:reverse] = true
     end
 
