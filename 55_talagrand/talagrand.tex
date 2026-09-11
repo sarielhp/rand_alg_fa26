@@ -138,7 +138,11 @@ And the corresponding \emphi{$T$-distance}
     $\brc{0,1}^d$.
 
     As a concrete example, for the set $\SetA = \bd \Ball$, and the
-    point $\pnt = (200d,\ldots, 200d)$, we have
+    point 
+    \begin{equation*}
+        \pnt = (200d,\ldots, 200d),
+    \end{equation*}
+     we have
     $\distTY{\pnt}{\SetA} = \sqrt{d}$.
 \end{example}
 
@@ -181,11 +185,10 @@ that it is going to help us much).
 \end{theorem}
 
 \begin{example}
-    To see why this inequality interesting, consider
+    To see why this inequality interesting, consider the set
     $\Omega = [0,100]^d$ with uniform distribution on each
-    coordinate. The probability measure of a set
-    $\SetA \subseteq \Omega$ is $\Prob{\SetA} = \volX{\SetA} /
-    100^d$. Let
+    coordinate. The probability measure of a set $\SetA \subseteq \Omega$ is
+    $\Prob{\SetA} = \volX{\SetA} / 100^d$. Let
     \begin{equation*}
         \SetA = \Set{ \pnt =(\pntCoord_1, \ldots, \pntCoord_d) \in
            [0,100]^d}%
@@ -240,13 +243,16 @@ claim, at least at first reading.
     The proof is by induction on the dimension $d$. For $d=1$, then
     $\distTY{\pnt}{\SetA} = 0$ if $\pnt \in \SetA$, and
     $\distTY{\pnt}{\SetA}= 1$ if $\pnt \notin \SetA$. As such, we have
-    \begin{equation*}
-        \gamma = \Ex{ \exp \pth{\frac{\distTSqY{\pnt}{\SetA} }{4}}}%
+    \begin{align*}
+        \gamma
+        &\EQ
+        \Ex{ \exp \pth{\frac{\distTSqY{\pnt}{\SetA} }{4}}}%
         =%
         e^{0^2/4} \Prob{\SetA} + e^{1^2/4} (1-\Prob{\SetA})
-        =%
+        \\&
+        \EQ%
         \Prob{\SetA} + e^{1/4}(1-\Prob{\SetA})= f\pth{\Prob{\SetA}},
-    \end{equation*}                   
+    \end{align*}                   
     where $f(x) = x + e^{1/4}(1-x)$. An easy argument (see
     \tedref{Talagrand:1}) shows that $f(x) \leq 1/x$, which implies
     that $\gamma = f(\Prob{\SetA}) \leq 1/ \Prob{\SetA}$, as claimed.
@@ -277,21 +283,24 @@ claim, at least at first reading.
     \smallskip%
     \begin{align*}
         &s \in \HSetY{\pnt}{\SetA_\OldOm} \subseteq \brc{0,1}^d
-        &\implies&& \qquad(s,1) \in \HSetY{\pntE}{\SetA}
+        &\implies&& \quad(s,1) \in \HSetY{\pntE}{\SetA}
       %
-        &\qquad\text{ (see \Eqref{t:c:change})}\qquad \\%
+        &\quad\text{\Eqref{t:c:change}}\qquad \\%
         &s' \in \HSetY{\pnt}{\SetA(\nu)} & \implies&& \qquad(s',0) \in
         \HSetY{\pntE}{\SetA}.
     \end{align*}
     And similarly, for the corresponding convex-hulls, we have
-    \begin{equation*}
-        s \in \CHSetY{\pnt}{\SetA_\OldOm} 
-        \implies (s,1) \in \CHSetY{\pntE}{\SetA}
-        \qquad\text{ and }\qquad%
+    \begin{align*}
+        &s \in \CHSetY{\pnt}{\SetA_\OldOm} 
+        \quad\implies\quad 
+        (s,1) \in \CHSetY{\pntE}{\SetA}
+        \\
+       \text{ and }\qquad%
+        &
         s' \in \CHSetY{\pnt}{\SetA(\nu)}
-        \implies
+        \quad\implies\quad
         (s',0) \in \CHSetY{\pntE}{\SetA}.
-    \end{equation*}
+    \end{align*}
     In particular, for $s, s'$ as above, we have (by convexity) that for
     any $\lambda \in [0,1]$, the point
     \begin{equation*}
@@ -310,9 +319,9 @@ claim, at least at first reading.
         \widehat{h}\pth{\lambda} = \norm{ (1-\lambda)s + \lambda s'}^2
     \end{math}    
     is convex, see \tedref{Talagrand:2}. We thus have
-    \begin{equation*}
+    \begin{align*}
         \distTSqY{\pntE}{\SetA}%
-        =
+        &\EQ
         \Bigl(
         \min_{\pnt \in \CHSetY{\pntE}{\SetA}} \norm{\pnt}^2
         \Bigr)
@@ -320,9 +329,10 @@ claim, at least at first reading.
         \norm{h(\lambda)}^2 %
         =%
         \norm{ (1-\lambda)s + \lambda s'}^2 + ( 1-\lambda)^2        
-        \leq%
+        \\&
+        \LEQ%
         (1-\lambda)\norm{s}^2  + \lambda \norm{ s'}^2 + ( 1-\lambda)^2.
-    \end{equation*}
+    \end{align*}
     We are still at the liberty of choosing $s$ and $s'$. Let $s$ be
     the point realizing $\distTY{\pnt}{\SetA_\OldOm}$ -- this is the
     closest point in $\CHSetY{\pnt}{\SetA}$ to the origin (i.e.,
@@ -343,42 +353,47 @@ claim, at least at first reading.
         \int_\pnt  \exp \pth{\frac{\distTSqY{\bigl.(\pnt,\nu)}{\SetA}
         }{4}} 
      % 
-        \leq% 
-        \int_\pnt  \exp \pth{
+     \\&
+     \LEQ % 
+     \int_\pnt  \exp \pth{
         \frac{
-        (1-\lambda)\distTY{\pnt}{\SetA_\OldOm}^2
-        + \lambda \distTY{\pnt}{\SetA(\nu)}^2 + ( 1-\lambda)^2}{4}}
-        \hspace{-5cm}%
-      \\&%
-      \leq%
-      e^{(1-\lambda)^2 /4} 
-      \int_\pnt  \exp \pth{
-      \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}^{1-\lambda}
-      \exp\pth{ \frac{1}{4} \distTY{\pnt}{\SetA(\nu)}^2 }^\lambda \\
-      &\leq%
-        e^{(1-\lambda)^2 /4} 
-        \pbrcS{ \int_\pnt  \exp \pth{
-        \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}}^{(1-\lambda)}
-        \pbrcS{ \int_\pnt
+           (1-\lambda)\distTY{\pnt}{\SetA_\OldOm}^2
+           + \lambda \distTY{\pnt}{\SetA(\nu)}^2 + ( 1-\lambda)^2}{4}}
+     \hspace{-5cm}%
+     \\&%
+     \leq%
+     e^{(1-\lambda)^2 /4} 
+     \int_\pnt  \exp \pth{
+        \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}^{1-\lambda}
+     \exp\pth{ \frac{1}{4} \distTY{\pnt}{\SetA(\nu)}^2 }^\lambda \\
+     &\leq%
+     e^{(1-\lambda)^2 /4} 
+     \pbrcS{ \int_\pnt  \exp \pth{
+           \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}}^{(1-\lambda)}
+     \\&\qquad
+     \pbrcS{ \int_\pnt
         \exp\pth{ \frac{1}{4} \distTY{\pnt}{\SetA(\nu)}^2 }}^\lambda 
-      &\text{(by  \Holder's \si{ineq} \Eqrefbare{holder:var})}
-      \\&%
-      \leq%
-      e^{(1-\lambda)^2 /4} 
-      \pth{ \frac{1}{\Prob{ \SetA_\OldOm}} }^{(1-\lambda)}
-      \pth{ \frac{1}{\Prob{ \SetA(\nu) } } }^\lambda 
-      =%
-      e^{(1-\lambda)^2 /4} 
-      \frac{1}{\Prob{ \SetA_\OldOm}}
-      \pth{ \frac{\Prob{ \SetA(\nu) }}{\Prob{ \SetA_\OldOm}} }^{-\lambda} 
-      &\text{(induction)}
-      \\&%
-      =%
-      \frac{1}{\Prob{ \SetA_\OldOm}}
-      \cdot 
-      e^{(1-\lambda)^2 /4} 
-      r^{-\lambda}, & \text{for } r = \frac{\Prob{ \SetA(\nu) }} {\Prob{
-                      \SetA_\OldOm}}
+     \\
+     \tag{\text{(by  \Holder's \si{ineq} \Eqrefbare{holder:var})}}
+     \\&%
+     \leq%
+     e^{(1-\lambda)^2 /4} 
+     \pth{ \frac{1}{\Prob{ \SetA_\OldOm}} }^{(1-\lambda)}
+     \pth{ \frac{1}{\Prob{ \SetA(\nu) } } }^\lambda 
+     \\&
+     =%
+     e^{(1-\lambda)^2 /4} 
+     \frac{1}{\Prob{ \SetA_\OldOm}}
+     \pth{ \frac{\Prob{ \SetA(\nu) }}{\Prob{ \SetA_\OldOm}} }^{-\lambda} 
+     \tag{induction}
+     \\&%
+     =%
+     \frac{1}{\Prob{ \SetA_\OldOm}}
+     \cdot 
+     e^{(1-\lambda)^2 /4} 
+     r^{-\lambda}.
+     \tag{for $r = \frac{\Prob{ \SetA(\nu) }} {\Prob{
+              \SetA_\OldOm}}$}
     \end{align*}
     Observe that $\Prob{ \SetA_\OldOm} \geq \Prob{ \SetA(\nu) }$, and
     thus $r \leq 1 $. To minimize the above, consider the function
@@ -408,34 +423,36 @@ claim, at least at first reading.
     
     We remind the reader that our purpose is to bound
     \begin{align*}
-      &\int_\pntE  \exp \pth{\frac{\distTSqY{\bigl.\pntE}{\SetA}
-        }{4}}
+        &\int_\pntE  \exp \pth{\frac{\distTSqY{\bigl.\pntE}{\SetA}
+           }{4}}
         =%
         \int_{\nu \in \NewOm}
         \int_{\pnt \in \OldOm}
         \exp \pth{\frac{\distTSqY{\bigl.(\pnt, \nu)}{\SetA}
-        }{4}}%
+           }{4}}%
+        \\&
         \leq%
         \int_{\nu \in \NewOm} F(\nu) %
         \leq%
         \int_{\nu \in \NewOm} 
         \frac{1}{\Prob{ \SetA_\OldOm}}
         \pth{2-  \frac{\Prob{ \SetA(\nu) }} {\Prob{
-        \SetA_\OldOm}}}\\
-      &=         
+                 \SetA_\OldOm}}}\\
+        &=         
         \frac{1}{\Prob{ \SetA_\OldOm}}
         \pth{2-  \frac{ \int_{\nu \in \NewOm}  \Prob{\SetA(\nu) }} {\Prob{
-        \SetA_\OldOm}}}%
+                 \SetA_\OldOm}}}%
         =%        
         \frac{1}{\Prob{ \SetA_\OldOm}}
         \pth{2-  \frac{  \Prob{\SetA }} {\Prob{
-        \SetA_\OldOm}}}
+                 \SetA_\OldOm}}}
+        \\&
         =%
         \frac{1}{\Prob{\SetA }}%
         \cdot
         \frac{\Prob{\SetA }}{\Prob{ \SetA_\OldOm}}
         \pth{2-  \frac{  \Prob{\SetA }} {\Prob{
-        \SetA_\OldOm}}}%
+                 \SetA_\OldOm}}}%
         \leq %
         \frac{1}{\Prob{\SetA }},
     \end{align*}    
