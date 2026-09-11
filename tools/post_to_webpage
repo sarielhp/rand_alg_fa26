@@ -1,0 +1,267 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "optparse"
+require "pathname"
+
+def find_repo_root(start_dir)
+  curr = File.expand_path(start_dir)
+  loop do
+    if Dir.exist?(File.join(curr, "notes")) && Dir.exist?(File.join(curr, "webpage"))
+      return curr
+    end
+    parent = File.dirname(curr)
+    break if parent == curr
+    curr = parent
+  end
+  File.expand_path("../..", __dir__)
+end
+
+REPO_ROOT    = find_repo_root(__dir__)
+NOTES_DIR    = File.join(REPO_ROOT, "notes")
+WEBPAGE_DIR  = File.join(REPO_ROOT, "webpage")
+LECTURES_DIR = File.join(WEBPAGE_DIR, "content", "lectures")
+TOOLS_DIR    = File.join(REPO_ROOT, "tools")
+SYNC_SCRIPT  = File.join(TOOLS_DIR, "webpage_copy")
+
+HUGO_BIN         = "hugo"
+HUGO_BUILD_FLAGS = ["--minify"].freeze
+PDF_DELIMITER    = ", "
+
+def collect_chapter_pdfs
+  chapter_pdfs = {}
+  Dir.glob(File.join(NOTES_DIR, "*", "*.pdf")).each do |pdf|
+    next if pdf.include?("/figs/") || pdf.include?("/refs/") || pdf.include?("/junk/") || pdf.include?("/styles/") || pdf.include?("/ai_notes/")
+    base = File.basename(pdf)
+    chapter_pdfs[base] = pdf
+  end
+  chapter_pdfs
+end
+
+def normalize_pdf_name(name)
+  clean = File.basename(name.to_s.strip)
+  clean = "alias_method.pdf" if clean =~ /alias/i
+  clean = clean.sub(/^\d+_/, "")
+  clean
+end
+
+def format_bytes(bytes)
+  return "0 B" unless bytes && bytes.positive?
+
+  if bytes < 1024
+    "#{bytes} B"
+  elsif bytes < 1024 * 1024
+    format("%.1f KB", bytes / 1024.0)
+  else
+    format("%.2f MB", bytes / (1024.0 * 1024.0))
+  end
+end
+
+def update_lecture_index(index_file, new_pdf_names, dry_run: false)
+  return false unless File.exist?(index_file)
+
+  content = File.read(index_file)
+  new_pdf_line = new_pdf_names.empty? ? 'pdf: ""' : "pdf: \"#{new_pdf_names.join(PDF_DELIMITER)}\""
+
+  if content =~ /\A(---\s*\n)(.*?\n)(---\s*\n?)(.*)\z/m
+    header = Regexp.last_match(1)
+    fm     = Regexp.last_match(2)
+    footer = Regexp.last_match(3)
+    body   = Regexp.last_match(4)
+
+    if fm =~ /^pdf:\s*(.*)$/
+      existing_line = Regexp.last_match(0).strip
+      return false if existing_line == new_pdf_line.strip
+
+      fm = fm.sub(/^pdf:\s*.*$/, new_pdf_line)
+    else
+      fm = "#{fm.chomp}\n#{new_pdf_line}\n"
+    end
+
+    new_content = "#{header}#{fm}#{footer}#{body}"
+  else
+    return false
+  end
+
+  File.write(index_file, new_content) unless dry_run
+  true
+end
+
+def process_lecture(dir_path, chapter_pdfs, options)
+  lec_name   = File.basename(dir_path)
+  index_file = File.join(dir_path, "index.md")
+  return nil unless File.exist?(index_file)
+
+  content  = File.read(index_file)
+  pdf_val  = content[/^pdf:\s*["']?(.*?)["']?$/, 1] || ""
+  tokens   = pdf_val.split(",").map(&:strip).reject(&:empty?)
+  return nil if tokens.empty?
+
+  copied_files  = []
+  new_pdf_names = []
+  removed_files = []
+
+  tokens.each do |t|
+    norm_name   = normalize_pdf_name(t)
+    source_path = chapter_pdfs[norm_name]
+
+    if source_path && File.exist?(source_path)
+      dest_path = File.join(dir_path, norm_name)
+      needs_copy = !File.exist?(dest_path) || File.size(dest_path) != File.size(source_path) || (File.mtime(dest_path) < File.mtime(source_path))
+
+      if needs_copy
+        unless options[:dry_run]
+          FileUtils.cp(source_path, dest_path)
+        end
+        copied_files << { name: norm_name, size: File.size(source_path), dest: dest_path }
+      end
+
+      new_pdf_names << norm_name
+
+      # Optional cleanup of superseded old numbered PDF if different
+      if options[:clean_old] && t != norm_name
+        old_path = File.join(dir_path, t)
+        if File.exist?(old_path)
+          FileUtils.rm_f(old_path) unless options[:dry_run]
+          removed_files << t
+        end
+      end
+    else
+      # If not found in notes, preserve existing reference
+      new_pdf_names << t
+    end
+  end
+
+  new_pdf_names.uniq!
+  fm_changed = (tokens != new_pdf_names)
+
+  if fm_changed
+    update_lecture_index(index_file, new_pdf_names, dry_run: options[:dry_run])
+  end
+
+  {
+    lec_name: lec_name,
+    copied: copied_files,
+    removed: removed_files,
+    new_pdf_names: new_pdf_names,
+    fm_changed: fm_changed,
+    changed: (!copied_files.empty? || fm_changed || !removed_files.empty?)
+  }
+end
+
+def main
+  options = {
+    build: true,
+    sync: true,
+    dry_run: false,
+    clean_old: false
+  }
+
+  parser = OptionParser.new do |opts|
+    opts.banner = "Usage: #{$PROGRAM_NAME} [options] [lecture_number ...]\n" \
+                  "Posts compiled chapter PDFs from notes/ to the course webpage."
+    opts.separator ""
+    opts.separator "Options:"
+    opts.on("--[no-]build", "Build Hugo webpage after updating (default: true)") { |v| options[:build] = v }
+    opts.on("--[no-]sync", "Deploy webpage to server using webpage_copy (default: true)") { |v| options[:sync] = v }
+    opts.on("--clean-old", "Remove old superseded PDF files (e.g. 03_quick_sort.pdf)") { options[:clean_old] = true }
+    opts.on("-n", "--dry-run", "Show what would be copied and updated without making changes") { options[:dry_run] = true }
+    opts.on("-h", "--help", "Show this help message") do
+      puts opts
+      exit 0
+    end
+  end
+
+  target_lecs = parser.parse(ARGV)
+
+  chapter_pdfs = collect_chapter_pdfs
+  if chapter_pdfs.empty?
+    warn "Error: No compiled chapter PDFs found in #{NOTES_DIR}. Run gen_pdf_all_chapters first."
+    exit 1
+  end
+
+  lecture_dirs = Dir.glob(File.join(LECTURES_DIR, "*")).select { |d| File.directory?(d) }.sort
+  if target_lecs.any?
+    targets = target_lecs.map { |t| sprintf("%02d", t.to_i) }
+    lecture_dirs.select! { |d| targets.include?(File.basename(d)) }
+  end
+
+  puts "=" * 68
+  puts "Posting Notes PDFs to Course Webpage"
+  puts "=" * 68
+  puts "Configuration:"
+  puts "  - Source Notes:    #{NOTES_DIR} (#{chapter_pdfs.size} PDFs available)"
+  puts "  - Webpage bundle:  #{LECTURES_DIR}"
+  puts "  - Target lectures: #{lecture_dirs.size} lecture directories"
+  puts "  - Rebuild Hugo:    #{options[:build]}"
+  puts "  - Deploy/Sync:     #{options[:sync]}"
+  puts "  - Mode:            #{options[:dry_run] ? '[DRY RUN]' : 'LIVE'}"
+  puts "=" * 68
+  puts ""
+
+  total_copied = 0
+  total_updated = 0
+
+  lecture_dirs.each do |lec_dir|
+    res = process_lecture(lec_dir, chapter_pdfs, options)
+    next unless res
+
+    prefix = sprintf("[%s]", res[:lec_name])
+    if res[:changed]
+      total_updated += 1
+      details = []
+      res[:copied].each do |c|
+        total_copied += 1
+        details << "Copied #{c[:name]} (#{format_bytes(c[:size])})"
+      end
+      details << "Updated front matter -> [#{res[:new_pdf_names].join(', ')}]" if res[:fm_changed]
+      details << "Cleaned old: #{res[:removed].join(', ')}" unless res[:removed].empty?
+
+      action_prefix = options[:dry_run] ? "[Dry-run] Would update" : "Updated"
+      puts "#{prefix} #{action_prefix}: #{details.join('; ')}"
+    else
+      puts "#{prefix} Up to date: [#{res[:new_pdf_names].join(', ')}]"
+    end
+  end
+
+  puts ""
+  puts "=" * 68
+  puts "Summary:"
+  puts format("  Lectures Checked: %d", lecture_dirs.size)
+  puts format("  Lectures Updated: %d", total_updated)
+  puts format("  PDF Files Copied: %d", total_copied)
+  puts "=" * 68
+
+  if total_updated.zero? && !options[:dry_run]
+    puts "\nAll lecture PDFs are already up to date on the webpage."
+  end
+
+  # Rebuild Hugo
+  if options[:build] && (total_updated > 0 || options[:dry_run])
+    puts "\n==> Building Hugo webpage..."
+    if options[:dry_run]
+      puts "[Dry-run] Would run: #{HUGO_BIN} #{HUGO_BUILD_FLAGS.join(' ')} -s #{WEBPAGE_DIR}"
+    else
+      system(HUGO_BIN, *HUGO_BUILD_FLAGS, "-s", WEBPAGE_DIR) || abort("Error: Hugo build failed.")
+    end
+  end
+
+  # Deploy / Sync
+  if options[:sync] && (total_updated > 0 || options[:dry_run])
+    if File.exist?(SYNC_SCRIPT)
+      puts "\n==> Deploying to server: #{SYNC_SCRIPT}..."
+      if options[:dry_run]
+        puts "[Dry-run] Would run: #{SYNC_SCRIPT}"
+      else
+        system(SYNC_SCRIPT) || abort("Error: Sync script failed.")
+      end
+    else
+      warn "Warning: Sync script #{SYNC_SCRIPT} not found."
+    end
+  end
+
+  puts "\nDone!"
+end
+
+main if __FILE__ == $PROGRAM_NAME
