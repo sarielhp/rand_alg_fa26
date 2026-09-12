@@ -21,14 +21,14 @@
 
 \ChapterPrefix{} \ChapterGen{}
 
-\QuoteExt{The memory of my father is wrapped up in\\
+\QuotePExt{The memory of my father is wrapped up in\\
    white paper, like sandwiches taken for a day at work.\\
-   ~\\begin{equation*}-0.2cm]
+   ~\\
    Just as a magician takes towers and rabbits\\
    out of his hat, he drew love from his small body,\\
-   ~\\begin{equation*}-0.2cm]
+   ~\\
    and the rivers of his hands\\
-   overflowed with good deeds.}{-- Yehuda Amichai, My Father.}
+   overflowed with good deeds.}{Yehuda Amichai}{My Father}
 
 
 
@@ -558,20 +558,22 @@ hope for recovery). Then an easy packing argument implies the claim.
        \corlab{q:integer:values}%
        % 
        We have:
-       \begin{tabular}{ll}
-         (i) $q \in [0, 1/2]$ $\Rightarrow$ $\binom{n}{\floor{nq}} \leq
-         2^{n \EntropyX{q}}$.
-         &
-           (ii) $q \in [1/2,1]$ $\binom{n}{\ceil{nq}} \leq 2^{n
-           \EntropyX{q}}$.
-         \\begin{equation*}0.1cm]
-         (iii)  $q \in [1/2,1]$ $\Rightarrow$ $\frac{2^{n \EntropyX{q}}}{n+1}
-         \leq \binom{n}{\floor{nq}}$.
-         &
-         (iv)
-         $q \in [0,1/2]$ $\Rightarrow$ $\frac{2^{n \EntropyX{q}}}{n+1}
-         \leq \binom{n}{\ceil{nq}}$.
-     \end{tabular}           
+       \begin{compactenumi}
+           \item $q \in [0, 1/2]$ $\Rightarrow$
+           $\binom{n}{\floor{nq}} \leq 2^{n \EntropyX{q}}$.
+
+           \item 
+           $q \in [1/2,1]$
+           $\binom{n}{\ceil{nq}} \leq 2^{n \EntropyX{q}}$.
+           
+           \item $q \in [1/2,1]$
+           $\Rightarrow$
+           $\frac{2^{n \EntropyX{q}}}{n+1} \leq
+           \binom{n}{\floor{nq}}$.
+           \item
+            $q \in [0,1/2]$
+           $\Rightarrow$ $\frac{2^{n \EntropyX{q}}}{n+1} \leq \binom{n}{\ceil{nq}}$.
+       \end{compactenumi}
 \end{corollary}
            
 \begin{theorem}

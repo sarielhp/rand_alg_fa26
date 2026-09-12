@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="144pt" height="144pt" viewBox="0 0 144 144">
+<path fill-rule="evenodd" fill="rgb(100%, 60.099792%, 60.099792%)" fill-opacity="1" stroke-width="0.4" stroke-linecap="butt" stroke-linejoin="round" stroke="rgb(40.79895%, 13.299561%, 54.499817%)" stroke-opacity="1" stroke-miterlimit="10" d="M 104 128 C 104 150.089844 86.089844 168 64 168 C 41.910156 168 24 150.089844 24 128 C 24 105.910156 41.910156 88 64 88 C 86.089844 88 104 105.910156 104 128 " transform="matrix(1, 0, 0, -1, 0, 144)"/>
+<path fill-rule="evenodd" fill="rgb(100%, 60.099792%, 60.099792%)" fill-opacity="1" d="M 160 24 C 160 1.910156 142.089844 -16 120 -16 C 97.910156 -16 80 1.910156 80 24 C 80 46.089844 97.910156 64 120 64 C 142.089844 64 160 46.089844 160 24 "/>
+<path fill-rule="evenodd" fill="rgb(100%, 60.099792%, 60.099792%)" fill-opacity="1" d="M 72 128 C 72 105.910156 54.089844 88 32 88 C 9.910156 88 -8 105.910156 -8 128 C -8 150.089844 9.910156 168 32 168 C 54.089844 168 72 150.089844 72 128 "/>
+<path fill-rule="evenodd" fill="rgb(100%, 60.099792%, 60.099792%)" fill-opacity="1" d="M 64 88 C 64 65.910156 46.089844 48 24 48 C 1.910156 48 -16 65.910156 -16 88 C -16 110.089844 1.910156 128 24 128 C 46.089844 128 64 110.089844 64 88 "/>
+</svg>

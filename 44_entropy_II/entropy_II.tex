@@ -479,33 +479,24 @@ a prefix code, like the Huffman code.
 \StandAloneMode{
 \section{From previous lecture}
 \begin{corollary}
+    \corlab{q:integer:values}%
+    %
      We have:
-     \begin{tabular}{ll}
-        (i) $q \in [0, 1/2]$ $\Rightarrow$ $\binom{n}{\floor{nq}} \leq
-        2^{n \Entropy{q}}$. &
-        (ii) $q \in [1/2,1]$ $\binom{n}{\ceil{nq}} \leq 2^{n
+     \begin{compactenumi}
+         \item $q \in [0, 1/2]$ $\Rightarrow$ $\binom{n}{\floor{nq}} \leq
+        2^{n \Entropy{q}}$. 
+
+        \item $q \in [1/2,1]$ $\binom{n}{\ceil{nq}} \leq 2^{n
            \Entropy{q}}$.
-        \\begin{equation*}0.1cm]
-        (iii)  $q \in [1/2,1]$ $\Rightarrow$ $\frac{2^{n \Entropy{q}}}{n+1}
+
+        \item  $q \in [1/2,1]$ $\Rightarrow$ $\frac{2^{n \Entropy{q}}}{n+1}
         \leq \binom{n}{\floor{nq}}$.
-        &
-        (iv)
+
+        \item
         $q \in [0,1/2]$ $\Rightarrow$ $\frac{2^{n \Entropy{q}}}{n+1}
         \leq \binom{n}{\ceil{nq}}$.
-    \end{tabular}
-    
-    \corlab{q:integer:values}
+    \end{compactenumi}
 \end{corollary}
-
-\remove{
-\begin{lemma}
-    Suppose that $nq$ is integer in the range $[0,n]$. Then
-    $\displaystyle \frac{2^{n\Entropy{q}}}{n+1} \leq \binom{n}{nq}
-    \leq 2^{n \Entropy{q}}$.
-
-    \lemlab{q:values}
-\end{lemma}
-}
 }
 \section{Bibliographical Notes}
 

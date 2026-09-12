@@ -369,10 +369,6 @@ quite surprising.
     into, just after it was inserted.
 \end{defn}
 
-\newcommand{\binsY}[2]{\sqcup_{\geq #1}\pth{#2}}
-\newcommand{\ballsY}[2]{\text{\Football}_{\geq #1}\pth{#2}}
-
-\newcommand{\BLX}[1]{{{\sqcupplus{}}_{\geq #1}}}
 %\newcommand{\UBLX}[1]{\Mh{u}_{\geq #1}}%
 
 Some notations:
@@ -466,13 +462,18 @@ process, that have load $\geq i$.
       \Prob{\BadEvent_{i+1}}%{\cap_{k=1}^i\overline{\BadEvent_{1}}}%
       &=% 
         \Prob{\ballsY{i+1}{n} > \beta_{i+1}}%
+        \\&
         =%
         \Prob{\ballsY{i+1}{n} > 2np_i}
+        \\&
         \leq 
-        \Prob{\Bigl. \smash{\sum_i} Y_t' > (1+1)n p_i}%
-      \\&%
+        \Prob{ \textstyle{\sum_i} Y_t' > (1+1)n p_i}%
+        \\&
+        % \\&%
       \leq%
-      \exp\pth{ -np_i/4}= \exp(-\beta_{i+1}/8) < 1/n^{2c}.
+      \exp( -n p_i/4 )
+      =
+      \exp(-\beta_{i+1}/8) < 1/n^{2c}.
     \end{align*}
 
     (B) We have $\beta_{I+1} \leq 16 c \log n$.  Setting
@@ -655,7 +656,7 @@ The following proof is informal for the sake of simplicity.
 \end{proof}
 
 \begin{figure}
-    \centerline{%
+    \centering%
        \begin{tabular}{|c|c|c|c|}
          \hline
          \# balls in bin & Regular & $2$-choices & $2$-choices+go left\\ 
@@ -678,7 +679,6 @@ The following proof is informal for the sake of simplicity.
          \\
          \hline
        \end{tabular}%
-    }%
     \caption{Simulation of the three schemes described here. This was
     done with $n=1,000,000,000$ balls thrown into $n$ bins. Since
     $\log \log n$ is so small (i.e., $\approx 3$ in this case, there
