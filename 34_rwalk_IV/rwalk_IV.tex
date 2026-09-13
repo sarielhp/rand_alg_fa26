@@ -52,7 +52,7 @@ $\CoverTime(\Graph)$.
 \end{proof}
 
 \begin{defn}
-    The \emphi{resistance} of $\Graph$ is $\Resistance(\Graph) =
+    The \emphOnly{resistance}\index{resistance} of $\Graph$ is $\Resistance(\Graph) =
     \max_{u,v \in V(\Graph)} \EffectResist{u}{v}$; namely, it is the
     maximum effective resistance in $\Graph$.
 \end{defn}
@@ -73,7 +73,7 @@ $\CoverTime(\Graph)$.
     \Resistance(\Graph)$.
 
     As for the upper bound. Consider a random walk, and divide it into
-    \emphi{epochs}, where a epoch is a random walk of length
+    \emphOnly{epochs}\index{epochs}, where a epoch is a random walk of length
     $2e^3 m \Resistance(\Graph)$. For any vertex $v$, the expected
     time to hit $u$ is
     $\MCExSteps{v}{u} \leq 2 m \Resistance(\Graph)$, by
@@ -152,13 +152,13 @@ inequality.
 
     Any sequence of symbols $\sigma= (\sigma_1, \sigma_2, \ldots)$
     from $\brc{1,\ldots, d}$ together with a starting vertex $s$ in a
-    labeled graph describes a \emphi{walk} in the graph. For our
+    labeled graph describes a \emphOnly{walk}\index{walk} in the graph. For our
     purposes, such a walk would almost always be finite.
 
-    A sequence $\sigma$ is said to \emphi{traverse} a labeled graph if
+    A sequence $\sigma$ is said to \emphOnly{traverse}\index{traverse} a labeled graph if
     the walk visits every vertex of $\Graph$ regardless of the
     starting vertex. A sequence $\sigma$ is said to be a
-    \emphi{universal traversal sequence} of a labeled graph if it
+    \emphOnly{universal traversal sequence}\index{universal traversal sequence} of a labeled graph if it
     traverses all the graphs in this class.
 \end{defn}
 

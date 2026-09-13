@@ -1,0 +1,126 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{57}{490}
+
+\Chapter{Algorithmic Version of \Lovasz Local Lemma}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+\SaveIndent%
+\QuoteExt{%
+   \RestoreIndent%
+   As for me, they took away my toy merchant, wishing with him to
+   banish all toys from the world.%
+}%
+{The tin drum}%
+{Gunter Grass}
+
+
+\section{Introduction} 
+
+\newcommand{\Vars}{\Mh{\EuScript{P}}}%
+% \renewcommand{\Event}{\EuScript{E}}%
+\newcommand{\BEvent}{\Mh{{B}}}%
+\newcommand{\BEventA}{\Mh{{C}}}%
+\newcommand{\BEventSet}{\Mh{\mathcal{B}}}%
+\newcommand{\SetVars}{\Mh{S}}%
+\newcommand{\vblX}[1]{\mathrm{v{b}l}\pth{#1}}%
+\newcommand{\NbrX}[1]{\Mh{\Gamma}\pth{#1}}%
+\newcommand{\NbrCX}[1]{\Mh{\Gamma_{\!\!+}}\pth{#1}}%
+
+Let $\Vars$ be a collection of independent random variables in some
+probability space $\Omega$. We are interested in (bad) events that are
+determined by these variables. Specifically, for an event $\BEvent$,
+there is a set of variables $\SetVars \subseteq \Vars$ that determine
+if $\BEvent$ happens. There minimal such set of variables is denoted
+by $\vblX{\BEvent}$ (note, that it is unique). We assume that the set
+$\vblX{\BEvent}$ is either easily computable or available, for any
+event of interest.
+
+Consider a (finite) family $\BEventSet$ of such (bad) events. The
+\emphi{dependency graph} $\Graph = \Graph(\BEventSet)$, with the
+vertices being the events of $\BEventSet$, and two events
+$\BEvent_1,\BEvent_2 \in \BEventSet$ are connected by an edge $\iff$
+$\vblX{\BEvent_1} \cap \vblX{\BEvent_2} \neq \emptyset$. Let
+$\NbrX{\BEvent}$ be all the neighbors $\BEvent$ in $\Graph$, and let
+$\NbrCX{\BEvent} = \brc{\BEvent} \cup \NbrX{\BEvent}$. Observe that
+$\BEvent$ is independent of the events in
+$\BEventSet \setminus \pth{\brc{ \BEvent } \cup \NbrX{\BEvent}}$.
+
+A specific assignment to the variables of
+$\SetVars$ \emphi{violates} $\BEvent$, if it causes it to happen
+(remember, it is a bad event). 
+
+\paragraph*{Task.}
+Our purpose is to compute an assignment to the variables of $\Vars$,
+such that none of the bad events of $\BEventSet$ happens.
+
+\paragraph*{Algorithm.}
+Initially, the algorithm assigns the variables of $\Vars$ random
+values. As long as there is a violated event $\BEvent \in \BEventSet$,
+resample all the variables of $\vblX{\BEvent}$ (independently
+according to their own distributions) -- this is a \emphi{resampling}
+of $\BEvent$. The algorithm repeats this till no event is violated.
+
+\paragraph*{Finer details.}
+We fix some arbitrary strategy (randomized or deterministic) of how to
+pick the next event. This now fully specify the algorithm.
+
+\begin{remark_unnumbered}
+    Of course, it is not clear that the algorithm would always
+    succeeds. Let us just assume, for the time being, that we are in a
+    case where the algorithm always finds a good assignment (which
+    always exists).
+\end{remark_unnumbered}
+
+
+%-----------------------------------------------------------------------
+
+\newcommand{\ELogChar}{\Mh{L}}%
+\newcommand{\ELogX}[1]{\ELogChar\pth{#1}}%
+
+\subsection{Analysis}
+
+Let $\ELogX{i} \in \BEventSet$ be the event that was resampled in the
+$i$\th iteration of the algorithm, for $i > 0$. The sequence formed by
+$\ELogChar$ is the \emphi{log} of the execution.
+
+
+A \emphi{witness tree} $\Tree = (T, \sigma_T)$ is a rooted tree $T$
+together with a labeling $\sigma_T$. Here, every node $v \in T$ is
+labeled by an event $\sigma_T(v) \in\BEventSet$. If a node $u$ is a
+child of $v$ in $\Tree$, then $\sigma_T(u) \in \NbrCX{v}$.  Two nodes
+in a tree are \emphi{siblings} if they have a common parent. If all
+siblings have distinct labels then the witness tree is \emphi{proper}.
+
+For a vertex $v$ of $\Tree$, let $[v] = \sigma^{}_T(v)$.
+
+\begin{theorem}
+    Let $\Vars$ be a finite set of independent random variables in a
+    probability space, and let $\BEventSet$ be a set of (bad) events
+    determined by these variables. If there is an assignment
+    $x:\BEventSet \rightarrow (0,1)$, such that
+    \begin{equation*}
+        \forall \BEvent \in \BEventSet%
+        \qquad %
+        \Prob{\BEvent} \leq x(\BEvent) \prod_{\BEventA \in
+           \NbrX{\BEvent}} \bigl( 1 - x(\BEventA) \bigr),
+    \end{equation*}
+    then there exists an assignment for the variables of $\Vars$ such
+    that no event in $\BEventSet$ happens. Furthermore, in
+    expectation, the algorithm described above resamples, any event
+    $\BEvent \in \BEventSet$, at most
+    $x(\BEvent)/ \bigl(1-x(\BEvent) \bigr)$ times. Overall, the
+    expected number of resampling steps is at most
+    $\sum_{\BEvent\in\BEventSet} x(\BEvent) / \bigl(1-x(\BEvent)
+    \bigr)$.
+\end{theorem}
+
+\ChapterEnd{}
+

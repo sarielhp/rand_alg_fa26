@@ -110,7 +110,8 @@ random walk on $\Graph$. The graph $\Graph$ is connected, but it might
 be periodic (i.e., bipartite). To overcome this, consider the random
 walk on $\Graph$ that either stay in the current state with
 probability $1/2$ or traverse one of the edges. Clearly, the resulting
-Markov Chain (\MC) is aperiodic. The resulting \emphi{transition
+Markov Chain (\MC) is aperiodic. The resulting \emphOnly{transition
+   matrix}\index{transition
    matrix} is
 \begin{equation*}
     \TMtrx = \Mtrx / 2d + \IMtrx/2,
@@ -148,7 +149,8 @@ probability.
 \begin{defn}
     Let $\DstrbV{t}$ denote the state probability vector of a Markov
     chain defined by a transition matrix $\TMtrx$ at time $t \geq 0$,
-    given an initial distribution $\DstrbV{0}$. The \emphi{relative
+    given an initial distribution $\DstrbV{0}$. The \emphOnly{relative
+       pairwise distance}\index{relative
        pairwise distance} of the Markov chain at time $t$ is
     \begin{equation*}
         \Delta(t)%
@@ -162,7 +164,7 @@ probability.
 We remind the reader that we saw a construction of a constant degree
 expander with constant expansion. In its transition matrix $\TMtrx$,
 we have that $\TEV{1} = 1$, and $-1 \leq \TEV{2} <1$, and furthermore
-the \emphi{spectral gap} $\TEV{1} - \TEV{2}$ was a constant (the two
+the \emphOnly{spectral gap}\index{spectral gap} $\TEV{1} - \TEV{2}$ was a constant (the two
 properties are equivalent, but we proved only one direction of this).
 
 We need a slightly stronger property (that does hold for our expander
@@ -351,7 +353,7 @@ other along the path of the random walk.  We return the majority of
 the bits $Y_0, \ldots, Y_{\alpha k}$ as the decision of whether $x \in
 L$ or not.
 
-We assume here that we have a \emphi{fully explicit} construction of
+We assume here that we have a \emphOnly{fully explicit}\index{fully explicit} construction of
 an expander. That is, given a vertex of an expander, we can compute
 all its neighbors in polynomial time (in the length of the index of
 the vertex). While the construction of expander shown is only explicit

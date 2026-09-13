@@ -24,15 +24,15 @@
 
 \section{Introduction} 
 
-\newcommand{\Vars}{\Mh{\EuScript{P}}}%
+\newcommand{\Vars}{\EuScript{P}}%
 % \renewcommand{\Event}{\EuScript{E}}%
-\newcommand{\BEvent}{\Mh{{B}}}%
-\newcommand{\BEventA}{\Mh{{C}}}%
-\newcommand{\BEventSet}{\Mh{\mathcal{B}}}%
-\newcommand{\SetVars}{\Mh{S}}%
+\newcommand{\BEvent}{{B}}%
+\newcommand{\BEventA}{{C}}%
+\newcommand{\BEventSet}{\mathcal{B}}%
+\newcommand{\SetVars}{S}%
 \newcommand{\vblX}[1]{\mathrm{v{b}l}\pth{#1}}%
-\newcommand{\NbrX}[1]{\Mh{\Gamma}\pth{#1}}%
-\newcommand{\NbrCX}[1]{\Mh{\Gamma_{\!\!+}}\pth{#1}}%
+\newcommand{\NbrX}[1]{\Gamma\pth{#1}}%
+\newcommand{\NbrCX}[1]{\Gamma_{\!\!+}\pth{#1}}%
 
 Let $\Vars$ be a collection of independent random variables in some
 probability space $\Omega$. We are interested in (bad) events that are
@@ -44,7 +44,7 @@ $\vblX{\BEvent}$ is either easily computable or available, for any
 event of interest.
 
 Consider a (finite) family $\BEventSet$ of such (bad) events. The
-\emphi{dependency graph} $\Graph = \Graph(\BEventSet)$, with the
+\emphOnly{dependency graph}\index{dependency graph} $\Graph = \Graph(\BEventSet)$, with the
 vertices being the events of $\BEventSet$, and two events
 $\BEvent_1,\BEvent_2 \in \BEventSet$ are connected by an edge $\iff$
 $\vblX{\BEvent_1} \cap \vblX{\BEvent_2} \neq \emptyset$. Let
@@ -54,7 +54,7 @@ $\BEvent$ is independent of the events in
 $\BEventSet \setminus \pth{\brc{ \BEvent } \cup \NbrX{\BEvent}}$.
 
 A specific assignment to the variables of
-$\SetVars$ \emphi{violates} $\BEvent$, if it causes it to happen
+$\SetVars$ \emphOnly{violates}\index{violates} $\BEvent$, if it causes it to happen
 (remember, it is a bad event). 
 
 \paragraph*{Task.}
@@ -65,7 +65,7 @@ such that none of the bad events of $\BEventSet$ happens.
 Initially, the algorithm assigns the variables of $\Vars$ random
 values. As long as there is a violated event $\BEvent \in \BEventSet$,
 resample all the variables of $\vblX{\BEvent}$ (independently
-according to their own distributions) -- this is a \emphi{resampling}
+according to their own distributions) -- this is a \emphOnly{resampling}\index{resampling}
 of $\BEvent$. The algorithm repeats this till no event is violated.
 
 \paragraph*{Finer details.}
@@ -82,22 +82,22 @@ pick the next event. This now fully specify the algorithm.
 
 %-----------------------------------------------------------------------
 
-\newcommand{\ELogChar}{\Mh{L}}%
+\newcommand{\ELogChar}{L}%
 \newcommand{\ELogX}[1]{\ELogChar\pth{#1}}%
 
 \subsection{Analysis}
 
 Let $\ELogX{i} \in \BEventSet$ be the event that was resampled in the
 $i$\th iteration of the algorithm, for $i > 0$. The sequence formed by
-$\ELogChar$ is the \emphi{log} of the execution.
+$\ELogChar$ is the \emphOnly{log}\index{log} of the execution.
 
 
-A \emphi{witness tree} $\Tree = (T, \sigma_T)$ is a rooted tree $T$
+A \emphOnly{witness tree}\index{witness tree} $\Tree = (T, \sigma_T)$ is a rooted tree $T$
 together with a labeling $\sigma_T$. Here, every node $v \in T$ is
 labeled by an event $\sigma_T(v) \in\BEventSet$. If a node $u$ is a
 child of $v$ in $\Tree$, then $\sigma_T(u) \in \NbrCX{v}$.  Two nodes
-in a tree are \emphi{siblings} if they have a common parent. If all
-siblings have distinct labels then the witness tree is \emphi{proper}.
+in a tree are \emphOnly{siblings}\index{siblings} if they have a common parent. If all
+siblings have distinct labels then the witness tree is \emphOnly{proper}\index{proper}.
 
 For a vertex $v$ of $\Tree$, let $[v] = \sigma^{}_T(v)$.
 

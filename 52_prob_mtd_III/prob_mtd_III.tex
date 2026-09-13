@@ -50,7 +50,7 @@ let $P(v)$ be the probability that a random computation starting from
 $v$ succeeds -- here randomly assigning the remaining bits can be
 interpreted as a random walk down the tree to a leaf.
 
-Formally, the algorithm is \emphi{successful} if ends up with a vector
+Formally, the algorithm is \emphOnly{successful}\index{successful} if ends up with a vector
 $\vecA$, such that
 $\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$.
 
@@ -295,13 +295,13 @@ The following problem has a long and very painful
 history. It is truly amazing that it can be solved by such a
 short and elegant proof. 
 
-And \emphi{embedding} of a graph $\Graph = (\Vertices, \Edges)$ in the
+And \emphOnly{embedding}\index{embedding} of a graph $\Graph = (\Vertices, \Edges)$ in the
 plane is a planar representation of it, where each vertex is
 represented by a point in the plane, and each edge $u v$ is
 represented by a curve connecting the points corresponding to the
-vertices $u$ and $v$. The \emphi{crossing number} of such an embedding
+vertices $u$ and $v$. The \emphOnly{crossing number}\index{crossing number} of such an embedding
 is the number of pairs of intersecting curves that correspond to pairs
-of edges with no common endpoints. The \emphi{crossing number}
+of edges with no common endpoints. The \emphOnly{crossing number}\index{crossing number}
 $\CR(\Graph)$ of $\Graph$ is the minimum possible crossing number in
 an embedding of it in the plane.
 
@@ -437,15 +437,15 @@ Let $\LineSet$ be a set of $n$ lines in the plane. Assume, without
 loss of generality, that no three lines of $\LineSet$ pass through a
 common point, and none of them is vertical. The complement of union of
 lines $\LineSet$ break the plane into regions known as
-\emphi{faces}. An intersection of two lines, is a \emphi{vertex}, and
+\emphOnly{faces}\index{faces}. An intersection of two lines, is a \emphOnly{vertex}\index{vertex}, and
 the maximum interval on a line between two vertices is am
-\emphi{edge}. The whole structure of vertices, edges and faces induced
-by $\LineSet$ is known as \emphi{arrangement} of $\LineSet$, denoted
+\emphOnly{edge}\index{edge}. The whole structure of vertices, edges and faces induced
+by $\LineSet$ is known as \emphOnly{arrangement}\index{arrangement} of $\LineSet$, denoted
 by $\ArrX{\LineSet}$.
 
 
 Let $\LineSet$ be a set of $n$ lines in the plane. A point $\pnt \in
-\bigcup_{\Line \in \LineSet} \Line$ is of \emphi{level} $k$ if there
+\bigcup_{\Line \in \LineSet} \Line$ is of \emphOnly{level}\index{level} $k$ if there
 are $k$ lines of $\LineSet$ strictly below it. The
 \emphic{$k$-level}{level!k@$k$-level} is the closure of the set of
 points of level $k$. Namely, the $k$-level is an $x$-monotone curve

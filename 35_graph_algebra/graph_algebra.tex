@@ -30,18 +30,18 @@ edges between the vertices $v_i$ and $v_j$. If $\Graph$ is bipartite,
 we assume that $V$ is made out of two independent sets $X$ and $Y$. In
 this case the matrix $\Mtrx(\Graph)$ can be written in block form.
 
-\newcommand{\MA}{\Mh{\mathsf{N}}}%
+\newcommand{\MA}{\mathsf{N}}%
 \subsection{Eigenvalues and eigenvectors}
 
 A non-zero vector $v$ is an eigenvector of $\Mtrx$, if there is a
-value $\lambda$, known as the \emphi{eigenvalue} of $v$, such that
+value $\lambda$, known as the \emphOnly{eigenvalue}\index{eigenvalue} of $v$, such that
 $\Mtrx v = \lambda v$. That is, the vector $v$ is mapped to zero by
 the matrix $\MA = \Mtrx - \lambda I$. This happens only if $\MA$ is
 not full ranked, which in turn implies that $\det(\MA)=0$. We have
 that $f(\lambda ) =\det(\Mtrx - \lambda I)$ is a polynomial of degree
 $n$. It has $n$ roots (not necessarily real), which are the
-\emphi{eigenvalues} of $\Mtrx$. A matrix $\MA \in \Re^{n\times n}$ is
-\emphi{symmetric} if $\MA^T = \MA$.
+\emphOnly{eigenvalues}\index{eigenvalues} of $\Mtrx$. A matrix $\MA \in \Re^{n\times n}$ is
+\emphOnly{symmetric}\index{symmetric} if $\MA^T = \MA$.
 
 \begin{lemma}
     The eigenvalues of a symmetric real matrix $\MA \in \Re^{n \times

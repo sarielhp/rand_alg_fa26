@@ -48,7 +48,8 @@ $\NXExt{v}{\Graph}{i} = \NX{v}{i}$ the $i$\th neighbor of $v$ in the
 graph $\Graph$ (we order the neighbors of a vertex in an arbitrary
 order).
 
-The regular graphs we next discuss have \emphi{consistent
+The regular graphs we next discuss have \emphOnly{consistent
+   labeling}\index{consistent
    labeling}. That is, for a regular graph $\Graph$ (we assume here
 that $\Graph$ is regular). This means that if $u$ is the $i$\th
 neighbor $v$ then $v$ is the $i$\th neighbor of $u$. Formally, this
@@ -97,12 +98,12 @@ $\Graph$ by a copy of $\GraphB$.  The new graph $\GraphC$ has
 $\RangeI{n}\times\RangeI{D}$ as a vertex set.  Here, the edge $v u \in
 V(\Graph)$, where $u=v[i]$ and $v=u[j]$, is replaced by the edge
 connecting $(v,i) \in V(\GraphC)$ with $(u,j) \in V(\GraphC)$. We will
-refer to this resulting edge $(v,i)(u,j)$ as a \emphi{long}
+refer to this resulting edge $(v,i)(u,j)$ as a \emphOnly{long}\index{long}
 edge. Also, we copy all the edges of the small graph to each one of
 its copies. That is, for each $i\in \RangeI{n}$, and $uv \in
 E(\GraphB)$, we add the edge $(i,u) (i,v)$ to $\GraphC$, which is a
-\emphi{short} edge. We will refer to $\GraphC$, which is a $(nD,
-d+1)$-graph, as a \emphi{replacement product} of $\Graph$ and
+\emphOnly{short}\index{short} edge. We will refer to $\GraphC$, which is a $(nD,
+d+1)$-graph, as a \emphOnly{replacement product}\index{replacement product} of $\Graph$ and
 $\GraphB$, denoted by $\RProd{\Graph}{\GraphB}$. See \figref{replacement}
 for an example.
 
@@ -117,7 +118,7 @@ Again, intuitively, we are losing because the expansion of the
 resulting graph had deteriorated too much. To overcome this problem,
 we will perform local shortcuts to shorten the  paths in the
 resulting graph (and thus improve its expansion properties). A
-\emphi{zig-zag-zig path} in the replacement product graph $\GraphC$,
+\emphOnly{zig-zag-zig path}\index{zig-zag-zig path} in the replacement product graph $\GraphC$,
 is a three edge path $e_1 e_2 e_3$, where $e_1$ and $e_3$ are short
 edges, and the middle edge $e_2$ is a long edge.  That is, if $e_1 =
 (i,u) (i,v)$, $e_2 = (i,v)(j,v')$, and $e_3=(j,v')(j,u')$, then $e_1,
@@ -152,12 +153,12 @@ the graph $\GraphD = (V(\GraphC), Z)$. The graph $\GraphD$ has $nD$
 vertices, and it is $d^2$ regular. Furthermore, since we shortcut all
 these zig-zag-zig paths in $\GraphC$, the graph $\GraphD$ is a much
 better expander (intuitively) than $\GraphC$. We will refer to the
-graph $\GraphD$ as the \emphi{zig-zag} product of $\Graph$ and
+graph $\GraphD$ as the \emphOnly{zig-zag}\index{zig-zag} product of $\Graph$ and
 $\GraphB$.
 
 
 \begin{defn}
-    The \emphi{zig-zag product} of $(n,D)$-graph $\Graph$ and a
+    The \emphOnly{zig-zag product}\index{zig-zag product} of $(n,D)$-graph $\Graph$ and a
     $(D,d)$-graph $\GraphB$, is the $(nD, d^2)$ graph $\GraphD =
     \ZProd{\Graph}{\GraphB}$, where the set of vertices is
     $\RangeI{n}\times\RangeI{D}$ and for any $v \in \RangeI{n}$, $i
@@ -282,7 +283,7 @@ We next bound the tension of the zig-zag product graph.
 \subsection{Squaring}
 
 The last component in our construction, is
-\emphi{squaring}{squaring!graph} a graph. Given a $(n,d)$-graph
+\emphOnly{squaring}\index{squaring}{squaring!graph} a graph. Given a $(n,d)$-graph
 $\Graph$, consider the multigraph $\Graph^2$ formed by connecting any vertices
 connected in $\Graph$ by a path of length $2$. Clearly, if $\Mtrx$ is
 the adjacency matrix of $\Graph$, then the adjacency matrix of

@@ -1,0 +1,1387 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{55}{467}
+
+\Chapter{Talagrand's Inequality}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+\SaveIndent%
+\QuotePExt{%
+   \RestoreIndent%
+   At an archaeological site I saw fragments of precious vessels, well
+   cleaned and groomed and oiled and spoiled. And beside it I saw a
+   heap of discarded dust which wasn't even good for thorns and
+   thistles to grow on.
+
+   I asked: What is this gray dust which has been pushed around and
+   sifted and tortured and then thrown away?
+
+   I answered in my heart: This dust is people like us, who during
+   their lifetime lived separated from copper and gold and marble
+   stones and all other precious things - and they remained so in
+   death. We are this heap of dust, our bodies, our souls, all the
+   words in our mouths, all hopes.%
+}%
+{At an archaeological site}%
+{Yehuda Amichai}
+
+
+\section{Introduction} 
+
+Here, we want to prove a strong concentration inequality that is
+stronger than Azuma's inequality because it is independent of the
+underlying dimension of the process. This inequality is quite subtle,
+so we will need a quite elaborate way to get to it -- be patient.
+
+%^\newcommand{\vx}{\mathbf{x}}%
+%\newcommand{\pntA}{\mathbf{y}}%
+
+\subsection{Talangrand's inequality, and the $T$-distance}
+
+For two numbers $x,y$, let $[x\neq y]$ be $1$ if $x \neq y$, and $0$
+otherwise.  For two points
+\begin{math}
+    \pnt = (\pntCoord_1, \ldots, \pntCoord_d),%
+    \pntA = (\pntCoordA_1, \ldots, \pntCoordA_d) \in \Re^d,
+\end{math}
+let $H(\pnt,\pntA)$ be the binary vector in $\brc{0,1}^n$ that encodes
+the coordinates where they are different. Formally, we have
+\begin{equation}
+  H(\pnt,\pntA)%
+  =%
+  \pth{\Bigl. [\pntCoord_1 \neq \pntCoordA_1],
+  [\pntCoord_2 \neq \pntCoordA_2], \ldots,
+  [\pntCoord_d \neq \pntCoordA_d]}.
+\end{equation}
+For example $H\bigl( (1,2,3), (0.1,2,-1) \bigr) = (1,0,1)$.  Given a
+set $\SetA \subseteq \Re^d$, and a point $\pnt \in \Re^d$, let
+\begin{equation}
+    \HSetY{\pnt}{\SetA} = \Set{H(\pnt,\pntA)}{\pntA \in \SetA}.%
+    %
+    \eqlab{t:c:change}%    
+\end{equation}
+To understand this mysterious set, consider a point $\pnt \in \Re^d$.
+If $\pnt \in \SetA$, then
+$(0, \ldots, 0) = H(\pnt,\pnt) \in \HSetY{\pnt}{\SetA}$ (which would
+be an uninteresting case). Otherwise, every binary point
+$\pntC \in \HSetY{\pnt}{\SetA} $ specifies which coordinates in $\pnt$
+one has to change, so that one can move to a point that belongs to
+$\SetA$.
+
+A natural measure of the distance of $p$ from $\SetA$, is then to ask
+for the vector that minimizes the \emph{Hamming distance} from the
+origin to $\HSetY{\pnt}{\SetA}$ -- that is, the minimum number of
+coordinates one has to change in $\pnt$ to get to a point of
+$\SetA$.
+
+This distance measure is not informative. Think about
+$\HSetY{\pnt}{\SetA} = \brc{(0,1) }$ and
+$\HSetY{\pnt}{\SetA'}= \brc{(0,1), \, (1,0)}$. In this case, the
+Hamming measure would rank both sets as being of equal quality (i.e.,
+$1$). But clearly, $\SetA'$ is closer -- there are two different ways
+to get from $\pnt$ to some point of $\SetA'$ by changing a single
+coordinate.
+
+To capture this intuition, we consider the \emphi{convex-hull} of
+these sets:
+\begin{align*}
+  \CHSetY{\pnt}{\SetA} = \CHX{ \bigl.\Set{H(\pnt,\pntA)}{\pntA \in \SetA}}.
+\end{align*}
+\newcommand{\distTY}[2]{\Mh{\rho}\pth{#1, #2}}%
+\newcommand{\distTSqY}[2]{\Mh{\rho^2}\pth{#1, #2}}%
+And the corresponding \emphi{$T$-distance}
+\begin{equation}
+    \distTY{\pnt}{\SetA} = \min_{\pntA \in \CHSetY{\pnt}{\SetA}}
+    \norm{\pntA}.
+\end{equation}
+
+\begin{observation}
+    An easy upper bound on the $T$-distance of $\pnt$ to a set $\SetA$
+    (i.e., $\distTY{\pnt}{\SetA}$) is the minimum number of
+    coordinates one has to change in $\pnt$ to get to a point in
+    $\SetA$. As the next example shows, however, things are more
+    subtle -- if there are many different ways to get from $\pnt$ to a
+    point in $\SetA$, then the $T$-distance is going to be
+    significantly smaller.
+\end{observation}
+
+
+\begin{example}
+    It would be useful to understand this somewhat mysterious
+    $T$-distance. To this end, consider the ball in $\Re^d$ of radius
+    $100d$ centered in the origin, denote by $\Ball $, and let
+    $\SetA =\bd \Ball$ be its boundary sphere. For a point
+    $\pnt \in \mathrm{int} \Ball$, we have that
+    \begin{equation*}
+        H = \HSetY{\pnt}{\SetA} = \brc{0,1}^d \setminus \brc{(0,0, \ldots,
+           0)}.
+    \end{equation*}
+    As such $C= \HSetY{\pnt}{\SetA}$ is the convex-hull of all the
+    hypercube vertices, excluding the origin. it is easy to check that
+    the closest point in $C$ to the origin is the point
+    $\pntA = (1/d, 1/d, \ldots, 1/d)$, As such, we have that
+    $\distTY{\pnt}{\SetA} = \norm{\pntA} = \sqrt{1/d} = 1/\sqrt{d}$.
+
+    In particular, by monotonicity this implies that for any set
+    $\SetB$ in $\Re^d$ we have that $\distTY{\pnt}{\SetB}$ is either
+    $0$ (i.e., $\pnt \in \SetB$), or alternatively,
+    $\distTY{\pnt}{\SetB} \geq 1/\sqrt{d}$. Similarly,
+    $\distTY{\pnt}{\SetB} \leq \sqrt{d}$ as this is the maximum
+    distance from the origin to any vertex of the hypercube
+    $\brc{0,1}^d$.
+
+    As a concrete example, for the set $\SetA = \bd \Ball$, and the
+    point 
+    \begin{equation*}
+        \pnt = (200d,\ldots, 200d),
+    \end{equation*}
+     we have
+    $\distTY{\pnt}{\SetA} = \sqrt{d}$.
+\end{example}
+
+
+In the following, think about the dimension $d$ as being quite
+large. As such, the distance $1/\sqrt{d}$ is quite small. In
+particular, for a set $\SetA \subseteq \Re^d$, let
+\begin{equation*}
+    \SetA_t = \Set{ \pnt \in \Re^d}{\distTY{\pnt}{\SetA} \leq t},
+\end{equation*}
+be the expansion of $\SetA$ by including points that are in distance
+at most $t$ from $\SetA$ in the $T$-distance.
+
+Since we interested in probability here, consider $\Re^d$ to be the
+product of $d$ probability spaces. Formally, let $\Omega_i$ be a
+probability space, and consider the product probability space
+$\Omega = \prod_{i=1}^d \Omega_i$. As we are given a probability
+measure on each $\Omega_i$, this defines a natural probability measure
+on $\Omega$. That is, a point from $\Omega$ is generated by packing
+each of its coordinates independently from $\Omega_i$. for
+$i=1,\ldots, d$.
+
+The \emphi{volume} of a set $\SetA \subseteq \Omega$ is thus
+$\Prob{\SetA}$. We are now ready to state Talagrand inequality (not
+that it is going to help us much).
+
+\newcommand{\TalagrandBody}{%
+    X }%
+
+\begin{theorem}[Talagrand's inequality]
+    \thmlab{Talagrand:inequality}%
+    %
+    For any set $\SetA \subseteq \Omega$, we have
+    \begin{equation*}
+        \Prob{\SetA}\Prob{ \ts \smash{\overline{\SetA_t}}\ts }%
+        =%
+        \Prob{\SetA}\pth{\bigl. 1 - \Prob{ \SetA_t} } \leq %
+        \exp( -t^2 /4).
+    \end{equation*}%
+\end{theorem}
+
+\begin{example}
+    To see why this inequality interesting, consider the set
+    $\Omega = [0,100]^d$ with uniform distribution on each
+    coordinate. The probability measure of a set $\SetA \subseteq \Omega$ is
+    $\Prob{\SetA} = \volX{\SetA} / 100^d$. Let
+    \begin{equation*}
+        \SetA = \Set{ \pnt =(\pntCoord_1, \ldots, \pntCoord_d) \in
+           [0,100]^d}%
+        {\smash{\sum_i} \Bigl. \pntCoord_i \leq \frac{100d}{2}}.
+    \end{equation*}
+    It is easy to verify that $\volX{\SetA} = \volX{[0,100]^d}/2$.
+    Let $t= 4\sqrt{\ln d}$, and consider the set
+    $\overline{\SetA_t}$. Intuitively, and not quite correctly, it the
+    set of all points in $[0,100]^d$, such that one needs to change
+    more than $4 \ln d$ coordinates before one can get to a point of
+    $\SetA$. These points are $t$-far from being in $\SetA$.
+
+    By Talagrand inequality, we have that 
+    \begin{math}
+        {\Prob{\overline{\SetA_t}}}/{2}%
+        =%
+        \Prob{\SetA}\pth{\bigl. 1 - \Prob{ \SetA_t} }%
+        \leq %
+        \exp( -t^2 /4)%
+        =%
+        1/d^4.
+    \end{math}
+    Namely, only a tiny fraction of the cube is more than $T$-distance
+    $4 \sqrt{\ln d}$ from $\SetA$!
+
+    Let us try to restate this -- for any set $\SetA$ that is half the
+    volume of the hypercube $[0,100]^d$, the set of points in
+    $T$-distance $\leq 4 \sqrt{\ln d}$ in this hypercube is small.
+\end{example}
+
+
+\subsection{On the way to proving Talagrand's inequality}
+
+The following helper result is the core of the proof of Talagrand's
+inequality. The reader might want to skip reading the proof of this
+claim, at least at first reading.
+
+\begin{theorem}
+    \thmlab{talagrand:helper}%
+    %
+    For any set $\SetA \subseteq \Omega = \prod_{i=1}^d \Omega_i$, we
+    have
+    \begin{equation*}
+        \ds \Ex{ \exp \pth{\frac{\distTSqY{\pnt}{\SetA} }{4}}}%
+        =%
+        \int_{\pnt \in \Omega}\exp \pth{\frac{\distTSqY{\pnt}{\SetA}
+           }{4}} d\pnt \leq%
+        \frac{1}{\Prob{\SetA}}.
+    \end{equation*}                   
+\end{theorem}
+\begin{proof}
+    The proof is by induction on the dimension $d$. For $d=1$, then
+    $\distTY{\pnt}{\SetA} = 0$ if $\pnt \in \SetA$, and
+    $\distTY{\pnt}{\SetA}= 1$ if $\pnt \notin \SetA$. As such, we have
+    \begin{align*}
+        \gamma
+        &\EQ
+        \Ex{ \exp \pth{\frac{\distTSqY{\pnt}{\SetA} }{4}}}%
+        =%
+        e^{0^2/4} \Prob{\SetA} + e^{1^2/4} (1-\Prob{\SetA})
+        \\&
+        \EQ%
+        \Prob{\SetA} + e^{1/4}(1-\Prob{\SetA})= f\pth{\Prob{\SetA}},
+    \end{align*}                   
+    where $f(x) = x + e^{1/4}(1-x)$. An easy argument (see
+    \tedref{Talagrand:1}) shows that $f(x) \leq 1/x$, which implies
+    that $\gamma = f(\Prob{\SetA}) \leq 1/ \Prob{\SetA}$, as claimed.
+    
+    For $d=n+1$, let $\mathcal{O} = \prod_{i=1}^d \Omega_i$, and
+    $\mathcal{N} = \Omega_{d+1}$. Clearly,
+    $\Omega =\prod_{i=1}^{d+1} \Omega_i = \mathcal{O} \times
+    \mathcal{N}$.
+
+    \begin{equation*}
+        \SetA_\OldOm  =
+        \Set{ \pnt \in \mathcal{O} }{ (\pnt,y) \in \SetA, \text{ for
+              some } y \in \mathcal{N}}.
+    \end{equation*}
+    For $\nu \in \NewOm$, let 
+    \begin{equation*}
+        \SetA(\nu)%
+        =%
+        \Set{ \pnt \in \mathcal{O} }{ (\pnt,\nu) \in \SetA } \subseteq
+        \SetA_\OldOm .
+    \end{equation*}
+
+    Given a point $\pntE = (\pnt,y) \in \Omega$, we can get to a point
+    in $\SetA$, either by changing the new coordinate and then moving
+    inside the old space $\OldOm$, or alternatively, keeping the new
+    coordinate $\nu$ fixed and moving only in the old coordinates. In
+    particular, we have that if
+    \smallskip%
+    \begin{align*}
+        &s \in \HSetY{\pnt}{\SetA_\OldOm} \subseteq \brc{0,1}^d
+        &\implies&& \quad(s,1) \in \HSetY{\pntE}{\SetA}
+      %
+        &\quad\text{\Eqref{t:c:change}}\qquad \\%
+        &s' \in \HSetY{\pnt}{\SetA(\nu)} & \implies&& \qquad(s',0) \in
+        \HSetY{\pntE}{\SetA}.
+    \end{align*}
+    And similarly, for the corresponding convex-hulls, we have
+    \begin{align*}
+        &s \in \CHSetY{\pnt}{\SetA_\OldOm} 
+        \quad\implies\quad 
+        (s,1) \in \CHSetY{\pntE}{\SetA}
+        \\
+       \text{ and }\qquad%
+        &
+        s' \in \CHSetY{\pnt}{\SetA(\nu)}
+        \quad\implies\quad
+        (s',0) \in \CHSetY{\pntE}{\SetA}.
+    \end{align*}
+    In particular, for $s, s'$ as above, we have (by convexity) that for
+    any $\lambda \in [0,1]$, the point
+    \begin{equation*}
+        h(\lambda)%
+        =%
+        (1-\lambda)\bigl(s,1\bigr) + \lambda \bigl(s',0\bigr)%
+        =%
+        \bigl( (1-\lambda)s + \lambda s', 1-\lambda \bigr)
+        \in%
+        \CHSetY{\pntE}{\SetA}%
+        \subseteq%
+        [0,1]^{d+1}.
+    \end{equation*}
+    The function
+    \begin{math}
+        \widehat{h}\pth{\lambda} = \norm{ (1-\lambda)s + \lambda s'}^2
+    \end{math}    
+    is convex, see \tedref{Talagrand:2}. We thus have
+    \begin{align*}
+        \distTSqY{\pntE}{\SetA}%
+        &\EQ
+        \Bigl(
+        \min_{\pnt \in \CHSetY{\pntE}{\SetA}} \norm{\pnt}^2
+        \Bigr)
+        \leq%
+        \norm{h(\lambda)}^2 %
+        =%
+        \norm{ (1-\lambda)s + \lambda s'}^2 + ( 1-\lambda)^2        
+        \\&
+        \LEQ%
+        (1-\lambda)\norm{s}^2  + \lambda \norm{ s'}^2 + ( 1-\lambda)^2.
+    \end{align*}
+    We are still at the liberty of choosing $s$ and $s'$. Let $s$ be
+    the point realizing $\distTY{\pnt}{\SetA_\OldOm}$ -- this is the
+    closest point in $\CHSetY{\pnt}{\SetA}$ to the origin (i.e.,
+    $\norm{s} = \distTY{\pnt}{\SetA_\OldOm}$). Similarly, let $s'$ be
+    the point realizing $\distTY{\pnt}{\SetA(\nu)}$. Plugging these
+    two points into the above inequality, we have
+    \begin{equation*}
+        \distTSqY{\pntE}{\SetA}%
+        \leq%
+        (1-\lambda)\distTY{\pnt}{\SetA_\OldOm}^2
+        + \lambda \distTY{\pnt}{\SetA(\nu)}^2 + ( 1-\lambda)^2.
+    \end{equation*}
+
+    Now, fix $\nu$, and  ride the following little integral:
+    \begin{align*}
+      F(\nu)%
+      &=%
+        \int_\pnt  \exp \pth{\frac{\distTSqY{\bigl.(\pnt,\nu)}{\SetA}
+        }{4}} 
+     % 
+     \\&
+     \LEQ % 
+     \int_\pnt  \exp \pth{
+        \frac{
+           (1-\lambda)\distTY{\pnt}{\SetA_\OldOm}^2
+           + \lambda \distTY{\pnt}{\SetA(\nu)}^2 + ( 1-\lambda)^2}{4}}
+     \hspace{-5cm}%
+     \\&%
+     \leq%
+     e^{(1-\lambda)^2 /4} 
+     \int_\pnt  \exp \pth{
+        \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}^{1-\lambda}
+     \exp\pth{ \frac{1}{4} \distTY{\pnt}{\SetA(\nu)}^2 }^\lambda \\
+     &\leq%
+     e^{(1-\lambda)^2 /4} 
+     \pbrcS{ \int_\pnt  \exp \pth{
+           \frac{1}{4}\distTY{\pnt}{\SetA_\OldOm}^2}}^{(1-\lambda)}
+     \\&\qquad
+     \pbrcS{ \int_\pnt
+        \exp\pth{ \frac{1}{4} \distTY{\pnt}{\SetA(\nu)}^2 }}^\lambda 
+     \\
+     \tag{\text{(by  \Holder's \si{ineq} \Eqrefbare{holder:var})}}
+     \\&%
+     \leq%
+     e^{(1-\lambda)^2 /4} 
+     \pth{ \frac{1}{\Prob{ \SetA_\OldOm}} }^{(1-\lambda)}
+     \pth{ \frac{1}{\Prob{ \SetA(\nu) } } }^\lambda 
+     \\&
+     =%
+     e^{(1-\lambda)^2 /4} 
+     \frac{1}{\Prob{ \SetA_\OldOm}}
+     \pth{ \frac{\Prob{ \SetA(\nu) }}{\Prob{ \SetA_\OldOm}} }^{-\lambda} 
+     \tag{induction}
+     \\&%
+     =%
+     \frac{1}{\Prob{ \SetA_\OldOm}}
+     \cdot 
+     e^{(1-\lambda)^2 /4} 
+     r^{-\lambda}.
+     \tag{for $r = \frac{\Prob{ \SetA(\nu) }} {\Prob{
+              \SetA_\OldOm}}$}
+    \end{align*}
+    Observe that $\Prob{ \SetA_\OldOm} \geq \Prob{ \SetA(\nu) }$, and
+    thus $r \leq 1 $. To minimize the above, consider the function
+    $f_3(\lambda,r) = \exp\bigl( (1-\lambda)^2/4 )r^{-\lambda}$. Easy
+    calculation shows that $f_3(\lambda,r) $ is minimized, for a fixed
+    $r$, by choosing
+    \begin{align*}
+        \lambda(r) =
+        \begin{cases}
+            1 + 2\ln r & r \in [e^{-1/2},1]\\
+            0 & r \in [0, e^{-1/2}]\\
+        \end{cases},
+    \end{align*}
+    see \tedref{t:c:2} (A). Furthermore, for this choice of $\lambda$,
+    easy calculations shows that
+    $f_4(r) = f_r( \lambda(r), r) \leq 2-r$, see \tedref{t:c:2} (B).
+    As such, we have
+    \begin{equation*}
+        F(\nu) %
+        \leq %
+        \frac{1}{\Prob{ \SetA_\OldOm}} f_4(r)
+        \leq%
+        \frac{1}{\Prob{ \SetA_\OldOm}}
+        \pth{2-  \frac{\Prob{ \SetA(\nu) }} {\Prob{
+                 \SetA_\OldOm}}}
+    \end{equation*}
+    
+    We remind the reader that our purpose is to bound
+    \begin{align*}
+        &\int_\pntE  \exp \pth{\frac{\distTSqY{\bigl.\pntE}{\SetA}
+           }{4}}
+        =%
+        \int_{\nu \in \NewOm}
+        \int_{\pnt \in \OldOm}
+        \exp \pth{\frac{\distTSqY{\bigl.(\pnt, \nu)}{\SetA}
+           }{4}}%
+        \\&
+        \leq%
+        \int_{\nu \in \NewOm} F(\nu) %
+        \leq%
+        \int_{\nu \in \NewOm} 
+        \frac{1}{\Prob{ \SetA_\OldOm}}
+        \pth{2-  \frac{\Prob{ \SetA(\nu) }} {\Prob{
+                 \SetA_\OldOm}}}\\
+        &=         
+        \frac{1}{\Prob{ \SetA_\OldOm}}
+        \pth{2-  \frac{ \int_{\nu \in \NewOm}  \Prob{\SetA(\nu) }} {\Prob{
+                 \SetA_\OldOm}}}%
+        =%        
+        \frac{1}{\Prob{ \SetA_\OldOm}}
+        \pth{2-  \frac{  \Prob{\SetA }} {\Prob{
+                 \SetA_\OldOm}}}
+        \\&
+        =%
+        \frac{1}{\Prob{\SetA }}%
+        \cdot
+        \frac{\Prob{\SetA }}{\Prob{ \SetA_\OldOm}}
+        \pth{2-  \frac{  \Prob{\SetA }} {\Prob{
+                 \SetA_\OldOm}}}%
+        \leq %
+        \frac{1}{\Prob{\SetA }},
+    \end{align*}    
+    since for $x = {\Prob{\SetA }}/{\Prob{ \SetA_\OldOm}}$, we have
+    $x(2-x) \leq 1$, for any value of $x$ (see \tedref{t:i:parabola}).
+\end{proof}
+
+
+\subsubsection{The low level details used in the above proof}
+
+\begin{tedium}
+    \tedlab{Talagrand:1}%
+    %
+    Let $f(x) = x + e^{1/4}(1-x)$.  We claim that, for $x \in (0,1]$,
+    $f(x) \leq 1/x$.  Indeed, set $g(x) = 1/x$, and observe that
+    $f(1) = 1 = 1/1 = g(1)$.  We have that
+    $f'(x) = e^{1/4}-1 \approx -0.284$ and $g'(x) = -1/x^2$. In
+    particular, $g'(x) \leq f'(x)$, for all $x \in (0,1)$. Since and
+    $f(1) = g(1)$. it follows that $f(x) \leq g(x)$, for
+    $x \in (0,1]$.
+\end{tedium}
+
+\begin{tedium}
+    \tedlab{Talagrand:2}%
+    %
+    For any $\pnt, \pntA \in \Re^d$, the function
+    $f(\lambda) =\norm{ (1-\lambda)\pnt + \lambda \pntA}^2$ is
+    convex. Indeed, let
+    \begin{math}
+        f_i(\lambda) = \pth{ (1-\lambda)\pntCoord_i + \lambda
+           \pntCoordA_i}^2,
+    \end{math}
+    for $i=1,\ldots, d$. Observe that
+    $f(\lambda) = \sum_i f_i(\lambda)$, and as such it is sufficient
+    to prove that $f_i$ is convex. We have
+    \begin{math}
+        f_i'(\lambda) = 2(\pntCoordA_i - \pntCoord_i)\pth{\bigl.
+           (1-\lambda)\pntCoord_i + \lambda \pntCoordA_i},
+    \end{math}
+    and
+    \begin{math}
+        f_i''(\lambda) = 2(\pntCoordA_i - \pntCoord_i)^2 > 0,
+    \end{math}
+    which implies convexity.
+\end{tedium}
+
+\begin{fact}[\Holder's inequality.]
+    \factlab{holder}%
+    %
+    Let $p,q \geq 1$ be two numbers such that $1/p+1/q=1$. Then, for
+    any two functions $f,g$, we have
+    $\norm{fg}_1 \leq \norm{f}_p \norm{g}_q$. Explicitly, stated as
+    integrals, \Holder's inequality is
+    \begin{math}
+        \int |f(x) g(x)| \mathrm{d} x \leq \pth{\int |f(x)|^p
+           \mathrm{d} x}^{1/p} \pth{\int |f(x)|^q \mathrm{d} x}^{1/q}.
+    \end{math}
+    In particular, 
+    for $\lambda \in (0,1)$, $p=1/(1-\lambda)$ and $q=1/\lambda$, we
+    have that
+    \begin{equation}
+        \int \cardin{f^\lambda (x) g^{1-\lambda}(x)} \mathrm{d} x%
+        \leq%
+        \pth{\int |f(x)|
+           \mathrm{d} x}^{1-\lambda} \pth{\int |f(x)| \mathrm{d}
+           x}^{\lambda}.
+        \eqlab{holder:var}
+    \end{equation}
+\end{fact}
+
+\begin{tedium}
+    \tedlab{t:c:2}%
+    %
+    (A)
+    We need to find the minimum of the following function
+    \begin{math}
+        f(\lambda) = \exp\bigl( (1-\lambda)^2/4 )r^{-\lambda} =
+        \exp\bigl( (1-\lambda)^2/4 -\lambda \ln r ).
+    \end{math}
+    We have
+    \begin{math}
+        f'(\lambda) = f_3(\lambda) \pth{\bigl. (1- \lambda)/2 - \ln
+           r}.
+    \end{math}
+    Solving for $f'(\lambda) = 0$, we have
+    \begin{math}
+        (1- \lambda)/2 - \ln r =0
+    \end{math}
+    $\implies$
+    \begin{math}
+        1- \lambda  =2 \ln r0
+    \end{math}    
+    $\implies$
+    \begin{math}
+        \lambda = 1- 2 \ln r,
+    \end{math}
+    which works as long as $r \geq e^{-1/2}$. Otherwise, we set
+    $\lambda = 0$.
+
+    (B) For $r \leq e^{-1/2}$, we have, by the above, that
+    \begin{math}
+        f(0) = e^{1/4} \approx 1.28 \leq 1.39 \approx 2 -e^{-1/2} \leq
+        2-r.
+    \end{math}
+    For $r > e^{-1/2}$, by the above, $\lambda=1-2\ln r$, and thus
+    \begin{align*}
+      g(r) = 
+      f(\lambda)%
+      =%
+      \exp\bigl( (1-\lambda)^2/4 -\lambda \ln r )%
+      =%
+      \exp\bigl( (2 \ln r)^2/4 +(1-2\ln r) \ln r \bigr)
+      =%
+      \exp\bigl(  \ln r - \ln^2 r)
+      \leq%
+      1 \leq 2-r,
+    \end{align*}
+    since $\ln r - \ln^2 r \leq \ln r \leq 0$, for $r \in (0,1]$.
+\end{tedium}
+
+\begin{tedium}
+    \tedlab{t:i:parabola}%
+    %
+    The function $f(x) = x(2-x) = 2x - x^2$ is a parabola with a
+    maximum at $2x = 2$ $\implies$ $x=1$ $\implies$
+    $\forall y \quad f(y) \leq f(1) = 1$.
+\end{tedium}
+
+\subsection{Proving Talagrand's inequality}
+
+Proving Talagrand's inequality is now easy \si{peasy}.
+
+\bigskip%
+\noindent
+\textbf{Talagrand's inequality restatement
+   (\thmref{Talagrand:inequality}).}
+% 
+    For any set $\SetA \subseteq \Omega$, we have
+    \begin{equation*}
+        \Prob{\SetA}\Prob{ \ts \smash{\overline{\SetA_t}}\ts }%
+        =%
+        \Prob{\SetA}\pth{\bigl. 1 - \Prob{ \SetA_t} } \leq %
+        \exp( -t^2 /4).
+    \end{equation*}%
+
+\begin{proof}
+    Consider a random point $\pnt \in \Omega$. We are interested in
+    the probability $ \pnt \notin \SetA_t$. To this end, consider the
+    random variable $X = \distTY{\pnt}{\SetA}$. By definition,
+    $\pnt \in \overline{\SetA_t}$ $\iff$ $X \geq t$. As such, by
+    Markov's inequality, we have
+    \begin{equation*}
+        \Prob{\overline{\SetA_t}} %
+        =%
+        \Prob{X \geq t}%
+        =%
+        \Prob{\exp\pth{X^2/4} \geq \exp\pth{t^2/4}}%
+        \leq%
+        \frac{\ExChar [ \exp\pth{X^2/4} ] }{\exp\pth{t^2/4}}%
+        \leq%
+        \frac{\exp\pth{-t^2/4}}{\Prob{\SetA}},
+    \end{equation*}
+    by \thmref{talagrand:helper}.   
+\end{proof}
+
+
+%\section{Applications of Talagrand's inequality}
+
+\section{Concentration via certification}
+
+
+
+\begin{example}
+    \exmlab{c:balls:bins}%
+    %
+    Consider the process of throwing $m$ balls into $n$ bins. The
+    $i$\th ball $X_i$ is uniformly distributed in
+    $\Omega_i = \IRX{n}$. For
+    \begin{math}
+        \vecX = (X_1, \ldots, X_m) \in \Omega = \prod_{i=1}^m
+        \Omega_i,
+    \end{math}
+    let $h(\vecX)$ be the number of bins that are not empty.  If
+    $h(\vecX) \geq k$, then there is a set
+    $I = \brc{i_1, \ldots, i_k}$ of $k$ indices, such that for any two
+    distinct $i,j \in I$, we have that $X_i \neq X_j$.
+
+    Namely, $I$ is a ``compact'' proof/certificate that
+    $h( \vecX ) \geq k$. Furthermore, if for
+    $\vecY = (Y_1, \ldots, Y_m) \in \Omega$ we have that
+    $X_{\alpha} = Y_{\alpha}$, for all $\alpha \in I$, then
+    $h( \vecY ) \geq k$.  Here, the certificate for a value $k$, was a
+    set of size $k$.
+\end{example}
+
+
+\begin{defn}
+    Let $\Omega =\prod_{i=1}^m \Omega_i$. For a function
+    $h:\Omega \rightarrow \NNN$, it is \emphi{$f$-certifiable}, for a
+    function $f:\NNN \rightarrow \NNN$, if whenever
+    $h(\vecX ) \geq k$, there exists a set $I \subseteq \IRX{m}$, with
+    $\cardin{I} \leq f(k)$, such that, for any $\vecY \in \Omega$, if
+    $\vecY$ agree with $\vec{x}$ on the coordinates of $I$, then
+    $h(\vec{y}) \geq k$.
+\end{defn}
+
+\begin{example}
+    In \exmref{c:balls:bins}, the function $h$ (i.e., number of bins
+    that are not empty) is $f$-certifiable, where $f(k) = k$.
+\end{example}
+
+\begin{example}
+    Consider the random graph $\Graph(n,p)$ over $n$ vertices, created
+    by picking every edge with probability $p$. One can interpret such
+    a graph as a random binary vector with $\binom{n}{2}$ coordinates,
+    where the $i$\th coordinate is $1$ $\iff$ the $i$\th edge is in
+    the graph (for some canonical ordering of all possible
+    $\binom{n}{2}$ edges).
+
+    A \emphi{triangle} in a graph $\Graph$ is a triple of vertices
+    $i,j,k$, such that $ij, jk, ki \in \EdgesX{\Graph}$. For a graph
+    $\Graph$, let $h(\Graph)$ be the number of distinct triangles in
+    $\Graph$. In the above interpretation as a graph as a vector
+    $\vecX \in \brc{0,1}^{\binom{n}{2}}$, it is easy to verify that if
+    $h(\Graph) \geq k$ then it can be certified by $3k$
+    coordinates. As such, the number of triangles in a graph is
+    $f$-certifiable, for $f(k) = 3k$. %
+
+    Note, that the certificate is only for the lower bound on the
+    value of the function.
+\end{example}
+
+We need the following reinterpretation of the $T$-distance.
+
+\begin{lemma}%
+    \lemlab{t:dist:reint}%
+    %
+    Consider a set $\SetA \subseteq \Re^d$ and a point
+    $\pnt \in \Re^d$.  We have that $\distTY{\pnt}{\SetA} \leq t$
+    $\iff$ for all $\vecX = (x_1, \ldots, x_d) \in \Re^d$, with
+    $\norm{\vecX} =1$, there exists
+    $\vecH \in \HSetY{\pnt}{\SetA}$,
+    such that $\DotProd{\vecX}{\vecH}\leq t$.
+\end{lemma}
+\begin{proof}
+    The quantity $\ell = \distTY{\pnt}{\SetA}$ is the distance from
+    the origin to the convex polytope $\CHSetY{\pnt}{\SetA}$. In
+    particular, let $\vecY$ be the closest point to the origin in this
+    polytope, and observe that
+    $\ell = \norm{\vecY} = \DotProd{\vecY}{\vecY/\norm{\vecY}}$. In
+    particular, for any other vector $\vecX$, with $\norm{\vecX} =1$,
+    we have
+    $\DotProd{\vecY}{\vecX} \leq \DotProd{\vecY}{\vecY/\norm{\vecY}}
+    \leq \ell$. Since $\vecY$ is in the convex-hull of
+    $\HSetY{\pnt}{\SetA}$, it follows that there is
+    $\vecH \in \HSetY{\pnt}{\SetA}$ such that
+    $\DotProd{\vecY}{\vecX} \leq \DotProd{\vecH}{\vecX}\leq \ell$.
+
+    As for the other direction, assume that
+    $\ell = \distTY{\pnt}{\SetA} > t$, and let
+    $\vecY \in \CHSetY{\pnt}{\SetA}$ be the point realizing this
+    distance. Arguing as above, we have that for the direction
+    $\vecY /\norm{\vecY}$, and any vertex
+    $\vecH \in \HSetY{\pnt}{\SetA}$ we have that
+    $\DotProd{\vecH}{\vecX} \geq \DotProd{\vecH}{\vecX}\geq \ell > t$.
+\end{proof}
+
+
+\begin{theorem}
+    \thmlab{talagrand:certifable}%
+    %
+    Consider a probability space $\Omega =\prod_{i=1}^m \Omega_i$, and
+    let $h:\Omega \rightarrow \NN$ be $1$-Lipschitz and
+    $f$-certifiable, for some function $f$. Consider the random
+    variable $X= h(\vecX)$, for $\vecX$ picked randomly in
+    $\Omega$. Then, for any positive real numbers $b$ and $t$, we have
+    \begin{equation*}
+        \Prob{ X \leq b- t\sqrt{f(b)}}%
+        \!\Prob{X \geq b} \leq \exp(-t^2/4).
+    \end{equation*}
+
+    If $h$ is $k$-Lipschitz then 
+    \begin{math}
+        \Prob{ X \leq b- tk\sqrt{f(b)}}%
+        \!\Prob{X \geq b} \leq \exp(-t^2/4).
+    \end{math}
+\end{theorem}
+\begin{proof}
+    Set
+    $\SetA = \Set{\pnt \in \Omega}{ h(\pnt) < b- t\smash{\sqrt{f(b)}}
+       \bigr.}$. Consider a point $\pntA$, such that
+    $h(\pntA) \geq b$. Assume for the sake of contradiction that
+    $\pntA \in \SetA_t$. Let $I\subseteq \IRX{m}$ be the certificate
+    of size $\leq f(b)$ that $h(\pntA) \geq b$. And consider the
+    vector $\vecX=(x_1,\ldots, x_d)$, such that
+    $x_i = 1/\sqrt{\cardin{I}}$ if $i \in I$, and $x_i =0 $
+    otherwise. Observe that
+    $\norm{\vecX}^2 = \cardin{I}\pth{ 1/\cardin{I}} = 1$, and thus
+    $\norm{\vecX} = 1$. By \lemref{t:dist:reint}, there exists
+    $\vecH \in \HSetY{\pntA}{\SetA}$, such that
+    $\DotProd{\vecX}{\vecH}\leq t$, since by assumption
+    $\distTY{\pntA}{\SetA} \leq t$. Let $\pntB \in \SetA$ be the point
+    realizing $\vecH$ -- that is, $H(\pnt,\pntB) = \vecH$.
+
+    Let $J \subseteq I$ be the set of indices of coordinates that are
+    in $I$, such that $\pnt$ and $\pntB$ differ on this coordinate. We
+    have by the definition of $\vecX$, that
+    $\cardin{J} /\sqrt{\cardin{I}} \leq \DotProd{\vecX}{\vecH}\leq t$,
+    which implies that
+    $\cardin{J} \leq t \sqrt{\cardin{I}} \leq t \sqrt{f(b)}$.
+
+    Let $\pntA'$ be the point that agrees with $\pntA$ on the
+    coordinates of $I$, and agrees with $\pntB$ on the other
+    coordinates. The points $\pntA'$ and $\pntB$ disagree only on
+    coordinates in $I$, but such coordinates of disagreement are
+    exactly the coordinates (in $I$) where $\pntA$ disagrees with
+    $\pntB$ -- which is the set $J$ of coordinates. As such, by the
+    $1$-Lipschitz condition, we have that 
+    \begin{equation*}
+        h(\pntB) %
+        \geq %
+        h(\pntA') - \cardin{J}
+        \geq%
+        h(\pntA) - t \sqrt{f(b)},
+    \end{equation*}
+    but then, by the definition of $\SetA$, we have
+    $\pntB \notin \SetA$, which is a contradiction as
+    $\pntB \in \SetA$. 
+
+    We conclude that $\pntA \notin \SetA_t$ $\implies$
+    $\pntA \in \overline{\SetA_t}$. As such, we have
+    $\Prob{X \geq b} \leq \ProbLTR \bigl[ \overline{\SetA_t}
+    \bigr]$. By \thmrefY{Talagrand inequality}{Talagrand:inequality},
+    we have
+    \begin{equation*}
+        \Prob{\bigl.\ts X < b - t\smash{\sqrt{f(b)} } \ts }
+        \Prob{X \geq b} %
+        \leq%
+        \Prob{\SetA}\Prob{ \ts \smash{\overline{\SetA_t}}\ts }%
+        \leq %
+        \exp( -t^2 /4).
+    \end{equation*}%
+    The ``<'' on the left side can be replaced by ``$\leq$'', as in
+    the statement of the theorem, by using the value $t+\eps$ instead
+    of $t$, and taking the limit as $\eps \rightarrow 0$. %
+
+    The $k$-Lipschitz version follows by applying the above inequality
+    to the function $h(\cdot) /k$.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% \newcommand{\med}{\Mh{\mathsf{m}}}%
+\section{Some examples}
+
+\begin{defn}
+    For a random variable $X \in \Re$, let $\med(X)$ denote the
+    maximum number $m$, such that $\Prob{X < m} \leq 1/2$ and
+    $\Prob{X > m} \leq 1/2$. The number $\med(X)$ is the
+    \emphi{median} of $X$.
+\end{defn}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Longest increasing subsequence}
+
+Let $\vecX = (X_1, \ldots, X_n)$ be a vector of $n$ numbers picked
+randomly and uniformly from $[0,1]$. Let $h(\vecX)$ be the longest
+increasing subsequence in the associated sequence.
+
+\begin{lemma}
+    We have $h(\vecX) =\Theta(\sqrt{n})$ with high
+    probability. Furthermore, for some constant $c$ and any $t > 0$,
+    we have that
+    \begin{math} 
+        \Prob{\bigl. \cardin{ h(\vecX) - \medX{h(\vecX)}} - t
+           cn^{1/4}} \leq%
+        4 \exp(-t^2/4),
+    \end{math}
+    Namely, the random variable $h(\vecX)$ is strongly concentrated.
+\end{lemma}
+\begin{proof}
+    Let $Y_i$ be an indicator variable that is $1$ $\iff$
+    $\vecX[i] \equiv x_{(i-1)\sqrt{n}+ 1,}, \ldots, x_{i\sqrt{n}}$
+    contains a number in the interval
+    $J(i) = [(i-1)/\sqrt{n}, i\sqrt{n}]$. We have
+    \begin{math}
+        \Prob{Y_i=1}%
+        =%
+        1 - (1-1/\sqrt{n})^{\sqrt{n}} \geq 1-1/e \geq 1/2,
+    \end{math}
+    since $(1-1/m)^m \leq 1/e$. If $Y_i$ happens, then we can take the
+    number in $\vecX[i]$ that falls in $J(i)$, and add it to the
+    generated sequence. As such, the length of the generated sequence,
+    which is increasing, is $Y=\sum_{i=1}^n Y_i$. And in particular,
+    $\Ex{Y} \geq \sqrt{n}/2$, and Chernoff's inequality implies that
+    $\Prob{Y \geq (1-\delta)\sqrt{n}/2} \leq \exp( - \delta^2
+    \sqrt{n}/8 )$.
+
+    The upper bound is more interesting. The probability that a
+    specific subsequence of $t$ indices $i_1 < i_2 < \ldots <i_t$ form
+    an increasing subsequence $X_{i_1} < X_{i_2} < \cdots < X_{i_t}$
+    is $1/t!$. As such, the expected number of such increasing
+    sequences of length $\geq \ell$ is bounded by
+    \begin{equation*}
+        \alpha %
+        =%
+        \sum_{t=\ell}^n \binom{n}{t} \frac{1}{t!}%
+        \leq%
+        \sum_{t=\ell}^n \pth{\frac{n e}{t}}^t \frac{1}{t!}
+        \leq%
+        \sum_{t=\ell}^n \pth{\frac{n e}{t}}^t \frac{1}{(t/e)^t}
+        = %
+        \sum_{t=\ell}^n \frac{n^t e^{2t}}{t^{2t}},
+    \end{equation*}
+    using \lemref{approximation:basic}. In particular, for $\ell =
+    4e \sqrt{n}$, we have
+    \begin{equation*}
+        \alpha %
+        \leq %
+        \sum_{t=\ell}^n \frac{n^t e^{2t}}{\pth{4 e \sqrt{n}}^{2t}},
+        =%
+        \sum_{t=\ell}^n \frac{1}{4^{2t}}%
+        \leq%
+        2 / 4^{8e\sqrt{n}}%
+        \ll%
+        1.%
+    \end{equation*}
+    By Markov's inequality, this implies that
+    $\Prob{h(\vecX) \geq 4e \sqrt{n}} \leq 2 / 4^{8e\sqrt{n}}$. %
+
+    The above readily implies that
+    $\medianC = \medX{h(\vecX)} = \Theta( \sqrt{n})$. Furthermore,
+    $h(\vecX)$ is $f(x) =x$ certifiable, and it is $1$-Lipschitz.
+    \thmref{talagrand:certifable} now implies that
+    \begin{equation*} 
+        \Prob{ h(\vecX) \leq \medianC - t\sqrt{\medianC}}/2
+        \leq%
+        \Prob{ h(\vecX) \leq \medianC - t\sqrt{\medianC}}%
+        \!\Prob{X \geq \medianC} \leq \exp(-t^2/4).
+    \end{equation*}
+
+    As $\medianC = O(n^{1/4})$, we get the following (this requires
+    some further tedious calculations which we omit).
+    \begin{equation*} 
+        \Prob{ \cardin{\bigl. h(\vecX) - \medianC} - t cn^{1/4}}        
+        \leq%
+        4 \exp(-t^2/4),
+    \end{equation*}
+    where $c$ is some constant.
+\end{proof}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Largest convex subset}
+
+A set of points $\PntSet$ is in \emphi{convex position} if they are
+all vertices of the convex-hull of $\PntSet$.
+
+\begin{lemma}
+    \lemlab{l:c:subset}%
+    %
+    Let $\PntSet$ be a set of $n$ points picked randomly and uniformly
+    in the unit square $[0,1]^2$. Let $Y$ be the size of the largest
+    subset of point of $\PntSet$ that are in convex position. Then, we
+    have that $\Ex{Y} = \Omega(n^{1/3})$.
+\end{lemma}
+
+\begin{proof}
+    Let $\pnt = (1/2,1/2)$, and consider the regular $N$-gon $Q$, for
+    $N = n^{1/3}$, that its vertices lie on the circle centered at
+    $\pnt$, and is of radius $r=1/2$. Consider the triangle
+    $\triangle_i$ formed by connecting three consecutive vertices
+    $\pnt_{2i-1}, \pnt_{2i}, \pnt_{2i+1}$ of $Q$. We have that
+    $\alpha = 2\pi / N$, and we pick $n$ large enough, so that
+    $\alpha \leq 1/4$. We remind the reader that
+    $1-x^2/4 \geq \cos x \geq 1-x^2/2$, for $x \in (0,1/4)$. As such,
+    we have that $\alpha^2/4 \leq 1-\cos \alpha \leq \alpha^2/2$. In
+    particular, this implies that the height of $\triangle$ is
+    $h = r(1-\cos(\alpha))$, and we have
+    $\alpha^2/8 = r\alpha^2/4 \leq h \leq r \alpha^2/2$.
+
+    Let $\ell = \distY{\pnt_{2i-1}}{\pnt_{2i+1}} = 2 r \sin \alpha$,
+    since $x/2 \leq \sin(x) \leq x$, we have that
+    $\alpha/2 \leq \ell \leq \alpha$. As such, we have that
+    \begin{equation*}
+        \mathrm{area}(\triangle_i) = h \ell /2%
+        \geq%
+        (\alpha^2/8) (\alpha/2)%
+        =%
+        \alpha^3/16
+        =%
+        (2\pi / N)^3 /16%
+        =%
+        8 /n.
+    \end{equation*}
+
+    In particular, the probability that $\triangle_i$ does not contain
+    a point of $\PntSet$ is at most
+    $(1-\areaX{\triangle_i})^n \leq (1-8/n)^n \leq \exp(-8)$.  We
+    conclude that, in expectation, at least $(1-\exp(-8))N/2$
+    triangles contains points of $\PntSet$. Selecting a point of
+    $\PntSet$ from each such triangle results in a convex subset,
+    which implies the claim.
+\end{proof}
+
+It is not hard to show that $Y = \Omega(n^{1/3})$, with high
+probability, see \exeref{l:c:subset:large}. This readily implies that
+$\medX{Y} = \Omega(n^{1/3})$. It is significantly harder, but known,
+that $\Ex{Y} =O(n^{1/3})$, see \cite{v-pnrpc-94}. We provide a weaker
+but easier upper bound next.
+
+
+
+
+\begin{lemma}
+    \lemlab{l:c:subset:h:p:exp}%
+    %
+    Let $\PntSet$ be a set of $n$ points picked randomly and uniformly
+    in the unit square $[0,1]^2$. Let $Y$ be the size of the largest
+    subset of point of $\PntSet$ that are in convex position. Then,
+    $\Ex{Y} = O(n^{1/3} \log n / \log \log n)$, with high probability.
+\end{lemma}
+
+\begin{proof}
+    Let $V$ be a set of directions of size $O(n^{c})$, where $c$ is
+    some constant, such that for any unit vector $u$, there is a
+    vector in $\vecV \in V$, such that the angle between $u$ and $v$
+    is at most $1/n^{c}$. For a vector $\vecV \in V$, consider the
+    grid $G(\vecV)$ with directions $\vecV$, and orthogonal direction
+    $\vecV^\perp$. Every cell of this grid is a rectangle with
+    sidelength $1/n^{1/3}$ in the direction of $\vecV$, and
+    $1/n^{2/3}$ in the orthogonal direction. In addition the origin is
+    a vertex of $G(\vecV)$. This grid is uniquely defined, and every
+    cell in this grid has sidelength $1$. The of number of grid cells
+    of this grid intersecting the unit square is $O(n)$, as can be
+    easily verified.
+
+    Let $\Family$ be the set of all rectangles in all these grids that
+    intersect the unit square. Clearly, the number of such cells is
+    $O(\cardin{V} n) = O(n^{c+1})$. Each rectangle in $\Family$ has
+    area $1/n$, and as such by expectation it contains $\leq 1$ point
+    of $\PntSet$ (the inequality is there because the rectangle might
+    be partially outside the unit square). A standard application of
+    Chernoff's inequality implies that the probability that a
+    rectangle of $\Family$ contains more than
+    $10 c \log n/ \log \log n$ points of $\PntSet$ is $\leq
+    1/n^{2c}$. As such, with high probability no rectangle in
+    $\Family$ contains more than $O( \log n/ \log \log n)$ points of
+    $\PntSet$.
+
+    Consider any convex body $C \subseteq [0,1]^2$. The key
+    observation is that $\partial{C}$ can be covered by $O(n^{1/3})$
+    rectangles of $\Family$. Indeed, the perimeter of $C$ is at most
+    $4$. As such, place $O(n^{1/3})$ points along $\bd C$ that are at
+    distance at most $1/(10n^{1/3})$ from each other. Similarly, place
+    additional $O(n^{1/3})$ points on $\bd{C}$, such that the angle of
+    the tangents between two consecutive points is at most $1/n^{1/3}$
+    (in radians) [a vertex of $C$ might be picked repeatedly]. Let
+    $\PntSetA$ be the resulting set of points.  Consider two
+    consecutive points $\pnt,\pntA \in \PntSetA$ along $\bd C$, and
+    observe that the distance between them is at most $1/(10n^{1/3})$,
+    and the angle between their two tangents is at most
+    $\alpha = 1/n^{1/3}$.  consider the triangle $\triangle$ formed by
+    the two tangents to $\bd C$ at $\pnt, \pntA$, and the segment
+    $\pnt, \pntA$. This triangle has height bounded by
+    $\distY{\pnt}{\pntA} \sin \alpha \leq 1/(10n^{2/3})$. It is now
+    straightforward, if somewhat tedious to argue that one of the
+    rectangles of $\Family$ must contain $\triangle$.
+
+    Now we are almost done -- if the maximum cardinality convex subset
+    $\PntSetB \subseteq \PntSet$ was larger than
+    $c'n^{1/3} \log n / \log \log n$, for some constant $c'$, then let
+    $C$ be the convex-hull of this large subset. The above would imply
+    that one of the rectangles of $\Family$ must contain at least
+    $\Omega(c' \log n / \log \log n)$ points of $\PntSet$, but this
+    does not happen with high probability, for $c'$ sufficiently
+    large. Thus implying the claim.
+\end{proof}
+
+In particular, the above implies that $\medX{Y} = O(n^{1/3} \log n)$.
+
+\begin{theorem}
+    \thmlab{l:c:subset:h:p}%
+    %
+    Let $\PntSet$ be a set of $n$ points picked randomly and uniformly
+    in the unit square $[0,1]^2$. Let $Y$ be the size of the largest
+    subset of point of $\PntSet$ that are in convex position. Then,
+    for any $t>0$, we have
+    \begin{equation*}
+        \Prob{ \cardin{Y - \medX{Y} } \geq  t c n^{1/6} \log^{1/2} n} 
+        \leq
+        2\exp(-t^2/4),
+    \end{equation*}
+    for some constant $c$.
+\end{theorem}
+\begin{proof}
+    Observe that $Y$ is $1$-Lipschitz (i.e., changing the location of
+    one point in $\PntSet$ can decrease or increase the value of $Y$
+    by at most $1$. In addition $Y$ is $1$-certifiable, since we only
+    need to list the points that form the convex subset. As such,
+    \thmref{talagrand:certifable} applies. Setting $b=\medX{Y}$, we
+    have by the above that $\medX{Y} =\Omega(n^{1/3})$ and
+    $\medX{Y} = O(n^{1/3} \log n)$. As such, we have
+    \begin{equation*}
+        \Prob{ Y \leq \medX{Y}- t\sqrt{c n^{1/3} \log n}}%
+        \!\Prob{X \geq \medX{Y}} \leq \exp(-t^2/4).
+    \end{equation*}
+    Similarly, setting $b = \medX{Y} + t \sqrt{c n^{1/3} \log n} \leq
+    2 \medX{Y}$, we have
+    \begin{equation*}
+        \Prob{ Y \leq \medX{Y}}%
+        \!\Prob{X \geq \medX{Y} + t \sqrt{c n^{1/3} \log n} } \leq \exp(-t^2/4).
+    \end{equation*}
+    Putting the two inequalities together, we get
+    \begin{equation*}
+        \Prob{ \cardin{Y - \medX{Y}} \geq  t \sqrt{c n^{1/3} \log n} }
+        \leq
+        2\exp(-t^2/4).
+    \end{equation*}   
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\nballs}{\Mh{\mathsf{n}}}%
+\newcommand{\nbins}{\Mh{\mathsf{b}}}%
+\newcommand{\NHX}[1]{\Mh{h}_{\Mh{\geq} #1}}
+
+
+\subsection{Balls into bins revisited}
+\seclab{b:i:b:revisit}
+
+Given $\nballs$ balls, one throw them into $\nbins$ bins, where
+$\nbins \geq \nballs$.  A ball that falls into a bin with $i$ or more
+balls is \emphi{$i$-heavy}.  Let $\NHX{i}$ be the number of $i$-heavy
+balls. It turns out that a strong concentration on $\NHX{i}$ follows
+readily from Talagrand's inequality.
+
+
+\begin{lemma}%\RefProofInAppendix{l:i:e}
+    \lemlab{L:i:expecation}%
+    %
+    Consider throwing $\nballs$ balls into $\nbins$ bins, where
+    $\nbins \geq 3 \nballs$. Then,
+    \begin{math}
+        e^{-2} F_i \leq%
+        \Ex{\NHX{i}} %
+        \leq 6e^{i-1} F_i,
+    \end{math}
+    where $\NHX{i}$ is the number of $i$-heavy balls, and
+    \begin{math}
+        F_i = \nballs \pth{{\nballs}/{i \nbins}}^{i-1}.
+    \end{math}
+    Let $\beta_i$ denote the expected number of pairs of $i$-heavy
+    balls that are colliding. We have that
+    \begin{math}
+        \beta_i = O \bigl( \nballs i \pth{{e \nballs}/{i
+              \nbins}}^{i-1} \bigr).
+    \end{math}
+\end{lemma}
+\begin{proof}
+    Let $p = 1/\nbins$. A specific ball falls into a bin with exactly
+    $i$ balls, if there are $i-1$ balls, of the remaining $n-1$ balls
+    that falls into the same bin. As such, the probability for that is
+    \begin{math}
+        \gamma_i = p^{i-1}(1-p)^{\nballs-i} \binom{\nballs-1}{i-1}.
+    \end{math}
+    As such, a specific ball is $i$-heavy with probability
+    \begin{equation*}
+        \alpha%
+        =%
+        \sum_{j=i}^\nballs \gamma_j %
+        =%
+        \sum_{j=i-1}^{\nballs-1} \binom{\nballs-1}{j}
+        p^j(1-p)^{\nballs-j-1}%
+        \leq%
+        \sum_{j=i-1}^{\nballs-1}  \pth{\frac{e(\nballs-1)}{j \nbins}}^j%
+        \leq%
+        2 \pth{\frac{e \nballs}{\nbins (i-1)}}^{i-1}
+        \leq%
+        6 \pth{\frac{e \nballs}{i \nbins}}^{i-1},
+    \end{equation*}
+    as $\pth{ n/i}^i \leq \binom{n}{i} \leq \pth{ e n/i}^i$. Since
+    \begin{math}
+        (1-p)^{\nballs-j-1}%
+        \geq%
+        (1-1/\nbins)^{\nbins-1}%
+        \geq%
+        1/e,
+    \end{math}
+    we have
+    \begin{equation*}
+      \alpha%
+      \geq%
+        \frac{1}{e}
+        \sum_{j=i-1}^{\nballs-1}  \pth{\frac{\nballs-1}{j \nbins}}^j\\%
+      \geq%
+        \frac{1}{e}
+        \pth{\frac{\nballs-1}{\nballs}\cdot\frac{\nballs}{(i-1) \nbins}}^{i-1}%
+        \geq%
+        \frac{1}{e^2}
+        \pth{\frac{\nballs}{i \nbins}}^{i-1}.%
+    \end{equation*}
+    As such, we have
+    \begin{math}
+        \Ex{\NHX{i}} = \nballs \alpha = \Theta(
+        \nballs(\nballs/\nbins)^{i-1} ).
+    \end{math}
+
+    If a ball is in a bin with exactly $j$ balls, for $j \geq i$, then
+    it collides directly with $j-1$ other $i$-heavy balls. Thus, the
+    expected number of collisions that a specific ball has with
+    $i$-heavy balls is in expectation
+    \begin{math}
+        \sum_{j=i}^{\nballs} (j-1) \gamma_j%
+        =%
+        \sum_{j=i-1}^{\nballs-1} j \gamma_{j+1}.
+    \end{math}
+    Summing over all balls, and dividing by two, as every $i$-heavy
+    collision is counted twice, we have that the expected overall
+    number of such collisions is
+    \begin{equation*}
+        \beta_i%
+        =%
+        \frac{n}{2}
+        \sum_{j=i-1}^{\nballs-1} j \gamma_{j+1}\\
+        =%
+        \frac{\nballs}{2} \sum_{j=i-1}^{\nballs}
+        j \binom{\nballs-1}{j} p^j(1-p)^{\nballs-j-1}%
+        =%
+        O \pth{ \nballs i \pth{\frac{e \nballs}{i \nbins}}^{i-1}}.
+    \end{equation*}
+\end{proof}
+
+
+
+\begin{lemma}
+    \lemlab{L:i:concentration}%
+    %
+    Consider throwing $\nballs$ balls into $\nbins$ bins, where
+    $\nbins \geq 3 \nballs$. Let $i$ be a small constant integer,
+    $\NHX{i}$ be the number of $i$-heavy balls, and let
+    $\medianC_i = \medX{\NHX{i}}$.  Assume that
+    \begin{math}
+        \medianC_i \geq 16i^2 c \log \nballs,
+    \end{math}
+    where $c$ is some arbitrary constant.  Then, for some constant
+    $c'$, we have that
+    $\cardin{\medianC_i - \Ex{\NHX{i}}} \leq c' i \sqrt{\medianC_i}$,
+    and
+    \begin{equation*}
+        \Prob{ \cardin{\NHX{i} - \medianC_i } \geq 6i \sqrt{c
+              \medianC_i \ln \nballs}} \leq %
+        \frac{1}{\nballs^{c}}%
+        \qquad\text{ and }\qquad%
+        \Prob{ \cardin{\bigl.\NHX{i}
+              - \Ex{\NHX{i}} } \geq c'i \sqrt{\medianC_i} + 6i \sqrt{c
+              \medianC_i \ln \nballs}} \leq %
+        \frac{1}{\nballs^{c}}.
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+    Observe that $\NHX{i}$ is $1$-certifiable -- indeed, the
+    certificate is the list of indices of all the balls that are
+    contained in bins with $i$ or more balls. The variable $\NHX{i}$
+    is also $i$-Lipschitz. Changing the location of a single ball, can
+    make one bin that contains $i$ balls, into a bin that contains
+    only $i-1$ balls, thus decreasing $\NHX{i}$ by $i$.
+
+    We require that
+    \begin{math}
+        ti\sqrt{ \medianC_i} \leq \medianC_i/2%
+        \implies%
+        t \leq \sqrt{ \medianC_i}/(2i).%
+    \end{math}    
+    \thmref{talagrand:certifable} implies that
+    \begin{equation}
+        \Prob{ \NHX{i} \leq  \medianC_i - ti\sqrt{ \medianC_i}}%
+        \leq 2\exp(-t^2/4).
+        %
+        \eqlab{lower:end:t:e}
+    \end{equation}
+
+    Setting $b = \medianC_i + 2 ti\sqrt{\medianC_i}$, we have that
+    \begin{equation*}
+        b- ti\sqrt{b}%
+        \geq%
+        b - ti \sqrt{\medianC_i + 2 ti\sqrt{\medianC_i}} 
+        \geq%
+        b - ti \sqrt{2 \medianC_i} %
+        =%
+        \medianC_i + 2 ti\sqrt{\medianC_i} - ti \sqrt{2 \medianC_i}%
+        \geq%
+        \medianC_i.        
+    \end{equation*}
+    This implies that
+    \begin{math}
+        \Prob{ \NHX{i} \geq b} /2%
+        \leq %
+        \Prob{ \NHX{i} \leq \medianC_i} \Prob{X \geq b}%
+        \leq %
+        \Prob{ \NHX{i} \leq b- tk\sqrt{b}}%
+        \!\Prob{\NHX{i} \geq b} \leq \exp(-t^2/4).
+    \end{math}
+    We conclude that
+    \begin{equation}
+        \Prob{ \NHX{i} \geq \medianC_i + 2 ti\sqrt{\medianC_i}}%
+        \leq 2 \exp(-t^2/4).
+        \eqlab{upper:end:t:e}
+    \end{equation}
+    Combining the above, we get that
+    \begin{equation*}
+        \Prob{ \cardin{\NHX{i} - \medianC_i} \geq
+           2ti\sqrt{\medianC_i}}%
+        \leq 4 \exp(-t^2/4)
+    \end{equation*}
+    We require that 
+    \begin{math}
+        4 \exp(-t^2/4) \leq {1}/{\nballs^{c}},
+    \end{math}
+    which holds for $ t= 3\sqrt{c \ln n}$.
+    We get the inequality
+    \begin{math}
+        \ProbLTR \bigl[ \cardin{\NHX{i} - \medianC_i} \geq 6 i\sqrt{c
+           \medianC_i \ln n} \bigr]%
+        \leq {1}/{\nballs^{c}},
+    \end{math}
+    as claimed.
+    
+    This in turn translates into the requirement that 
+    \begin{math}
+        3\sqrt{c \ln n} \leq \sqrt{ \medianC_i}/(2i).%
+        \implies%
+        6i\sqrt{c \ln n} \leq \sqrt{ \medianC_i}.%
+        \implies%
+        36i^2 c \ln n \leq \medianC_i.%
+    \end{math}    
+
+    Next, we estimate the expectation. We have that
+    \begin{equation*}
+        \Ex{ \NHX{i}} %
+        \geq%
+        \medianC_i  - \sum_{t=1}^\infty t i \sqrt{ \medianC_i}
+        \Prob{ \NHX{i} \leq  \medianC_i - (t-1)i\sqrt{ \medianC_i}}%
+        \geq%
+        \medianC_i  - i \sqrt{ \medianC_i} \sum_{t=1}^\infty t 
+        2\exp(-(t-1)^2/4)%
+        \geq %
+        \medianC_i  - 10 i \sqrt{ \medianC_i},
+    \end{equation*}
+    by \Eqref{lower:end:t:e}. Similarly, by \Eqref{upper:end:t:e}, we
+    have
+    \begin{equation*}
+        \Ex{ \NHX{i}} %
+        \leq%
+        \medianC_i  + \sum_{t=1}^\infty 2ti \sqrt{ \medianC_i}
+        \Prob{ \NHX{i} \geq  \medianC_i + (t-1)i\sqrt{ \medianC_i}}%
+        \leq%
+        \medianC_i  + 4 i \sqrt{ \medianC_i} \sum_{t=1}^\infty t 
+        \exp(-(t-1)^2/4)%
+        \leq %
+        \medianC_i  + 20 i \sqrt{ \medianC_i},
+    \end{equation*}
+    As such, we have that
+    \begin{math}
+        \cardin{ \Ex{ \NHX{i}} - \medianC_i } \leq 30 i \sqrt{
+           \medianC_i},
+    \end{math}
+    namely $c' \leq 30$. Combining the above inequalities implies the
+    statement of the lemma.
+\end{proof}
+
+\begin{example}
+    Consider throwing $\nballs$ into $\nbins = \nballs^{4/3}$ bins.
+    \lemref{L:i:expecation} implies that
+    \begin{math}
+        e^{-2} F_i \leq%
+        \Ex{\NHX{i}} %
+        \leq 6e^{i-1} F_i,
+    \end{math}
+    where
+    \begin{math}
+        F_i = \nballs / ( i \nbins^{1/3})^{i-1}.
+    \end{math}
+    As such $ \Ex{\NHX{2}} = \Theta( \nballs^{2/3})$,
+    $ \Ex{\NHX{3}} = \Theta( \nballs^{1/3})$, and
+    $ \Ex{\NHX{4}} = \Theta( 1 )$.
+
+    Applying \lemref{L:i:concentration}, we get that the number of
+    balls that collides (i.e., $\NHX{2}$), is strongly concentrated
+    around some value $\medianC_2 =\Theta( \nballs^{2/3})$, with the
+    interval where it lies being of length
+    $O\bigl( \nballs^{1/3} \sqrt{\log n}\bigr)$.
+\end{example}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Bibliographical notes}
+
+Our presentation follows closely Alon and Spencer \cite{as-pm-00}.
+\secref{b:i:b:revisit} is from Har-Peled and Jones \cite{hj-spl-18}.
+
+\section{Problems}
+\begin{exercise}
+    \exelab{l:c:subset:large}%
+    %
+    Elaborating on the argument of \lemref{l:c:subset}, prove that,
+    with high probability, a random set of points picked uniformly in
+    the unit square contains a convex subset of size
+    $\Omega(n^{2/3})$.
+\end{exercise}
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   
+   \IncFragment{d_approx_basic}%
+}
+
+
+
+\ChapterEnd{}
+

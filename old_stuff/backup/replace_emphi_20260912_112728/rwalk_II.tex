@@ -1,0 +1,667 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+
+% \newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\ChapterNumPage{32}{258}
+
+\Chapter{Random Walks II}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{``Then you must begin a reading program immediately so that
+   you man understand the crises of our age," Ignatius said
+   solemnly. "Begin with the late Romans, including Boethius, of
+   course. Then you should dip rather extensively into early
+   Medieval. You may skip the Renaissance and the Enlightenment. That
+   is mostly dangerous propaganda. Now, that I think about of it, you
+   had better skip the Romantics and the Victorians, too. For the
+   contemporary period, you should study some selected comic books.''
+   
+   ``You're fantastic.''
+   
+   ``I recommend Batman especially, for he tends to transcend the
+   abysmal society in which he's found himself. His morality is rather
+   rigid, also. I rather respect Batman.''  }{John Kennedy Toole} {A
+   confederacy of Dunces}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Catalan numbers}
+
+For a sequence $\sigma$ of symbols, let $\#(\sigma,X)$ be the number
+of times the symbol $X$ appears in $\sigma$.
+\begin{defn}
+    A sequence/word $\sigma$ of length $2n$ elements/characters made out of two
+    symbols $X$ and $Y$, is \emphi{balanced}, if
+    \smallskip%
+    \begin{compactenumI}
+        \item $X$ appears $n$ times (i.e., $\#(\sigma, X) = n$),
+        \item $Y$ appears $n$ times (i.e., $\#(\sigma, Y) = n$),
+        \item In any prefix of the string, the number of $X$s is at
+        least as large as the number of $Y$s.
+    \end{compactenumI}
+    \smallskip%
+    Such a string is known as a \emphi{Dyck word}. If $X$ and $Y$ are
+    the open and close parenthesis characters, respectively, then the
+    word is a balanced/valid parenthesis pattern.
+\end{defn}
+
+\begin{defn}
+    The \emphi{Catalan number}, denoted by $C_n$, is the number of
+    balanced strings of length $2n$.
+\end{defn}
+
+There are many other equivalent definitions of Catalan number.
+
+\begin{defn}
+    A sequence $\sigma$ made out of two symbols $X$ and $Y$ is
+    \emphi{dominating}, if for any non-empty prefix of $\sigma$, the
+    number of $X$s is strictly larger than the number of $Y$s.
+\end{defn}
+
+\begin{lemma}
+    \lemlab{dominating:shitfs}%
+    %
+    Let $\sigma$ be a cyclic sequence made out symbols $X$ and $Y$,
+    where $n = \#(\sigma,X)$ and
+    $m = \#(\sigma,y)$, with $n > m$. Then there are exactly $n-m$
+    locations where cutting the cyclic sequence at these locations,
+    results in a dominating sequence.
+\end{lemma}
+\begin{proof}
+    Consider a location in $\sigma$ that contains $X$, and the next
+    location contains $Y$. Clearly, such a location can not be a start
+    for a dominating sequence. Of course, the next location can also
+    not be a start position for a dominating sequence. As such, these
+    two locations must be interior to a dominating sequence, and
+    deleting both of these symbols from $\sigma$, results in a new
+    cyclic sequence, where every dominating start location corresponds
+    to a dominating start location in the original sequence. Observe,
+    that as long as the number of $X$s is larger than the number of
+    $Y$s, there must be such a location with $XY$ as the
+    prefix. Repeatedly deleting $XY$ substring, results in a string of
+    length $n-m$, where every location is a good start of a dominating
+    sequence. We conclude that there are exactly $n-m$ such locations.
+\end{proof}
+
+\begin{observation}
+    The number of distinct cyclic sequences of length $m+n$, with $m$
+    appearances of $X$, and $n$ appearances of $Y$ is
+    \begin{math}
+        \frac{(n+m-1)!}{m! n!} = \frac{1}{n +m}\binom{n + m}{n},
+    \end{math}
+    since there are $(n+m-1)!$ different cyclic ways to arrange $n+m$
+    distinct values.
+\end{observation}
+
+\begin{theorem}
+    For $n \geq 1$, we have that the Catalan number
+    $C_n = \frac{1}{n+1} \binom{2n}{n}$.
+\end{theorem}
+\begin{proof}
+    Consider a dominating sequence $\sigma$ of length $2n+1$ with
+    $\#(\sigma,X)=n+1$, and $\#(\sigma,Y)=n$. Such a sequence must
+    start with an $X$, and if we remove the leading $X$, then what
+    remains is a balanced sequence. Such a sequence $\sigma$ can be
+    interpreted as a cyclic sequence. By the \lemrefY{above
+       lemma}{dominating:shifts}, there is a unique shift that is
+    dominating. As such, the number of such cyclic sequence is the
+    Catalan number $C_n$.  By the above observation, the number of
+    such cyclic sequences is
+    \begin{equation*}
+        \frac{(n+m-1)!}{m! n!}%
+        =%        
+        \frac{(n+n+1-1)!}{(n+1)!n!}%
+        =%        
+        \frac{1}{n+1}
+        \frac{2n!}{n!n!}%
+        =%        
+        \frac{1}{n+1}
+        \binom{2n}{n}.
+    \end{equation*}
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+
+\Section{Walking on the integer line revisited}
+
+\SubSection{Estimating the middle binomial coefficient}
+\begin{lemma}
+    \lemlab{binomial:middle}%
+ %
+    For $i\geq 11^2$, we have
+    \begin{math}
+        \displaystyle \frac{1}{4} \cdot \frac{2^{2i}}{\sqrt{i}} \leq%
+        \binom{2i}{i} \leq%
+        2 \cdot \frac{2^{2i}}{\sqrt{i}}.
+    \end{math}
+    and
+    \begin{math}
+        \binom{2i}{i+\sqrt{i}}
+        \geq%
+        \frac{1}{12} \cdot
+        \frac{2^{2i}}{\sqrt{i}}
+    \end{math}
+
+\end{lemma}
+\begin{proof}
+    Observe that $\binom{2i}{i} \geq \binom{2i}{j}$, for any $j$.  We
+    assume that $i \geq 11^2$, and $\sqrt{i}$ is an integer. O bserve
+    that
+    \begin{math}
+        \binom{2i}{i+\tau} =%
+        \frac{2i!}{(i+\tau)! (i-\tau)!}%
+        =%
+        \frac{2i!}{i!i!}  \frac{(i-\tau+1) \cdots (i-1)i} {(i+1)
+           \cdots (i+\tau)} =%
+        \binom{2i}{i} \prod_{k=1}^\tau \frac{i-\tau+k}{i+k}.
+    \end{math}
+    Now, by \lemref{exp:lower:bound:2}, we have
+    \begin{equation*}
+        \alpha
+        =%
+        \prod_{k=1}^\tau \frac{i-\tau+k}{i+k}
+        =%
+        \prod_{k=1}^\tau \pth{ 1- \frac{\tau}{i+k}}
+        \geq 
+        \pth{ 1- \frac{\tau}{i}}^\tau
+        \geq
+        \pth{ 1 - \frac{\tau^2}{i^2} \tau }
+        \exp \pth{ -\frac{\tau^2}{i}}
+        \geq
+        \frac{1}{3},        
+    \end{equation*}
+    for $\tau \leq \sqrt{i}$, and $i \geq 11^2$.  Namely, for any $k$,
+    such that $-\sqrt{i} \leq k \leq \sqrt{i}$, we have
+    $\binom{2i}{i+k} \geq \binom{2i}{i}/3$.  We thus have that
+    \begin{equation*}
+        1
+        \geq 
+        \frac{1}{2^{2i}}
+        \sum_{k=-\sqrt{i}+1}^{\sqrt{i}} \binom{2i}{i+k}%
+        \geq%       
+        \frac{2\sqrt{i}}{3\cdot 2^{2i}}  \binom{2i}{i}
+        \qquad\implies\quad%
+        \binom{2i}{i}
+        \leq%
+        \frac{2}{3} \cdot \frac{2^{2i}}{\sqrt{i}}.
+    \end{equation*}
+
+
+
+    Let $\Delta = \sqrt{i}-1$ and $X \sim \mathrm{bin}(2i,1/2)$. We
+    have that $\Ex{X} = i$, and $\Var{X} = 2i (1/2)(1/2) = i/2$.  Let
+    \begin{math}
+        \beta = \frac{1}{2^{2i}} \sum_{k=-\Delta}^\Delta
+        \binom{2i}{i+k}.
+    \end{math}
+    By Chebychev, we have that
+    \begin{math}
+        1 - \beta =%
+        \Prob{|X - i| \geq \sqrt{2} \sqrt{i/2}} \leq 1/2.
+    \end{math}
+    which implies
+    \begin{math}
+        \beta \geq 1/2.
+    \end{math}
+    We have
+    \begin{equation*}
+        \frac{1}{2} \leq \beta \leq
+        \frac{1}{2^{2i}}
+        \sum_{k=-\Delta}^\Delta \binom{2i}{i+k}%
+        \leq%       
+        \frac{2\Delta+1}{2^{2i}} \binom{2i}{i}
+        \qquad\implies\qquad
+        \binom{2i}{i}
+        \geq%
+        \frac{2^{2i}}{2(2\Delta+1)}
+        \geq%
+        \frac{2^{2i}}{4\sqrt{i}}.
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    In a random walk on the line starting at zero, in expectation,
+    after $48n^2$ steps, the walk had visited either $-n$ or $+n$.
+\end{lemma}
+\begin{proof}
+    By \lemref{binomial:middle}, the probability that after $2i$
+    steps, for $i=16n^2$, the walk is in the range
+    $\{-\sqrt{i}+1, \ldots, \sqrt{i}-1 \}$ is at most
+    \begin{equation*}
+        2n \frac{1}{2^{2i}} \cdot \frac{2}{3} \cdot \frac{2^{2i}}{\sqrt{i}}
+        = %
+        2n  \frac{2}{3} \cdot \frac{1}{4n}
+        = %
+        \frac{1}{3}.
+    \end{equation*}
+    Namely, the walk arrived to either $-n$ or $+n$ during the first
+    $32n^2$ steps (note that $n \leq i/2$) with probability
+    $\geq 2/3$.  If this did not happen, we continue the walk. As
+    $ i\geq 2n$, the same argumentation essentially implies that every
+    $32n^2$ steps, the walk terminates with probability at least
+    $2/3$. As such, in expectation, after $3/2$ such epochs, the walk
+    would terminate.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Section{Solving 2SAT using random walk}
+
+Let $\Graph= G(V,E)$ be a undirected connected graph. For $v \in V$,
+let $\Nbr(v)$ denote the neighbors of $v$ in $\Graph$. A random walk
+on $\Graph$ is the following process: Starting from a vertex $v_0$, we
+randomly choose one of the neighbors of $v_0$, and set it to be
+$v_1$. We continue in this fashion, such that $v_i \in
+\Nbr(v_{i-1})$. It would be interesting to investigate the process of
+the random walk. For example, questions like: (i) how long does it
+take to arrive from a vertex $v$ to a vertex $u$ in $\Graph$? and (ii)
+how long does it take to visit all the vertices in the graph.
+
+\subsection{Solving 2SAT}
+
+Consider a 2SAT formula $F$ with $m$ clauses defined over $n$
+variables. Start from an arbitrary assignment to the variables, and
+consider a non-satisfied clause in $F$. Randomly pick one of the
+clause variables, and change its value. Repeat this till you arrive to
+a satisfying assignment.
+
+Consider the random variable $X_i$, which is the number of variables
+assigned the correct value (according to the satisfying assignment) in
+the current assignment. Clearly, with probability (at least) half $X_i
+= X_{i-1}+1$.
+
+Thus, we can think about this algorithm as performing a random walk on
+the numbers $0, 1,\ldots, n$, where at each step, we go to the right
+probability at least half. The question is, how long does it take to
+arrive to $n$ in such a settings.
+
+\begin{theorem}
+    The expected number of steps to arrive to a satisfying assignment
+    is $O(n^2)$.
+\end{theorem}
+
+\begin{proof}
+    For simplicity of exposition assume that $n$ is divisible by $4$.
+    Consider the random walk on the integer line, starting from zero,
+    where we go to the left with probability $1/2$, and to the right
+    probability $1/2$. Let $Y_i$ be the location of the walk at the
+    $i$ step. Clearly, $\Ex{Y_i} \geq \Ex{X_i}$. By defining the
+    random walk on the integer line more carefully, one can ensure
+    that $Y_i \leq X_i$. Thus, the expected number of steps till $Y_i$
+    is equal to $n$ is an upper bound on the required quantity.
+
+     
+    For an $i$, $Y_{2i}$ is an even number. Thus, consider the event
+    that $Y_{2i} = 2\Delta \geq n$, let $Y_{2i} = R_{2i}-L_{2i}$,
+    where $R_{2i}$ is the number of steps to the right, and $L_{2i}$
+    is the number of steps to the left. Observe that
+    \begin{equation*}
+        \begin{cases}
+          R_{2i} - L_{2i} = 2\Delta\\
+          R_{2i} + L_{2i} = 2i
+        \end{cases}
+        \implies
+        \begin{cases}
+          R_{2i} &= i +\Delta\\
+          L_{2i} = i - R_{2i} &= i - \Delta. 
+        \end{cases}        
+    \end{equation*}
+
+
+    
+
+    Thus, for $i \geq n/2$, we have that the
+    probability that in the $2i$\th step we have $Y_{2i} \geq n$ is
+    \begin{equation*}
+        \rho=\smash{\sum_{\Delta=n/2}^{i}}
+        \frac{1}{2^{2i}}\ts\mybinom{2i}{i + \Delta}.
+    \end{equation*}
+    \lemref{bionomial:heavy:tail} below, tells us that for
+    $\rho > 1/3$, is implied if $\Delta \leq \sqrt{i}/6$.  That is,
+    $n/2 \leq \sqrt{i}/6$, which holds for $i=9n^2$.
+    
+    Next, if $X_{2i}$ fails to arrive to $n$ at the first $\mu$ steps,
+    we will reset $Y_\mu = X_\mu$ and continue the random walk,
+    repeating this process as many phases as necessary. The
+    probability that the number of phases exceeds $i$ is
+    $\leq (2/3)^i$. As such, the expected number of steps in the walk
+    is at most
+    \begin{equation*}
+        \sum_i c' n^2 i \pth[]{1 - \rho}^i = O(n^2),
+    \end{equation*}
+    as claimed.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{bionomial:heavy:tail}%
+    %
+    We have
+    \begin{math}
+        \ds \smash{\sum\nolimits_{k=i + \sqrt{i}/6}^{2i}}\;
+        \frac{1}{2^{2i}}\binom{2i}{k} \geq \frac{1}{3}
+    \end{math}    .
+\end{lemma}
+\begin{proof}
+    It is known\footnote{Probably because you got it as a homework
+       problem, if not wikipedia knows, and if you are bored you can
+       try and prove it yourself.} that
+    $\binom{2i}{i}\leq 2^{2i}/\sqrt{i}$ (better constants are known).
+    As such, since $\binom{2i}{i}\geq \binom{2i}{m}$, for all $m$, we
+    have by symmetry that
+    \begin{equation*}
+        \smash{\ds \sum_{k=i + \sqrt{i}/6}^{2i} \frac{1}{2^{2i}}
+           \binom{2i}{k}%
+           \geq%
+           \sum_{k=i+1}^{2i} \frac{1}{2^{2i}}\binom{2i}{k} - \sqrt{i}/6
+           \frac{1}{2^{2i}} \binom{2i}{i}%
+           \geq%
+           \frac{1}{2} - \sqrt{i}/6 \frac{1}{2^{2i}} \cdot
+           \frac{2^{2i}}{\sqrt{i}}%
+           =%
+           \frac{1}{3}.}
+    \end{equation*}
+\end{proof}
+
+
+% ---------------------------------------------------------
+
+\section{Markov chains}
+
+Let $\MCSpc$ denote a state space, which is either finite or
+countable.  A \emphi{Markov chain} is at one state at any given time.
+There is a \emphi{transition probability} $\MCPrb_{ij}$, which is the
+probability to move to the state $j$, if the Markov chain is currently
+at state $i$. As such, $\sum_{j} \MCPrb_{ij} = 1$ and $\forall i,j$ we
+have $0 \leq \MCPrb_{ij} \leq 1$. The matrix $\,\MCPrbM = \brc{
+   \MCPrb_{ij} }_{ij}\,$ is the \emphi{transition probabilities
+   matrix}.
+
+\begin{equation*}
+    \MCPrbM
+    =% 
+    \left(
+        \begin{array}{cccc>{\columncolor{olive!20}}ccccccc|}
+          \multicolumn{1}{c}{}& & & 
+          &
+            {j \text{\th column}} & & &  \\
+                              & & & & & & & & & \cr%
+                                  & & & & & & & & & \\%
+          \rowcolor{blue!20}
+          i\text{\th row} & & & & \cellcolor{purple!20}\MCPrb_{ij} & & & & & \\%
+                              & & & & & & & & & \\%
+                              & & & & & & & & & \\%
+        \end{array}
+    \right)
+  \end{equation*}
+
+
+The Markov chain start at an initial state $X_0$, and at each point in
+time moves according to the transition probabilities. This form a
+sequence of states $\brc{X_t}$. We have a distribution over those
+sequences. Such a sequence would be referred to as a \emphi{history}.
+
+Similar to Martingales, the behavior of a Markov chain in the future,
+depends only on its location $X_t$ at time $t$, and does not depends
+on the earlier stages that the Markov chain went through. This is the
+\emphi{memorylessness property} of the Markov chain, and it follows as
+$\MCPrb_{ij}$ is independent of time. Formally, the memorylessness
+property is
+\begin{equation*}
+    \ProbCond{\bigl.X_{t+1} =j }{ X_0 = i_0, X_1 = i_1, \ldots, X_{t-1} =
+       i_{t-1} , X_t = i }%
+    \boldsymbol{=}\ts\ts%
+    \ProbCond{X_{t+1} =j}{ X_t = i}%
+    \ts\boldsymbol{=}\;%
+    \MCPrb_{ij}.
+\end{equation*}
+The initial state of the Markov chain might also be chosen randomly in
+some cases.
+
+For states $i,j \in \MCSpc$, the \emphi{$t$-step transition
+   probability} is $\MCPrbT{i}{j}{t} = \Prob{X_t = j \sep{ X_0 =
+      i}}$. The probability that we visit $j$ for the first time,
+starting from $i$ after $t$ steps, is denoted by
+\begin{equation*}
+    \MCFPrbT{i}{j}{t} = \Prob{X_t = j \text{ and } X_1 \ne j, X_2 \ne
+       j, \ldots, X_{t-1}\ne j \sep{ X_0 = i}}.
+\end{equation*}
+Let $\MCVstProb{i}{j} = \sum_{t>0} \MCFPrbT{i}{j}{t}$ denote the
+probability that the Markov chain visits state $j$, at any point in
+time, starting from state $i$. The expected number of steps to arrive
+to state $j$ starting from $i$ is
+\begin{equation*}
+    \MCExSteps{i}{j} = \sum_{t >0} t\cdot \MCFPrbT{i}{j}{t}.
+\end{equation*}
+Of course, if $\MCVstProb{i}{j} <1$, then there is a positive
+probability that the Markov chain never arrives to $j$, and as such
+$\MCExSteps{i}{j} = \infty$ in this case.
+
+\begin{defn}
+    A state $i \in \MCSpc$ for which $\MCVstProb{i}{i} < 1$ (i.e., the
+    chain has positive probability of never visiting $i$ again), is a
+    \emphic{transient}{state!transient} state. If $\MCVstProb{i}{i}=1$
+    then the state is \emphic{persistent}{state!persistent}.
+    
+    A state $i$ that is persistent but $\MCExSteps{i}{i} = \infty$ is
+    \emphic{null persistent}{state!null persistent}. A state $i$ that
+    is persistent and $\MCExSteps{i}{i} \ne \infty$ is \emphic{non
+       null persistent}{state!non null}.
+\end{defn}
+
+\begin{example}
+    Consider the state $0$ in the random walk on the integers. We
+    already know that in expectation the random walk visits the origin
+    infinite number of times, so this hints that this is a persistent
+    state. Let figure out the probability $ \MCFPrbT{0}{0}{2n}$. To
+    this end, consider a walk $X_0, X_1, \ldots, X_{2n}$ that starts
+    at $0$ and return to $0$ only in the $2n$ step.  Let
+    $S_i = X_i - X_{i-1}$, for all $i$.  Clearly, we have
+    $S_i \in \brc{-1, +1}$ (i.e., move left or move right).  Assume
+    the walk starts by $S_1 = +1$ (the case $-1$ is handled
+    similarly). Clearly, the walk $S_{2}, \ldots, S_{2n-1}$ must be
+    prefix balanced; that is, the number of $1$s is always bigger (or
+    equal) for any prefix of this sequence.
+    
+    Strings with this property are known as \emphi{Dyck words}, and
+    the number of such words of length $2m$ is the \emphi{Catalan
+       number} $C_{m} = \frac{1}{m+1} \binom{2m}{m}$. As such, the
+    probability of the random walk to visit $0$ for the first time
+    (starting from $0$) after $2n$ steps, is
+    \begin{equation*}
+        \MCFPrbT{0}{0}{2n} = {2 \frac{1}{n} \binom{2n - 2}{n-1}
+        }\frac{1}{2^{2n}} = \Theta\pth{ \frac{1}{n} \cdot
+           \frac{1}{\sqrt{n}} } = \Theta \pth{ \frac{1}{n^{3/2}}} .
+    \end{equation*}
+    (the $2$ here is because the other option is that the sequence
+    starts with $-1$), using that $\binom{2n}{n} = \Theta\pth{ 2^{2n}
+       / \sqrt{n}}$.
+
+    Observe that
+    $\MCVstProb{0}{0}= \sum_{n=0}^\infty \MCFPrbT{0}{0}{2n} =
+    O(1)$. However, one can be more precise -- that is,
+    $\MCVstProb{0}{0}=1$ (this requires a trick)! On the other hand,
+    we have that
+    \begin{equation*}
+        \MCExSteps{0}{0} = \sum_{t >0} t\cdot \MCFPrbT{0}{0}{t} \geq %
+        \sum_{n=1}^\infty 2n \MCFPrbT{0}{0}{2n}%
+        =%
+        \sum_{n=1}^{\infty} \Theta\pth{ 1/\sqrt{n}} = \infty.
+    \end{equation*}
+    Namely, $0$ (and indeed all integers) are null persistent.
+\end{example}
+
+In finite Markov chains there are no null persistent states (this
+requires a proof, which is left as an exercise).  There is a natural
+directed graph associated with a Markov chain. The states are the
+vertices, and the transition probability $\MCPrbY{i}{j}$ is the weight
+assigned to the edge $\dirEdge{i}{j}$. Note that we include only edges
+with $\MCPrbY{i}{j} > 0$.
+\begin{defn}
+    A \emphi{strong component} (or a \emph{strong connected
+       component}) of a directed graph $\Graph$ is a maximal subgraph
+    $C$ of $\Graph$ such that for any pair of vertices $i$ and $j$ in
+    the vertex set of $C$, there is a directed path from $i$ to $j$,
+    as well as a directed path from $j$ to $i$.
+\end{defn}
+
+\begin{defn}
+    A strong component $C$ is a \emphi{final strong component}\, if
+    there is no edge going from a vertex in $C$ to a vertex that is
+    not in $C$.
+\end{defn}
+
+In a finite Markov chain, there is positive probability to arrive from
+any vertex on $C$ to any other vertex of $C$ in a finite number of
+steps. If $C$ is a final strong component, then this probability is
+$1$, since the Markov chain can never leave $C$ once it enters
+it\footnote{Think about it as hotel California.}. It follows that a
+state is persistent if and only if it lies in a final strong
+component.
+
+\begin{defn}
+    A Markov chain is \emphi{irreducible} if its underlying graph
+    consists of a single strong component.
+\end{defn}
+
+Clearly, if a Markov chain is irreducible, then all states are
+persistent.
+
+\begin{defn}
+    Let
+    $\MCPVec{t} = \pth[]{ q_1^{(t)}, q_2^{(t)}, \ldots, q_n^{(t)} }\,$
+    be the \emphi{state probability vector} (also known as the
+    distribution of the chain at time $t$), to be the row vector whose
+    $i$\th component is the probability that the chain is in state $i$
+    at time $t$.
+\end{defn}
+
+The key observation is that
+\begin{equation*}
+    \MCPVec{t} = \MCPVec{t-1} \MCPrbM = \MCPVec{0} \MCPrbM^{t}.
+\end{equation*}
+Namely, a Markov chain is fully defined by $\MCPVec{0}$ and $\MCPrbM$.
+
+\begin{defn}
+    A \emphi{stationary distribution} for a Markov chain with the
+    transition matrix $\MCPrbM$ is a probability distribution $\pi$
+    such that $\pi = \pi \MCPrbM$.
+\end{defn}
+
+In general, stationary distribution does not necessarily exist. We
+will mostly be interested in Markov chains that have stationary
+distribution. Intuitively it is clear that if a stationary
+distribution exists, then the Markov chain, given enough time, will
+converge to the stationary distribution.
+
+\begin{defn}
+    The \emphi{periodicity} of a state $i$ is the maximum integer $T$
+    for which there exists an initial distribution $\MCPVec{0}$ and
+    positive integer $a$ such that, for all $t$, if at time $t$ we
+    have $q_i^{(t)} >0$ then $t$ belongs to the arithmetic progression
+    $\Set{a+ T i }{ i \geq 0}$. A state is said to be
+    \emphic{periodic}{state!periodic} if it has periodicity greater
+    than $1$, and is \emphic{aperiodic}{state!aperiodic} otherwise. A
+    Markov chain in which every state is aperiodic is
+    \emphic{aperiodic}{Markov chain!aperiodic}.
+\end{defn}
+
+\begin{example}
+    The easiest example maybe of a periodic Markov chain is a directed
+    cycle. 
+
+    \begin{figure}[t]
+        \centering
+        \IncludeGraphics{\File{figs/cycle}}
+        \caption{A directed cycle of length 3 is a periodic Markov chain.}
+        \figlab{cycle}
+    \end{figure}
+
+    For example, the Markov chain shown in \figref{cycle} has periodicity of
+    three. In particular, the initial state probability vector
+    $\MCPVec{0} = (1,0,0)$ leads to the following sequence of state
+    probability vectors
+    \begin{equation*}
+        \MCPVec{0} = (1,0,0)%
+        \implies%
+        \MCPVec{1} = (0,1,0)%
+        \implies%
+        \MCPVec{2} = (0,0,1)%
+        \implies%
+        \MCPVec{3} = (1,0,0) %
+        \implies \ldots.%
+    \end{equation*}
+    Note, that this chain still has a stationary distribution, that is
+    $(1/3, 1/3, 1/3)$, but unless you start from this distribution,
+    you are going to converge to it.
+\end{example}
+
+
+A neat trick that forces a Markov chain to be aperiodic, is to shrink
+all the probabilities by a factor of $2$, and make every state to have
+a transition probability to itself equal to $1/2$. Clearly, the
+resulting Markov chain is aperiodic.
+
+
+\begin{defn}
+    An \emphic{ergodic}{state!ergodic} state is aperiodic and
+    (non-null) persistent.
+    
+    An \emphic{ergodic}{Markov chain!ergodic} Markov chain is one in
+    which all states are ergodic.
+\end{defn}
+
+The following theorem is the fundamental property of Markov chains
+that we will need. The interested reader, should check the proof in
+\cite{n-mc-98} (the proof is not hard).
+\begin{fragment}{fund_m_c_theorem}
+    \begin{theorem}[Fundamental theorem of Markov chains]
+        \thmlab{fundamental}%
+        %
+        Any irreducible, finite, and aperiodic Markov chain has the
+        following properties.
+        \begin{compactenumi}
+            \item All states are ergodic.
+            
+            \item There is a unique stationary distribution $\pi$ such
+            that, for $1 \leq i \leq n$, we have $\pi_i > 0$.
+            
+            \item For $1 \leq i \leq n$, we have $\MCVstProb{i}{i} =1$
+            and $\MCExSteps{i}{i} = 1/ \pi_i$.
+            
+            \item Let $N(i,t)$ be the number of times the Markov chain
+            visits state $i$ in $t$ steps. Then
+            \begin{equation*}
+                \lim_{t \rightarrow \infty} \frac{N(i,t)}{t} = \pi_i.
+            \end{equation*}
+            Namely, independent of the starting distribution, the
+            process converges to the stationary distribution.
+        \end{compactenumi}
+    \end{theorem}
+\end{fragment}
+% \bibliographystyle{alpha} \bibliography{shortcuts,geometry}
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{exp_lower_bound_2}
+
+}
+
+\ChapterEnd{}
+
+% \end{document}%
+

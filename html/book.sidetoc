@@ -1,0 +1,524 @@
+\contentsline {chapter}{\numberline {1}{\ignorespaces Introduction to Randomized Algorithms\relax }}{12}{}
+\contentsline {section}{\numberline {1.1}{\ignorespaces What are randomized algorithms?\relax }}{15}{}
+\contentsline {subsection}{\numberline {1.1.1}{\ignorespaces The benefits of unpredictability\relax }}{16}{}
+\contentsline {subsection}{\numberline {1.1.2}{\ignorespaces Back to randomized algorithms\relax }}{21}{}
+\contentsline {subsection}{\numberline {1.1.3}{\ignorespaces Randomized vs average-case analysis\relax }}{22}{}
+\contentsline {section}{\numberline {1.2}{\ignorespaces Examples of randomized algorithms\relax }}{23}{}
+\contentsline {subsection}{\numberline {1.2.1}{\ignorespaces 2SAT\relax }}{24}{}
+\contentsline {subsubsection}{\numberline {1.2.1.1}{\ignorespaces The algorithm\relax }}{25}{}
+\contentsline {subsubsection}{\numberline {1.2.1.2}{\ignorespaces Intuition\relax }}{27}{}
+\contentsline {subsection}{\numberline {1.2.2}{\ignorespaces Walk on the grid\relax }}{28}{}
+\contentsline {subsubsection}{\numberline {1.2.2.1}{\ignorespaces Walk on the line\relax }}{29}{}
+\contentsline {subsubsection}{\numberline {1.2.2.2}{\ignorespaces Walk on the two dimensional grid\relax }}{31}{}
+\contentsline {subsubsection}{\numberline {1.2.2.3}{\ignorespaces Walk on the two dimensional grid\relax }}{33}{}
+\contentsline {subsection}{\numberline {1.2.3}{\ignorespaces R{S}A and primality testing\relax }}{34}{}
+\contentsline {subsection}{\numberline {1.2.4}{\ignorespaces Min cut\relax }}{37}{}
+\contentsline {chapter}{\numberline {2}{\ignorespaces The Alias Method\relax }}{44}{}
+\contentsline {section}{\numberline {2.1}{\ignorespaces Introduction\relax }}{47}{}
+\contentsline {section}{\numberline {2.2}{\ignorespaces The alias method\relax }}{48}{}
+\contentsline {section}{\numberline {2.3}{\ignorespaces Bibliographical notes\relax }}{59}{}
+\contentsline {chapter}{\numberline {3}{\ignorespaces Probability and Expectation\relax }}{65}{}
+\contentsline {section}{\numberline {3.1}{\ignorespaces Basic probability\relax }}{68}{}
+\contentsline {subsection}{\numberline {3.1.1}{\ignorespaces Formal basic definitions\relax }}{69}{}
+\contentsline {subsection}{\numberline {3.1.2}{\ignorespaces Expectation and conditional probability\relax }}{80}{}
+\contentsline {subsection}{\numberline {3.1.3}{\ignorespaces Variance and standard deviation\relax }}{90}{}
+\contentsline {section}{\numberline {3.2}{\ignorespaces Some distributions and their moments\relax }}{93}{}
+\contentsline {subsection}{\numberline {3.2.1}{\ignorespaces Bernoulli distribution\relax }}{94}{}
+\contentsline {subsection}{\numberline {3.2.2}{\ignorespaces Geometric distribution\relax }}{97}{}
+\contentsline {section}{\numberline {3.3}{\ignorespaces Application: Approximating $3$SAT\relax }}{101}{}
+\contentsline {section}{\numberline {3.4}{\ignorespaces Markov's inequality\relax }}{109}{}
+\contentsline {subsection}{\numberline {3.4.1}{\ignorespaces Markov's inequality\relax }}{110}{}
+\contentsline {subsection}{\numberline {3.4.2}{\ignorespaces Example: Approximating $k$SAT\relax }}{114}{}
+\contentsline {subsection}{\numberline {3.4.3}{\ignorespaces Example: Coloring a graph\relax }}{117}{}
+\contentsline {subsubsection}{\numberline {3.4.3.1}{\ignorespaces Getting a valid coloring\relax }}{122}{}
+\contentsline {paragraph}{\numberline {3.4.3.1.1}{\ignorespaces A fun algorithm.\relax }}{123}{}
+\contentsline {chapter}{\numberline {4}{\ignorespaces Analyzing QuickSort and Quick{}Select via Expectation\relax }}{132}{}
+\contentsline {section}{\numberline {4.1}{\ignorespaces QuickSort\relax }}{135}{}
+\contentsline {section}{\numberline {4.2}{\ignorespaces Quick{}Select{}: Median selection in linear time\relax }}{138}{}
+\contentsline {subsection}{\numberline {4.2.1}{\ignorespaces Analysis via expectation and indicator variables\relax }}{139}{}
+\contentsline {subsection}{\numberline {4.2.2}{\ignorespaces Analysis of Quick{}Select via conditional expectations\relax }}{141}{}
+\contentsline {section}{\numberline {4.3}{\ignorespaces Bibliographical notes\relax }}{145}{}
+\contentsline {chapter}{\numberline {5}{\ignorespaces Chebyshev, Sampling and Selection\relax }}{151}{}
+\contentsline {section}{\numberline {5.1}{\ignorespaces Chebyshev's inequality\relax }}{154}{}
+\contentsline {subsection}{\numberline {5.1.1}{\ignorespaces Example: A better inequality via moments\relax }}{156}{}
+\contentsline {subsection}{\numberline {5.1.2}{\ignorespaces Chebyshev's inequality\relax }}{160}{}
+\contentsline {section}{\numberline {5.2}{\ignorespaces Estimation via sampling\relax }}{166}{}
+\contentsline {section}{\numberline {5.3}{\ignorespaces Randomized selection via sampling\relax }}{173}{}
+\contentsline {subsection}{\numberline {5.3.1}{\ignorespaces Inverse estimation\relax }}{174}{}
+\contentsline {subsubsection}{\numberline {5.3.1.1}{\ignorespaces Inverse estimation -- intuition\relax }}{178}{}
+\contentsline {subsection}{\numberline {5.3.2}{\ignorespaces Randomized selection\relax }}{180}{}
+\contentsline {subsubsection}{\numberline {5.3.2.1}{\ignorespaces The algorithm.\relax }}{181}{}
+\contentsline {subsubsection}{\numberline {5.3.2.2}{\ignorespaces Analysis.\relax }}{188}{}
+\contentsline {subsubsection}{\numberline {5.3.2.3}{\ignorespaces Doing better.\relax }}{192}{}
+\contentsline {chapter}{\numberline {6}{\ignorespaces Verifying Identities, and Some Complexity\relax }}{204}{}
+\contentsline {section}{\numberline {6.1}{\ignorespaces Verifying equality\relax }}{207}{}
+\contentsline {subsection}{\numberline {6.1.1}{\ignorespaces Vectors\relax }}{208}{}
+\contentsline {subsubsection}{\numberline {6.1.1.1}{\ignorespaces Amplification.\relax }}{211}{}
+\contentsline {subsection}{\numberline {6.1.2}{\ignorespaces Matrices\relax }}{214}{}
+\contentsline {subsection}{\numberline {6.1.3}{\ignorespaces Checking identity for polynomials\relax }}{221}{}
+\contentsline {subsubsection}{\numberline {6.1.3.1}{\ignorespaces The Schwartz–Zippel lemma\relax }}{222}{}
+\contentsline {subsubsection}{\numberline {6.1.3.2}{\ignorespaces Applications.\relax }}{226}{}
+\contentsline {paragraph}{\numberline {6.1.3.2.1}{\ignorespaces Checking if a polynomial is the zero polynomial.\relax }}{227}{}
+\contentsline {paragraph}{\numberline {6.1.3.2.2}{\ignorespaces Checking if two polynomials are equal.\relax }}{228}{}
+\contentsline {paragraph}{\numberline {6.1.3.2.3}{\ignorespaces Verifying polynomials product.\relax }}{229}{}
+\contentsline {subsection}{\numberline {6.1.4}{\ignorespaces Checking if a bipartite graph has a perfect matching\relax }}{230}{}
+\contentsline {section}{\numberline {6.2}{\ignorespaces Las Vegas and Monte Carlo algorithms\relax }}{231}{}
+\contentsline {subsection}{\numberline {6.2.1}{\ignorespaces Complexity Classes\relax }}{234}{}
+\contentsline {section}{\numberline {6.3}{\ignorespaces Bibliographical notes\relax }}{277}{}
+\contentsline {chapter}{\numberline {7}{\ignorespaces The Birthday Paradox, Occupancy and the Coupon Collector Problem\relax }}{283}{}
+\contentsline {section}{\numberline {7.1}{\ignorespaces Some needed math\relax }}{286}{}
+\contentsline {section}{\numberline {7.2}{\ignorespaces The birthday paradox\relax }}{291}{}
+\contentsline {section}{\numberline {7.3}{\ignorespaces Occupancy problems\relax }}{297}{}
+\contentsline {subsection}{\numberline {7.3.1}{\ignorespaces Understanding pileups\relax }}{300}{}
+\contentsline {subsubsection}{\numberline {7.3.1.1}{\ignorespaces Intuition\relax }}{301}{}
+\contentsline {subsubsection}{\numberline {7.3.1.2}{\ignorespaces Just doing the math\relax }}{303}{}
+\contentsline {subsection}{\numberline {7.3.2}{\ignorespaces Probability of all bins to have exactly one ball\relax }}{308}{}
+\contentsline {section}{\numberline {7.4}{\ignorespaces The Coupon Collector's Problem\relax }}{309}{}
+\contentsline {section}{\numberline {7.5}{\ignorespaces Notes\relax }}{312}{}
+\contentsline {chapter}{\numberline {8}{\ignorespaces On $k$-wise independence\relax }}{318}{}
+\contentsline {section}{\numberline {8.1}{\ignorespaces Pairwise independence\relax }}{320}{}
+\contentsline {subsection}{\numberline {8.1.1}{\ignorespaces Pairwise independence\relax }}{321}{}
+\contentsline {subsection}{\numberline {8.1.2}{\ignorespaces A pairwise independent set of bits\relax }}{324}{}
+\contentsline {subsection}{\numberline {8.1.3}{\ignorespaces An application: Max cut\relax }}{327}{}
+\contentsline {paragraph}{\numberline {8.1.3.0.1}{\ignorespaces Algorithm.\relax }}{328}{}
+\contentsline {subsection}{\numberline {8.1.4}{\ignorespaces Analysis\relax }}{329}{}
+\contentsline {section}{\numberline {8.2}{\ignorespaces On $k$-wise independence\relax }}{335}{}
+\contentsline {subsection}{\numberline {8.2.1}{\ignorespaces Definition\relax }}{336}{}
+\contentsline {subsection}{\numberline {8.2.2}{\ignorespaces On working modulo prime\relax }}{338}{}
+\contentsline {subsection}{\numberline {8.2.3}{\ignorespaces Construction of $k$-wise independence variables\relax }}{346}{}
+\contentsline {subsection}{\numberline {8.2.4}{\ignorespaces Construction\relax }}{347}{}
+\contentsline {subsection}{\numberline {8.2.5}{\ignorespaces Applications of $k$-wide independent variables\relax }}{358}{}
+\contentsline {subsubsection}{\numberline {8.2.5.1}{\ignorespaces Product of expectations\relax }}{359}{}
+\contentsline {subsubsection}{\numberline {8.2.5.2}{\ignorespaces Application: Using less randomization for a randomized algorithm\relax }}{362}{}
+\contentsline {section}{\numberline {8.3}{\ignorespaces Higher moment inequalities\relax }}{371}{}
+\contentsline {chapter}{\numberline {9}{\ignorespaces Higher Moments and Some Inequalities\relax }}{384}{}
+\contentsline {section}{\numberline {9.1}{\ignorespaces Higher moment inequalities\relax }}{386}{}
+\contentsline {subsubsection}{\numberline {9.1.0.1}{\ignorespaces Random walk on the integers\relax }}{389}{}
+\contentsline {section}{\numberline {9.2}{\ignorespaces More inequalities involving expectations\relax }}{397}{}
+\contentsline {subsection}{\numberline {9.2.1}{\ignorespaces Cauchy–Schwarz inequality for expectations\relax }}{398}{}
+\contentsline {subsection}{\numberline {9.2.2}{\ignorespaces Paley–Zygmund inequality\relax }}{401}{}
+\contentsline {subsection}{\numberline {9.2.3}{\ignorespaces Bounding the random walk away from zero\relax }}{404}{}
+\contentsline {subsubsection}{\numberline {9.2.3.1}{\ignorespaces Why Chebychev's inequality does not work in this case\relax }}{407}{}
+\contentsline {chapter}{\numberline {10}{\ignorespaces Hashing\relax }}{413}{}
+\contentsline {section}{\numberline {10.1}{\ignorespaces Introduction\relax }}{416}{}
+\contentsline {section}{\numberline {10.2}{\ignorespaces Universal Hashing\relax }}{421}{}
+\contentsline {subsection}{\numberline {10.2.1}{\ignorespaces How to build a $2$-universal family\relax }}{427}{}
+\contentsline {subsubsection}{\numberline {10.2.1.1}{\ignorespaces A quick reminder on working modulo prime\relax }}{428}{}
+\contentsline {subsubsection}{\numberline {10.2.1.2}{\ignorespaces Constructing a family of $2$-universal hash functions\relax }}{431}{}
+\contentsline {subsubsection}{\numberline {10.2.1.3}{\ignorespaces Analysis\relax }}{432}{}
+\contentsline {subsubsection}{\numberline {10.2.1.4}{\ignorespaces Explanation via pictures\relax }}{441}{}
+\contentsline {section}{\numberline {10.3}{\ignorespaces Perfect hashing\relax }}{442}{}
+\contentsline {subsection}{\numberline {10.3.1}{\ignorespaces Some easy calculations\relax }}{443}{}
+\contentsline {subsection}{\numberline {10.3.2}{\ignorespaces Construction of perfect hashing\relax }}{448}{}
+\contentsline {subsubsection}{\numberline {10.3.2.1}{\ignorespaces Analysis\relax }}{449}{}
+\contentsline {section}{\numberline {10.4}{\ignorespaces Bloom filters\relax }}{452}{}
+\contentsline {section}{\numberline {10.5}{\ignorespaces Bibliographical notes\relax }}{458}{}
+\contentsline {chapter}{\numberline {11}{\ignorespaces Closest Pair\relax }}{465}{}
+\contentsline {section}{\numberline {11.1}{\ignorespaces How many times can a minimum change?\relax }}{467}{}
+\contentsline {section}{\numberline {11.2}{\ignorespaces Closest Pair\relax }}{470}{}
+\contentsline {section}{\numberline {11.3}{\ignorespaces Bibliographical notes\relax }}{485}{}
+\contentsline {chapter}{\numberline {12}{\ignorespaces Coupon's Collector Problems II\relax }}{491}{}
+\contentsline {section}{\numberline {12.1}{\ignorespaces The Coupon Collector's Problem Revisited\relax }}{494}{}
+\contentsline {subsection}{\numberline {12.1.1}{\ignorespaces Some technical lemmas\relax }}{495}{}
+\contentsline {subsection}{\numberline {12.1.2}{\ignorespaces Back to the coupon collector's problem\relax }}{502}{}
+\contentsline {subsection}{\numberline {12.1.3}{\ignorespaces An asymptotically tight bound\relax }}{505}{}
+\contentsline {section}{\numberline {12.2}{\ignorespaces Bibliographical notes\relax }}{510}{}
+\contentsline {chapter}{\numberline {13}{\ignorespaces Conditional Expectation and Concentration\relax }}{516}{}
+\contentsline {section}{\numberline {13.1}{\ignorespaces Conditional expectation\relax }}{519}{}
+\contentsline {subsection}{\numberline {13.1.1}{\ignorespaces Concentration from conditional expectation\relax }}{525}{}
+\contentsline {chapter}{\numberline {14}{\ignorespaces Quick Sort with High Probability\relax }}{533}{}
+\contentsline {section}{\numberline {14.1}{\ignorespaces QuickSort{} runs in $O(n \log n)$ time with high probability\relax }}{535}{}
+\contentsline {section}{\numberline {14.2}{\ignorespaces Treaps\relax }}{537}{}
+\contentsline {subsection}{\numberline {14.2.1}{\ignorespaces Construction\relax }}{538}{}
+\contentsline {subsection}{\numberline {14.2.2}{\ignorespaces Operations\relax }}{543}{}
+\contentsline {subsubsection}{\numberline {14.2.2.1}{\ignorespaces Insertion\relax }}{545}{}
+\contentsline {subsubsection}{\numberline {14.2.2.2}{\ignorespaces Deletion\relax }}{551}{}
+\contentsline {subsubsection}{\numberline {14.2.2.3}{\ignorespaces Split\relax }}{552}{}
+\contentsline {subsubsection}{\numberline {14.2.2.4}{\ignorespaces Meld\relax }}{553}{}
+\contentsline {subsection}{\numberline {14.2.3}{\ignorespaces Summery\relax }}{554}{}
+\contentsline {section}{\numberline {14.3}{\ignorespaces Extra: Sorting Nuts and Bolts\relax }}{557}{}
+\contentsline {subsection}{\numberline {14.3.1}{\ignorespaces Running time analysis\relax }}{563}{}
+\contentsline {section}{\numberline {14.4}{\ignorespaces Bibliographical Notes\relax }}{570}{}
+\contentsline {chapter}{\numberline {15}{\ignorespaces Concentration of Random Variables -- Chernoff's Inequality\relax }}{576}{}
+\contentsline {section}{\numberline {15.1}{\ignorespaces Concentration of mass and Chernoff's inequality\relax }}{589}{}
+\contentsline {subsection}{\numberline {15.1.1}{\ignorespaces Example: Binomial distribution\relax }}{590}{}
+\contentsline {subsection}{\numberline {15.1.2}{\ignorespaces A restricted case of Chernoff inequality via games\relax }}{591}{}
+\contentsline {subsubsection}{\numberline {15.1.2.1}{\ignorespaces Chernoff games\relax }}{592}{}
+\contentsline {subsection}{\numberline {15.1.3}{\ignorespaces A weak form of Chernoff's inequality\relax }}{600}{}
+\contentsline {subsubsection}{\numberline {15.1.3.1}{\ignorespaces Some low level boring calculations\relax }}{604}{}
+\contentsline {section}{\numberline {15.2}{\ignorespaces A proof for the $-1/+1$ case\relax }}{608}{}
+\contentsline {section}{\numberline {15.3}{\ignorespaces To read or not to read?\relax }}{615}{}
+\contentsline {section}{\numberline {15.4}{\ignorespaces The Chernoff Bound --- General Case\relax }}{617}{}
+\contentsline {subsection}{\numberline {15.4.1}{\ignorespaces The lower tail\relax }}{620}{}
+\contentsline {subsection}{\numberline {15.4.2}{\ignorespaces A more convenient form of Chernoff's inequality\relax }}{627}{}
+\contentsline {subsubsection}{\numberline {15.4.2.1}{\ignorespaces Bound when the expectation is small\relax }}{638}{}
+\contentsline {section}{\numberline {15.5}{\ignorespaces A special case of Hoeffding's inequality\relax }}{642}{}
+\contentsline {subsection}{\numberline {15.5.1}{\ignorespaces Some technical lemmas\relax }}{656}{}
+\contentsline {section}{\numberline {15.6}{\ignorespaces Hoeffding's inequality\relax }}{659}{}
+\contentsline {section}{\numberline {15.7}{\ignorespaces Bibliographical notes\relax }}{666}{}
+\contentsline {section}{\numberline {15.8}{\ignorespaces Exercises\relax }}{667}{}
+\contentsline {chapter}{\numberline {16}{\ignorespaces Applications of Chernoff's Inequality\relax }}{676}{}
+\contentsline {section}{\numberline {16.1}{\ignorespaces QuickSort{} is Quick\relax }}{678}{}
+\contentsline {section}{\numberline {16.2}{\ignorespaces How many times can the minimum change?\relax }}{682}{}
+\contentsline {section}{\numberline {16.3}{\ignorespaces Routing in a parallel computer\relax }}{687}{}
+\contentsline {subsection}{\numberline {16.3.1}{\ignorespaces Analysis\relax }}{693}{}
+\contentsline {section}{\numberline {16.4}{\ignorespaces Faraway Strings\relax }}{698}{}
+\contentsline {section}{\numberline {16.5}{\ignorespaces Bibliographical notes\relax }}{702}{}
+\contentsline {section}{\numberline {16.6}{\ignorespaces Exercises\relax }}{703}{}
+\contentsline {chapter}{\numberline {17}{\ignorespaces Min Cut\relax }}{710}{}
+\contentsline {section}{\numberline {17.1}{\ignorespaces Branching processes -- Galton-Watson Process\relax }}{713}{}
+\contentsline {subsection}{\numberline {17.1.1}{\ignorespaces The problem\relax }}{714}{}
+\contentsline {subsection}{\numberline {17.1.2}{\ignorespaces On coloring trees\relax }}{715}{}
+\contentsline {section}{\numberline {17.2}{\ignorespaces Min Cut\relax }}{721}{}
+\contentsline {subsection}{\numberline {17.2.1}{\ignorespaces Problem Definition\relax }}{722}{}
+\contentsline {subsection}{\numberline {17.2.2}{\ignorespaces Some Definitions\relax }}{725}{}
+\contentsline {section}{\numberline {17.3}{\ignorespaces The Algorithm\relax }}{727}{}
+\contentsline {subsection}{\numberline {17.3.1}{\ignorespaces Analysis\relax }}{748}{}
+\contentsline {subsubsection}{\numberline {17.3.1.1}{\ignorespaces The probability of success\relax }}{749}{}
+\contentsline {subsubsection}{\numberline {17.3.1.2}{\ignorespaces Running time analysis.\relax }}{756}{}
+\contentsline {subsection}{\numberline {17.3.2}{\ignorespaces An alternative implementation using MST\relax }}{763}{}
+\contentsline {section}{\numberline {17.4}{\ignorespaces A faster algorithm\relax }}{769}{}
+\contentsline {section}{\numberline {17.5}{\ignorespaces Bibliographical Notes\relax }}{786}{}
+\contentsline {chapter}{\numberline {18}{\ignorespaces Discrepancy and Derandomization\relax }}{793}{}
+\contentsline {section}{\numberline {18.1}{\ignorespaces Discrepancy\relax }}{796}{}
+\contentsline {section}{\numberline {18.2}{\ignorespaces The Method of Conditional Probabilities\relax }}{802}{}
+\contentsline {section}{\numberline {18.3}{\ignorespaces Bibliographical Notes\relax }}{805}{}
+\contentsline {chapter}{\numberline {19}{\ignorespaces Independent set -- \Turan 's theorem\relax }}{811}{}
+\contentsline {section}{\numberline {19.1}{\ignorespaces \Turan 's theorem\relax }}{814}{}
+\contentsline {subsection}{\numberline {19.1.1}{\ignorespaces Some silly helper lemmas\relax }}{815}{}
+\contentsline {subsection}{\numberline {19.1.2}{\ignorespaces Statement and proof\relax }}{821}{}
+\contentsline {subsection}{\numberline {19.1.3}{\ignorespaces An alternative proof of \Turan 's theorem\relax }}{824}{}
+\contentsline {subsection}{\numberline {19.1.4}{\ignorespaces An algorithm for the weighted case\relax }}{826}{}
+\contentsline {chapter}{\numberline {20}{\ignorespaces Derandomization using Conditional Expectations\relax }}{834}{}
+\contentsline {section}{\numberline {20.1}{\ignorespaces Method of conditional expectations\relax }}{836}{}
+\contentsline {subsection}{\numberline {20.1.1}{\ignorespaces Applications\relax }}{846}{}
+\contentsline {subsubsection}{\numberline {20.1.1.1}{\ignorespaces Max $k$SAT\relax }}{847}{}
+\contentsline {subsubsection}{\numberline {20.1.1.2}{\ignorespaces Max cut\relax }}{849}{}
+\contentsline {subsubsection}{\numberline {20.1.1.3}{\ignorespaces \Turan theorem\relax }}{850}{}
+\contentsline {chapter}{\numberline {21}{\ignorespaces Martingales\relax }}{858}{}
+\contentsline {section}{\numberline {21.1}{\ignorespaces Martingales\relax }}{861}{}
+\contentsline {subsection}{\numberline {21.1.1}{\ignorespaces Preliminaries\relax }}{862}{}
+\contentsline {subsection}{\numberline {21.1.2}{\ignorespaces Martingales\relax }}{863}{}
+\contentsline {subsubsection}{\numberline {21.1.2.1}{\ignorespaces Examples of martingales\relax }}{867}{}
+\contentsline {subsubsection}{\numberline {21.1.2.2}{\ignorespaces Azuma's inequality\relax }}{874}{}
+\contentsline {section}{\numberline {21.2}{\ignorespaces Bibliographical notes\relax }}{879}{}
+\contentsline {chapter}{\numberline {22}{\ignorespaces Martingales II\relax }}{885}{}
+\contentsline {section}{\numberline {22.1}{\ignorespaces Filters and Martingales\relax }}{888}{}
+\contentsline {section}{\numberline {22.2}{\ignorespaces Martingales\relax }}{898}{}
+\contentsline {subsection}{\numberline {22.2.1}{\ignorespaces Martingales -- an alternative definition\relax }}{901}{}
+\contentsline {section}{\numberline {22.3}{\ignorespaces Occupancy Revisited\relax }}{909}{}
+\contentsline {subsection}{\numberline {22.3.1}{\ignorespaces Lets verify this is indeed an improvement\relax }}{913}{}
+\contentsline {chapter}{\numberline {23}{\ignorespaces The power of two choices\relax }}{919}{}
+\contentsline {section}{\numberline {23.1}{\ignorespaces Balls and bins with many rows\relax }}{922}{}
+\contentsline {subsection}{\numberline {23.1.1}{\ignorespaces The game\relax }}{923}{}
+\contentsline {subsection}{\numberline {23.1.2}{\ignorespaces Analysis\relax }}{924}{}
+\contentsline {subsection}{\numberline {23.1.3}{\ignorespaces With only $d$ rows\relax }}{931}{}
+\contentsline {section}{\numberline {23.2}{\ignorespaces The power of two choices\relax }}{936}{}
+\contentsline {subsection}{\numberline {23.2.1}{\ignorespaces Upper bound\relax }}{938}{}
+\contentsline {subsection}{\numberline {23.2.2}{\ignorespaces Applications\relax }}{949}{}
+\contentsline {subsection}{\numberline {23.2.3}{\ignorespaces The power of restricted $d$ choices: Always go left\relax }}{950}{}
+\contentsline {section}{\numberline {23.3}{\ignorespaces Avoiding terrible choices\relax }}{955}{}
+\contentsline {section}{\numberline {23.4}{\ignorespaces Escalated choices\relax }}{956}{}
+\contentsline {section}{\numberline {23.5}{\ignorespaces Bibliographical notes\relax }}{957}{}
+\contentsline {chapter}{\numberline {24}{\ignorespaces Evaluating And/Or Trees\relax }}{963}{}
+\contentsline {section}{\numberline {24.1}{\ignorespaces Evaluating an And/Or Tree\relax }}{965}{}
+\contentsline {subsection}{\numberline {24.1.1}{\ignorespaces Randomized evaluation algorithm for $T_{2k}$\relax }}{967}{}
+\contentsline {subsection}{\numberline {24.1.2}{\ignorespaces Analysis\relax }}{968}{}
+\contentsline {section}{\numberline {24.2}{\ignorespaces Bibliographical notes\relax }}{972}{}
+\contentsline {chapter}{\numberline {25}{\ignorespaces The Probabilistic Method II\relax }}{978}{}
+\contentsline {section}{\numberline {25.1}{\ignorespaces Expanding Graphs\relax }}{981}{}
+\contentsline {subsection}{\numberline {25.1.1}{\ignorespaces An alternative construction\relax }}{985}{}
+\contentsline {subsection}{\numberline {25.1.2}{\ignorespaces An expander\relax }}{988}{}
+\contentsline {section}{\numberline {25.2}{\ignorespaces Probability Amplification\relax }}{992}{}
+\contentsline {section}{\numberline {25.3}{\ignorespaces Oblivious routing revisited\relax }}{997}{}
+\contentsline {chapter}{\numberline {26}{\ignorespaces Dimension Reduction\relax }}{1006}{}
+\contentsline {section}{\numberline {26.1}{\ignorespaces Introduction to dimension reduction\relax }}{1008}{}
+\contentsline {section}{\numberline {26.2}{\ignorespaces Normal distribution\relax }}{1009}{}
+\contentsline {subsection}{\numberline {26.2.1}{\ignorespaces The standard multi-dimensional normal distribution\relax }}{1015}{}
+\contentsline {section}{\numberline {26.3}{\ignorespaces Dimension reduction\relax }}{1018}{}
+\contentsline {subsection}{\numberline {26.3.1}{\ignorespaces The construction\relax }}{1019}{}
+\contentsline {subsection}{\numberline {26.3.2}{\ignorespaces Analysis\relax }}{1020}{}
+\contentsline {subsubsection}{\numberline {26.3.2.1}{\ignorespaces A single unit vector is preserved\relax }}{1021}{}
+\contentsline {subsection}{\numberline {26.3.3}{\ignorespaces All pairwise distances are preserved\relax }}{1029}{}
+\contentsline {section}{\numberline {26.4}{\ignorespaces Even more on the normal distribution\relax }}{1033}{}
+\contentsline {section}{\numberline {26.5}{\ignorespaces Bibliographical notes\relax }}{1040}{}
+\contentsline {chapter}{\numberline {27}{\ignorespaces Streaming and the Multipass Model\relax }}{1046}{}
+\contentsline {section}{\numberline {27.1}{\ignorespaces The secretary problem\relax }}{1049}{}
+\contentsline {section}{\numberline {27.2}{\ignorespaces Reservoir sampling: Fishing a sample from a stream\relax }}{1050}{}
+\contentsline {section}{\numberline {27.3}{\ignorespaces Sampling and median selection revisited\relax }}{1053}{}
+\contentsline {subsection}{\numberline {27.3.1}{\ignorespaces A median selection with few comparisons\relax }}{1058}{}
+\contentsline {section}{\numberline {27.4}{\ignorespaces Big data and the streaming model\relax }}{1066}{}
+\contentsline {section}{\numberline {27.5}{\ignorespaces Heavy hitters\relax }}{1067}{}
+\contentsline {subsection}{\numberline {27.5.1}{\ignorespaces A randomized algorithm\relax }}{1069}{}
+\contentsline {subsection}{\numberline {27.5.2}{\ignorespaces A deterministic algorithm\relax }}{1070}{}
+\contentsline {chapter}{\numberline {28}{\ignorespaces Frequency Estimation over a Stream\relax }}{1080}{}
+\contentsline {section}{\numberline {28.1}{\ignorespaces The art of estimation\relax }}{1083}{}
+\contentsline {subsection}{\numberline {28.1.1}{\ignorespaces The problem\relax }}{1084}{}
+\contentsline {subsection}{\numberline {28.1.2}{\ignorespaces Averaging estimator: Success with constant probability\relax }}{1086}{}
+\contentsline {subsubsection}{\numberline {28.1.2.1}{\ignorespaces The challenge\relax }}{1087}{}
+\contentsline {subsubsection}{\numberline {28.1.2.2}{\ignorespaces Taming of the variance\relax }}{1088}{}
+\contentsline {subsection}{\numberline {28.1.3}{\ignorespaces Median estimator: Success with high probability\relax }}{1090}{}
+\contentsline {section}{\numberline {28.2}{\ignorespaces Frequency estimation over a stream for the $k$th\xspace moment\relax }}{1094}{}
+\contentsline {subsection}{\numberline {28.2.1}{\ignorespaces An estimator for the $k$th\xspace moment\relax }}{1095}{}
+\contentsline {subsubsection}{\numberline {28.2.1.1}{\ignorespaces Basic estimator\relax }}{1096}{}
+\contentsline {subsubsection}{\numberline {28.2.1.2}{\ignorespaces Analysis\relax }}{1097}{}
+\contentsline {subsection}{\numberline {28.2.2}{\ignorespaces An improved estimator: Plugin\relax }}{1111}{}
+\contentsline {section}{\numberline {28.3}{\ignorespaces Better estimation for ${F}_2$\relax }}{1113}{}
+\contentsline {subsection}{\numberline {28.3.1}{\ignorespaces Pseudo-random $k$-wide independent sequence of signed bits\relax }}{1114}{}
+\contentsline {subsection}{\numberline {28.3.2}{\ignorespaces Estimator construction for ${F}_2$\relax }}{1117}{}
+\contentsline {subsubsection}{\numberline {28.3.2.1}{\ignorespaces The basic estimator\relax }}{1118}{}
+\contentsline {subsection}{\numberline {28.3.3}{\ignorespaces Improving the estimator\relax }}{1122}{}
+\contentsline {section}{\numberline {28.4}{\ignorespaces Bibliographical notes\relax }}{1125}{}
+\contentsline {chapter}{\numberline {29}{\ignorespaces Approximating the Number of Distinct Elements in a Stream\relax }}{1131}{}
+\contentsline {section}{\numberline {29.1}{\ignorespaces Counting number of distinct elements\relax }}{1134}{}
+\contentsline {subsection}{\numberline {29.1.1}{\ignorespaces First order statistic\relax }}{1135}{}
+\contentsline {subsection}{\numberline {29.1.2}{\ignorespaces The algorithm\relax }}{1140}{}
+\contentsline {section}{\numberline {29.2}{\ignorespaces Sampling from a stream with ``low quality'' randomness\relax }}{1147}{}
+\contentsline {section}{\numberline {29.3}{\ignorespaces Bibliographical notes\relax }}{1157}{}
+\contentsline {chapter}{\numberline {30}{\ignorespaces Approximate Nearest Neighbor (ANN{}b{}r) Search in High Dimensions\relax }}{1163}{}
+\contentsline {section}{\numberline {30.1}{\ignorespaces ANN{}br on the hypercube\relax }}{1165}{}
+\contentsline {subsection}{\numberline {30.1.1}{\ignorespaces ANN{}br for the hypercube and the Hamming distance\relax }}{1166}{}
+\contentsline {subsection}{\numberline {30.1.2}{\ignorespaces Preliminaries\relax }}{1169}{}
+\contentsline {subsubsection}{\numberline {30.1.2.1}{\ignorespaces Algorithm\relax }}{1172}{}
+\contentsline {paragraph}{\numberline {30.1.2.1.1}{\ignorespaces Input.\relax }}{1173}{}
+\contentsline {paragraph}{\numberline {30.1.2.1.2}{\ignorespaces Preprocessing.\relax }}{1174}{}
+\contentsline {paragraph}{\numberline {30.1.2.1.3}{\ignorespaces Answering a query.\relax }}{1175}{}
+\contentsline {subsubsection}{\numberline {30.1.2.2}{\ignorespaces Analysis\relax }}{1176}{}
+\contentsline {subsubsection}{\numberline {30.1.2.3}{\ignorespaces Running time\relax }}{1183}{}
+\contentsline {paragraph}{\numberline {30.1.2.3.1}{\ignorespaces Improving the performance (a bit).\relax }}{1184}{}
+\contentsline {section}{\numberline {30.2}{\ignorespaces Testing for good items\relax }}{1186}{}
+\contentsline {section}{\numberline {30.3}{\ignorespaces LSH for the hypercube: An elaborate construction\relax }}{1187}{}
+\contentsline {subsubsection}{\numberline {30.3.0.1}{\ignorespaces On sense and sensitivity\relax }}{1188}{}
+\contentsline {subsection}{\numberline {30.3.1}{\ignorespaces A simple sensitive family\relax }}{1190}{}
+\contentsline {subsection}{\numberline {30.3.2}{\ignorespaces A family with a large sensitivity gap\relax }}{1193}{}
+\contentsline {subsection}{\numberline {30.3.3}{\ignorespaces Amplifying sensitivity\relax }}{1197}{}
+\contentsline {subsection}{\numberline {30.3.4}{\ignorespaces The near neighbor data-structure and handling a query\relax }}{1201}{}
+\contentsline {subsubsection}{\numberline {30.3.4.1}{\ignorespaces Setting the parameters\relax }}{1202}{}
+\contentsline {subsection}{\numberline {30.3.5}{\ignorespaces The result\relax }}{1209}{}
+\contentsline {section}{\numberline {30.4}{\ignorespaces LSH and ANN{}br in Euclidean space\relax }}{1214}{}
+\contentsline {subsection}{\numberline {30.4.1}{\ignorespaces Preliminaries\relax }}{1215}{}
+\contentsline {subsection}{\numberline {30.4.2}{\ignorespaces Locality sensitive hashing (\textsf {L{S}H}\xspace )\relax }}{1219}{}
+\contentsline {subsection}{\numberline {30.4.3}{\ignorespaces \textsf {ANN}\xspace in high-dimensional euclidean space\relax }}{1222}{}
+\contentsline {subsubsection}{\numberline {30.4.3.1}{\ignorespaces The result\relax }}{1223}{}
+\contentsline {section}{\numberline {30.5}{\ignorespaces Bibliographical notes\relax }}{1226}{}
+\contentsline {chapter}{\numberline {31}{\ignorespaces Random Walks I\relax }}{1232}{}
+\contentsline {section}{\numberline {31.1}{\ignorespaces Definitions\relax }}{1234}{}
+\contentsline {subsection}{\numberline {31.1.1}{\ignorespaces Walking on grids and lines\relax }}{1236}{}
+\contentsline {subsubsection}{\numberline {31.1.1.1}{\ignorespaces Walking on the line\relax }}{1238}{}
+\contentsline {subsubsection}{\numberline {31.1.1.2}{\ignorespaces Walking on two dimensional grid\relax }}{1241}{}
+\contentsline {subsubsection}{\numberline {31.1.1.3}{\ignorespaces Walking on three dimensional grid\relax }}{1244}{}
+\contentsline {section}{\numberline {31.2}{\ignorespaces Bibliographical notes\relax }}{1247}{}
+\contentsline {chapter}{\numberline {32}{\ignorespaces Random Walks II\relax }}{1253}{}
+\contentsline {section}{\numberline {32.1}{\ignorespaces Catalan numbers\relax }}{1256}{}
+\contentsline {section}{\numberline {32.2}{\ignorespaces Walking on the integer line revisited\relax }}{1265}{}
+\contentsline {subsection}{\numberline {32.2.1}{\ignorespaces Estimating the middle binomial coefficient\relax }}{1266}{}
+\contentsline {section}{\numberline {32.3}{\ignorespaces Solving 2SAT using random walk\relax }}{1271}{}
+\contentsline {subsection}{\numberline {32.3.1}{\ignorespaces Solving 2SAT\relax }}{1272}{}
+\contentsline {section}{\numberline {32.4}{\ignorespaces Markov chains\relax }}{1278}{}
+\contentsline {chapter}{\numberline {33}{\ignorespaces Random Walks III\relax }}{1296}{}
+\contentsline {section}{\numberline {33.1}{\ignorespaces Random walks on graphs\relax }}{1299}{}
+\contentsline {section}{\numberline {33.2}{\ignorespaces Electrical networks and random walks\relax }}{1314}{}
+\contentsline {subsection}{\numberline {33.2.1}{\ignorespaces A tangent on parallel and series resistors\relax }}{1315}{}
+\contentsline {subsection}{\numberline {33.2.2}{\ignorespaces Back to random walks\relax }}{1318}{}
+\contentsline {section}{\numberline {33.3}{\ignorespaces Bibliographical Notes\relax }}{1326}{}
+\contentsline {chapter}{\numberline {34}{\ignorespaces Random Walks IV\relax }}{1332}{}
+\contentsline {section}{\numberline {34.1}{\ignorespaces Cover times\relax }}{1335}{}
+\contentsline {subsection}{\numberline {34.1.1}{\ignorespaces Rayleigh's Short-cut Principle.\relax }}{1341}{}
+\contentsline {section}{\numberline {34.2}{\ignorespaces Graph Connectivity\relax }}{1344}{}
+\contentsline {subsection}{\numberline {34.2.1}{\ignorespaces Directed graphs\relax }}{1356}{}
+\contentsline {chapter}{\numberline {35}{\ignorespaces A Bit on Algebraic Graph Theory\relax }}{1365}{}
+\contentsline {section}{\numberline {35.1}{\ignorespaces Graphs and Eigenvalues\relax }}{1368}{}
+\contentsline {subsection}{\numberline {35.1.1}{\ignorespaces Eigenvalues and eigenvectors\relax }}{1369}{}
+\contentsline {subsection}{\numberline {35.1.2}{\ignorespaces Eigenvalues and eigenvectors of a graph\relax }}{1374}{}
+\contentsline {section}{\numberline {35.2}{\ignorespaces Bibliographical Notes\relax }}{1376}{}
+\contentsline {chapter}{\numberline {36}{\ignorespaces Random Walks V\relax }}{1382}{}
+\contentsline {section}{\numberline {36.1}{\ignorespaces Explicit expander construction\relax }}{1385}{}
+\contentsline {section}{\numberline {36.2}{\ignorespaces Rapid mixing for expanders\relax }}{1392}{}
+\contentsline {subsection}{\numberline {36.2.1}{\ignorespaces Bounding the mixing time\relax }}{1401}{}
+\contentsline {section}{\numberline {36.3}{\ignorespaces Probability amplification by random walks on expanders\relax }}{1411}{}
+\contentsline {subsection}{\numberline {36.3.1}{\ignorespaces The analysis\relax }}{1417}{}
+\contentsline {subsection}{\numberline {36.3.2}{\ignorespaces Some standard inequalities\relax }}{1429}{}
+\contentsline {chapter}{\numberline {37}{\ignorespaces Complexity classes\relax }}{1437}{}
+\contentsline {section}{\numberline {37.1}{\ignorespaces Las Vegas and Monte Carlo algorithms\relax }}{1439}{}
+\contentsline {section}{\numberline {37.2}{\ignorespaces Complexity classes\relax }}{1442}{}
+\contentsline {section}{\numberline {37.3}{\ignorespaces Bibliographical notes\relax }}{1485}{}
+\contentsline {chapter}{\numberline {38}{\ignorespaces Backwards analysis\relax }}{1491}{}
+\contentsline {section}{\numberline {38.1}{\ignorespaces How many times can the minimum change?\relax }}{1493}{}
+\contentsline {section}{\numberline {38.2}{\ignorespaces Computing a good ordering of the vertices of a graph\relax }}{1498}{}
+\contentsline {subsection}{\numberline {38.2.1}{\ignorespaces The algorithm\relax }}{1499}{}
+\contentsline {subsection}{\numberline {38.2.2}{\ignorespaces Analysis\relax }}{1500}{}
+\contentsline {section}{\numberline {38.3}{\ignorespaces Computing nets\relax }}{1503}{}
+\contentsline {subsection}{\numberline {38.3.1}{\ignorespaces Basic definitions\relax }}{1504}{}
+\contentsline {subsubsection}{\numberline {38.3.1.1}{\ignorespaces Nets\relax }}{1506}{}
+\contentsline {subsection}{\numberline {38.3.2}{\ignorespaces Computing an $r$-net in a sparse graph\relax }}{1508}{}
+\contentsline {subsubsection}{\numberline {38.3.2.1}{\ignorespaces The algorithm\relax }}{1509}{}
+\contentsline {subsubsection}{\numberline {38.3.2.2}{\ignorespaces Analysis\relax }}{1510}{}
+\contentsline {section}{\numberline {38.4}{\ignorespaces Bibliographical notes\relax }}{1517}{}
+\contentsline {chapter}{\numberline {39}{\ignorespaces Multiplicative Weight Update: Expert Selection\relax }}{1523}{}
+\contentsline {section}{\numberline {39.1}{\ignorespaces The problem: Expert selection\relax }}{1525}{}
+\contentsline {section}{\numberline {39.2}{\ignorespaces Majority vote\relax }}{1527}{}
+\contentsline {section}{\numberline {39.3}{\ignorespaces Randomized weighted majority\relax }}{1535}{}
+\contentsline {section}{\numberline {39.4}{\ignorespaces Bibliographical notes\relax }}{1537}{}
+\contentsline {chapter}{\numberline {40}{\ignorespaces On Complexity, Sampling, and ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-Nets and ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-Samples\relax }}{1543}{}
+\contentsline {section}{\numberline {40.1}{\ignorespaces \ensuremath {\mathsf {VC}}\xspace {} dimension\relax }}{1546}{}
+\contentsline {subsection}{\numberline {40.1.1}{\ignorespaces Examples\relax }}{1557}{}
+\contentsline {subsubsection}{\numberline {40.1.1.1}{\ignorespaces Halfspaces\relax }}{1579}{}
+\contentsline {section}{\numberline {40.2}{\ignorespaces Shattering dimension and the dual shattering dimension\relax }}{1588}{}
+\contentsline {subsection}{\numberline {40.2.1}{\ignorespaces Mixing range spaces\relax }}{1600}{}
+\contentsline {section}{\numberline {40.3}{\ignorespaces On ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-nets and ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-sampling\relax }}{1619}{}
+\contentsline {subsection}{\numberline {40.3.1}{\ignorespaces ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-nets and ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-samples\relax }}{1620}{}
+\contentsline {subsection}{\numberline {40.3.2}{\ignorespaces Some applications\relax }}{1631}{}
+\contentsline {subsubsection}{\numberline {40.3.2.1}{\ignorespaces Range searching\relax }}{1632}{}
+\contentsline {subsubsection}{\numberline {40.3.2.2}{\ignorespaces Learning a concept\relax }}{1635}{}
+\contentsline {section}{\numberline {40.4}{\ignorespaces A better bound on the growth function\relax }}{1640}{}
+\contentsline {section}{\numberline {40.5}{\ignorespaces Some required definitions\relax }}{1645}{}
+\contentsline {chapter}{\numberline {41}{\ignorespaces Double sampling\relax }}{1652}{}
+\contentsline {section}{\numberline {41.1}{\ignorespaces Double sampling\relax }}{1655}{}
+\contentsline {subsection}{\numberline {41.1.1}{\ignorespaces Disagreement between samples on a specific set\relax }}{1659}{}
+\contentsline {subsection}{\numberline {41.1.2}{\ignorespaces Exponential decay for a single set\relax }}{1663}{}
+\contentsline {subsection}{\numberline {41.1.3}{\ignorespaces Moments of the sample size\relax }}{1666}{}
+\contentsline {subsection}{\numberline {41.1.4}{\ignorespaces Growth function\relax }}{1670}{}
+\contentsline {section}{\numberline {41.2}{\ignorespaces Proof of the ${\TextOrMath {\textepsilon }{\mitvarepsilon }}$-net theorem\relax }}{1676}{}
+\contentsline {subsection}{\numberline {41.2.1}{\ignorespaces The proof\relax }}{1680}{}
+\contentsline {subsubsection}{\numberline {41.2.1.1}{\ignorespaces Reduction to double sampling\relax }}{1681}{}
+\contentsline {subsubsection}{\numberline {41.2.1.2}{\ignorespaces Using double sampling to finish the proof\relax }}{1684}{}
+\contentsline {chapter}{\numberline {42}{\ignorespaces Finite Metric Spaces and Partitions\relax }}{1693}{}
+\contentsline {section}{\numberline {42.1}{\ignorespaces Finite Metric Spaces\relax }}{1695}{}
+\contentsline {section}{\numberline {42.2}{\ignorespaces Examples\relax }}{1700}{}
+\contentsline {subsection}{\numberline {42.2.1}{\ignorespaces Hierarchical Tree Metrics\relax }}{1706}{}
+\contentsline {subsection}{\numberline {42.2.2}{\ignorespaces Clustering\relax }}{1708}{}
+\contentsline {section}{\numberline {42.3}{\ignorespaces Random Partitions\relax }}{1710}{}
+\contentsline {subsection}{\numberline {42.3.1}{\ignorespaces Constructing the partition\relax }}{1712}{}
+\contentsline {subsection}{\numberline {42.3.2}{\ignorespaces Properties\relax }}{1713}{}
+\contentsline {section}{\numberline {42.4}{\ignorespaces Probabilistic embedding into trees\relax }}{1716}{}
+\contentsline {subsection}{\numberline {42.4.1}{\ignorespaces Application: approximation algorithm for $k$-median clustering\relax }}{1719}{}
+\contentsline {section}{\numberline {42.5}{\ignorespaces Embedding any metric space into Euclidean space\relax }}{1722}{}
+\contentsline {subsection}{\numberline {42.5.1}{\ignorespaces The bounded spread case\relax }}{1725}{}
+\contentsline {subsection}{\numberline {42.5.2}{\ignorespaces The unbounded spread case\relax }}{1728}{}
+\contentsline {section}{\numberline {42.6}{\ignorespaces Bibliographical notes\relax }}{1730}{}
+\contentsline {section}{\numberline {42.7}{\ignorespaces Exercises\relax }}{1734}{}
+\contentsline {chapter}{\numberline {43}{\ignorespaces Entropy, Randomness, and Information\relax }}{1744}{}
+\contentsline {section}{\numberline {43.1}{\ignorespaces The entropy function\relax }}{1747}{}
+\contentsline {section}{\numberline {43.2}{\ignorespaces Extracting randomness\relax }}{1758}{}
+\contentsline {section}{\numberline {43.3}{\ignorespaces Bibliographical Notes\relax }}{1769}{}
+\contentsline {chapter}{\numberline {44}{\ignorespaces Entropy II\relax }}{1775}{}
+\contentsline {section}{\numberline {44.1}{\ignorespaces Huffman coding\relax }}{1778}{}
+\contentsline {subsection}{\numberline {44.1.1}{\ignorespaces The algorithm to build Hoffman's code\relax }}{1782}{}
+\contentsline {subsection}{\numberline {44.1.2}{\ignorespaces Analysis\relax }}{1783}{}
+\contentsline {subsection}{\numberline {44.1.3}{\ignorespaces A formula for the average size of a code word\relax }}{1790}{}
+\contentsline {section}{\numberline {44.2}{\ignorespaces Compression\relax }}{1795}{}
+\contentsline {section}{\numberline {44.3}{\ignorespaces Bibliographical Notes\relax }}{1800}{}
+\contentsline {chapter}{\numberline {45}{\ignorespaces Entropy III - Shannon's Theorem\relax }}{1806}{}
+\contentsline {section}{\numberline {45.1}{\ignorespaces Coding: Shannon's Theorem\relax }}{1809}{}
+\contentsline {section}{\numberline {45.2}{\ignorespaces Proof of Shannon's theorem\relax }}{1813}{}
+\contentsline {subsection}{\numberline {45.2.1}{\ignorespaces How to encode and decode efficiently\relax }}{1814}{}
+\contentsline {subsubsection}{\numberline {45.2.1.1}{\ignorespaces The scheme\relax }}{1815}{}
+\contentsline {subsubsection}{\numberline {45.2.1.2}{\ignorespaces The proof\relax }}{1817}{}
+\contentsline {subsection}{\numberline {45.2.2}{\ignorespaces Lower bound on the message size\relax }}{1832}{}
+\contentsline {section}{\numberline {45.3}{\ignorespaces Bibliographical Notes\relax }}{1833}{}
+\contentsline {chapter}{\numberline {46}{\ignorespaces Approximate Max Cut\relax }}{1839}{}
+\contentsline {section}{\numberline {46.1}{\ignorespaces Problem Statement\relax }}{1841}{}
+\contentsline {subsection}{\numberline {46.1.1}{\ignorespaces Analysis\relax }}{1842}{}
+\contentsline {section}{\numberline {46.2}{\ignorespaces Semi-definite programming\relax }}{1856}{}
+\contentsline {section}{\numberline {46.3}{\ignorespaces Bibliographical Notes\relax }}{1859}{}
+\contentsline {chapter}{\numberline {47}{\ignorespaces Expanders I\relax }}{1865}{}
+\contentsline {section}{\numberline {47.1}{\ignorespaces Preliminaries on expanders\relax }}{1867}{}
+\contentsline {subsection}{\numberline {47.1.1}{\ignorespaces Definitions\relax }}{1868}{}
+\contentsline {section}{\numberline {47.2}{\ignorespaces Tension and expansion\relax }}{1872}{}
+\contentsline {chapter}{\numberline {48}{\ignorespaces Expanders II\relax }}{1884}{}
+\contentsline {section}{\numberline {48.1}{\ignorespaces Bi-tension\relax }}{1886}{}
+\contentsline {section}{\numberline {48.2}{\ignorespaces Explicit construction\relax }}{1890}{}
+\contentsline {subsection}{\numberline {48.2.1}{\ignorespaces Explicit construction of a small expander\relax }}{1893}{}
+\contentsline {subsubsection}{\numberline {48.2.1.1}{\ignorespaces A quicky reminder of fields\relax }}{1894}{}
+\contentsline {paragraph}{\numberline {48.2.1.1.1}{\ignorespaces Computing multiplication in $\symbb {F}_q$.\relax }}{1895}{}
+\contentsline {subsubsection}{\numberline {48.2.1.2}{\ignorespaces The construction\relax }}{1896}{}
+\contentsline {chapter}{\numberline {49}{\ignorespaces Expanders III - The Zig Zag Product\relax }}{1905}{}
+\contentsline {section}{\numberline {49.1}{\ignorespaces Building a large expander with constant degree\relax }}{1908}{}
+\contentsline {subsection}{\numberline {49.1.1}{\ignorespaces Notations\relax }}{1909}{}
+\contentsline {subsection}{\numberline {49.1.2}{\ignorespaces The Zig-Zag product\relax }}{1910}{}
+\contentsline {subsection}{\numberline {49.1.3}{\ignorespaces Squaring\relax }}{1917}{}
+\contentsline {subsection}{\numberline {49.1.4}{\ignorespaces The construction\relax }}{1920}{}
+\contentsline {section}{\numberline {49.2}{\ignorespaces Bibliographical notes\relax }}{1923}{}
+\contentsline {section}{\numberline {49.3}{\ignorespaces Exercises\relax }}{1924}{}
+\contentsline {chapter}{\numberline {50}{\ignorespaces The Probabilistic Method\relax }}{1934}{}
+\contentsline {section}{\numberline {50.1}{\ignorespaces Introduction\relax }}{1937}{}
+\contentsline {subsection}{\numberline {50.1.1}{\ignorespaces Examples\relax }}{1938}{}
+\contentsline {subsubsection}{\numberline {50.1.1.1}{\ignorespaces Max cut\relax }}{1939}{}
+\contentsline {section}{\numberline {50.2}{\ignorespaces Maximum Satisfiability\relax }}{1942}{}
+\contentsline {chapter}{\numberline {51}{\ignorespaces The Probabilistic Method III\relax }}{1959}{}
+\contentsline {section}{\numberline {51.1}{\ignorespaces The \Lovasz {} Local Lemma\relax }}{1962}{}
+\contentsline {section}{\numberline {51.2}{\ignorespaces Application to $k$-SAT\relax }}{1973}{}
+\contentsline {subsection}{\numberline {51.2.1}{\ignorespaces An efficient algorithm\relax }}{1974}{}
+\contentsline {subsubsection}{\numberline {51.2.1.1}{\ignorespaces Analysis\relax }}{1976}{}
+\contentsline {chapter}{\numberline {52}{\ignorespaces The Probabilistic Method IV\relax }}{1988}{}
+\contentsline {section}{\numberline {52.1}{\ignorespaces The Method of Conditional Probabilities\relax }}{1991}{}
+\contentsline {section}{\numberline {52.2}{\ignorespaces Independent set in a graph\relax }}{1994}{}
+\contentsline {section}{\numberline {52.3}{\ignorespaces A Short Excursion into Combinatorics via the Probabilistic Method\relax }}{1997}{}
+\contentsline {subsection}{\numberline {52.3.1}{\ignorespaces High Girth and High Chromatic Number\relax }}{1998}{}
+\contentsline {subsection}{\numberline {52.3.2}{\ignorespaces Crossing Numbers and Incidences\relax }}{2002}{}
+\contentsline {subsection}{\numberline {52.3.3}{\ignorespaces Bounding the at most $k$-level\relax }}{2009}{}
+\contentsline {chapter}{\numberline {53}{\ignorespaces Sampling and the Moments Technique\relax }}{2018}{}
+\contentsline {section}{\numberline {53.1}{\ignorespaces Vertical decomposition\relax }}{2021}{}
+\contentsline {subsection}{\numberline {53.1.1}{\ignorespaces Randomized incremental construction (\textsf {RIC}\xspace {})\relax }}{2025}{}
+\contentsline {subsubsection}{\numberline {53.1.1.1}{\ignorespaces Analysis\relax }}{2028}{}
+\contentsline {subsection}{\numberline {53.1.2}{\ignorespaces Backward analysis\relax }}{2035}{}
+\contentsline {section}{\numberline {53.2}{\ignorespaces General settings\relax }}{2037}{}
+\contentsline {subsection}{\numberline {53.2.1}{\ignorespaces Notation\relax }}{2044}{}
+\contentsline {subsubsection}{\numberline {53.2.1.1}{\ignorespaces Examples of the general framework\relax }}{2047}{}
+\contentsline {subsection}{\numberline {53.2.2}{\ignorespaces Analysis\relax }}{2048}{}
+\contentsline {subsubsection}{\numberline {53.2.2.1}{\ignorespaces On the probability of a region to be created\relax }}{2049}{}
+\contentsline {subsubsection}{\numberline {53.2.2.2}{\ignorespaces On exponential decay\relax }}{2053}{}
+\contentsline {subsubsection}{\numberline {53.2.2.3}{\ignorespaces Bounding the moments\relax }}{2058}{}
+\contentsline {section}{\numberline {53.3}{\ignorespaces Applications\relax }}{2061}{}
+\contentsline {subsection}{\numberline {53.3.1}{\ignorespaces Analyzing the \textsf {RIC}\xspace algorithm for vertical decomposition\relax }}{2062}{}
+\contentsline {subsection}{\numberline {53.3.2}{\ignorespaces Cuttings\relax }}{2063}{}
+\contentsline {section}{\numberline {53.4}{\ignorespaces Bounds on the probability of a region to be created\relax }}{2074}{}
+\contentsline {section}{\numberline {53.5}{\ignorespaces Bibliographical notes\relax }}{2083}{}
+\contentsline {section}{\numberline {53.6}{\ignorespaces Exercises\relax }}{2085}{}
+\contentsline {chapter}{\numberline {54}{\ignorespaces Primality testing\relax }}{2093}{}
+\contentsline {section}{\numberline {54.1}{\ignorespaces Number theory background\relax }}{2097}{}
+\contentsline {subsection}{\numberline {54.1.1}{\ignorespaces Modulo arithmetic\relax }}{2098}{}
+\contentsline {subsubsection}{\numberline {54.1.1.1}{\ignorespaces Prime and coprime\relax }}{2099}{}
+\contentsline {subsubsection}{\numberline {54.1.1.2}{\ignorespaces Computing $\gcd $\relax }}{2100}{}
+\contentsline {subsubsection}{\numberline {54.1.1.3}{\ignorespaces The Chinese remainder theorem\relax }}{2110}{}
+\contentsline {subsubsection}{\numberline {54.1.1.4}{\ignorespaces Euler totient function\relax }}{2115}{}
+\contentsline {subsection}{\numberline {54.1.2}{\ignorespaces Structure of the modulo group $\symbb {Z}_n$\relax }}{2118}{}
+\contentsline {subsubsection}{\numberline {54.1.2.1}{\ignorespaces Some basic group theory\relax }}{2119}{}
+\contentsline {subsubsection}{\numberline {54.1.2.2}{\ignorespaces Subgroups\relax }}{2121}{}
+\contentsline {subsubsection}{\numberline {54.1.2.3}{\ignorespaces Cyclic groups\relax }}{2126}{}
+\contentsline {subsubsection}{\numberline {54.1.2.4}{\ignorespaces Modulo group\relax }}{2131}{}
+\contentsline {subsubsection}{\numberline {54.1.2.5}{\ignorespaces Fields\relax }}{2138}{}
+\contentsline {subsubsection}{\numberline {54.1.2.6}{\ignorespaces $\symbb {Z}_p^*$ is cyclic for prime numbers\relax }}{2140}{}
+\contentsline {subsubsection}{\numberline {54.1.2.7}{\ignorespaces $\symbb {Z}_n^*$ is cyclic for powers of a prime\relax }}{2145}{}
+\contentsline {subsection}{\numberline {54.1.3}{\ignorespaces Quadratic residues\relax }}{2148}{}
+\contentsline {subsubsection}{\numberline {54.1.3.1}{\ignorespaces Quadratic residue\relax }}{2149}{}
+\contentsline {subsubsection}{\numberline {54.1.3.2}{\ignorespaces Legendre symbol\relax }}{2153}{}
+\contentsline {subsubsection}{\numberline {54.1.3.3}{\ignorespaces Jacobi symbol\relax }}{2162}{}
+\contentsline {subsubsection}{\numberline {54.1.3.4}{\ignorespaces Jacobi{}($a,n$): Computing the Jacobi symbol\relax }}{2172}{}
+\contentsline {subsubsection}{\numberline {54.1.3.5}{\ignorespaces Subgroups induced by the Jacobi symbol\relax }}{2174}{}
+\contentsline {section}{\numberline {54.2}{\ignorespaces Primality testing\relax }}{2179}{}
+\contentsline {subsection}{\numberline {54.2.1}{\ignorespaces Distribution of primes\relax }}{2182}{}
+\contentsline {section}{\numberline {54.3}{\ignorespaces Bibliographical notes\relax }}{2194}{}
+\contentsline {chapter}{\numberline {55}{\ignorespaces Talagrand's Inequality\relax }}{2200}{}
+\contentsline {section}{\numberline {55.1}{\ignorespaces Introduction\relax }}{2203}{}
+\contentsline {subsection}{\numberline {55.1.1}{\ignorespaces Talangrand's inequality, and the $T$-distance\relax }}{2204}{}
+\contentsline {subsection}{\numberline {55.1.2}{\ignorespaces On the way to proving Talagrand's inequality\relax }}{2209}{}
+\contentsline {subsubsection}{\numberline {55.1.2.1}{\ignorespaces The low level details used in the above proof\relax }}{2212}{}
+\contentsline {subsection}{\numberline {55.1.3}{\ignorespaces Proving Talagrand's inequality\relax }}{2218}{}
+\contentsline {section}{\numberline {55.2}{\ignorespaces Concentration via certification\relax }}{2220}{}
+\contentsline {section}{\numberline {55.3}{\ignorespaces Some examples\relax }}{2229}{}
+\contentsline {subsection}{\numberline {55.3.1}{\ignorespaces Longest increasing subsequence\relax }}{2231}{}
+\contentsline {subsection}{\numberline {55.3.2}{\ignorespaces Largest convex subset\relax }}{2234}{}
+\contentsline {subsection}{\numberline {55.3.3}{\ignorespaces Balls into bins revisited\relax }}{2241}{}
+\contentsline {section}{\numberline {55.4}{\ignorespaces Bibliographical notes\relax }}{2247}{}
+\contentsline {section}{\numberline {55.5}{\ignorespaces Problems\relax }}{2248}{}
+\contentsline {chapter}{\numberline {56}{\ignorespaces Low Dimensional Linear Programming\relax }}{2255}{}
+\contentsline {section}{\numberline {56.1}{\ignorespaces Linear programming in constant dimension ($d>2$)\relax }}{2259}{}
+\contentsline {section}{\numberline {56.2}{\ignorespaces Handling Infeasible Linear Programs\relax }}{2285}{}
+\contentsline {section}{\numberline {56.3}{\ignorespaces References\relax }}{2286}{}
+\contentsline {chapter}{\numberline {57}{\ignorespaces Algorithmic Version of \Lovasz Local Lemma\relax }}{2292}{}
+\contentsline {section}{\numberline {57.1}{\ignorespaces Introduction\relax }}{2294}{}
+\contentsline {subsection}{\numberline {57.1.1}{\ignorespaces Analysis\relax }}{2299}{}
+\contentsline {chapter}{\numberline {58}{\ignorespaces Some math stuff\relax }}{2306}{}
+\contentsline {section}{\numberline {58.1}{\ignorespaces Some useful estimates\relax }}{2308}{}
+

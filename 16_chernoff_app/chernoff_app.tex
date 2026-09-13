@@ -200,7 +200,7 @@ of $\Graph$, where $N = 2^n$, and $\Graph$ is the hypercube. As such,
 each processor is identified by a binary string
 $b_1b_2\ldots b_n \in \brc{0,1}^n$. Two nodes are connected if their
 binary string differs only in a single bit. Namely, $\Graph$ is the
-binary \emphi{hypercube} over $n$ bits.
+binary \emphOnly{hypercube}\index{hypercube} over $n$ bits.
 
 We want to investigate the best routing strategy for this network
 topology. We assume that every processor need to send a message to a
@@ -214,7 +214,7 @@ packets it has to transmit. At every clock tick, the message in front
 of the queue get sent. All the processors start sending their packets
 (to the destination specified by the permutation) in the same time.
 
-A routing scheme is \emphi{oblivious} if every node that has to
+A routing scheme is \emphOnly{oblivious}\index{oblivious} if every node that has to
 forward a packet, inspect the packet, and depending only on the
 content of the packet decides how to forward it. That is, such a
 routing scheme is local in nature, and does not take into account
@@ -245,7 +245,7 @@ through regions of the hypercube that are ``gridlocked''.
 
 \paragraph*{How do we send a packet?}
 
-We use \emphi{bit fixing}.  Namely, the packet from the $i$ node,
+We use \emphOnly{bit fixing}\index{bit fixing}.  Namely, the packet from the $i$ node,
 always go to the current adjacent node that have the first different
 bit as we scan the destination string $d(i)$. For example, packet from
 $(0000)$ going to $(1101)$, would pass through $(1000)$, $(1100)$,

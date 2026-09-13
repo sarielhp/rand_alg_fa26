@@ -126,7 +126,7 @@ end
 
 def build_l_command(chap, options)
   cmd = ["l"]
-  cmd << "-no-env" if options[:no_env]
+  cmd << "--no-env" if options[:no_env]
   cmd << "--no-bib" if options[:no_bib]
   cmd << "-s" unless options[:verbose]
   cmd << "-u" if options[:quick]

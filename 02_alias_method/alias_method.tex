@@ -43,7 +43,7 @@ Given a list of $n$ positive numbers $p_1, \ldots, p_n$ such that $\sum_i p_i = 
     \item The floor function $\floor{ \cdot }$.
 \end{compactenumI}
 \smallskip%
-The \emphi{alias method} is described below. After linear-time
+The \emphOnly{alias method}\index{alias method} is described below. After linear-time
 preprocessing, it enables sampling from this discrete distribution in
 worst-case constant time.
 
@@ -54,7 +54,7 @@ The algorithm redistributes the probabilities into $n$ buckets, where each bucke
 
 An elegant way to think about this is to view each probability $p_i$ as
 an interval of length (you guessed it) $p_i$, with $i$ being its
-\emphi{label}.  These intervals tile/cover the interval $[0,1]$. Think
+\emphOnly{label}\index{label}.  These intervals tile/cover the interval $[0,1]$. Think
 about marking each interval by its label (i.e., the value $i$ that it
 represents). Then, choosing a random value $i$ according to this
 distribution is easy---we randomly pick a value $x \in [0,1]$, and pick the

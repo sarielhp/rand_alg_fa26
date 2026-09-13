@@ -1,0 +1,1126 @@
+% ------------------------------------------------------- V C dim
+% chapter
+% 
+% 09/27/2010 16:56:36 Finished a pass. Would benefit form another
+% iteration.  --------------------------------------------------------
+% \def\GenColorMath{1}
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{40}{305}
+
+\Chapter{On Complexity, Sampling, and \TPDF{$\eps$}{epsilon}-Nets and
+   \TPDF{$\eps$}{eps}-Samples}
+
+\ChapterPrefix{}
+\ChapterGen{}
+\chaplab{v:c:dim}
+
+
+\QuotePExt{``I've never touched the hard stuff, only smoked grass a
+   few times with the boys to be polite, and that's all, though ten is
+   the age when the big guys come around teaching you all sorts to
+   things.  But happiness doesn't mean much to me, I still think life
+   is better. Happiness is a mean son of a bitch and needs to be put
+   in his place. Him and me aren't on the same team, and I'm cutting
+   him dead. I've never gone in for politics, because somebody always
+   stand to gain by it, but happiness is an even crummier racket, and
+   their ought to be laws to put it out of business.''}%
+{Momo}%
+{Emile Ajar}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\bigskip%
+\noindent%
+In this chapter we will try to quantify the notion of geometric
+complexity. It is intuitively clear that a {\tiny \CircleSolid} (i.e.,
+disk) is a simpler shape than an {\small \EllipseSolid} (i.e.,
+ellipse), which is in turn simpler than a {blacksmiley} (i.e.,
+smiley). This becomes even more important when we consider several
+such shapes and how they interact with each other. As these examples
+might demonstrate, this notion of complexity is somewhat elusive.
+
+To this end, we show that one can capture the structure of a
+distribution/point set by a small subset. The size here would depend
+on the complexity of the shapes/ranges we care about, but surprisingly
+it would be independent of the size of the point set.
+
+\section{\TPDF{\VC{}}{VC} dimension}
+
+\begin{defn}
+    A \emphi{range space} $\RangeSpace$ is a pair
+    $(\GroundSet,\RangeSet)$, where $\GroundSet$ is a \emphi{ground
+       set} (finite or infinite) and $\RangeSet$ is a (finite or
+    infinite) family of subsets of $\GroundSet$. The elements of
+    $\GroundSet$ are \emphOnly{points} and the elements of $\RangeSet$
+    are \emphic{ranges}{range}.
+\end{defn}
+
+Our interest is in the size/weight of the ranges in the range
+space. For technical reasons, it will be easier to consider a finite
+subset $\FGroundSet$ as the underlining ground set.
+
+\begin{defn}
+    \deflab{measure}%
+    %
+    Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range space, and
+    let $\FGroundSet$ be a finite (fixed) subset of $\GroundSet$. For
+    a range $\range \in \RangeSet$, its \emphi{measure} is the
+    quantity
+    \begin{equation*}
+        \Measure{\range}%
+        =%
+        \frac{\cardin{\range \cap \FGroundSet}}{\cardin{\FGroundSet}}.
+    \end{equation*}
+\end{defn}
+
+While $\FGroundSet$ is finite, it might be very large. As such, we are
+interested in getting a good estimate to $\Measure{\range}$ by using a
+more compact set to represent the range space.
+
+\begin{defn}
+    \deflab{s:measure}%
+    %
+    Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range space.  For
+    a subset $\SetC$ (which might be a multi-set) of $\FGroundSet$,
+    its \emphi{estimate} of the measure of $\Measure{\range}$, for
+    $\range \in \RangeSet$, is the quantity
+    \begin{align*}
+      \sMeasure{\range}%
+      =%
+      \frac{\cardin{\range \cap \SetC}}{\cardin{\SetC}}.
+    \end{align*}
+\end{defn}
+
+The main purpose of this chapter is to come up with methods to
+generate a sample $\SetC$, such that $\Measure{\range} \approx
+\sMeasure{\range}$, for all the ranges $\range \in \RangeSet$.
+
+It is easy to see that in the worst case, no sample can capture the
+measure of all ranges.  Indeed, given a sample $\SetC$, consider the
+range $\FGroundSet \setminus \SetC$ that is being completely missed by
+$\SetC$.  As such, we need to concentrate on range spaces that are
+``low dimensional'', where not all subsets are allowable ranges. The
+notion of \VC dimension (named after Vapnik and Chervonenkis
+\cite{vc-ucrfe-71}) is one way to limit the complexity of a range
+space.
+
+
+\begin{fragment}{v_c_dimension}
+    \begin{defn}
+        \deflab{v:c:dimension}%
+        %
+        Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range
+        space. For $Y \subseteq \GroundSet$, let
+        \begin{equation}
+            \VCProj{\RangeSet}{Y}%
+            =%
+            \Set{\range \cap Y}{ \range \in \RangeSet\bigr.\,}
+            \eqlab{v:c:project}
+        \end{equation}
+        denote the \emphic{projection}{range space!projection} of
+        $\RangeSet$ on $Y$. The range space $\RangeSpace$ projected to
+        $Y$ is $\VCProj{\RangeSpace}{Y} = \pth{Y,
+           \VCProj{\RangeSet}{Y}}$.
+        
+        If $\VCProj{\RangeSet}{Y}$ contains all subsets of $Y$ (i.e.,
+        if $Y$ is finite, we have $\cardin{\VCProj{\RangeSet}{Y}} =
+        2^{\cardin{Y}}$), then $Y$ is \emphi{shattered} by $\RangeSet$
+        (or equivalently $Y$ is shattered by $\RangeSpace$).
+        
+        The \emphOnly{Vapnik-Chervonenkis} dimension (or
+        \emphic{\VC{}\!~dimension}{VC@\Term{VC}!dimension}) of
+        $\RangeSpace$, denoted by $\VCDim(\RangeSpace)$, is the
+        maximum cardinality of a shattered subset of $\GroundSet$. If
+        there are arbitrarily large shattered subsets, then
+        $\VCDim(S) = \infty$.
+    \end{defn}
+\end{fragment}
+
+
+\subsection{Examples}
+\seclab{V:C:examples}
+
+
+% \parpic[r]{
+% \begin{minipage}{1.8cm}
+%     \hspace*{-0.4cm}
+%     \makebox[0cm][l]{\IncludeGraphics{\File{figs/intervals}}}
+% \end{minipage}}
+
+%~
+
+\begin{figure}[t]
+    \centering
+    \TwoFiguresBase{\IncGraphPage{figs/}{intervals}{1}}{(a)}
+                   {\IncGraphPage{figs/}{intervals}{2}}{(b)}
+    \caption{(a) Four intervals realizing all subsets of $Y = \{1,2\}$.
+             (b) For three points, no interval can contain the two extreme points without also containing the middle one.}
+    \figlab{vc:intervals}
+\end{figure}
+
+\noindent{\bfseries Intervals.}
+Consider the set $\GroundSet$ to be the real line, and consider
+$\RangeSet$ to be the set of all intervals on the real line.
+Consider the set $Y = \brc{1,2}$.  Clearly, one can find four
+intervals that contain all possible subsets of $Y$.  Formally, the
+projection
+$\VCProj{\RangeSet}{Y} = \brc{ \MakeSBig\! \brc{\,}, \brc{ 1 },
+   \brc{2}, \brc{1,2} }$. The intervals realizing each of these
+subsets are depicted in \figref{vc:intervals} (a).
+
+However, this is false for a set of three
+points $B = \brc{\pnt,\pntA,\pntB}$ (see \figref{vc:intervals} (b)),
+since there is no interval that
+can contain the two extreme points $\pnt$ and $\pntB$ without also
+containing $\pntA$. Namely, the subset $\brc{\pnt,\pntB}$ is not
+realizable for intervals, implying that the largest shattered set by
+the range space $\pth[]{\text{real line}, \text{intervals} }$ is of
+size two. We conclude that the \VC dimension of this space is two.
+
+% \smallskip
+
+\medskip%
+\noindent%
+\begin{minipage}{0.76\linewidth}
+    \noindent{\bfseries Disks.}
+    Let $\GroundSet = \Re^2$, and let $\RangeSet$ be the set of disks
+    in the plane. Clearly, for any three points in the plane (in
+    general position), denoted by $\pnt, \pntA$, and $\pntB$, one can
+    find eight disks that realize all possible $2^3$ different
+    subsets.  See the figure on the right.
+
+    But can disks shatter a set with four points? Consider such a set
+    $\PntSet$ of four points. If the convex hull of $\PntSet$ has only
+    three points on its boundary, then the subset $X$ having only
+    those three vertices (i.e., it does not include the middle point)
+    is impossible, by convexity. Namely, there is no disk that
+    contains only the points of $X$ without the middle point.
+% \end{minipage}}
+\end{minipage}%
+\hfill%
+\begin{minipage}{0.22\linewidth}
+    \hfill%
+    \IncludeGraphics{\File{figs/shatter3x}}%
+\end{minipage}
+
+
+
+\medskip%
+\noindent%
+\begin{minipage}{0.76\linewidth}
+    Alternatively, if all four points are vertices of the convex hull
+    and they are $a,b,c,d$ along the boundary of the convex hull,
+    either the set $\brc{a, c}$ or the set $\brc{b, d}$ is not
+    realizable. Indeed, if both options are realizable, then consider
+    the two disks $\disk_1$ and $\disk_2$ that realize those
+    assignments.  Clearly, $\bd D_1$ and $\bd D_2$ must intersect in
+    four points, but this is not possible, since two circles have at
+    most two intersection points. See the figure on the left.  Hence
+    the \VC dimension of this range space is $3$.
+\end{minipage}
+\begin{minipage}{0.22\linewidth}
+    \hfill%
+\IncludeGraphics{\File{figs/no_shatter_4x}}
+\end{minipage}
+
+
+%     \medskip
+
+% \parpic[r]{\PPic{1.8cm}{figs/convex}}
+
+\noindent%
+\begin{minipage}{0.8\linewidth}
+    \noindent{\bfseries Convex sets.}
+    Consider the range space $\RangeSpace = (\Re^2, \RangeSet)$, where
+    $\RangeSet$ is the set of all (closed) convex sets in the plane.
+    We claim that $\VCDim(\RangeSpace)=\infty$. Indeed, consider a set
+    $U$ of $n$ points $p_1,\ldots, p_n$ all lying on the boundary of
+    the unit circle in the plane. Let $V$ be any subset of $U$, and
+    consider the convex hull $\CHX{V}$. Clearly,
+    $\CHX{V} \in \RangeSet$, and furthermore, $\CHX{V} \cap U =
+    V$. Namely, any subset of $U$ is realizable by
+    $\RangeSpace$. Thus, $\RangeSpace$ can shatter sets of arbitrary
+    size, and its \VC dimension is unbounded.
+\end{minipage}
+\begin{minipage}{0.2\linewidth}
+    \IncludeGraphics[scale=0.8]{\File{figs/convex}}%
+\end{minipage}
+
+\bigskip%
+\noindent%
+\textbf{Complement.}  %
+Consider the range space $\RangeSpace = (\GroundSet, \RangeSet)$ with
+$\Dim =\VCDim(\RangeSpace)$. Next, consider the complement space,
+$\overline{\RangeSpace} = \bigl(\ts\GroundSet, \overline{\RangeSet}\,
+\bigr)$, where
+\begin{equation*}
+    \overline{\RangeSet}%
+    =%
+    \Set{\GroundSet \setminus \range }{ \range
+       \in \RangeSet\bigr. }.
+\end{equation*}
+Namely, the ranges of $\overline{\RangeSpace}$ are the complement of
+the ranges in $\RangeSpace$.  What is the \VC dimension of
+$\overline{\RangeSpace}$?  Well, a set $B \subseteq \GroundSet$ is
+shattered by $\overline{\RangeSpace}$ if and only if it is shattered
+by $\RangeSpace$. Indeed, if $\RangeSpace$ shatters $B$, then for any
+$Z \subseteq B$, we have that
+$(B \setminus Z) \in \VCProj{\RangeSet}{B}$, which implies that
+$Z = {B \setminus \MakeSBig (B \setminus Z)} \in
+\VCProj{\overline{\RangeSet}}{B}$. Namely,
+$\VCProj{\overline{\RangeSet}}{B}$ contains all the subsets of $B$,
+and $\overline{\RangeSpace}$ shatters $B$.  Thus,
+$\VCDim\bigl( \ts \overline{\RangeSpace} \ts \bigr) = \VCDim(
+\RangeSpace)$.
+
+\begin{lemma}
+    \lemlab{complement}%
+    %
+    For a range space $\RangeSpace = (\GroundSet, \RangeSet)$ we have
+    that $\VCDim(\RangeSpace) = \VCDim
+    \pth{\overline{\RangeSpace}}\,$, where $\overline{\RangeSpace}$ is
+    the complement range space.    
+\end{lemma}
+
+
+\subsubsection{Halfspaces}
+% \begin{example}
+Let $\RangeSpace = (\GroundSet,\RangeSet)$, where
+$\GroundSet=\Re^\hdim$ and $\RangeSet$ is the set of all (closed)
+halfspaces in $\Re^\hdim$.  We need the following technical claim.
+
+\begin{claim}
+    \clmlab{helper:Radon}%
+    %
+    Let $\PntSet = \brc{\pnt_1, \ldots, \pnt_{\hdim+2}}$ be a set of
+    $\hdim+2$ points in $\Re^\hdim$.  There are real numbers
+    $\;\beta_1, \ldots, \beta_{\hdim+2}$, not all of them zero, such
+    that $\sum_i \beta_i \pnt_i = 0$ and $\sum_i \beta_i = 0$.
+\end{claim}
+
+\begin{proof} %
+    Indeed, set $\pntA_i = \pth[]{\pnt_i, 1}$, for $i=1,\ldots,
+    d+2$. Now, the points $\pntA_1, \ldots, \pntA_{\hdim+2} \in
+    \Re^{\hdim+1}$ are linearly dependent, and there are coefficients
+    $\beta_1, \ldots, \beta_{\hdim+2}$, not all of them zero, such
+    that $\sum_{i=1}^{\hdim+2} \beta_i \pntA_i = 0$.  Considering only
+    the first $\hdim$ coordinates of these points implies that
+    $\sum_{i=1}^{\hdim+2} \beta_i \pnt_i = 0$. Similarly, by
+    considering only the $(d+1)$st coordinate of these points, we have
+    that $\sum_{i=1}^{\hdim+2} \beta_i = 0$.
+\end{proof}
+
+
+To see what the \VC dimension of halfspaces in $\Re^\hdim$ is, we need
+the following result of Radon. (For a reminder of the formal
+definition of convex hulls, see \defref{convex:hull}.)
+
+\begin{fragment}{radon}
+\begin{theorem}[Radon's theorem]
+    Let $\PntSet = \brc{\pnt_1, \ldots, \pnt_{\hdim+2}}$ be a set of
+    $\hdim+2$ points in $\Re^\hdim$. Then, there exist two disjoint
+    subsets $C$ and $D$ of $\PntSet$, such that $\CHX{C} \cap \CHX{D}
+    \ne \emptyset$ and $C \cup D = \PntSet$. %
+    % 
+    \index{theorem!Radon's}%
+    \index{Radon's theorem}%
+    \thmlab{radon}
+\end{theorem}
+\end{fragment}
+\begin{proof}
+    By \clmref{helper:Radon} there are real numbers $\beta_1, \ldots,
+    \beta_{\hdim+2}$, not all of them zero, such that $\sum_i \beta_i
+    \pnt_i = 0$ and $\sum_i \beta_i = 0$.
+    
+    Assume, for the sake of simplicity of exposition, that $\beta_1, 
+    \ldots, \beta_k \geq 0$ and $\beta_{k+1}, \ldots$,
+    $\beta_{\hdim+2} < 0$.  Furthermore, let $\mu = \sum_{i=1}^{k}
+    \beta_i = -\sum_{i=k+1}^{\hdim+2} \beta_i$.  We have that
+    \begin{equation*}
+        \sum_{i=1}^{k} \beta_i \pnt_i = - \sum_{i=k+1}^{\hdim+2} \beta_i
+        \pnt_i.        
+    \end{equation*}
+    In particular, $v = \sum_{i=1}^{k} (\beta_i/\mu) \pnt_i$ is a
+    point in $\CHX{\brc{\pnt_1,\ldots, \pnt_k}}$. Furthermore, for the
+    same point $v$ we have
+    $v = \sum_{i=k+1}^{\hdim+2} - \ts(\beta_i/\mu) \pnt_i$
+    $ \in \CHX{\brc{\pnt_{k+1}, \ldots, \pnt_{\hdim+2}}}$. We conclude
+    that $v$ is in the intersection of the two convex hulls, as
+    required.
+\end{proof}
+% \end{minipage}}
+
+
+The following is a trivial observation, and yet we provide a proof to
+demonstrate it is true.
+
+\begin{lemma}
+    \lemlab{trivial:observation}%
+    %
+    Let $\PntSet \subseteq \Re^\hdim$ be a finite set, let $\pntB$ be
+    any point in $\CHX{\PntSet}$, and let $h^+$ be a halfspace of
+    $\Re^\hdim$ containing $\pntB$. Then there exists a point of
+    $\PntSet$ contained inside $h^+$.
+\end{lemma}
+
+\begin{proof}
+    The halfspace $h^+$ can be written as
+    \begin{math}
+        h^+ = \Set{ \pntC \in \Re^\hdim }{\! \DotProd{\pntC }{v} \leq
+           c}\!.
+    \end{math}
+     Now $\pntB \in \CHX{\PntSet} \cap h^+$, and as such
+    there are numbers $\alpha_1, \ldots, \alpha_m \geq 0$ and points
+    $\pnt_1,\ldots, \pnt_m \in \PntSet$, such that
+    $\sum_i \alpha_i = 1$ and $\sum_i \alpha_i \pnt_i =\pntB$. By the
+    linearity of the dot product, we have that
+    \begin{equation*}
+        \pntB \in h^+ %
+        \implies%
+        \DotProd{\pntB }{v} \leq c%
+        \implies%
+        \DotProd{\Bigl.\smash{\sum_{i=1}^m \alpha_i \pnt_i }}{v} \leq c%
+        \implies%
+        \beta = \sum_{i=1}^m \alpha_i\DotProd{ \pnt_i }{v} \leq c.        
+    \end{equation*}
+    Setting $\,\beta_i = \DotProd{ \pnt_i }{v}$, for $i=1,\ldots, m$,
+    the above implies that $\,\beta$ is a weighted average of
+    $\,\beta_1, \ldots, \beta_m$. In particular, there must be a
+    $\,\beta_i$ that is no larger than the average. That is
+    $\,\beta_i \leq c$. This implies that
+    $\DotProd{ \pnt_i }{v} \leq c$. Namely, $\pnt_i \in h^+$ as
+    claimed.
+\end{proof}
+
+
+Let $\RangeSpace$ be the range space having $\Re^\hdim$ as the ground
+set and all the close halfspaces as ranges.  Radon's theorem implies
+that if a set $\PntSetB$ of $\hdim + 2$ points is being shattered by
+$\RangeSpace$, then we can partition this set $\PntSetB$ into two
+disjoint sets $Y$ and $Z$ such that $\CHX{Y} \cap \CHX{Z} \ne
+\emptyset$. In particular, let $\pntB$ be a point in $\CHX{Y} \cap
+\CHX{Z}$.  If a halfspace $h^+$ contains all the points of $Y$, then
+$\CHX{Y} \subseteq h^+$, since a halfspace is a convex set.  Thus, any
+halfspace $h^+$ containing all the points of $Y$ will contain the
+point $\pntB \in \CHX{Y}$. But $\pntB \in \CHX{Z} \cap h^+$, and this
+implies that a point of $Z$ must lie in $h^+$, by
+\lemref{trivial:observation}.  Namely, the subset $Y \subseteq
+\PntSetB$ cannot be realized by a halfspace, which implies that
+$\PntSetB$ cannot be shattered. Thus $\VCDim(S) < d+2$. It is also
+easy to verify that the regular simplex with $\hdim+1$ vertices is
+shattered by $\RangeSpace$. Thus, $\VCDim(S) = \hdim+1$.
+% \end{example}
+
+
+
+\section{Shattering dimension and %
+   the dual shattering dimension}
+
+The main property of a range space with bounded \VC dimension is that
+the number of ranges for a set of $n$ elements grows polynomially in
+$n$ (with the power being the dimension) instead of exponentially.
+Formally, let the \emphi{growth function} be
+\begin{equation}
+    \Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}
+    \leq \sum_{i=0}^{\Dim} \frac{n^i}{i!}
+    \leq n^\Dim,
+    % 
+    \eqlab{g:d:n:estimate}
+\end{equation}
+for $\Dim>1$ (the cases where $\Dim=0$ or $\Dim=1$ are not interesting
+and we will just ignore them).  Note that for all $n,\Dim \geq 1$, we
+have $\Growth{\Dim}{n} = \Growth{\Dim}{n-1} +
+\Growth{\Dim-1}{n-1}$\footnote{Here is a cute (and standard) counting
+   argument: $\Growth{\Dim}{n}$ is just the number of different
+   subsets of size at most $\Dim$ out of $n$ elements. Now, we either
+   decide to not include the first element in these subsets (i.e.,
+   $\Growth{\Dim}{n-1}$) or, alternatively, we include the first
+   element in these subsets, but then there are only $\Dim-1$ elements
+   left to pick (i.e., $\Growth{\Dim-1}{n-1}$).}.
+
+\begin{fragment}{Sauer_lemma}
+    \begin{lemma}[Sauer's lemma]
+        \lemlab{Sauer}%
+        %
+        If $(\GroundSet,\RangeSet)$ is a range space of \VC dimension
+        $\Dim$ with $|\GroundSet| = n$, then $|\RangeSet| \leq
+        \Growth{\Dim}{n}$.        
+    \end{lemma}
+\end{fragment}
+
+\begin{proof}
+    The claim trivially holds for $\Dim=0$ or $n=0$.
+    
+    Let $x$ be any element of $\GroundSet$, and consider the sets
+    \begin{equation*}
+        \RangeSet_x%
+        =%
+        \Set{ \range \setminus \brc{x} }%
+        {\bigl. \range \cup \brc{x} \in \RangeSet \text{ and }%
+           \range \setminus \brc{x} \in \RangeSet}%
+        \quad\text{and}\quad%
+        \RangeSet \setminus x%
+        =%
+        \Set{ \range
+           \setminus \brc{x} }{ \bigl. \range \in \RangeSet}.
+    \end{equation*}
+    Observe that $\cardin{\RangeSet} = \cardin{\RangeSet_x} +
+    \cardin{\RangeSet \setminus x}$. Indeed, we charge the elements of
+    $\RangeSet$ to their corresponding element in $\RangeSet\setminus
+    x$.  The only bad case is when there is a range $\range$ such that
+    both $\range\cup \brc{x} \in \RangeSet$ and $\range\setminus
+    \brc{x} \in \RangeSet$, because then these two distinct ranges get
+    mapped to the same range in $\RangeSet \setminus x$. But such
+    ranges contribute exactly one element to $\RangeSet_x$. Similarly,
+    every element of $\RangeSet_x$ corresponds to two such ``twin''
+    ranges in $\RangeSet$.
+    
+    Observe that $( X \setminus \brc{x}, \RangeSet_x)$ has \VC{}
+    dimension $\Dim-1$, as the largest set that can be shattered is of
+    size $\Dim-1$.  Indeed, any set $B \subset \GroundSet \setminus
+    \brc{x}$ shattered by $\RangeSet_x$ implies that $B \cup \brc{x}$
+    is shattered in $\RangeSet$.
+    
+    Thus, we have
+    \begin{equation*}
+        \cardin{\RangeSet}%
+        =%
+        \cardin{\RangeSet_x} + \cardin{\RangeSet
+           \setminus x} \leq \Growth{\Dim-1}{n-1} +
+        \Growth{\Dim}{n-1}%
+        =%
+        \Growth{\Dim}{n},        
+    \end{equation*}
+    by induction.
+\end{proof}
+
+
+
+Interestingly, \lemref{Sauer} is tight.
+
+Next, we show pretty tight bounds on $\Growth{\Dim}{n}$.  The proof is
+technical and not very interesting, and it is delegated to
+\secref{growth:improved}.
+
+% \begin{fragment}{sum:of:binomial:coefficients:x}
+% \end{fragment}
+
+% \IncFragment{sum:of:binomial:coefficients:x}
+
+\providecommand{\LemmaGrowthImproved}{%
+   For $n \geq 2\Dim$ and $\Dim \geq 1$, we have 
+   \begin{math}
+       \;\displaystyle%
+       \pth{\frac{n }{\Dim}}^\Dim%
+       \leq%
+       \Growth{\Dim}{n}%
+       \leq%
+       2\, \pth{\frac{n e}{\Dim}}^\Dim,
+   \end{math}
+   where $\ds\Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}$.}
+
+\begin{fragment}{sum_of_binomial_coefficients}
+    \providecommand{\LemmaGrowthImproved}{%
+       For $n \geq 2\Dim$ and $\Dim \geq 1$, we have
+       \begin{math}
+           \;\displaystyle \pth{\frac{n }{\Dim}}^\Dim%
+           \leq%
+           \Growth{\Dim}{n}%
+           \leq%
+           2\; \pth{\frac{n e}{\Dim}}^\Dim,
+       \end{math}
+        where $\ds\Growth{\Dim}{n} =
+       \sum_{i=0}^{\Dim} \binom{n}{i}$.}
+    \begin{lemma}
+        \lemlab{growth:improved}%
+        %
+        \LemmaGrowthImproved        
+    \end{lemma}
+\end{fragment}
+
+
+\begin{fragment}{shattering_d}
+    \begin{defn}[\DefName{Shatter function}]
+        \deflab{shatter:function}%
+        %
+        Given a range space $\RangeSpace = (\GroundSet, \RangeSet)$,
+        its \emphi{shatter function} $\ShatterFunc{\RangeSpace}(m)$ is
+        the maximum number of sets that might be created by
+        $\RangeSpace$ when restricted to subsets of size
+        $m$. Formally,
+        \begin{equation*}
+            \ShatterFunc{\RangeSpace}(m)%
+            =%
+            \smash{\max_{\substack{B \subset \GroundSet\\
+                     \cardin{B} = m}} \cardin{ \VCProj{\RangeSet}{B} }};
+        \end{equation*}
+        see \Eqref{v:c:project}.
+    \end{defn}
+\end{fragment}
+
+
+
+Our arch-nemesis in the following is the function $x / \ln x$. The
+following lemma states some properties of this function, and its proof
+is left as an exercise.
+
+
+\begin{lemma}
+    \lemlab{nemesis:function}%
+    %
+    For the function $\,f(x) = x / \ln x\,$ the following hold.
+    \begin{compactenumA}
+        \item $f(x)$ is monotonically increasing for $x \geq e$.
+        \item $f(x) \geq e$, for $x >1$.
+        \item For $u \geq \sqrt{e}$, if $f(x) \leq u$, then $x \leq 2
+        u \ln u$.
+        \item For $u \geq \sqrt{e}$, if $x > 2 u \ln u$, then $f(x) >
+        u$.
+        \label{nemesis:function:part:D}
+        
+        \item For $u \geq e$, if $f(x) \geq u$, then $x \geq u \ln u$.
+    \end{compactenumA}
+\end{lemma}
+
+
+\subsection{Mixing range spaces}
+
+
+\begin{lemma}
+    \lemlab{VC:dimension:union:suck}%
+    %
+    Let $\RangeSpace = (\GroundSet,\RangeSet)$ and
+    $\RangeSpaceA = (\GroundSet,\RangeSetA)$ be two range spaces of
+    ~\VC dimension $\Dim$ and $\DimA$, respectively, where
+    $\Dim, \DimA > 1$. Let
+    \begin{math}
+        \Bigl.  \widehat{\RangeSet}%
+        =%
+        \Set{\range \cup \rangeA}{ \range \in \RangeSet, \rangeA \in
+           \RangeSetA}.
+    \end{math}
+      Then, for the range
+    space
+    \begin{math}
+        \widehat{\RangeSpace} = \bigl( \ts \GroundSet,
+        \widehat{\RangeSet} \bigr),
+    \end{math}
+     we have that
+    $\VCDim\bigl( \ts \widehat{\RangeSpace} \ts \bigr)=O(\Dim +
+    \DimA)$.
+\end{lemma}
+
+\begin{proof}
+    As a warm-up exercise, we prove a somewhat weaker bound here of
+    $O( (\Dim + \DimA) \log \pth{\Dim + \DimA} )$. The stronger bound
+    follows from \thmref{VC:combination} below.  Let $B$ be a set of
+    $n$ points in $\GroundSet$ that are shattered by
+    $\widehat{\RangeSpace}$. There are at most $\Growth{\Dim}{n }$ and
+    $\Growth{\DimA}{n }$ different ranges of $B$ in the range sets
+    $\VCProj{\RangeSet}{B}$ and $\VCProj{\RangeSetA}{B}$,
+    respectively, by \lemref{Sauer}. Every subset $C$ of $B$ realized
+    by $\widehat{r} \in \widehat{\RangeSet}$ is a union of two subsets
+    $B \cap \range$ and $B \cap \rangeA$, where $\range \in R$ and
+    $\rangeA \in \RangeSetA$, respectively.  Thus, the number of
+    different subsets of $B$ realized by $\widehat{\RangeSpace}$ is
+    bounded by $\Growth{\Dim}{n} \Growth{\DimA}{n }$. Thus, $2^n \leq
+    n^{\Dim} n^{\DimA}$, for $\Dim, \DimA > 1$.  We conclude that $n
+    \leq (\Dim + \DimA) \lg n$, which implies that $n = O \pth{
+       \pth[]{\Dim + \DimA} \log\pth{ \Dim + \DimA}}$, by
+    \lemref{nemesis:function}(C).
+\end{proof}
+
+
+Interestingly, one can prove a considerably more general result with
+tighter bounds. The required computations are somewhat more painful.
+
+\begin{fragment}{v_c_combining}
+    \begin{theorem}
+        Let
+        $\RangeSpace_1 = \pth{\GroundSet,\RangeSet^1}, \ldots,
+        \RangeSpace_k = \pth{\GroundSet,\RangeSet^k}$
+        be range spaces with \VC dimension $\Dim_1, \ldots, \Dim_k$,
+        respectively.  Next, let $f\pth{ \range_1, \ldots, \range_k}$
+        be a function that maps any $k$-tuple of sets
+        $\range_1 \in \RangeSet^1, \ldots, \range_k \in \RangeSet^k$
+        into a subset of $\GroundSet$. Here, the function $f$ is
+        restricted to be defined by a sequence of set operations like
+        complement, intersection and union.  Consider the range set
+        \begin{align*}
+          \RangeSetA%
+          =%
+          \Set{ f\pth{ \range_1, \ldots, \range_k}}{ \range_1
+          \in \RangeSet_1, \ldots, \range_k \in \RangeSet_k \bigr.}
+        \end{align*}
+        and the associated range space $\RangeSpaceA =
+        \pth{\GroundSet, \RangeSetA}$. Then, the \VC dimension of
+        $\;\RangeSpaceA$ is bounded by $O\pth{ k \Dim \lg k}$, where
+        $\Dim = \max_i \Dim_i$.
+        
+        \thmlab{VC:combination}
+    \end{theorem}
+\end{fragment}
+
+\begin{proof}
+    Assume a set $Y \subseteq \GroundSet$ of size $t$ is being
+    shattered by $\RangeSetA$, and observe that
+    \begin{align*}
+      \bigl| \VCProj{\RangeSetA}{Y} \bigr|%
+      &%
+        \leq%
+        \cardin{\,%\VBig{0.8cm}
+        \Set{\,%\VBig{0.7cm}
+           % 
+        \pth[]{ \range_1, \ldots, \range_k}
+        % 
+        }{ \range_1 \in \smash{\VCProj{\RangeSet^1}{Y}}, \ldots,
+        \range_k \in \smash{\VCProj{\RangeSet^k}{Y}} \bigr.} \Bigr. }%
+        \leq%
+        \cardin{\smash{\VCProj{\RangeSet^1}{Y}} \bigr.} \cdots
+        \cardin{\smash{\VCProj{\RangeSet^k}{Y}}\bigr.}%
+        \leq%
+        {\Growth{\Dim_1}{t}}
+        \cdot {\Growth{\Dim_2}{t}} \cdots
+        {\Growth{\Dim_k}{t}}%
+      \\
+      &\leq%
+        \pth{\bigl. \Growth{\Dim}{t}}^k%
+        \leq%
+        \Bigl( 2\, \bigl(
+        {t e}/{\Dim} \bigr)^\Dim \Bigr)^k ,
+    \end{align*}
+    by \lemref{Sauer} and \lemref{growth:improved}. On the other hand,
+    since $Y$ is being shattered by $\RangeSetA$, this implies that
+    $\bigl| \VCProj{\RangeSetA}{Y}\bigr| = 2^t$. Thus, we have the
+    inequality
+    $2^t \leq \bigl( 2 \pth{ \nfrac{t e}{\Dim}}^\Dim \bigr)^k$, which
+    implies $t \leq k \pth{ 1 + \Dim \lg(\nfrac{t e}{\Dim }) }$.
+    Assume that $t \geq e$ and
+    $\Dim \lg\pth{\nfrac{t e}{\Dim }} \geq 1$ since otherwise the
+    claim is trivial, and observe that
+    $t \leq k \pth{ 1 + \Dim \lg\pth{\nfrac{t e}{\Dim }} } \leq 3 k
+    \Dim \lg (t/ \Dim)$.  Setting $x = t/\Dim$, we have
+    \begin{equation*}
+        \frac{t}{\Dim}%
+        \leq%
+        3k \frac{\ln\pth{ \nfrac{t}{\Dim}}}{\ln 2} %
+        \leq%
+        6k \ln \frac{t}{\Dim}%
+        \implies%
+        \frac{x}{\ln x} \leq 6k%
+        \implies%
+        x \leq 2 \cdot 6k \ln \pth{ 6k }%
+        \implies%
+        x \leq 12 k \ln (6 k ),
+    \end{equation*}
+    by \lemref{nemesis:function}(C).  We conclude that
+    $t \leq 12 \Dim k \ln (6 k )$, as claimed.
+\end{proof}
+
+
+
+
+\begin{corollary}
+    Let $\RangeSpace =(\GroundSet, \RangeSet)$ and $\RangeSpaceA =
+    (\GroundSet, \RangeSetA)$ be two range spaces of \VC dimension
+    $\Dim$ and $\DimA$, respectively, where $\Dim,\DimA > 1$. Let
+    \begin{math}
+        \widehat{\RangeSet}%
+        =%
+        \Set{ \range \cap \rangeA }{ \range \in \RangeSet, \rangeA \in
+           \RangeSetA \bigr.}.
+    \end{math}
+      Then, for the range
+    space $\widehat{\RangeSpace} = (\GroundSet, \widehat{\RangeSet})$,
+    we have that $\VCDim( \widehat{\RangeSpace} ) = O( \Dim + \DimA)$.
+\end{corollary}
+
+\begin{fragment}{v_c_combine}
+    \begin{corollary}
+        Any finite sequence of combining range spaces with finite \VC
+        dimension (by intersecting, complementing, or taking their
+        union) results in a range space with a finite \VC dimension.
+        
+        \corlab{v:c:combine}
+    \end{corollary}
+\end{fragment}
+
+
+\section{On \TPDF{$\eps$}{epsilon}-nets and
+   \TPDF{$\eps$}{epsilon}-sampling}
+
+
+\subsection{\TPDF{$\eps$}{epsilon}-nets and
+   \TPDF{$\eps$}{epsilon}-samples}
+
+
+\begin{defn}[\DefName{$\eps$-sample}]
+    Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range space, and
+    let $\FGroundSet$ be a finite subset of $\GroundSet$. For $0 \leq
+    \eps \leq 1$, a subset $C \subseteq \FGroundSet$ is an
+    \emphic{$\eps$-sample}{sample!sample@$\eps$-sample} for $\FGroundSet$ if
+    for any range $\range \in \RangeSet$, we have
+    \begin{align*}
+      \cardin{\, \Measure{\range} - \sMeasure{\range} \bigr.\, }%
+      \leq%
+      \eps,
+    \end{align*}
+    where
+    $\Measure{\range} = {\cardin{\FGroundSet \cap \range}} \, /\,
+    {\cardin{\FGroundSet}}$ is the measure of $\range$ (see
+    \defref{measure}) and
+    $\sMeasure{\range} = {\cardin{C \cap \range}} \, /\,{\cardin{C}}$
+    is the estimate of $\range$ (see \defref{s:measure}).  (Here $C$
+    might be a multi-set, and as such $\cardin{C \cap \range}$ is
+    counted with multiplicity.)
+\end{defn}
+
+As such, an $\eps$-sample is a subset of the ground set $\FGroundSet$
+that ``captures'' the range space up to an error of
+$\eps$. Specifically, to estimate the fraction of the ground set
+covered by a range $\range$, it is sufficient to count the points of
+$C$ that fall inside $\range$.
+
+If $\GroundSet$ is a finite set, we will abuse notation slightly and
+refer to $C$ as an \emphic{$\eps$-sample}{sample!sample@$\eps$-sample}
+for $\RangeSpace$.
+
+To see the usage of such a sample, consider $\FGroundSet = \GroundSet$
+to be, say, the population of a country (i.e., an element of
+$\GroundSet$ is a citizen). A range in $\RangeSet$ is the set of all
+people in the country that answer yes to a question (i.e., would you
+vote for party Y?, would you buy a bridge from me?, questions like
+that). An $\eps$-sample of this range space enables us to estimate
+reliably (up to an error of $\eps$) the answers for all these
+questions, by just asking the people in the sample.
+
+The natural question of course is how to find such a subset of small
+(or minimal) size.
+
+\begin{fragment}{epsilon_sample_original}
+    \begin{theorem}[$\eps$-sample theorem, \cite{vc-ucrfe-71}]
+        \thmlab{epsilon:sample}%
+        \index{sample!sample@$\eps$-sample!sample
+           theorem@$\eps$-sample theorem|textbf}%
+        \index{theorem!sample@$\eps$-sample|textbf}%
+        \index{random sample!sample@$\eps$-sample}%
+        \index{sample!sample@$\eps$-sample}%
+        %
+        There is a positive constant $c$ such that if
+        $(\GroundSet,\RangeSet)$ is any range space with \VC dimension
+        at most $\Dim$, $\FGroundSet \subseteq \GroundSet$ is a finite
+        subset and $\eps, \BadProb > 0$, then a random subset
+        $C\subseteq \FGroundSet$ of cardinality
+        \begin{align*}
+          s = \frac{c}{\eps^2} \pth{ \Dim \log \frac{\Dim}{\eps} +
+          \log\frac{1}{\BadProb}}\
+        \end{align*}
+        is an $\eps$-sample for $\FGroundSet$ with probability at
+        least $1-\BadProb$.                
+    \end{theorem}
+\end{fragment}
+
+(In the above theorem, if $s > \cardin{\FGroundSet}$, then we can just
+take all of $\FGroundSet$ to be the $\eps$-sample.)
+
+\medskip
+
+
+Sometimes it is sufficient to have (hopefully smaller) samples with a
+weaker property -- if a range is ``heavy'', then there is an element in
+our sample that is in this range.
+
+\begin{defn}[\DefName{$\eps$-net}]
+    A set $N \subseteq \FGroundSet$ is an
+    \emphic{$\eps$-net}{net!eps@$\eps$-net|textbf} for $\FGroundSet$ if
+    for any range $\range \in \RangeSet$, if $\Measure{\range} \geq
+    \eps$ (i.e., $\cardin{\range \cap \FGroundSet} \geq \eps
+    \cardin{\FGroundSet}$), then $\range$ contains at least one point
+    of $N$ (i.e., $\range \cap N \ne \emptyset$).
+\end{defn}
+
+% The $\eps$-net notion is somewhat weaker as it has to stab only the
+% heavy sets. But fortunately, considerably smaller $\eps$-nets exist.
+
+\begin{fragment}{epsilon_net_theorem}
+    \begin{theorem}[$\eps$-net theorem, \cite{hw-ensrq-87}]
+        \index{random sample}%
+        \index{net!theorem@$\varepsilon$-net theorem|textbf}%
+        \index{theorem!net@$\varepsilon$-net|textbf}%%
+        \thmlab{epsilon:net}%
+        %
+        Let $(\GroundSet,\RangeSet)$ be a range space of \VC dimension
+        $\Dim$, let $\FGroundSet$ be a finite subset of $\GroundSet$,
+        and suppose that $0 < \eps \leq 1$ and $\BadProb < 1$. Let $N$
+        be a set obtained by $m$ random independent draws from
+        $\FGroundSet$, where
+        \begin{equation}
+            m \geq \max\pth{\;
+               \frac{4}{\eps} \lg \frac{4}{\BadProb} \,,\,
+               \frac{8\Dim}{\eps}\lg \frac{16}{\eps} \;}.
+            \eqlab{e:net}
+        \end{equation}
+        Then $N$ is an $\eps$-net for $\FGroundSet$ with probability
+        at least $1-\BadProb$.
+    \end{theorem}
+\end{fragment}
+
+(We remind the reader that $\lg=\log_2$.)
+
+
+The proofs of the above theorems are somewhat involved and we first
+turn our attention to some applications before presenting the proofs.
+
+\begin{fragment}{epsilon_net_s}
+    \begin{remark}
+        \remlab{epsilon:net:s}%
+        %
+        The above two theorems also hold for spaces with shattering
+        dimension at most $\Dim$, in which case the sample size is
+        slightly larger.  Specifically, for \thmref{epsilon:net}, the
+        sample size needed is $\ds O\pth{ \frac{1}{\eps} \lg
+           \frac{1}{\BadProb} + \frac{\Dim}{\eps}\lg \frac{\Dim}{\eps}
+        }$.        
+    \end{remark}
+\end{fragment}
+
+\begin{remark}
+    The $\eps$-net theorem is a relatively easy consequence (up to
+    constants) of the $\eps$-sample theorem -- see bibliographical
+    notes for details.
+\end{remark}
+
+\subsection{Some applications}
+
+We mention two (easy) applications of these theorems, which
+(hopefully) demonstrate their power.
+
+\subsubsection{Range searching}
+So, consider a (very large) set of points $\PntSet$ in the plane.  We
+would like to be able to quickly decide how many points are included
+inside a query rectangle. Let us assume that we allow ourselves $1\%$
+error.  What \thmref{epsilon:sample} tells us is that there is a
+subset of \emph{constant size} (that depends only on $\eps$) that can
+be used to perform this estimation, and it works for \emph{all} query
+rectangles (we used here the fact that rectangles in the plane have
+finite \VC dimension). In fact, a random sample of this size works
+with constant probability.
+
+
+
+
+\subsubsection{Learning a concept}
+\index{random sample}
+
+\begin{figure}[t]
+    \centering
+    \begin{tabular}{ccc}
+        \IncGraphPage[scale=0.9]{figs/}{learn_disk}{1} &
+        \IncGraphPage[scale=0.9]{figs/}{learn_disk}{2} &
+        \IncGraphPage[scale=0.9]{figs/}{learn_disk}{3} \\
+        (a) & (b) & (c)
+    \end{tabular}
+    \caption{(a) Sample points with labels, where black dots are points with label $1$.
+             (b) The smallest disk containing all positive sample points.
+             (c) The error region is the symmetric difference between the two disks.}
+    \figlab{learn:disk}
+\end{figure}
+
+Assume that we have a function $f$ defined in the plane that returns
+`$1$' inside an (unknown) disk $\disk_{\text{unknown}}$ and `$0$'
+outside it. There is some distribution $\Distribution$ defined over
+the plane, and we pick points from this distribution.  Furthermore, we
+can compute the function for these labels (i.e., we can compute $f$
+for certain values, but it is expensive).  For a mystery value
+$\eps >0$, to be explained shortly, \thmref{epsilon:net} tells us to
+pick (roughly) $O((1/\eps) \log(1/\eps))$ random points in a sample
+$\Sample$ from this distribution and to compute the labels for the
+samples. This is demonstrated in \figref{learn:disk} (a), where black
+dots are the sample points for which $f(\cdot)$ returned $1$.
+
+So, now we have positive examples and negative examples. We would like
+to find a hypothesis that agrees with all the samples we have and that
+hopefully is close to the true unknown disk underlying the function
+$f$. To this end, compute the smallest disk $\disk$ that contains the
+sample labeled by `$1$' and does not contain any of the `$0$' points
+(see \figref{learn:disk} (b)),
+and let $g:\Re^2 \rightarrow \brc{0,1}$ be the function $g$ that
+returns `$1$' inside the disk and `$0$' otherwise.  We claim that $g$
+classifies correctly all but an $\eps$-fraction of the points (i.e.,
+the probability of misclassifying a point picked according to the
+given distribution is smaller than $\eps$); that is, $\ProbExt{\pnt
+   \in \Distribution}{f(\pnt) \ne g(\pnt)} \leq \eps$.
+
+Geometrically, the region where $g$ and $f$ disagree is all the points
+in the symmetric difference between the two disks. That is, $\Error =
+\disk \oplus \disk_{\text{unknown}}$; see \figref{learn:disk} (c).
+
+Thus, consider the range space $\RangeSpace$ having the plane as the
+ground set and the symmetric difference between any two disks as its
+ranges. By \corref{v:c:combine}, this range space has finite \VC{}
+dimension. Now, consider the (unknown) disk $\diskA$ that induces $f$
+and the region $\range = \disk_\text{unknown} \oplus \disk$. Clearly,
+the learned classifier $g$ returns incorrect answers only for points
+picked inside $\range$.
+
+Thus, the probability of a mistake in the classification is the
+measure of $\range$ under the distribution $\Distribution$. So, if
+$\ProbLTR_\Distribution [ \range ] > \eps$ (i.e., the probability that
+a sample point falls inside $\range$), then by the $\eps$-net theorem
+(i.e., \thmref{epsilon:net}) the set $\Sample$ is an $\eps$-net for
+$\RangeSpace$ (ignore for the time being the possibility that the
+random sample \index{random sample} fails to be an $\eps$-net) and as
+such, $\Sample$ contains a point $\pntA$ inside $\range$. But, it is
+not possible for $g$ (which classifies correctly all the sampled
+points of $\Sample$) to make a mistake on $\pntA$, a contradiction,
+because by construction, the range $\range$ is where $g$ misclassifies
+points. We conclude that
+$\ProbLTR_\Distribution\, \pbrc{ \range } \leq \eps$, as desired.
+
+\myParagraph{Little lies.}  The careful reader might be tearing his or
+her hair out because of the above description. First,
+\thmref{epsilon:net} might fail, and the above conclusion might not
+hold. This is of course true, and in real applications one might use a
+much larger sample to guarantee that the probability of failure is so
+small that it can be practically ignored.  A more serious issue is
+that \thmref{epsilon:net} is defined only for finite sets. Nowhere
+does it speak about a continuous distribution.  Intuitively, one can
+approximate a continuous distribution to an arbitrary precision using
+a huge sample and apply the theorem to this sample as our ground
+set. A formal proof is more tedious and requires extending the proof
+of \thmref{epsilon:net} to continuous distributions. This is
+straightforward and we will ignore this topic altogether.
+
+
+\section{A better bound on the growth function}
+\seclab{growth:improved}
+
+In this section, we prove \lemref{growth:improved}. Since the
+proof is straightforward but tedious, the reader can safely skip
+reading this section.
+
+\begin{fragment}{a_basic_binomial}
+    \begin{lemma}
+        \lemlab{a:basic:binomial}%
+        %
+        For any positive integer $n$, the following hold.
+        
+        \medskip
+        
+        \begin{tabular}{llll}
+            (i) & $(1+1/n)^n \leq e$. ~~~~~~~~~~~~~~~~~~
+            & 
+            (ii) & $(1-1/n)^{n-1} \geq e^{-1}$.\\
+            % 
+            (iii) &$n! \geq (n/e)^n$.&
+            % 
+            (iv) & For any $k \leq n$, we have $\;\;\displaystyle
+            \pth{\frac{n}{k}}^k \leq \binom{n}{k} \leq \pth{\frac{n
+                  e}{k}}^k$.
+        \end{tabular}
+        
+        \index{binomial!estimates}
+    \end{lemma}
+\end{fragment}
+
+\begin{proof}
+    (i) Indeed, $1+1/n\leq \exp \pth{1/n}$, since $1+x \leq e^x$, for
+    $x \geq 0$. As such $(1+1/n)^n \leq \exp\pth{n(1/n)} = e$.
+    
+    (ii) Rewriting the inequality, we have that we need to prove
+    $\pth{\frac{n-1}{n}}^{n-1} \geq \frac{1}{e}$. This is equivalent
+    to proving $e \geq \pth{\frac{n}{n-1}}^{n-1} = \pth{
+       1+\frac{1}{n-1}}^{n-1}$, which is our friend from (i).
+    
+    (iii) Indeed,
+    \begin{equation*}
+        \frac{n^n}{n!} \leq \sum_{i=0}^{\infty} \frac{n^i}{i!} = e^n,        
+    \end{equation*}
+    by the Taylor expansion of $e^x = \sum_{i=0}^\infty
+    \frac{x^i}{i!}$. This implies that $(n/e)^n \leq n!$, as required.
+    
+    (iv) Indeed, for any $k \leq n$, we have $\frac{n}{k} \leq
+    \frac{n-1}{k-1}$, as can be easily verified. As such, $\frac{n}{k}
+    \leq \frac{n-i}{k-i}$, for $1 \leq i \leq k-1$. As such,
+    \begin{equation*}
+        \pth{\frac{n}{k}}^k \leq \frac{n}{k} \cdot \frac{n-1}{k-1} \cdots
+        \frac{n-k+1} {1} = \binom{n}{k}.        
+    \end{equation*}
+    As for the other direction, by (iii), we have $\displaystyle\;
+    \binom{n}{k} \leq \frac{n^k}{k!} \leq
+    \frac{n^k}{\pth{\frac{k}{e}}^{k}} = \pth{ \frac{n e}{k} }^k$.
+\end{proof}
+
+\noindent{\textbf{\lemref{growth:improved} restated.}
+   \emph{\LemmaGrowthImproved}}
+   
+
+\begin{proof}
+    Note that by \lemref{a:basic:binomial} (iv), we have
+    $\displaystyle \Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}
+    \leq 1 + \sum_{i=1}^{\Dim} \pth{\frac{ne}{i}}^i$.
+    This series behaves like a geometric series with constant larger
+    than $2$, since
+    \begin{equation*}
+        {\pth{\frac{ne}{i}}^i} \;/ \; {\pth{\frac{ne}{i-1}}^{i-1}} =
+        \frac{ne }{i} \pth{\frac{i-1}{i}}^{i-1} = \frac{ne }{i} \pth{1 -
+           \frac{1}{i}}^{i-1} \geq \frac{ne }{i} \frac{1}{e} = \frac{n}{i}
+        \geq \frac{n}{\Dim} \geq 2,        
+    \end{equation*}
+    by \lemref{a:basic:binomial}. As such, this series is bounded by
+    twice the largest element in the series, implying the claim.
+\end{proof}
+
+
+
+
+\section{Some required definitions}
+\begin{fragment}{convex_hull}
+    \begin{defn}[\DefName{Convex hull}]
+        The \emphi{convex hull} of a set $\PntSetC \subseteq
+        \Re^\hdim$ is the set of all convex combinations of points of
+        $\PntSetC$; that is,
+        \[
+        \CHX{ \PntSetC} = \brc{\sum_{i=0}^m \alpha_i \pntB_i\sep{
+              \forall i \;\;\pntB_i \in \PntSetC, \alpha_i \geq 0,
+              \text{ and } \sum_{j=1}^m \alpha_i =1}}.
+        \]
+        \deflab{convex:hull}
+    \end{defn}
+\end{fragment}
+
+
+
+
+   
+
+\StandAloneMode{
+   % \section{From previous lectures}
+   
+   % \IncFragment{convex:hull}
+   % \IncFragment{Chebychev}
+   % \IncFragment{Chernoff:1}
+   % \IncFragment{chernoff:small}
+   % \IncFragment{Chernoff:below}
+   % \IncFragment{t:Chernoff:special} 
+   % \IncFragment{epsilon:sample:stronger}
+%
+}
+
+
+
+\ChapterEnd{}
+
+% --------------------------------------------------------
+% 
+% 12_VC dim - end of file
+% --------------------------------------------------------
+  

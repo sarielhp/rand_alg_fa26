@@ -24,7 +24,7 @@ techniques for approximating discrete optimization problems. So far,
 we had seen such techniques when the relaxed optimization problem is a
 linear program. Interestingly, it is currently known how to solve
 optimization problems that are considerably more general than linear
-programs. Specifically, one can solve \emphi{convex programming}. Here
+programs. Specifically, one can solve \emphOnly{convex programming}\index{convex programming}. Here
 the feasible region is convex. How to solve such an optimization
 problems is outside the scope of this course. It is however natural to
 ask what can be done if one assumes that one can solve such general
@@ -44,7 +44,7 @@ improved approximation.
 
 Given an undirected graph $\Graph = (\Vertices, \Edges)$ and
 nonnegative weights $\WeightChar_{ij}$, for all $ij \in \Edges$, the
-\emphi{maximum cut problem} (\ProblemC{MAX CUT}) is that of finding
+\emphOnly{maximum cut problem}\index{maximum cut problem} (\ProblemC{MAX CUT}) is that of finding
 the set of vertices $S$ that maximizes the weight of the edges in the
 cut $\bigl( S, \overline{S} \bigr)$; that is, the weight of the edges
 with one endpoint in $S$ and the other in $\overline{S}$. For
@@ -302,11 +302,12 @@ $x_{ii}=1$ for $i=1,\ldots, n$. Let $V$ be the matrix having
 $v_1,\ldots, v_n$ as its columns. Clearly, $M=V^T V$. In particular,
 this implies that for any non-zero vector $v \in \Re^n$, we have
 $v^T M v = v^T A^T A v = (A v)^T (A v) \geq 0$. A matrix that has this
-property, is called \emphi{positive semidefinite}. Interestingly, any
+property, is called \emphOnly{positive semidefinite}\index{positive semidefinite}. Interestingly, any
 positive semidefinite matrix $P$ can be represented as a product of a
 matrix with its transpose; namely, $P=B^T B$.  Furthermore, given such
 a matrix $P$ of size $n \times n$, we can compute $B$ such that
-$P = B^T B$ in $O(n^3)$ time. This is know as \emphi{Cholesky
+$P = B^T B$ in $O(n^3)$ time. This is know as \emphOnly{Cholesky
+   decomposition}\index{Cholesky
    decomposition}.
 
 Observe, that if a semidefinite matrix $P = B^T B$ has a diagonal

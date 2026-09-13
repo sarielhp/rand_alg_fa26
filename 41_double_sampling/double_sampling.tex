@@ -31,9 +31,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 
-% \providecommand{\obj}{\Mh{f}}%
-% \providecommand{\Wg}{\Mh{\omega}}%
-% \newcommand{\TotalW}{\Mh{W}}%
+% \providecommand{\obj}{f}%
+% \providecommand{\Wg}{\omega}%
+% \newcommand{\TotalW}{W}%
 
 \section{Double sampling}
 
@@ -48,7 +48,7 @@ which makes the computations somewhat easier.
     Let $\ObjSet = \brc{ \obj_1, \ldots, \obj_n}$ be a set of objects,
     where the $i$\th object has weight $\Wg_i > 0$, for all $i$. Let
     $\TotalW = \sum_i \Wg_i$.  For a target size $\rho$, a
-    \emphi{$\rho$-sample} is a random sample
+    \emphOnly{$\rho$-sample}\index{$\rho$-sample} is a random sample
     $\Sample \subseteq \ObjSet$, where object $\obj_i$ is picked
     independently with probability
     $\displaystyle \rho \Wg_i / \TotalW$. To simplify the discussion,
@@ -269,7 +269,7 @@ somewhat different for each version.
     \end{math}
     Next, consider a set $\range \subseteq \ObjSet$ such that
     $\WeightX{\range} \geq t \TotalW / \rho$ (such a set is
-    \emphi{$t$-heavy}). Let $\Sample$ be a $\rho$-sample from
+    \emphOnly{$t$-heavy}\index{$t$-heavy}). Let $\Sample$ be a $\rho$-sample from
     $\ObjSet$. Then, the probability that $\Sample$ misses $\range$ is
     at most $e^{-t}$. Formally, we have
     \begin{math}
@@ -304,8 +304,8 @@ somewhat different for each version.
 
 \subsection{Moments of the sample size}
 
-\newcommand{\cEFunc}[1]{\Mh{U}\pth{#1}}
-\newcommand{\cFuncX}[1]{\Mh{f}\pth{#1}}%
+\newcommand{\cEFunc}[1]{U\pth{#1}}
+\newcommand{\cFuncX}[1]{f\pth{#1}}%
 \begin{lemma}
     \lemlab{two:samples:gen}%
     %
@@ -390,7 +390,7 @@ somewhat different for each version.
 
 \subsection{Growth function}
 
-The \emphi{growth function} $\Growth{\Dim}{n}$ is the maximum number
+The \emphOnly{growth function}\index{growth function} $\Growth{\Dim}{n}$ is the maximum number
 of ranges in a range space with \VC dimension $\Dim$, and with $n$
 elements. By Sauer's lemma, it is known that 
 \begin{equation}
@@ -417,8 +417,8 @@ tedious to prove):
     where $\Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}$.
 \end{lemma}
 
-\newcommand{\Net}{\Mh{{\Sample}}}%
-\newcommand{\NetA}{\Mh{{T}}}%
+\newcommand{\Net}{{\Sample}}%
+\newcommand{\NetA}{{T}}%
 
 \begin{lemma}
     \lemlab{two:samples}%

@@ -49,14 +49,14 @@ it is  in $\SetA$, and $-1$ if it is in $\SetB$.
 \begin{defn} 
     Consider a set system $\RangeSpace = (\GroundSet,\Ranges)$, and let
     $\chi: \GroundSet \rightarrow \brc{-1,+1}$ be a function (i.e., a
-    coloring).  The \emphi{discrepancy} of $\range \in \Ranges$ is
+    coloring).  The \emphOnly{discrepancy}\index{discrepancy} of $\range \in \Ranges$ is
     $\chi(\range) = \cardin{\sum_{x \in \range} \chi(x)}$.  The
-    \emphi{discrepancy of $\chi$} is the maximum discrepancy over all
+    \emphOnly{discrepancy of $\chi$}\index{discrepancy of $\chi$} is the maximum discrepancy over all
     the ranges -- that is
     \begin{equation*}
         \discX{\chi} = \max_{\range \in \Ranges} \chi(\range).
     \end{equation*}
-    The \emphi{discrepancy} of $\RangeSpace$ is
+    The \emphOnly{discrepancy}\index{discrepancy} of $\RangeSpace$ is
     \begin{equation*}
         \discX{\RangeSpace}%
         =%
@@ -82,7 +82,7 @@ system as an incidence matrix.
 \begin{defn}       
     For a $m \times n$ a binary matrix $\Matrix$ (i.e., each entry is
     either $0$ or $1$), consider a vector $\vecb \in \brc{-1,
-       +1}^n$. The \emphi{discrepancy} of $\vecb$ is
+       +1}^n$. The \emphOnly{discrepancy}\index{discrepancy} of $\vecb$ is
     $\dist{\Matrix \vecb}_\infty$.
 \end{defn}
 
@@ -98,7 +98,10 @@ system as an incidence matrix.
 
 \begin{proof}
     Let $v = (v_1, \ldots, v_n)$ be a row of $\Matrix$. Chose a random
-    $\vecb = (b_1, \ldots, b_n) \in \brc{-1,+1}^n$.  Let
+    \begin{equation*}
+        \vecb = (b_1, \ldots, b_n) \in \brc{-1,+1}^n.
+    \end{equation*}
+    Let
     $i_1,\ldots, i_\tau$ be the indices such that $v_{i_j} =1$, and
     let
     \begin{equation*}
@@ -123,19 +126,20 @@ system as an incidence matrix.
     By \thmrefY{Chernoff inequality}{Chernoff:special} and the
     symmetry of $Y$, we have that, for $\Delta = 4 \sqrt{n \ln{m}}$,
     it holds
-    \begin{equation*}
+    \begin{align*}
         \Prob{\bigl.\cardin{Y}\MakeSBig \geq \Delta} 
-        = %
+        &\EQ %
         2 \Prob{\bigl. \DotProd{v}{\vecb}  \geq \Delta }
         =%
         2 \Prob{\Bigl. \smash{\sum_{j=1}^\tau b_{i_j}} \geq \Delta}%
-        \leq%
+        \\
+        &\LEQ%
         2 \exp \pth{ - \frac{\Delta^2}{2\tau}}
         =%
         2 \exp \pth{-8 {\frac{n\ln m}{\tau}}}%
         \leq%
         \frac{2}{m^{8}},
-    \end{equation*}
+    \end{align*}
     since $\tau \leq n$.  In words, the probability that any entry in
     $\Matrix b$ exceeds (in absolute values) $4 \sqrt{ n\ln ,}$ is
     smaller than $2/m^7$. Thus, with probability at least $1 - 2/m^7$,
@@ -178,7 +182,7 @@ let $P(v)$ be the probability that a random computation starting from
 $v$ succeeds -- here randomly assigning the remaining bits can be
 interpreted as a random walk down the tree to a leaf.
 
-Formally, the algorithm is \emphi{successful} if ends up with a vector
+Formally, the algorithm is \emphOnly{successful}\index{successful} if ends up with a vector
 $\vecA$, such that
 $\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$.
 
@@ -190,23 +194,24 @@ deterministically), then we could derandomize the algorithm.
 
 Let $C_\ind^+$ be the bad event that
 $\row_\ind \cdot \vecA > 4 \sqrt{n \log n}$, where $\row_\ind$ is the
-$\ind$\th row of $\Matrix$.  Similarly, $C_\ind^-$ is the bad event
-that $\row_\ind \cdot \vecA < -4 \sqrt{n \log{n}}$, and let
+$\ind$\th row of $\Matrix$.  Similarly, $C_\ind^-$ is the bad event that
+$\row_\ind \cdot \vecA < -4 \sqrt{n \log{n}}$, and let
 $C_\ind = C_\ind^+ \cup C_\ind^-$.  Consider the probability,
-$\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first
-$k$ coordinates of $\vecA$ are specified).  Let
+$\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first $k$
+coordinates of $\vecA$ are specified).  Let
 $\row_\ind = (\rowc_1,\ldots, \rowc_n)$.  We have that
-\begin{equation*}
+\begin{align*}
     \ProbCond{C_\ind^+ }{\vecA_1, \ldots, \vecA_k}%
-    =
+    &\EQ
     \Prob{\smash{\sum_{i=k+1}^{n}} \vecA_i \rowc_i > 4 \sqrt{n \log{n}} -
        \smash{\sum_{i=1}^{k}} \vecA_i \rowc_i }%
-    =%
+    \\[0.4cm]&
+    \EQ%
     \Prob{\Bigl.\smash{\sum_{i \geq k+1, \rowc_i \ne 0 }} \vecA_i \rowc_i >
        L}%
     =%
     \Prob{\Bigl. \smash{\sum_{i \geq k+1, \rowc_i = 1}} \vecA_i > L},
-\end{equation*}
+\end{align*}
 where
 \begin{math}
     L = 4 \sqrt{n \log{n}} - \sum_{i=1}^{k} \vecA_i \rowc_i
@@ -214,13 +219,14 @@ where
 is a known quantity (since $\vecA_1, \ldots, \vecA_k$ are known). Let
 $V = \sum_{i \geq k+1, \rowc_i =1 } 1$. We have,
 \begin{align*}
-  \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} 
-  &=%
-    \Prob{\Bigl. \smash{\sum_{\substack{i \geq k+1\\ \alpha_i = 1}} }\pth{ \vecA_i +
-  1} > L + V}%
-  =%
-  \Prob{\Bigl. \smash{\sum_{\substack{i \geq k+1\\ \alpha_i = 1} }}\frac{{ \vecA_i +
-  1}}{2} > \frac{L + V}{2}},
+    \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} 
+    &\EQ%
+    \Prob{\Bigl. \smash{\displaystyle \sum\nolimits_{{i \geq k+1,\, \alpha_i = 1}} }\pth{ \vecA_i +
+          1} > L + V}%
+    \\[0.3cm]&%
+    \EQ%
+    \Prob{\Bigl. \smash{\sum\nolimits_{{i \geq k+1,\, \alpha_i = 1} }}\frac{{ \vecA_i +
+             1}}{2} > \frac{L + V}{2}},
 \end{align*}
 \medskip%
 The last quantity is the probability that in $V$ flips of a fair $0/1$
@@ -283,7 +289,7 @@ assignment.
 \section{Bibliographical Notes}
 
 There is a lot of nice work on discrepancy in geometric settings. See
-the books \cite{c-dmr-01, m-gd-99}.
+the books \cite{c-dmrc-01, m-gd-99}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

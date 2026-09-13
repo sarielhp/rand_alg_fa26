@@ -1,0 +1,340 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\ChapterNumPage{11}{92}
+
+\Chapter{Closest Pair}
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteExt{The events of September 8 prompted Foch to draft the later
+   legendary signal: ``My \si{centre} is giving way, my right is in
+   retreat, situation excellent. I attack.'' It was probably never
+   sent.  }{John Keegan}{The first world war}
+
+
+\section{How many times can a minimum change?}
+
+Let $a_1, \ldots, a_n$ be a set of $n$ numbers, and let us randomly
+permute them into the sequence $b_1,\ldots, b_n$. Next, let $c_i =
+\min_{k=1}^{i} b_i$, and let $X$ be the random variable which is the
+number of distinct values that appears in the sequence $c_1, \ldots,
+c_n$. What is the expectation of $X$?
+
+\begin{lemma}
+    In expectation, the number of times the minimum of a prefix of $n$
+    randomly permuted numbers change, is $O(\log n)$. That is
+    $\Ex{X} = O(\log n)$.
+\end{lemma}
+\begin{proof}
+    Consider the indicator variable $X_i$, such that $X_i=1$ if
+    $c_i \ne c_{i-1}$. The probability for that is $\leq 1/i$, since
+    this is the probability that the smallest number of
+    $b_1,\ldots, b_i$ is $b_i$.  (Why is this probability not simply
+    equal to $1/i$?)  As such, we have $X = \sum_{i} X_i$, and
+    $\displaystyle \Ex{X} = \sum_i \Ex{ X_i } = \sum_{i=1}^n
+    \frac{1}{i} = O( \log n)$.
+\end{proof}
+
+
+\section{Closest Pair}
+
+\begin{assumption}
+    Throughout the discourse, we are going to assume that every
+    hashing operation takes (worst case) constant time. This is quite
+    a reasonable assumption when true randomness is available (using
+    for example perfect hashing \cite{clrs-ia-01}). We will revisit
+    this issue later in the course.
+\end{assumption}
+
+For a real positive number $r$ and a point $\pnt = (x,y)$ in
+$\mathbb{R}^2$, define 
+\[
+\Grid_r(\pnt) := \pth{\;\MakeVBig\floor{\frac{x}{r}} \, r \;\;,\;\;
+   \floor{\frac{y}{r}} \, r \;} \;\; \in \Re^2.
+\]
+The number $r$ is the \emphi{width} of the \emphi{grid}
+$\Grid_r$. Observe that $\Grid_r$ partitions the plane into square
+regions, which are \emph{grid cells}. Formally, for any
+$i,j \in \mathbb{Z}$, the intersection of the half-planes
+$x \geq r i$, $x < r(i+1)$, $y \geq r j$ and $y < r(j+1)$ is a
+\emphi{grid cell}.  Further a \emphi{grid cluster} is a block of
+$3\times 3$ contiguous grid cells.
+
+For a point set $\PntSet$, and a parameter $r$, the partition of
+$\PntSet$ into subsets by the grid $\Grid_r$, is denoted by
+$\Grid_r(\PntSet)$. More formally, two points $\pnt,\pntA \in \PntSet$
+belong to the same set in the partition $\Grid_r(\PntSet)$, if both points
+are being mapped to the same grid point or equivalently belong to the
+same grid cell.
+
+Note, that every grid cell $C$ of $\Grid_r$, has a unique ID; indeed,
+let $\pnt = (x,y)$ be any point in $C$, and consider the pair of
+integer numbers $\ID_C = \ID(\pnt) = (\floor{x/r},
+\floor{y/r})$. Clearly, only points inside $C$ are going to be mapped
+to $\ID_C$. This is useful, as one can store a set $\PntSet$ of points
+inside a grid efficiently.  Indeed, given a point $\pnt$, compute its
+$\ID(\pnt)$. We associate with each unique $\ID$ a data-structure that
+stores all the points falling into this grid cell (of course, we do
+not maintain such data-structures for grid cells which are empty).
+For our purposes here, the grid-cell data-structure can simply be a
+linked list of points.  So, once we computed $\ID(\pnt)$, we fetch the
+data structure for this cell, by using hashing.  Namely, we store
+pointers to all those data-structures in a hash table, where each such
+data-structure is indexed by its unique $\ID$.  Since the $\ID$s are
+integer numbers, we can do the hashing in constant time.
+
+\bigskip
+
+We are interested in solving the following problem.
+\begin{problem}
+    Given a set $\PntSet$ of $n$ points in the plane, find the pair of
+    points closest to each other. Formally, return the pair of points
+    realizing
+    $\ClosestPair(\PntSet) = \min_{\pnt,\pntA \in P}
+    \distY{\pnt}{\pntA}$.
+\end{problem}
+
+We need the following easy packing lemma.
+
+
+\bigskip%
+\minipageWFigure{%
+   \begin{lemma}%
+       \lemlab{packing:2:d}%    
+       %
+       Let $\PntSet$ be a set of points contained inside a square
+       $\square$, such that the sidelength of $\square$ is
+       $\num = \ClosestPair ({\PntSet} )$. Then
+       $\cardin{\PntSet} \leq 4$.
+   \end{lemma}
+   
+   
+   \begin{proof}
+       Partition $\square$ into four equal squares
+       $\square_1,\ldots, \square_4$, and observe that each of these
+       squares has diameter $\sqrt{2} \num/2$ $ < \num$, and as such
+       each can contain at most one point of $\PntSet$; that is, the
+       disk of radius $\num$ centered at a point $\pnt \in \PntSet$
+       completely covers the subsquare containing it; see the figure
+       on the right.
+       
+       Note that the set $\PntSet$ can have four points if it is the
+       four corners of $\square$.
+   \end{proof}%
+}%
+{%
+   {\IncludeGraphics{\File{figs/\si{min_dist_square}}}}%
+}%
+{}%
+\medskip%
+
+
+
+\begin{lemma}
+    \lemlab{c:p:check}%
+    %
+    Given a set $\PntSet$ of $n$ points in the plane, and a distance $r$,
+    one can verify in linear time, whether or not $\ClosestPair(\PntSet) <
+    r$ or $\ClosestPair(\PntSet) \geq r$.
+\end{lemma}
+
+\begin{proof}
+    Indeed, store the points of $\PntSet$ in the grid $\Grid_r$. For every
+    non-empty grid cell, we maintain a linked list of the points
+    inside it. Thus, adding a new point $p$ takes constant time.
+    Indeed, compute $\ID(p)$, check if $\ID(p)$ already appears in the
+    hash table, if not, create a new linked list for the cell with
+    this ID number, and store $p$ in it. If a data-structure already
+    exist for $\ID(p)$, just add $p$ to it.
+    
+    This takes $O(n)$ time. Now, if any grid cell in
+    $\Grid_r(\PntSet)$ contains more than four points of $\PntSet$,
+    then, by \lemref{packing:2:d}, it must be that the
+    $\ClosestPair(\PntSet) < r$.
+    % Indeed, consider a cell $C$
+    % containing more than four points of $\PntSet$, and partition $C$
+    % into $3\times 3$ equal squares. Clearly, one of those squares must
+    % contain two points of $\PntSet$, and let $C'$ be this
+    % square. Clearly, the diameter of
+    % $C' = \Diam(C)/3 = \sqrt{r^2 + r^2}/3 < r$. Thus, the (at least)
+    % two points of $\PntSet$ in $C'$ are in distance smaller than $r$
+    % from each other.
+    
+    Thus, when inserting a point $p$, the algorithm fetch all the
+    points of $\PntSet$ that were already inserted, for the cell of
+    $p$, and the $8$ adjacent cells. All those cells must contain at
+    most $4$ points of $\PntSet$ (otherwise, we would already have
+    stopped since the $\ClosestPair(\cdot)$ of the inserted points is
+    smaller than $r$). Let $S$ be the set of all those points, and
+    observe that $\cardin{S} \leq 4 \cdot 9 = O(1)$. Thus, we can
+    compute by brute force the closest point to $p$ in $S$. This takes
+    $O(1)$ time. If $\DistSetY{p}{S} < r$, we stop and return this
+    distance (together with the two points realizing $\DistSetY{p}{S}$
+    as a proof that the distance is too short). Otherwise, we continue
+    to the next point, where
+    $\DistSetY{p}{S} = \min_{s \in S} \distY{p}{s}$.
+    
+    Overall, this takes $O(n)$ time. As for correctness, first observe
+    that if $\ClosestPair(\PntSet) >r$ then the algorithm would never
+    make a mistake, since it returns `$\ClosestPair(\PntSet)<r$' only
+    after finding a pair of points of $\PntSet$ with distance smaller
+    than $r$.  Thus, assume that $p,q$ are the pair of points of
+    $\PntSet$ realizing the closest pair, and
+    $\distY{p}{q} = \ClosestPair(\PntSet)<r$.  Clearly, when the later
+    of them, say $p$, is being inserted, the set $S$ would contain
+    $q$, and as such the algorithm would stop and return
+    ``$\ClosestPair(\PntSet) < r$''.
+\end{proof}
+
+
+\lemref{c:p:check} hints to a natural way to compute
+$\ClosestPair(\PntSet)$.  Indeed, permute the points of $\PntSet$, in
+an arbitrary fashion, and let $P = \permut{p_1, \ldots, p_n}$. Next,
+let $r_i = \ClosestPair\pth{\bigl.\brc{p_1,\ldots, p_i} }$. We can
+check if $r_{i+1} < r_i$, by just calling the algorithm for
+\lemref{c:p:check} on $\PntSet_{i+1}$ and $r_i$. If $r_{i+1} < r_i$,
+the algorithm of \lemref{c:p:check}, would give us back the distance
+$r_{i+1}$ (with the other point realizing this distance).
+
+So, consider the ``good'' case where $r_{i+1} = r_{i}=r_{i-1}$.
+Namely, the length of the shortest pair does not change. In this case
+we do not need to rebuild the data structure of \lemref{c:p:check} for
+each point. We can just reuse it from the previous iteration. Thus,
+inserting a single point takes constant time as long as the closest
+pair (distance) does not change.
+
+Things become bad, when $r_{i} < r_{i-1}$. Because then we need to
+rebuild the grid, and reinsert all the points of
+$\PntSet_i = \permut{p_1,\ldots, p_i}$ into the new grid
+$\Grid_{r_i}\pth{\PntSet_i}$.  This takes $O(i)$ time.
+
+So, if the closest pair radius, in the sequence $r_1,\ldots, r_n$,
+changes only $k$ times, then the running time of the algorithm would
+be $O(nk)$. But we can do even better!
+
+\begin{theorem}
+    \thmlab{closest:pair}%
+    %
+    Let $\PntSet$ be a set of $n$ points in the plane. One can compute
+    the closest pair of points of $\PntSet$ in expected linear time.
+\end{theorem}
+
+\begin{proof}
+    Pick a random permutation of the points of $\PntSet$, and let
+    $\permut{p_1,\ldots, p_n}$ be this permutation. Let
+    $r_2= \distY{p_1}{p_2}$, and start inserting the points into the
+    data structure of \lemref{c:p:check}. In the $i$\th iteration, if
+    $r_{i} =r_{i-1}$, then this insertion takes constant time. If
+    $r_{i} < r_{i-1}$, then we rebuild the grid and reinsert the
+    points.  Namely, we recompute $\Grid_{r_i}\pth{\PntSet_i}$.
+
+    To analyze the running time of this algorithm, let $X_i$ be the
+    indicator variable which is $1$ if $r_i \ne r_{i-1}$, and $0$
+    otherwise. Clearly, the running time is proportional to 
+    \[
+    R = 
+    1 + \sum_{i=2}^n \pth{1 + X_i \cdot i}.
+    \]
+    Thus, the expected running time is
+    \begin{align*}
+      \Ex{ \bigl. R} %
+      &=%
+        1 +
+        \Ex{1 + \sum\nolimits_{i=2}^n \pth{1 + X_i \cdot i}}
+        = n + \sum_{i=2}^n \bigl( \Ex{X_i} \cdot i \bigr)
+        = n + \sum_{i=2}^n i \cdot \Prob{X_1 = 1},
+    \end{align*}
+    by linearity of expectation and since for an indicator variable
+    $X_i$, we have that $\Ex{X_i} = \Prob{X_i = 1}$.
+
+%\newcommand{\MakeBigX}{\rule[-.00cm]{0cm}{0.34cm}}
+    
+    Thus, we need to bound $\Prob{ X_i=1} = \Prob{r_i < r_{i-1}}$. To
+    bound this quantity, fix the points of $\PntSet_i$, and randomly
+    permute them. A point $\pntA \in \PntSet_i$ is \emphi{critical} if
+    $\ClosestPair\pth{ \PntSet_i \setminus \brc{\pntA}} >
+    \ClosestPair\pth{\PntSet_i}$.
+    \begin{compactenumA}
+        \item If there are no critical points, then $r_{i-1} = r_i$
+        and then $\Prob{X_i=1}= 0$.
+
+        \smallskip%
+        \item If there is one critical point, than $\Prob{X_i=1}=1/i$,
+        as this is the probability that this critical point would be
+        the last point in a random permutation of $\PntSet_i$.
+
+        \smallskip%
+        \item If there are two critical points, and let $\pnt,\pntA$
+        be this unique pair of points of $\PntSet_i$ realizing
+        $\ClosestPair\pth{\PntSet_i}$. The quantity $r_i$ is smaller
+        than $r_{i-1}$, if either $\pnt$ or $\pntA$ are $p_i$. But the
+        probability for that is $2/i$ (i.e., the probability in a
+        random permutation of $i$ objects, that one of two marked
+        objects would be the last element in the permutation).
+
+    \end{compactenumA}
+    \smallskip%
+    Observe, that there can not be more than two critical points.
+    Indeed, if $\pnt$ and $\pntA$ are two points that realize the
+    closest distance, than if there is a third critical point $\pntB$,
+    then
+    $\ClosestPair( \PntSet_i \setminus \brc{\pntB}) = \distY{\pnt}{
+       \pntA}$, and $\pntB$ is not critical.
+
+    We conclude that 
+    \[
+    \Ex{\bigl. R} = n + \sum_{i=2}^n i \cdot \Prob{X_1 = 1} \leq
+    n + \sum_{i=2}^n i \cdot \frac{2}{i} \leq 3n. 
+    \]
+    As such, the expected running time of this algorithm is $O\pth{
+    \Ex{R\MakeBig}} = O(n)$.
+\end{proof}
+
+
+\thmref{closest:pair} is a surprising result, since it implies that
+\emphi{uniqueness} (i.e., deciding if $n$ real numbers are all
+distinct) can be solved in linear time. However, there is a lower
+bound of $\Omega(n \log n)$ on uniqueness, using the comparison tree
+model. This reality dysfunction, can be easily explained, once one
+realizes that the model of computation of \thmref{closest:pair} is
+considerably stronger, using hashing, randomization, and the floor
+function.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+The closest-pair algorithm follows Golin \etal{} \cite{grss-sracp-95}.
+This is in turn a simplification of a result of the celebrated result
+of Rabin \cite{r-pa-76}.  Smid provides a survey of such algorithms
+\cite{s-cppcg-00}. A generalization of the closest pair algorithm was
+provided by Har-Peled and Raichel \cite{hr-nplta-15}.
+
+Surprisingly, Sch{\"{o}}\si{nhage} \cite{s-pram-79} showed that
+assuming that the floor function is allowed, and the standard
+arithmetic operation can be done in constant time, then every problem
+in \PSPACE can be solved in polynomial time. Since \PSPACE includes
+\NPC, this is bad news, as it implies that one can solve \NPC problem
+in polynomial time (finally!). The basic idea is that one can pack
+huge number of bits into a single number, and the floor function
+enables one to read a single bit of this number. As such, a real RAM
+model that allows certain operations, and put no limit on the bit
+complexity of numbers, and assume that each operation can take
+constant time, is not a reasonable model of computation (but we
+already knew that).
+
+
+\ChapterEnd{}
+%\bibliographystyle{alpha}  
+%\bibliography{shortcuts,geometry}
+
+%\end{document}

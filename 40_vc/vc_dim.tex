@@ -55,8 +55,9 @@ it would be independent of the size of the point set.
 \section{\TPDF{\VC{}}{VC} dimension}
 
 \begin{defn}
-    A \emphi{range space} $\RangeSpace$ is a pair
-    $(\GroundSet,\RangeSet)$, where $\GroundSet$ is a \emphi{ground
+    A \emphOnly{range space}\index{range space} $\RangeSpace$ is a pair
+    $(\GroundSet,\RangeSet)$, where $\GroundSet$ is a \emphOnly{ground
+       set}\index{ground
        set} (finite or infinite) and $\RangeSet$ is a (finite or
     infinite) family of subsets of $\GroundSet$. The elements of
     $\GroundSet$ are \emphOnly{points} and the elements of $\RangeSet$
@@ -72,7 +73,7 @@ subset $\FGroundSet$ as the underlining ground set.
     %
     Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range space, and
     let $\FGroundSet$ be a finite (fixed) subset of $\GroundSet$. For
-    a range $\range \in \RangeSet$, its \emphi{measure} is the
+    a range $\range \in \RangeSet$, its \emphOnly{measure}\index{measure} is the
     quantity
     \begin{equation*}
         \Measure{\range}%
@@ -90,7 +91,7 @@ more compact set to represent the range space.
     %
     Let $\RangeSpace = (\GroundSet,\RangeSet)$ be a range space.  For
     a subset $\SetC$ (which might be a multi-set) of $\FGroundSet$,
-    its \emphi{estimate} of the measure of $\Measure{\range}$, for
+    its \emphOnly{estimate}\index{estimate} of the measure of $\Measure{\range}$, for
     $\range \in \RangeSet$, is the quantity
     \begin{align*}
       \sMeasure{\range}%
@@ -132,7 +133,7 @@ space.
         
         If $\VCProj{\RangeSet}{Y}$ contains all subsets of $Y$ (i.e.,
         if $Y$ is finite, we have $\cardin{\VCProj{\RangeSet}{Y}} =
-        2^{\cardin{Y}}$), then $Y$ is \emphi{shattered} by $\RangeSet$
+        2^{\cardin{Y}}$), then $Y$ is \emphOnly{shattered}\index{shattered} by $\RangeSet$
         (or equivalently $Y$ is shattered by $\RangeSpace$).
         
         The \emphOnly{Vapnik-Chervonenkis} dimension (or
@@ -158,11 +159,19 @@ space.
 %~
 
 \begin{figure}[t]
-    \centering
-    \TwoFiguresBase{\IncGraphPage{figs/}{intervals}{1}}{(a)}
-                   {\IncGraphPage{figs/}{intervals}{2}}{(b)}
-    \caption{(a) Four intervals realizing all subsets of $Y = \{1,2\}$.
-             (b) For three points, no interval can contain the two extreme points without also containing the middle one.}
+    \phantom{}
+    \hfill%
+    \IncGraphPage{figs/}{intervals}{1}
+    \hfill%
+    \IncGraphPage{figs/}{intervals}{2}
+    \hfill{}
+    \phantom{}
+
+%    {\IncGraphPage{figs/}{intervals}{2}}{(b)}
+    \caption{Left: Four intervals realizing all subsets of
+       $Y = \{1,2\}$. Right: For three points, no interval
+       can contain the two extreme points without also
+       containing the middle one.}
     \figlab{vc:intervals}
 \end{figure}
 
@@ -187,72 +196,75 @@ size two. We conclude that the \VC dimension of this space is two.
 
 % \smallskip
 
-\medskip%
-\noindent%
-\begin{minipage}{0.76\linewidth}
-    \noindent{\bfseries Disks.}
-    Let $\GroundSet = \Re^2$, and let $\RangeSet$ be the set of disks
-    in the plane. Clearly, for any three points in the plane (in
-    general position), denoted by $\pnt, \pntA$, and $\pntB$, one can
-    find eight disks that realize all possible $2^3$ different
-    subsets.  See the figure on the right.
+% \medskip%
+% \noindent%
+% \begin{minipage}{0.76\linewidth}
 
-    But can disks shatter a set with four points? Consider such a set
-    $\PntSet$ of four points. If the convex hull of $\PntSet$ has only
-    three points on its boundary, then the subset $X$ having only
-    those three vertices (i.e., it does not include the middle point)
-    is impossible, by convexity. Namely, there is no disk that
-    contains only the points of $X$ without the middle point.
+\noindent{\bfseries Disks.}
+Let $\GroundSet = \Re^2$, and let $\RangeSet$ be the set of disks in the
+plane. Clearly, for any three points in the plane (in general position),
+denoted by $\pnt, \pntA$, and $\pntB$, one can find eight disks that
+realize all possible $2^3$ different subsets.  See the figure on the
+right.
+
+But can disks shatter a set with four points? Consider such a set
+$\PntSet$ of four points. If the convex hull of $\PntSet$ has only three
+points on its boundary, then the subset $X$ having only those three
+vertices (i.e., it does not include the middle point) is impossible, by
+convexity. Namely, there is no disk that contains only the points of $X$
+without the middle point.
 % \end{minipage}}
-\end{minipage}%
-\hfill%
-\begin{minipage}{0.22\linewidth}
-    \hfill%
+%\end{minipage}%
+%\hfill%
+%\begin{minipage}{0.22\linewidth}
+%    \hfill%
+\begin{figure}[h]
+    \centering%
     \IncludeGraphics{\File{figs/shatter3x}}%
-\end{minipage}
+    \caption{Shattering of points by disks.}
+    \figlab{shatter_points_disks}    
+\end{figure}
 
 
 
-\medskip%
-\noindent%
-\begin{minipage}{0.76\linewidth}
-    Alternatively, if all four points are vertices of the convex hull
-    and they are $a,b,c,d$ along the boundary of the convex hull,
-    either the set $\brc{a, c}$ or the set $\brc{b, d}$ is not
-    realizable. Indeed, if both options are realizable, then consider
-    the two disks $\disk_1$ and $\disk_2$ that realize those
-    assignments.  Clearly, $\bd D_1$ and $\bd D_2$ must intersect in
-    four points, but this is not possible, since two circles have at
-    most two intersection points. See the figure on the left.  Hence
-    the \VC dimension of this range space is $3$.
-\end{minipage}
-\begin{minipage}{0.22\linewidth}
-    \hfill%
-\IncludeGraphics{\File{figs/no_shatter_4x}}
-\end{minipage}
+Alternatively, if all four points are vertices of the convex hull and
+they are $a,b,c,d$ along the boundary of the convex hull, either the set
+$\brc{a, c}$ or the set $\brc{b, d}$ is not realizable. Indeed, if both
+options are realizable, then consider the two disks $\disk_1$ and
+$\disk_2$ that realize those assignments.  Clearly, $\bd D_1$ and
+$\bd D_2$ must intersect in four points, but this is not possible, since
+two circles have at most two intersection points. See the figure on the
+left.  Hence the \VC dimension of this range space is $3$.
+
+\begin{figure}[h]
+    \centering%
+    \IncludeGraphics{\File{figs/no_shatter_4x}}
+    \caption{}
+    \figlab{no-shatter-4-x}
+\end{figure}
 
 
 %     \medskip
 
 % \parpic[r]{\PPic{1.8cm}{figs/convex}}
 
-\noindent%
-\begin{minipage}{0.8\linewidth}
-    \noindent{\bfseries Convex sets.}
-    Consider the range space $\RangeSpace = (\Re^2, \RangeSet)$, where
-    $\RangeSet$ is the set of all (closed) convex sets in the plane.
-    We claim that $\VCDim(\RangeSpace)=\infty$. Indeed, consider a set
-    $U$ of $n$ points $p_1,\ldots, p_n$ all lying on the boundary of
-    the unit circle in the plane. Let $V$ be any subset of $U$, and
-    consider the convex hull $\CHX{V}$. Clearly,
-    $\CHX{V} \in \RangeSet$, and furthermore, $\CHX{V} \cap U =
-    V$. Namely, any subset of $U$ is realizable by
-    $\RangeSpace$. Thus, $\RangeSpace$ can shatter sets of arbitrary
-    size, and its \VC dimension is unbounded.
-\end{minipage}
-\begin{minipage}{0.2\linewidth}
+\noindent{\bfseries Convex sets.}
+Consider the range space $\RangeSpace = (\Re^2, \RangeSet)$, where
+$\RangeSet$ is the set of all (closed) convex sets in the plane.  We
+claim that $\VCDim(\RangeSpace)=\infty$. Indeed, consider a set $U$ of
+$n$ points $p_1,\ldots, p_n$ all lying on the boundary of the unit circle in
+the plane. Let $V$ be any subset of $U$, and consider the convex hull
+$\CHX{V}$. Clearly, $\CHX{V} \in \RangeSet$, and furthermore,
+$\CHX{V} \cap U = V$. Namely, any subset of $U$ is realizable by
+$\RangeSpace$. Thus, $\RangeSpace$ can shatter sets of arbitrary size,
+and its \VC dimension is unbounded.
+
+\begin{figure}[h]
+    \centering%
     \IncludeGraphics[scale=0.8]{\File{figs/convex}}%
-\end{minipage}
+    \caption{}
+    \figlab{v-c-convex}
+\end{figure}
 
 \bigskip%
 \noindent%
@@ -350,11 +362,14 @@ definition of convex hulls, see \defref{convex:hull}.)
     \end{equation*}
     In particular, $v = \sum_{i=1}^{k} (\beta_i/\mu) \pnt_i$ is a
     point in $\CHX{\brc{\pnt_1,\ldots, \pnt_k}}$. Furthermore, for the
-    same point $v$ we have
-    $v = \sum_{i=k+1}^{\hdim+2} - \ts(\beta_i/\mu) \pnt_i$
-    $ \in \CHX{\brc{\pnt_{k+1}, \ldots, \pnt_{\hdim+2}}}$. We conclude
-    that $v$ is in the intersection of the two convex hulls, as
-    required.
+    same point $v$ we have    
+    \begin{equation*}
+        v = \sum_{i=k+1}^{\hdim+2} - \ts(\beta_i/\mu) \pnt_i
+        \,\,\in\,\,%
+        \CHX{\brc{\pnt_{k+1}, \ldots, \pnt_{\hdim+2}}}.
+    \end{equation*}
+     We conclude that
+    $v$ is in the intersection of the two convex hulls, as required.
 \end{proof}
 % \end{minipage}}
 
@@ -382,15 +397,16 @@ demonstrate it is true.
     $\pnt_1,\ldots, \pnt_m \in \PntSet$, such that
     $\sum_i \alpha_i = 1$ and $\sum_i \alpha_i \pnt_i =\pntB$. By the
     linearity of the dot product, we have that
-    \begin{equation*}
+    \begin{align*}
         \pntB \in h^+ %
-        \implies%
+        &\implies%
         \DotProd{\pntB }{v} \leq c%
         \implies%
         \DotProd{\Bigl.\smash{\sum_{i=1}^m \alpha_i \pnt_i }}{v} \leq c%
+        \\&
         \implies%
         \beta = \sum_{i=1}^m \alpha_i\DotProd{ \pnt_i }{v} \leq c.        
-    \end{equation*}
+    \end{align*}
     Setting $\,\beta_i = \DotProd{ \pnt_i }{v}$, for $i=1,\ldots, m$,
     the above implies that $\,\beta$ is a weighted average of
     $\,\beta_1, \ldots, \beta_m$. In particular, there must be a
@@ -421,13 +437,12 @@ shattered by $\RangeSpace$. Thus, $\VCDim(S) = \hdim+1$.
 
 
 
-\section{Shattering dimension and %
-   the dual shattering dimension}
+\section{Shattering dimension and its dual}%
 
 The main property of a range space with bounded \VC dimension is that
 the number of ranges for a set of $n$ elements grows polynomially in
 $n$ (with the power being the dimension) instead of exponentially.
-Formally, let the \emphi{growth function} be
+Formally, let the \emphOnly{growth function}\index{growth function} be
 \begin{equation}
     \Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}
     \leq \sum_{i=0}^{\Dim} \frac{n^i}{i!}
@@ -460,18 +475,19 @@ have $\Growth{\Dim}{n} = \Growth{\Dim}{n-1} +
     The claim trivially holds for $\Dim=0$ or $n=0$.
     
     Let $x$ be any element of $\GroundSet$, and consider the sets
-    \begin{equation*}
-        \RangeSet_x%
-        =%
+    \begin{align*}
+        &\RangeSet_x%
+        \EQ%
         \Set{ \range \setminus \brc{x} }%
         {\bigl. \range \cup \brc{x} \in \RangeSet \text{ and }%
            \range \setminus \brc{x} \in \RangeSet}%
-        \quad\text{and}\quad%
-        \RangeSet \setminus x%
+        \\[0.05cm]
+        \text{and}\quad%
+        &\RangeSet \setminus x%
         =%
         \Set{ \range
            \setminus \brc{x} }{ \bigl. \range \in \RangeSet}.
-    \end{equation*}
+    \end{align*}
     Observe that $\cardin{\RangeSet} = \cardin{\RangeSet_x} +
     \cardin{\RangeSet \setminus x}$. Indeed, we charge the elements of
     $\RangeSet$ to their corresponding element in $\RangeSet\setminus
@@ -552,7 +568,7 @@ technical and not very interesting, and it is delegated to
         \deflab{shatter:function}%
         %
         Given a range space $\RangeSpace = (\GroundSet, \RangeSet)$,
-        its \emphi{shatter function} $\ShatterFunc{\RangeSpace}(m)$ is
+        its \emphOnly{shatter function}\index{shatter function} $\ShatterFunc{\RangeSpace}(m)$ is
         the maximum number of sets that might be created by
         $\RangeSpace$ when restricted to subsets of size
         $m$. Formally,
@@ -673,17 +689,18 @@ tighter bounds. The required computations are somewhat more painful.
     Assume a set $Y \subseteq \GroundSet$ of size $t$ is being
     shattered by $\RangeSetA$, and observe that
     \begin{align*}
-      \bigl| \VCProj{\RangeSetA}{Y} \bigr|%
-      &%
-        \leq%
+        \bigl| \VCProj{\RangeSetA}{Y} \bigr|%
+        &%
+        \LEQ%
         \cardin{\,%\VBig{0.8cm}
-        \Set{\,%\VBig{0.7cm}
-           % 
-        \pth[]{ \range_1, \ldots, \range_k}
-        % 
-        }{ \range_1 \in \smash{\VCProj{\RangeSet^1}{Y}}, \ldots,
-        \range_k \in \smash{\VCProj{\RangeSet^k}{Y}} \bigr.} \Bigr. }%
-        \leq%
+           \Set{\,%\VBig{0.7cm}
+              % 
+              \pth[]{ \range_1, \ldots, \range_k}
+              % 
+           }{ \range_1 \in \smash{\VCProj{\RangeSet^1}{Y}}, \ldots,
+              \range_k \in \smash{\VCProj{\RangeSet^k}{Y}} \bigr.} \Bigr. }%
+        \\&
+        \LEQ%
         \cardin{\smash{\VCProj{\RangeSet^1}{Y}} \bigr.} \cdots
         \cardin{\smash{\VCProj{\RangeSet^k}{Y}}\bigr.}%
         \leq%
@@ -691,7 +708,7 @@ tighter bounds. The required computations are somewhat more painful.
         \cdot {\Growth{\Dim_2}{t}} \cdots
         {\Growth{\Dim_k}{t}}%
       \\
-      &\leq%
+      &\LEQ%
         \pth{\bigl. \Growth{\Dim}{t}}^k%
         \leq%
         \Bigl( 2\, \bigl(
@@ -708,19 +725,21 @@ tighter bounds. The required computations are somewhat more painful.
     claim is trivial, and observe that
     $t \leq k \pth{ 1 + \Dim \lg\pth{\nfrac{t e}{\Dim }} } \leq 3 k
     \Dim \lg (t/ \Dim)$.  Setting $x = t/\Dim$, we have
-    \begin{equation*}
+    \begin{align*}
         \frac{t}{\Dim}%
-        \leq%
+        \LEQ%
         3k \frac{\ln\pth{ \nfrac{t}{\Dim}}}{\ln 2} %
-        \leq%
+        \LEQ%
         6k \ln \frac{t}{\Dim}%
-        \implies%
+        &\implies%
         \frac{x}{\ln x} \leq 6k%
+        \\&
         \implies%
         x \leq 2 \cdot 6k \ln \pth{ 6k }%
+        \\&
         \implies%
         x \leq 12 k \ln (6 k ),
-    \end{equation*}
+    \end{align*}
     by \lemref{nemesis:function}(C).  We conclude that
     $t \leq 12 \Dim k \ln (6 k )$, as claimed.
 \end{proof}
@@ -814,7 +833,8 @@ The natural question of course is how to find such a subset of small
         \index{random sample!sample@$\eps$-sample}%
         \index{sample!sample@$\eps$-sample}%
         %
-        There is a positive constant $c$ such that if
+        There is a positive co\-nstant 
+        $c$ such that if
         $(\GroundSet,\RangeSet)$ is any range space with \VC dimension
         at most $\Dim$, $\FGroundSet \subseteq \GroundSet$ is a finite
         subset and $\eps, \BadProb > 0$, then a random subset
@@ -857,7 +877,7 @@ our sample that is in this range.
         \index{theorem!net@$\varepsilon$-net|textbf}%%
         \thmlab{epsilon:net}%
         %
-        Let $(\GroundSet,\RangeSet)$ be a range space of \VC dimension
+        Let $(\GroundSet,\RangeSet)$ be a range s{}p\-ace of \VC dimension
         $\Dim$, let $\FGroundSet$ be a finite subset of $\GroundSet$,
         and suppose that $0 < \eps \leq 1$ and $\BadProb < 1$. Let $N$
         be a set obtained by $m$ random independent draws from
@@ -886,9 +906,12 @@ turn our attention to some applications before presenting the proofs.
         The above two theorems also hold for spaces with shattering
         dimension at most $\Dim$, in which case the sample size is
         slightly larger.  Specifically, for \thmref{epsilon:net}, the
-        sample size needed is $\ds O\pth{ \frac{1}{\eps} \lg
-           \frac{1}{\BadProb} + \frac{\Dim}{\eps}\lg \frac{\Dim}{\eps}
-        }$.        
+        sample size needed is
+        \begin{equation*}
+            \ds O\pth{ \frac{1}{\eps} \lg
+               \frac{1}{\BadProb} + \frac{\Dim}{\eps}\lg \frac{\Dim}{\eps}
+            }
+        \end{equation*}.        
     \end{remark}
 \end{fragment}
 
@@ -1000,7 +1023,7 @@ of \thmref{epsilon:net} to continuous distributions. This is
 straightforward and we will ignore this topic altogether.
 
 
-\section{A better bound on the growth function}
+\section{A make growth function small again}
 \seclab{growth:improved}
 
 In this section, we prove \lemref{growth:improved}. Since the
@@ -1012,20 +1035,22 @@ reading this section.
         \lemlab{a:basic:binomial}%
         %
         For any positive integer $n$, the following hold.
-        
-        \medskip
-        
-        \begin{tabular}{llll}
-            (i) & $(1+1/n)^n \leq e$. ~~~~~~~~~~~~~~~~~~
-            & 
-            (ii) & $(1-1/n)^{n-1} \geq e^{-1}$.\\
+        \smallskip        
+        \begin{compactenumi}
+            \item $(1+1/n)^n \leq e$.
+
+            \smallskip        
+            \item $(1-1/n)^{n-1} \geq e^{-1}$.
             % 
-            (iii) &$n! \geq (n/e)^n$.&
-            % 
-            (iv) & For any $k \leq n$, we have $\;\;\displaystyle
+            
+            \smallskip        
+            \item $n! \geq (n/e)^n$.
+            
+            \smallskip        
+            \item  For any $k \leq n$, we have $\;\;\displaystyle
             \pth{\frac{n}{k}}^k \leq \binom{n}{k} \leq \pth{\frac{n
                   e}{k}}^k$.
-        \end{tabular}
+        \end{compactenumi}
         
         \index{binomial!estimates}
     \end{lemma}
@@ -1069,12 +1094,18 @@ reading this section.
     \leq 1 + \sum_{i=1}^{\Dim} \pth{\frac{ne}{i}}^i$.
     This series behaves like a geometric series with constant larger
     than $2$, since
-    \begin{equation*}
-        {\pth{\frac{ne}{i}}^i} \;/ \; {\pth{\frac{ne}{i-1}}^{i-1}} =
+    \begin{align*}
+        {\pth{\frac{ne}{i}}^i} \;/ \; {\pth{\frac{ne}{i-1}}^{i-1}}%
+        &\EQ%
         \frac{ne }{i} \pth{\frac{i-1}{i}}^{i-1} = \frac{ne }{i} \pth{1 -
-           \frac{1}{i}}^{i-1} \geq \frac{ne }{i} \frac{1}{e} = \frac{n}{i}
-        \geq \frac{n}{\Dim} \geq 2,        
-    \end{equation*}
+           \frac{1}{i}}^{i-1}
+        \\&
+        \GEQ%
+        \frac{ne }{i} \frac{1}{e} = \frac{n}{i}
+%        \\&
+        \GEQ%
+        \frac{n}{\Dim} \geq 2,        
+    \end{align*}
     by \lemref{a:basic:binomial}. As such, this series is bounded by
     twice the largest element in the series, implying the claim.
 \end{proof}
@@ -1085,7 +1116,7 @@ reading this section.
 \section{Some required definitions}
 \begin{fragment}{convex_hull}
     \begin{defn}[\DefName{Convex hull}]
-        The \emphi{convex hull} of a set $\PntSetC \subseteq
+        The \emphOnly{convex hull}\index{convex hull} of a set $\PntSetC \subseteq
         \Re^\hdim$ is the set of all convex combinations of points of
         $\PntSetC$; that is,
         \[

@@ -1,0 +1,864 @@
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{17}{144}
+
+
+\Chapter{Min Cut}
+
+\QuotePExt{\textbf{To acknowledge the corn} - This purely American
+   expression means to admit the losing of an argument, especially in
+   regard to a detail; to retract; to admit defeat.  It is over a
+   hundred years old.  Andrew Stewart, a member of Congress, is said
+   to have mentioned it in a speech in 1828. He said that haystacks
+   and cornfields were sent by Indiana, Ohio and Kentucky to
+   Philadelphia and New York.  Charles A. Wickliffe, a member from
+   Kentucky questioned the statement by commenting that haystacks and
+   cornfields could not walk.  Stewart then pointed out that he did
+   not mean literal haystacks and cornfields, but the horses, mules,
+   and hogs for which the hay and corn were raised.  Wickliffe then
+   rose to his feet, and said, ``Mr. Speaker, I acknowledge the
+   corn''.}%
+{Funk, Earle}{A Hog on Ice and Other Curious Expressions}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+~
+
+% \bigskip%
+
+\bigskip%
+
+
+\section{Branching processes -- Galton-Watson Process}
+
+% The problem that initiated the study of these processes goes back to
+\subsection{The problem} %
+
+In the 19\th century, Victorians were worried that aristocratic
+surnames were disappearing, as family names passed on only through the
+male children. As such, a family with no male children had its family
+name disappear. So, imagine the number of male children of a person is
+an independent random variable $X \in \brc{0,1,2,\ldots}$. Starting
+with a single person, its family (as far as male children are
+concerned) is a random tree with the degree of a node being
+distributed according to $X$. We continue recursively in constructing
+this tree, again, sampling the number of children for each current
+leaf according to the distribution of $X$.  It is not hard to see that
+a family disappears if $\Ex{X} \leq 1$, and it has a constant
+probability of surviving if $\Ex{X} >1$.
+
+Francis Galton asked the question of what is the probability of such a
+blue-blood family name to survive, and this question was answered by
+Henry William Watson \cite{wg-pef-1875}. The Victorians were worried
+about strange things, see \cite{g-wwr-1869} for a provocatively titled
+article from the period, and \cite{s-wnrsf-12} for a more recent take
+on this issue.
+
+Of course, since infant mortality is dramatically down (as is the
+number of aristocrat males dying to maintain the British empire), the
+probability of family names to disappear is now much lower than it was
+in the 19\th century.  Interestingly, countries with family names that
+were introduced long time ago have very few surnames (i.e., Korean
+have 250 surnames, and three surnames form 45\% of the population). On
+the other hand, countries that introduced surnames more recently have
+dramatically more surnames (for example, the Dutch have surnames only
+for the last 200 years, and there are $68,000$ different family
+names).
+
+Here we are going to look on a very specific variant of this
+problem. Imagine that starting with a single male. A male has exactly
+two children, and one of them is a male with probability half (i.e.,
+the $Y$-chromosome is being passed only to its male children). As
+such, the natural question is what is the probability that $h$
+generations down, there is a male decedent that all his ancestors are
+male (i.e., it caries the original family name, and the original
+$Y$-chromosome).
+
+
+
+\subsection{On coloring trees}
+\seclab{min:cut:coloring:trees}
+
+Let $T_h$ be a complete binary tree of height $h$. We randomly color
+its edges by black and white. Namely, for each edge we independently
+choose its color to be either black or white, with equal probability
+(say, black indicates the child is male). We are interested in the
+event that there exists a path from the root of $T_h$ to one of its
+leafs, that is all black. Let $\Event_h$ denote this event, and let
+$\rho_h = \Prob{\Event_h}$. Observe that $\rho_0 =1$ and $\rho_1 =
+3/4$ (see below).
+
+To bound this probability, consider the root $u$ of $T_h$ and its two
+children $u_l$ and $u_r$. The probability that there is a black path
+from $u_l$ to one of its children is $\rho_{h-1}$, and as such, the
+probability that there is a black path from $u$ through $u_l$ to a
+leaf of the subtree of $u_l$ is $\Prob{\text{the edge } \MakeSBig u {}
+   u_l \text{ is colored black}} \cdot \rho_{h-1} = \rho_{h-1}/2$. As
+such, the probability that there is no black path through $u_l$ is
+$1-\rho_{h-1}/2$. As such, the probability of not having a black path
+from $u$ to a leaf (through either children) is
+$(1-\rho_{h-1}/2)^2$. In particular, there desired probability, is the
+complement; that is
+\begin{equation*}
+    \rho_h%
+    =%
+    1 - \pth{1-\frac{\rho_{h-1}}{2}}^2 %
+    =%
+    \frac{\rho_{h-1}}{2} \pth{2-\frac{\rho_{h-1}}{2}} = \rho_{h-1} -
+    \frac{\rho_{h-1}^2}{4} = f \bigl( \rho_{h-1} \bigr)
+    \qquad
+    \text{ for }
+    \qquad%
+    f(x) = x -x^2/4.
+\end{equation*}
+The starting values are $\rho_0 = 1$, and $\rho_1 = 3/4$.
+
+\begin{figure}[h]
+    \centerline{%
+       \IncludeGraphics[width=0.3\linewidth]%
+       {\File{figs/stupid_function}}%
+    }
+    \caption{A graph of the function $f(x) = x -x^2/4$.}
+\end{figure}
+
+\begin{lemma}
+    \lemlab{black:path}%
+    %
+    We have that $\rho_h \geq 1/(h+1)$.
+\end{lemma}
+\begin{proof}[Feel free to skip reading.]
+    The proof is by induction. For $h=1$, we have
+    $\rho_1 = 3/4 \geq 1/(1+1)$.
+    
+    Observe that $\rho_h = f\pth{\rho_{h-1} }$ for $f(x) = x -x^2/4$,
+    and $f'(x) = 1-x/2$. As such, $f'(x) > 0$ for $x\in[0,1]$ and
+    $f(x)$ is increasing in the range $[0,1]$. As such, by induction,
+    we have that
+    \begin{equation*}
+        \ds \rho_h = f\pth[]{ \rho_{h-1}} \geq f\pth[]{
+           \frac{1}{(h-1)+1}} = \frac{1}{h} - \frac{1}{4 h^2}.        
+    \end{equation*}
+    We need
+    to prove that $\rho_h \geq 1/(h+1)$, which is implied by the above
+    if
+    \begin{equation*}
+      \frac{1}{h} - \frac{1}{4 h^2} \geq \frac{1}{h+1}
+      \;\;\;\Leftrightarrow \;\;\; 4h(h+1) - (h+1) \geq 4h^2
+      \;\;\;\Leftrightarrow \;\;\; 4h^2 +4h - h- 1 \geq 4h^2
+      \;\;\;\Leftrightarrow \;\;\; 3h \geq 1,
+  \end{equation*}
+    which trivially holds.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{black:path:2}%
+    % 
+    We have that $\rho_h =O( 1/h)$.
+\end{lemma}
+
+
+\begin{proof}[Feel free to skip reading.]
+    We prove the claim for infinite number of values of $h$ -- the
+    claim then follows for all $h$ by fiddling with the constants.
+    The claim trivially holds for small values of $h$. For any
+    $j > 0$, let $h_j$ be the minimal index such that
+    $\rho_{h_j} \leq 1/2^j$.  It is easy to verify that
+    $\rho_{h_j} \geq 1/2^{j+1}$.  We claim (mysteriously) that
+    \begin{equation*}
+        \ds h_{j+1} - h_j%
+        \leq%
+        \frac{\rho_{h_{j}} - \rho_{h_{j+1}}} { (\rho_{h_{j+1}} )^2/4
+        }.%        
+    \end{equation*}
+    Indeed, $\rho_{k+1}$ is the number resulting from removing
+    $\rho_k^2/4$ from $\rho_k$. Namely, the sequence
+    $\rho_1, \rho_2, \ldots$ is a monotonically decreasing sequence of
+    numbers in the interval $[0,1]$, where the gaps between
+    consecutive numbers decreases. In particular, to get from
+    $\rho_{h_{j}}$ to $\rho_{h_{j+1}}$, the gaps used were of size at
+    least $\Delta = \bigl(\rho_{h_{j+1}} \bigr)^2$, which means that
+    there are at least $(\rho_{h_{j}} - \rho_{h_{j+1}}) / \Delta - 1$
+    numbers in the series between these two elements. As such, since
+    $\rho_{h_{j}} \leq 1/2^{j}$ and $\rho_{h_{j+1}} \geq 1/2^{j+2}$,
+    we have
+    \begin{equation*}
+        h_{j+1} - h_j%
+        \leq%
+        \frac{\rho_{h_{j}} - \rho_{h_{j+1}}} {
+           ( \rho_{h_{j+1}} )^2/4 }%
+        \leq%
+        \frac{1/2^{j} - 1/2^{j+2}} { 1/2^{2(j+2)+2}}%
+        \leq%
+        2^{2j + 6} /2^{j}
+        =%
+        2^{j+6}.
+    \end{equation*}
+    This implies that 
+    \begin{math}
+        h_j \leq (h_j - h_{j-1}) + (h_{j-1} - h_{j-2}) + \cdots + (h_1
+        - h_0) \leq 2^{j+6}.
+    \end{math}
+    % Arguing similarly, we have
+    % \begin{equation*}
+    %     h_{j+2} - h_j%
+    %     \geq%
+    %     \frac{\rho_{h_{j}} - \rho_{h_{j+2}}} {
+    %        (\rho_{h_{j}})^2/4 }%
+    %     \geq%
+    %     \frac{1/2^{j+1} - 1/2^{j+2}} { 1/2^{2j+2}}%
+    %     =%
+    %     2^{2j+2} \pth{1/2^{j+1} - 1/2^{j+2}}
+    %     =%
+    %     2^{j+1} - 2^{j}%
+    %     =%
+    %     2^j.
+    % \end{equation*}
+    % We conclude that
+    % \begin{math}
+    %     h_j \geq h_j - h_{j-2} \geq 2^{j-2}.
+    % \end{math}
+    As such, we have
+    $\rho_{h_j} \leq 1/2^{j} \leq 2^6/2^{j+6} \leq 2^6/h_j$, which
+    implies the claim.
+\end{proof}
+
+
+
+\section{Min Cut}
+
+\subsection{Problem Definition}
+
+
+
+\begin{figure}[t]
+    \centering
+    \IncGraphPage{figs/}{cut_example}{1}
+    \caption{An example of a cut in a graph.}
+    \figlab{cut:example}
+\end{figure}
+
+Let $\Graph=(\Vertices, \Edges)$ be an undirected graph with $n$
+vertices and $m$ edges.  We are interested in \emphi{cuts} in
+$\Graph$.
+
+\begin{defn}
+    A \emphiC{cut} in $\Graph$ is a partition of the vertices of
+    $\Vertices$ into two sets $S$ and $\Vertices \setminus S$,
+    where the edges of the cut are
+    \begin{equation*}
+        (S, \Vertices \setminus S)%
+        =%
+        \brc{ uv \sep{ u \in S, v \in \Vertices \setminus S,
+              \text{ and } uv \in E}},
+    \end{equation*}
+    where $S \neq \emptyset$ and $\Vertices \setminus S \ne
+    \emptyset$. We will refer to the number of edges in the cut
+    $(S, \Vertices \setminus S)$ as the \emph{size of the cut}.
+    For an example of a cut, see \figref{cut:example}.
+\end{defn}
+
+
+We are interested in the problem of computing the \emphic{minimum
+   cut}{cut!minimum} (i.e., \emphi{mincut}), that is, the cut in the
+graph with minimum cardinality.  Specifically, we would like to find
+the set $S\subseteq \Vertices$ such that $(S, \Vertices \setminus S)$
+is as small as possible, and $S$ is neither empty nor $\Vertices
+\setminus S$ is empty.
+
+
+
+\subsection{Some Definitions}
+
+We remind the reader of the following concepts.  The
+\emphi{conditional probability} of $X$ given $Y$ is $ \Prob{X=x\sep{
+      Y=y}} = \nfrac{\Prob{(X=x)\cap(Y=y)}}{\Prob{Y=y}}$.  An
+equivalent, useful restatement of this is that
+\begin{equation}
+    \Prob{\bigl. (X=x)\cap(Y=y)} = \Prob{X=x\sep{ Y=y \MakeSBig }}
+    \cdot \Prob{Y=y}.%
+    \eqlab{conditional:probability}
+\end{equation}
+
+% \smallskip
+
+The following is easy to prove by induction using
+\Eqref{conditional:probability}.
+\begin{lemma}
+    Let $\Event_{1},\ldots,\Event_{n}$ be $n$ events which are not
+    necessarily independent. Then,
+    \begin{align*}
+      \Prob{\bigl. \cap_{i=1}^{n}\Event_{i}} %
+      =%
+      \Prob{\bigl. \Event_{1}} * \Prob{\Event_{2}\sep{ \Event_{1}}}
+      * \Prob{\Event_{3}\sep{\Event_{1}\cap\Event_{2}}} * \ldots *
+      \Prob{\Event_{n} \sep{ \Event_{1}\cap\ldots\cap\Event_{n-1}}}.
+    \end{align*}
+\end{lemma}
+
+
+\section{The Algorithm}
+
+\begin{figure}[t]
+   \centering
+   \TwoFiguresBase{\IncGraphPage{figs/}{cut_example}{3}}{(a)}
+                  {\IncGraphPage{figs/}{cut_example}{4}}{(b)}                  
+   \caption{(a) A contraction of the edge $xy$. (b) The resulting graph.}
+   \figlab{cut}
+\end{figure}
+
+
+The basic operation used by the algorithm is \emphic{edge
+   contraction}{contraction!edge}, depicted in \figref{cut}.  We take
+an edge $e=x y$ in $\Graph$ and merge the two vertices into a single
+vertex.  The new resulting graph is denoted by $\Graph/ x y$.  Note,
+that we remove self loops created by the contraction.  However, since
+the resulting graph is no longer a regular graph, it has parallel
+edges -- namely, it is a multi-graph.  We represent a multi-graph, as
+a regular graph with multiplicities on the edges. See
+\figref{multi:graph}.
+
+
+\begin{figure}[t]
+   \centering
+   \TwoFiguresBase{\IncGraphPage{figs/}{cut_example}{5}}{(a)}
+                  {\IncGraphPage{figs/}{cut_example}{6}}{(b)}%
+   \caption{(a) A multi-graph. (b) A minimum cut in the resulting multi-graph.}%
+   \figlab{multi:graph}%
+\end{figure}
+
+The edge contraction operation can be implemented in $O(n)$ time for a
+graph with $n$ vertices. This is done by merging the adjacency lists
+of the two vertices being contracted, and then using hashing to do the
+fix-ups (i.e., we need to fix the adjacency list of the vertices that
+are connected to the two vertices).
+
+Note, that the cut is now computed counting multiplicities (i.e., if
+$e$ is in the cut and it has weight $w$, then the contribution of $e$
+to the cut weight is $w$).
+
+
+\begin{observation}
+    A set of vertices in $\Graph/x y$ corresponds to a set of vertices
+    in the graph $\Graph$. Thus a cut in $\Graph/x y$ always
+    corresponds to a valid cut in $\Graph$. However, there are cuts in
+    $\Graph$ that do not exist in $\Graph/ x y$. For example, the cut
+    $S = \brc{x}$, does not exist in $\Graph/ x y$. As such, the size
+    of the minimum cut in $\Graph/x y$ is at least as large as the
+    minimum cut in $\Graph$ (as long as $\Graph/x y$ has at least one
+    edge). Since any cut in $\Graph/x y$ has a corresponding cut of
+    the same cardinality in $\Graph$.
+\end{observation}
+
+Our algorithm works by repeatedly performing edge contractions. This
+is beneficial as this shrinks the underlying graph, and we would
+compute the cut in the resulting (smaller) graph. An ``extreme''
+example of this, is shown in \figref{contraction:cut}, where we
+contract the graph into a single edge, which (in turn) corresponds to
+a cut in the original graph. (It might help the reader to think about
+each vertex in the contracted graph, as corresponding to a connected
+component in the original graph.)
+\begin{figure}[p]
+    \begin{center}
+        \begin{tabular}{*{4}{c}}
+            \IncGraphPage{figs}{cut_example}{2}
+            &
+            \IncGraphPage{figs}{cut_example}{3}
+            &
+            \IncGraphPage{figs}{cut_example}{7}
+            &
+            \IncGraphPage{figs}{cut_example}{8}\\
+            (a) & (b) & (c) & (d)\\
+            \IncGraphPage{figs}{cut_example}{9}
+            &
+            \IncGraphPage{figs}{cut_example}{10}
+            &
+            \IncGraphPage{figs}{cut_example}{11}
+            &
+            \IncGraphPage{figs}{cut_example}{12}\\
+            (e) & (f) & (g) & (h)\\
+            &\IncGraphPage{figs}{cut_example}{13}
+            &
+            \IncGraphPage{figs}{cut_example}{14}\\
+            &(i) & (j)
+        \end{tabular}
+    \end{center}
+    \caption{(a) Original graph. (b)--(j) a sequence of contractions
+       in the graph, and (h) the cut in the original graph,
+       corresponding to the single edge in (h). Note that the cut of
+       (h) is not a mincut in the original graph.}
+    \figlab{contraction:cut}
+\end{figure}
+
+\figref{contraction:cut} also demonstrates the problem with taking
+this approach. Indeed, the resulting cut is not the minimum cut in the
+graph.
+
+So, why did the algorithm fail to find the minimum cut in this
+case?\footnote{Naturally, if the algorithm had succeeded in finding
+   the minimum cut, this would have been \textbf{our} success.}  The
+failure occurs because of the contraction at \figref{contraction:cut}
+(e), as we had contracted an edge in the minimum cut. In the new
+graph, depicted in \figref{contraction:cut} (f), there is no longer a
+cut of size 3, and all cuts are of size 4 or more. Specifically, the
+algorithm succeeds only if it does not contract an edge in the minimum
+cut.
+
+\begin{observation}
+    Let $e_{1},\ldots,e_{n-2}$ be a sequence of edges in $\Graph$,
+    such that none of them is in the minimum cut, and such that
+    $\Graph'=G/\brc{ e_{1},\ldots,e_{n-2}} $ is a single
+    multi-edge. Then, this multi-edge corresponds to a minimum cut in
+    $\Graph$.
+    
+    \obslab{contract}
+\end{observation}
+
+%\parpic[r]{%
+%   \begin{minipage}{0.5\linewidth}%
+\begin{figure}[p]
+    \centerline{%
+    \begin{algorithmEnv}
+           {\bfseries{Algorithm }} \MinCut{}($\Graph$) \+ \\
+           $\Graph_{0}\leftarrow G$\\
+           $i=0$\\
+           \While{} $\Graph_{i}$ has more than two vertices \Do{}\+\\
+           Pick randomly an edge $e_{i}$ from the edges of
+           $\Graph_{i}$\\
+           $\Graph_{i+1}\leftarrow G_{i}/e_{i}$\\
+           $i\leftarrow i+1$ \- \\
+           Let $(S,\Vertices \setminus S)$ be the cut in the original graph\\
+           ~~~~~~~~~~~~~ corresponding
+           to the single edge in $\Graph_{i}$\\
+           \Return $(S, \Vertices \setminus S)$.%
+       \end{algorithmEnv}%
+       }%
+       % \vspace*{-0.4cm}%
+       
+       \captionof{figure}{The minimum cut algorithm.}
+       \figlab{mincut:algorithm}%
+       % \end{minipage}%
+\end{figure}
+%}
+
+Note, that the claim in the above observation is only in one
+direction. We might be able to still compute a minimum cut, even if we
+contract an edge in a minimum cut, the reason being that a minimum cut
+is not unique. In particular, another minimum cut might survived the
+sequence of contractions that destroyed other minimum cuts.
+
+
+Using \obsref{contract} in an algorithm is problematic, since the
+argumentation is circular, how can we find a sequence of edges that
+are not in the cut without knowing what the cut is?  The way to slice
+the Gordian knot here, is to randomly select an edge at each stage,
+and contract this random edge.
+
+
+See \figref{mincut:algorithm} for the resulting algorithm \MinCut{}.
+
+
+\subsection{Analysis}
+
+\subsubsection{The probability of success}
+Naturally, if we are extremely lucky, the algorithm would never pick
+an edge in the mincut, and the algorithm would succeed. The ultimate
+question here is what is the probability of success. If it is
+relatively ``large'' then this algorithm is useful since we can run it
+several times, and return the best result computed. If on the other
+hand, this probability is tiny, then we are working in vain since this
+approach would not work.
+
+\begin{lemma}
+    If a graph $\Graph$ has a minimum cut of size $k$ and $\Graph$ has
+    $n$ vertices, then $|E(G)|\geq\frac{kn}{2}$.
+\end{lemma}
+
+\begin{proof}
+    Each vertex degree is at least $k$, otherwise the vertex itself
+    would form a minimum cut of size smaller than $k$. As such, there
+    are at least $\sum_{v \in \Vertices} \mathrm{degree(v)} / 2 \geq n
+    k /2$ edges in the graph.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{random:edge}%
+    %
+    Fix a specific minimum cut $C = (S,\overline{S})$ in the graph.
+    If we pick in random an edge $e$ from a graph $\Graph$, uniformly
+    at random, then with probability at most $\nfrac{2}{n}$ it belongs
+    to the minimum cut $C$.
+\end{lemma}
+
+\begin{proof}
+    There are at least $n k/2$ edges in the graph and exactly $k$
+    edges in the minimum cut. Thus, the probability of picking an edge
+    from the minimum cut is smaller then $k/(n k/2)=2/n.$
+\end{proof}
+
+
+% \medskip
+
+The following lemma shows (surprisingly) that \MinCut{} succeeds with
+reasonable probability.
+
+
+\newcommand\Ccancel[2][black]{%
+   \renewcommand\CancelColor{\color{#1}}\cancel{#2}}
+
+\begin{lemma}
+    \lemlab{mincut:success}%
+    %
+    \MinCut{} outputs the mincut with probability $\displaystyle \geq
+    \frac{2}{n ( n-1 ) }$.    
+\end{lemma}
+7\begin{proof}
+    Let $\Event_{i}$ be the event that $e_{i}$ is not in the minimum
+    cut of $\Graph_{i}$.  By \obsref{contract}, \MinCut{} outputs the
+    minimum cut if the events $\Event_{0},\ldots,\Event_{n-3}$ all
+    happen (namely, all edges picked are outside the minimum cut).
+    
+    By \lemref{random:edge}, it holds
+    \begin{math}
+        \displaystyle \Prob{\Event_{i}\sep{ \Event_{0} \cap
+              \Event_{1}\cap\ldots\cap\Event_{i-1}}} \geq
+        1-\frac{2}{\cardin{\Vertices(G_{i})}} = 1-\frac{2}{n-i}.
+    \end{math}
+    Implying that
+    \begin{align*}
+        \Delta%
+        &=%
+        \Prob{\Event_{0}\cap\ldots\cap\Event_{n-3}}%
+        % \\&%
+        =%
+        \Prob{\Event_{0}} \cdot \Prob{\Event_{1}\sep{\Event_{0}}}
+        \cdot \Prob{\Event_{2}\sep{\Event_{0}\cap\Event_{1}}} \cdot
+        \ldots \cdot \Prob{\Event_{n-3}\sep{
+              \Event_{0}\cap\ldots\cap\Event_{n-4}}}.
+    \end{align*}
+    As such, we have
+    \begin{align*}
+      \Delta%
+      &\geq %
+        \prod_{i=0}^{n-3}\pth{1-\frac{2}{n-i}}%
+        =%
+        \prod_{i=0}^{n-3}\frac{n-i-2}{n-i}%
+      \\&%
+      =%
+      \frac{\CCancel[green]{n-2}}{n}
+      * \frac{\Ccancel{n-3}}{n-1}
+      * \frac{\Ccancel[orange]{n-4}}{\Ccancel[green]{n-2}}%
+      *
+      \frac{\bcancel{n-5}}{\cancel{n-3}}
+      *
+      \frac{\Ccancel[red]{n-6}}{\Ccancel[orange]{n-4}}
+      *
+      \cdots * \frac{\Ccancel[purple]{3}}{\Ccancel[yellow]{5}} *
+      \frac{2}{\CCancel[brown]{4}}
+      * \frac{1}{\CCancel[purple]{3}}%
+      \\&
+      =%
+      \frac{2}{n (n-1)}.
+    \end{align*}
+\end{proof}
+
+\subsubsection{Running time analysis.}
+
+\begin{observation}
+    \MinCut{} runs in $O( n^{2} )$ time.
+\end{observation}
+
+\begin{observation}
+    The algorithm always outputs a cut, and the cut is not smaller
+    than the minimum cut.
+\end{observation}
+
+\begin{defn}\index{Probability!Amplification}
+    (informal) Amplification is the process of running an experiment
+    again and again till the things we want to happen, with good
+    probability, do happen.
+\end{defn}
+
+Let \MinCutRep{} be the algorithm that runs \MinCut{} $n(n-1)$ times
+and return the minimum cut computed in all those independent
+executions of \MinCut{}.
+
+\begin{lemma}
+    The probability that \MinCutRep{} fails to return the minimum cut
+    is $< 0.14$.
+    
+    \lemlab{mincut:amplification}
+\end{lemma}
+\begin{proof}
+    The probability of failure of \MinCut to output the mincut in each
+    execution is at most $1-\frac{2}{n( n-1)}$, by
+    \lemref{mincut:success}. Now, \MinCutRep fails, only if all the $n
+    (n-1)$ executions of \MinCut fail. But these executions are
+    independent, as such, the probability to this happen is at most
+    \begin{align*}
+        \pth{1-\frac{2}{n
+              (n-1)}}^{n(n-1)}\le\exp\pth{-\frac{2}{n(n-1)}\cdot
+           n(n-1)}=\exp(-2)<0.14,
+    \end{align*}
+    since $1-x\leq e^{-x}$ for $0\leq x\leq 1$.
+\end{proof}
+
+\begin{theorem}   
+    One can compute the minimum cut in $O(n^{4})$ time with constant
+    probability to get a correct result. In $O\pth{n^{4}\log n}$ time
+    the minimum cut is returned with high probability.
+\end{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{An alternative implementation using MST}
+
+\paragraph*{The algorithm.}
+The above algorithm can be restated as follows. Randomly assign
+weights to the edges of $\G$ (say, by picking numbers in
+$[0,1]$). Next, compute the \MST $\Tree$ of the graph according to
+these weights. Remove the heaviest edge in the \MST. The resulting
+partition of $\Tree$ into two trees, corresponds to a cut in the
+original graph. Return this cut as a candidate to be the minimum cut. 
+
+\paragraph*{The analysis.}
+To see that this algorithm is equivalent to \MinCut
+(\figref{mincut:algorithm}), observe that the contraction algorithm
+simulates Kruskal's \MST algorithm when run on randomly weighted
+edges. First, imagine implementing \MinCut{} so that it keeps parallel
+edges. Then, the edges connecting two vertices that are not
+contracted are exactly the edges between the two connected
+components. Picking a random edge to contract, is equivalent to
+picking the edge with the minimum random weight. Thus, the \MST
+algorithm here just simulates \MinCut{} (or vice versa). 
+
+\paragraph*{A small optimization.}
+It is possible to compute the heaviest edge in the \MST, and the
+partition it induces in (deterministic) linear time -- it is a 
+nice example of the search and prune technique.  
+\begin{exercise}
+    Given a graph $\G$ with weights on the edges, show how to compute
+    the maximum weight edge in the \MST of $\G$ in $O(n + m)$ time,
+    where $n$ are $m$ are the number of vertices and edges of $\G$,
+    respectively.
+\end{exercise}
+
+Thus, this yields a $O(n + m)$ implementation of \MinCut{}. We get the
+following result.
+
+\begin{lemma}
+    \lemlab{mincut:MST}%
+    %
+    \MinCut{} can implemented to run in $O(n + m)$ time, and it
+    outputs the mincut with probability
+    $\displaystyle \geq \frac{2}{n ( n-1 ) }$.
+\end{lemma}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{A faster algorithm}
+
+The algorithm presented in the previous section is extremely simple.
+Which raises the question of whether we can get a faster
+algorithm\footnote{This would require a more involved algorithm, that
+   is life.}?
+
+So, why \MinCutRep{} needs so many executions? Well, the probability
+of success in the first $\nu$ iterations is
+\begin{align}
+  \Prob{\Event_{0}\cap\ldots\cap\Event_{\nu-1}}
+  &\geq 
+    \prod_{i=0}^{\nu-1}\pth{1-\frac{2}{n-i}}
+    =  \prod_{i=0}^{\nu-1}\frac{n-i-2}{n-i} \nonumber\\
+  &=  \frac{n-2}{n}\ *\ \frac{n-3}{n-1}\ *\ \frac{n-4}{n-2}\ldots =
+    \frac{(n-\nu)(n-\nu-1)}{n\cdot(n-1)}.  \eqlab{first}
+\end{align}
+Namely, this probability deteriorates very quickly toward the end of
+the execution, when the graph becomes small enough. (To see this,
+observe that for $\nu=n/2$, the probability of success is roughly
+$1/4$, but for $\nu=n-\sqrt{n}$ the probability of success is roughly
+$1/n$.)
+
+
+So, the key observation is that as the graph get smaller the
+probability to make a bad choice increases.  So, instead of doing the
+amplification from the outside of the algorithm, we will run the new
+algorithm more times when the graph is smaller. Namely, we put the
+amplification directly into the algorithm.
+
+
+\begin{figure}
+    \hfill
+    \begin{algorithmEnv}
+        \!\!\Contract( $\Graph, t$ )\\
+        \Procbegin{}  \+  \\
+        \While{} $\cardin{(G)}>t$ \Do\+\\
+        Pick a random edge $e$ in $\Graph$.\\
+        $\Graph\leftarrow G/e$\-\\
+        \Return{} $\Graph$\- \\
+        \End{}
+    \end{algorithmEnv}
+    \hfill
+    \begin{algorithmEnv}
+        \noindent%
+        \!\!\FastCut{}($\Graph=(V,E)$) \+\\
+        $\Graph$ -- multi-graph \- \\
+        \Procbegin{}\+\\
+        $n\leftarrow\cardin{V(G)}$\\
+        \If{} $n\leq 6$ \Then\+ \\
+        Compute (via brute force) minimum cut\\
+        of $\Graph$ and return
+        cut.\-\\
+        $t\leftarrow \ceil{ 1+ n/\sqrt{2}}$\\
+        $H_{1} \leftarrow \Contract{}(G,t)$\\
+        $H_{2} \leftarrow \Contract{}(G,t)$\\
+        /* \Contract{} is randomized!!! {*}/\\
+        $X_{1}\leftarrow \FastCut{}\pth{H_{1}}$,\\
+        $X_{2}\leftarrow \FastCut{}\pth{H_{2}}$\\
+        \Return minimum cut out of $X_{1}$ and
+        $X_{2}$.\- \\
+        \End{}
+    \end{algorithmEnv}
+    \hfill
+    
+    \caption{\Contract{}($ G, t$) shrinks $\Graph$ till it has only
+       $t$ vertices. \FastCut{} computes the minimum cut using
+       \Contract{}.}
+    \figlab{contract}
+\end{figure}
+
+The basic new operation we use is \Contract{}, depicted in
+\figref{contract}, which also depict the new algorithm \FastCut{}.
+
+% \begin{minipage}[c]{0.45\textwidth}
+
+% \end{minipage}
+
+
+
+\begin{lemma}
+    The running time of \FastCut{}$(G)$ is $O\pth{n^{2}\log n}$, where
+    $n=\cardin{V(G)}$.
+    
+    \lemlab{fast:cut:running:time}
+\end{lemma}
+\begin{proof}
+    Well, we perform two calls to \Contract{}$(G,t)$ which takes
+    $O(n^{2})$ time. And then we perform two recursive calls on the
+    resulting graphs.  We have
+    \begin{equation*}
+        T(n)=O(n^{2}) + 2 T\bigl(  n/ \sqrt{2} \ts \bigr).
+    \end{equation*}
+    The solution to this recurrence is $O\pth{n^{2}\log n}$ as one can
+    easily (and should) verify.
+\end{proof}
+
+
+
+\begin{exercise}
+    Show that one can modify \FastCut{} so that it uses only
+    $O(n^{2})$ space.
+\end{exercise}
+
+\begin{lemma}
+    The probability that
+    \Contract{}$\bigl( \Graph, n/\sqrt{2} \ts \bigr)$ had not
+    contracted the minimum cut is at least $1/2$.
+    
+    Namely, the probability that the minimum cut in the contracted
+    graph is still a minimum cut in the original graph is at least
+    $1/2$.
+    
+    \lemlab{easy}
+\end{lemma}
+\begin{proof}
+    Just plug in $\nu= n -t = n - \ceil{1 + n/\sqrt{2} }$ into
+    \Eqref{first}. We have
+    \begin{align*}
+        \Prob{\Bigl. \Event_{0}\cap\ldots\cap\Event_{n-t}}\geq &
+        \frac{t(t-1)}{n\cdot(n-1)} = \frac{\ceil{1 + n/\sqrt{2} }
+           \pth{ \ceil{1 + n/\sqrt{2} } - 1}}{n(n-1)} \geq
+        \frac{1}{2}.
+    \end{align*}
+\end{proof}
+
+The following lemma bounds the probability of success. 
+%A more elegant
+%argument is given in \secref{min:cut:coloring:trees} below.
+
+\begin{lemma}
+    \lemlab{fast:cut:probability}
+    % 
+    \FastCut{} finds the minimum cut with probability larger than
+    $\Omega\pth[]{1/\log n}$.    
+\end{lemma}
+\begin{proof}
+    Let $T_h$ be the recursion tree of the algorithm of depth $h =
+    \Theta( \log n)$.  Color an edge of recursion tree by black if the
+    contraction succeeded. Clearly, the algorithm succeeds if there is
+    a path from the root to a leaf that is all black. This is exactly
+    the settings of \lemref{black:path}, and we conclude that the
+    probability of success is at least $1/(h+1) = \Theta(1/\log n)$,
+    as desired.
+\end{proof}
+
+\begin{exercise}
+    Prove, that running \FastCut{} repeatedly $c\cdot\log^{2}n$ times,
+    guarantee that the algorithm outputs the minimum cut with
+    probability $\geq1-1/n^{2}$, say, for $c$ a constant large enough.
+\end{exercise} %
+
+\begin{theorem}
+    One can compute the minimum cut in a graph $\Graph$ with $n$
+    vertices in $O(n^2 \log^3 n)$ time. The algorithm succeeds with
+    probability $\geq 1-1/n^2$.
+\end{theorem}
+\begin{proof}
+    We do amplification on \FastCut by running it $O(\log^2 n)$
+    times. The running time bound follows from
+    \lemref{fast:cut:running:time}. The bound on the probability
+    follows from \lemref{fast:cut:probability}, and using the
+    amplification analysis as done in \lemref{mincut:amplification}
+    for \MinCutRep{}.
+\end{proof}
+
+
+
+
+
+
+\section{Bibliographical Notes}
+
+The \MinCut{} algorithm was developed by David Karger during his PhD
+thesis in Stanford. The fast algorithm is a joint work with Clifford
+Stein.  The basic algorithm of the mincut is described in \cite[pages
+7--9]{mr-ra-95}, the faster algorithm is described in \cite[pages
+289--295]{mr-ra-95}.
+
+\paragraph*{Galton-Watson process.}
+The idea of using coloring of the edges of a tree to analyze \FastCut
+might be new (i.e., \secref{min:cut:coloring:trees}).
+% It is inspired by \emphi{Galton-Watson processes} (which is a
+% special case of a branching process).
+
+
+% \bibliographystyle{alpha} \bibliography{shortcuts,geometry}
+
+% -----------
+
+% 
+% \end{document}
+\ChapterEnd{}
+
+% -----------

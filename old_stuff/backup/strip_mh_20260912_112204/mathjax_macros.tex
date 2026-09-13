@@ -1,0 +1,617 @@
+\providecommand{\CSProbFull}[4]{\rho_{#1, #4}\left( #2, #3 \right)}
+\providecommand{\mBigA}{\vphantom{\Big|}}
+\providecommand{\mBigB}{\vphantom{\bigg|}}
+\providecommand{\lca}{\operatorname{lca}}
+\providecommand{\p}{p}
+\providecommand{\L}{\mathcal{L}}
+\providecommand{\leadsto}{\rightsquigarrow}
+\providecommand{\impliedby}{\Longleftarrow}
+\providecommand{\xspace}{}
+\providecommand{\upshape}{}
+\providecommand{\index}[1]{}
+\providecommand{\typeout}[1]{}
+\providecommand{\rule}[3][]{}
+\providecommand{\setlength}[2]{}
+\providecommand{\scalebox}[2]{#2}
+\providecommand{\hbox}[1]{#1}
+\providecommand{\vcenter}[1]{#1}
+\providecommand{\marginnote}[1]{}
+\providecommand{\textcolor}[2]{#2}
+\providecommand{\color}[1]{}
+\providecommand{\colorbox}[2]{#2}
+\providecommand{\fbox}[1]{#1}
+\providecommand{\llbracket}{\unicode{x27E6}}
+\providecommand{\rrbracket}{\unicode{x27E7}}
+\providecommand{\mleft}{\left}
+\providecommand{\mright}{\right}
+\providecommand{\Mh}[1]{{#1}}
+\providecommand{\si}[1]{#1}
+\providecommand{\ds}{\displaystyle}
+\providecommand{\divides}{\mid}
+\providecommand{\lg}{\operatorname{lg}}
+\providecommand{\EuScript}[1]{\mathcal{#1}}
+\providecommand{\boldsymbol}[1]{\mathbf{#1}}
+\providecommand{\cancel}[1]{\text{#1}}
+\providecommand{\bcancel}[1]{\text{#1}}
+\providecommand{\CCancel}[2][black]{\cancel{#2}}
+\providecommand{\Ccancel}[2][black]{\cancel{#2}}
+\providecommand{\salpha}{\alpha}
+\providecommand{\pbrcx}[1]{\left[ #1 \right]}
+\providecommand{\pbrc}[2][\!]{#1\left[ #2 \right]}
+\providecommand{\pth}[2][\!]{\left( #2 \right)}
+\providecommand{\ExSym}{\mathbb{E}}
+\providecommand{\ExChar}{\mathbb{E}}
+\providecommand{\Ex}[2][\!]{\mathbb{E}#1\left[ #2 \right]}
+\providecommand{\ExCond}[2]{\mathbb{E}\left[ #1 \;\middle\vert\; #2 \right]}
+\providecommand{\ExExt}[2]{\mathbb{E}_{#1}\left[ #2 \right]}
+\providecommand{\ProbLTR}{\mathbb{P}}
+\providecommand{\Prob}[2][\!]{\mathbb{P}#1\left[ #2 \right]}
+\providecommand{\ProbCond}[2]{\mathbb{P}\left[ #1 \;\middle\vert\; #2 \right]}
+\providecommand{\VarSymb}{\mathbb{V}}
+\providecommand{\Var}[2][\!]{\mathbb{V}#1\left[ #2 \right]}
+\providecommand{\permut}[1]{\left\langle #1 \right\rangle}
+\providecommand{\DotProd}[2]{\left\langle #1, #2 \right\rangle}
+\providecommand{\SDotProd}[2]{\left\langle #1, #2 \right\rangle}
+\providecommand{\jSym}[2]{\left\llbracket \ds {#1}\mid{#2} \right\rrbracket}
+\providecommand{\lSym}[2]{\left( \ds {#1}\mid{#2} \right)}
+\providecommand{\IRX}[1]{\left\llbracket #1 \right\rrbracket}
+\providecommand{\IRY}[2]{\left\llbracket #1:#2 \right\rrbracket}
+\providecommand{\IntRange}[1]{\left\llbracket #1 \right\rrbracket}
+\providecommand{\Tree}{T}
+\providecommand{\Graph}{\mathcal{G}}
+\providecommand{\G}{\mathcal{G}}
+\providecommand{\MST}{\mathrm{MST}}
+\providecommand{\AlgorithmI}[1]{\mathrm{#1}}
+\providecommand{\TermI}[1]{\emph{#1}}
+\providecommand{\emphi}[1]{\emph{#1}}
+\providecommand{\emphw}[1]{\textbf{#1}}
+\providecommand{\square}{\mdlgwhtsquare}
+\providecommand{\ProgWordX}[1]{{\small\textbf{#1}}{\ }}
+\providecommand{\Do}{\ProgWordX{do}}
+\providecommand{\End}{\ProgWordX{end}}
+\providecommand{\Return}{\ProgWordX{return}}
+\providecommand{\Procbegin}{\ProgWordX{begin}}
+\providecommand{\If}{\ProgWordX{if}}
+\providecommand{\Then}{\ProgWordX{then}}
+\providecommand{\Else}{\ProgWordX{else}}
+\providecommand{\For}{\ProgWordX{for}}
+\providecommand{\While}{{\small\bfseries while}\}
+\providecommand{\xbeginlgox}{\begin{minipage}{1in}\begin{tabbing} \quad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\qquad\=\kill}
+\providecommand{\xendlgox}{\end{tabbing}\end{minipage}}
+\providecommand{\AlgorithmBox}[1]{% \fbox{\begin{program} #1 \end{program}}%}
+\providecommand{\Algorithm}[1]{{\AlgorithmI{#1}\index{algorithm!#1@{\AlgorithmI{#1}}}}}
+\providecommand{\CodeComment}[1]{\textcolor{blue}{\texttt{#1}}}
+\providecommand{\RootDIR}{../}
+\providecommand{\File}[1]{#1}
+\providecommand{\RootFile}[1]{\RootDIR #1}
+\providecommand{\myqedsymbol}{$\blacksquare$}
+\providecommand{\bibpagespunct}{% \ifentrytype{article}{\addcolon}{\addcomma}\space%}
+\providecommand{\multicitedelim}{\addcomma\space}
+\providecommand{\chapnamefont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\providecommand{\chapnumfont}{\normalfont\huge\bfseries\color{DeepNavy}}
+\providecommand{\chaptitlefont}{\normalfont\Huge\bfseries\color{DeepNavy}}
+\providecommand{\Copyright}{This work is licensed under the Creative Commons Attribution-Noncommercial 3.0 License. To view a copy of this license, visit \url{http://creativecommons.org/licenses/by-nc/3.0/} or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.}
+\providecommand{\RealChapterEndInner}{% {% \begingroup% \emergencystretch=1em% \printbibliography[heading=subbibliography,segment=\therefsegment]{}% \endgroup% }%}
+\providecommand{\BookMode}[1]{}
+\providecommand{\StandAloneMode}[1]{#1}
+\providecommand{\ChapterNumPage}[2]{% \if\relax\detokenize{#1}\relax \setcounter{chapter}{0}% \else\ifnum#1>0 \setcounter{chapter}{\numexpr#1-1\relax}% \else \setcounter{chapter}{0}% \fi\fi \if\relax\detokenize{#2}\relax \setcounter{page}{1}% \else\ifnum#2>0 \setcounter{page}{#2}% \else \setcounter{page}{1}% \fi\fi}
+\providecommand{\ChapterPrefix}{}
+\providecommand{\ChapterGen}{\pagestyle{plain}\vspace*{-0.7cm}}
+\providecommand{\ChapterEnd}{% \RealChapterEndInner{}% \end{document}%}
+\providecommand{\FragmentName}[1]{\RootFile{fragment/\FragNormKey{#1}.tex}}
+\providecommand{\FragWritePrefix}{% \ifx\bookMode\undefined % Standalone chapter mode \ifInJunkDir ../../fragment/\else ../fragment/\fi \else % Master book mode \ifInJunkDir ../fragment/\else fragment/\fi \fi}
+\providecommand{\QuoteOpen}{}
+\providecommand{\QuoteClose}{}
+\providecommand{\QuoteWrite}[2]{}
+\providecommand{\QuoteExt}[3]{% \vspace*{-1.6cm}% \epigraph{{\footnotesize #1}}{{#2}, {#3}}% \vspace*{-1.2cm}%}
+\providecommand{\delX}[1]{{\color{red}\sout{#1}}}
+\providecommand{\newX}[1]{{\color{blue}#1}}
+\providecommand{\chgY}[2]{{\color{red}\sout{#1}}{\color{blue}#2}}
+\providecommand{\remX}[1]{{\color{purple}\textbf{[Remark: #1]}}}
+\providecommand{\SpellIgnore}[1]{#1}
+\providecommand{\EQ}{\mathrel{\;\;=\;\;}}
+\providecommand{\LEQ}{\mathrel{\;\;\leq\;\;}}
+\providecommand{\LT}{\mathrel{\;\;<\;\;}}
+\providecommand{\GT}{\mathrel{\;\;<\;\;}}
+\providecommand{\GEQ}{\mathrel{\;\;\geq\;\;}}
+\providecommand{\MdPrc}{\nu}
+\providecommand{\remove}[1]{}
+\providecommand{\NotAMSMode}[1]{#1}
+\providecommand{\Solution}[1]{}
+\providecommand{\Version}[1]{\hfill{Version: #1}}
+\providecommand{\Distor}{\mathrm{dist}}
+\providecommand{\Hardness}[1]{(h:#1)}
+\providecommand{\QuoteOptExt}[3]{\QuoteExt{#1}{#2}{#3}}
+\providecommand{\Hypercube}{\EuScript{H}}
+\providecommand{\emphiC}[1]{\emphic{#1}{#1}}
+\providecommand{\CoverTime}{\EuScript{C}}
+\providecommand{\Nbr}{\Gamma}
+\providecommand{\CommuteTime}[2]{\mathbf{CT}_{#1#2}}
+\providecommand{\Resistance}{\mathbf{R}}
+\providecommand{\EffectResist}[2]{\mathbf{R}_{#1#2}}
+\providecommand{\NetworkE}{\EuScript{N}}
+\providecommand{\trinom}[4]{\binom{#1}{#2 \;\; #3 \;\; #4}}
+\providecommand{\Ranges}{\EuScript{R}}
+\providecommand{\CClass}[1]{\ensuremath{\mathbf{#1}}}
+\providecommand{\coCClass}[1]{\ensuremath{\mathrm{co-}}\CClass{#1}}
+\providecommand{\CX}{\EuScript{C}}
+\providecommand{\packet}{\mathbf{c}}
+\providecommand{\packetA}{\mathbf{d}}
+\providecommand{\mopt}{m_{\mathrm{opt}}}
+\providecommand{\girth}{\mathop{\mathrm{girth}}}
+\providecommand{\CR}{\mathop{\mathrm{cr}}}
+\providecommand{\TRUE}{{\textcolor[named]{RedViolet}{\textsf{TRUE}}}}
+\providecommand{\FALSE}{{\textcolor[named]{RedViolet}{\textsf{FALSE}}}}
+\providecommand{\Part}[1]{\part{#1}}
+\providecommand{\Section}[1]{\section{#1}}
+\providecommand{\SubSection}[1]{\subsection{#1}}
+\providecommand{\SubSubSection}[1]{\subsubsection{#1}}
+\providecommand{\Exercise}[5]{% \begin{exercise_h}[#1]% \exelab{#3}{}% #4% \end{exercise_h}%}
+\providecommand{\myParagraph}[1]{\noindent\textbf{#1}}
+\providecommand{\DefName}[1]{#1}
+\providecommand{\deflabel}[1]{#1}
+\providecommand{\Description}[1]{}
+\providecommand{\HST}{\TermI{HST}}
+\providecommand{\Term}[1]{\textsf{#1}}
+\providecommand{\seg}{\mathsf{s}}
+\providecommand{\Diam}{\mathrm{diam}}
+\providecommand{\diam}{\mathrm{diam}}
+\providecommand{\Copt}{C_{\mathrm{opt}}}
+\providecommand{\CenterPnt}{\mathrm{cen}}
+\providecommand{\parent}{\overline{\mathrm{p}}}
+\providecommand{\parentX}[2][\!]{\parent\pth[#1]{#2}}
+\providecommand{\FMS}{\Mh{\EuScript{X}}}
+\providecommand{\FMSB}{\Mh{\EuScript{Y}}}
+\providecommand{\FastCut}{\Algorithm{FastCut}}
+\providecommand{\MinCut}{\Algorithm{MinCut}}
+\providecommand{\MinCutRep}{\Algorithm{MinCutRep}}
+\providecommand{\Contract}{\Algorithm{Contract}}
+\providecommand{\Grid}{\mathrm{G}}
+\providecommand{\ClosestPair}{\mathcal{CP}}
+\providecommand{\SphereChar}{\ensuremath{\mathbb{S}}}
+\providecommand{\Sphere}[1]{{\SphereChar^{(#1)}}}
+\providecommand{\PntSet}{{\Mh{\mathsf{P}}}}
+\providecommand{\PntSetA}{{\Mh{\mathsf{Q}}}}
+\providecommand{\query}{\mathcalb{q}}
+\providecommand{\pnt}{\mathsf{p}}
+\providecommand{\pntA}{\mathsf{u}}
+\providecommand{\pntB}{\mathsf{v}}
+\providecommand{\pntC}{{\mathsf{x}}}
+\providecommand{\pntD}{{\mathsf{y}}}
+\providecommand{\pntE}{{\mathsf{z}}}
+\providecommand{\pntCoord}{\Mh{p}}
+\providecommand{\pntCoordA}{\Mh{q}}
+\providecommand{\MCSpc}{\Mh{\mathtt{S}}}
+\providecommand{\MCPrb}{\Mh{\mathtt{P}}}
+\providecommand{\MCPrbY}[2]{\MCPrb_{#1#2}}
+\providecommand{\MCPrbM}{\Mh{\mathbf{P}}}
+\providecommand{\MCPrbT}[3]{\MCPrb_{#1#2}^{(#3)}}
+\providecommand{\MCFPrbT}[3]{\Mh{\mathtt{r}}_{#1#2}^{(#3)}}
+\providecommand{\MCVstProb}[2]{\Mh{\mathtt{f}}_{#1#2}}
+\providecommand{\MCExSteps}[2]{\Mh{\mathtt{h}}_{#1#2}}
+\providecommand{\MCPVec}[1]{\mathbf{q}^{(#1)}}
+\providecommand{\Spread}{\Phi}
+\providecommand{\VC}{\ensuremath{\mathsf{VC}}}
+\providecommand{\MC}{\ensuremath{\mathsf{MC}}}
+\providecommand{\hyperplane}{h}
+\providecommand{\QuickSort}{\Algorithm{QuickSort}}
+\providecommand{\Alg}{\Algorithm{Alg}}
+\providecommand{\GraphB}{\mathsf{H}}
+\providecommand{\GraphC}{\mathsf{K}}
+\providecommand{\GraphD}{\mathsf{F}}
+\providecommand{\RLP}{\ComplexityClass{RLP}}
+\providecommand{\USTCON}{\ComplexityClass{USTCON}}
+\providecommand{\STCON}{\overrightarrow{\ComplexityClass{STCON}}}
+\providecommand{\Mtrx}{\mathsf{M}}
+\providecommand{\TMtrx}{\mathsf{Q}}
+\providecommand{\IMtrx}{\mathcal{I}}
+\providecommand{\Expander}[3]{$\left[#1,#2,#3\right]$-expander}
+\providecommand{\ChartX}[1]{\ensuremath{\chi_{#1}}}
+\providecommand{\Field}{\mathbb{F}}
+\providecommand{\LSpace}{\mathbb{G}}
+\providecommand{\LD}[2]{\mathsf{L{D}}\pth{#1,#2}}
+\providecommand{\SEVN}{\widehat{\lambda_2}}
+\providecommand{\NX}[2]{#1\!\left[#2\right]}
+\providecommand{\Entry}[2]{#1\!\left[#2\right]}
+\providecommand{\NXExt}[3]{#1_{#2}\!\left[#3\right]}
+\providecommand{\RangeI}[1]{\llbracket #1 \rrbracket}
+\providecommand{\DialX}[1]{\gamma\pth{#1}}
+\providecommand{\BiDialX}[1]{{\gamma}_2\pth{#1}}
+\providecommand{\EV}[1]{\widehat{\lambda_{#1}}}
+\providecommand{\TEV}[1]{\widehat{\lambda_{#1}}}
+\providecommand{\EVal}{\widehat{\lambda}}
+\providecommand{\Basis}{\mathcal{B}}
+\providecommand{\ZProd}[2]{\ensuremath{#1 \, \text{\textcircled{z}} #2}}
+\providecommand{\RProd}[2]{\ensuremath{#1 \, \text{\textcircled{r}} #2}}
+\providecommand{\OneVec}[1]{\mathbf{1}^{#1}}
+\providecommand{\DstrbV}[1]{\mathbf{\mathsf{q}}^{(#1)}}
+\providecommand{\DstrbE}[2]{\mathsf{q}^{(#1)}_{#2}}
+\providecommand{\DEdges}{\widetilde{\Edges}}
+\providecommand{\VV}{\Mh{\mathsf{V}}}
+\providecommand{\EE}{\Mh{\mathsf{E}}}
+\providecommand{\Vertices}{\VV}
+\providecommand{\Edges}{\EE}
+\providecommand{\EdgesX}[1]{\Edges\pth{#1}}
+\providecommand{\VerticesX}[1]{V\pth{#1}}
+\providecommand{\StringX}[1]{\mathsf{s}\pth{#1}}
+\providecommand{\BMtrx}{\mathsf{B}}
+\providecommand{\WMtrx}{\mathsf{W}}
+\providecommand{\NWMtrx}{\overline{\mathsf{W}}}
+\providecommand{\Sequence}{\EuScript{S}}
+\providecommand{\med}{\mathrm{med}}
+\providecommand{\medX}[1]{\Mh{\mathrm{med}}\pth{#1}}
+\providecommand{\medianC}{\Mh{\nu}}
+\providecommand{\NNN}{\mathbb{N}}
+\providecommand{\NN}{\mathbb{N}}
+\providecommand{\Re}{\mathbb{R}}
+\providecommand{\reals}{\Re}
+\providecommand{\ZZ}{\mathbb{Z}}
+\providecommand{\level}{\mathop{\mathrm{level}}}
+\providecommand{\TPDF}[2]{\texorpdfstring{#1}{#2}}
+\providecommand{\Hint}[1]{\emph{[#1]}}
+\providecommand{\Arr}{\mathop{\mathrm{\EuScript{A}}}}
+\providecommand{\Array}{\mathcal{T}}
+\providecommand{\dirEdge}[2]{\left({{#1} \rightarrow {#2}} \right)}
+\providecommand{\emphic}[2]{% \textcolor{blue25}{% \bfseries{\emph{#1}}}%}
+\providecommand{\emphOnly}[1]{\textcolor{blue25}{\bfseries{\emph{#1}}}}
+\providecommand{\volX}[1]{\mathrm{vol}\pth{#1}}
+\providecommand{\Interval}{\EuScript{I}}
+\providecommand{\IntervalA}{\EuScript{I}}
+\providecommand{\Exp}{\mathrm{Exp}}
+\providecommand{\Ball}{\mathbf{b}}
+\providecommand{\hdim}{d}
+\providecommand{\Domain}{\mathcal{D}}
+\providecommand{\points}[1]{[\bfseries{#1 points}]}
+\providecommand{\Event}{\Mh{\EuScript{E}}}
+\providecommand{\EventB}{\Mh{\EuScript{B}}}
+\providecommand{\EventF}{\Mh{\EuScript{F}}}
+\providecommand{\EventG}{\Mh{\EuScript{G}}}
+\providecommand{\distCmd}[1]{\left\| {#1} \right\|}
+\providecommand{\distY}[2]{\distCmd{#1 - #2}}
+\providecommand{\NormalC}{\mathbf{N}}
+\providecommand{\NormalY}[2]{\NormalC\pth{#1, #2}}
+\providecommand{\NormalDistOneDim}{\NormalC}
+\providecommand{\NormalDistX}[1]{\NormalC^{#1}}
+\providecommand{\RangeSpace}{\Mh{\mathsf{S}}}
+\providecommand{\RangeSpaceA}{\mathsf{T}}
+\providecommand{\range}{\mathbf{r}}
+\providecommand{\rangeA}{\mathbf{r}'}
+\providecommand{\BadProb}{\varphi}
+\providecommand{\EntropyChar}{\mathbb{H}}
+\providecommand{\Entropy}[1]{\EntropyChar\pth{#1}}
+\providecommand{\EntropyX}[1]{\EntropyChar\pth[]{#1}}
+\providecommand{\Matrix}{\mathsf{M}}
+\providecommand{\MatrixB}{\mathsf{B}}
+\providecommand{\MatrixC}{\mathsf{C}}
+\providecommand{\MatrixD}{\mathsf{D}}
+\providecommand{\th}{th}
+\providecommand{\Family}{\mathcal{F}}
+\providecommand{\FamilyB}{\mathcal{G}}
+\providecommand{\FamilyC}{\mathcal{H}}
+\providecommand{\FMSC}{\EuScript{Y}}
+\providecommand{\median}{\overline{\mathsf{m}}}
+\providecommand{\QuickSelect}{\Algorithm{Quick{}Select}}
+\providecommand{\row}{\mathbf{r}}
+\providecommand{\rowc}{{r}}
+\providecommand{\vecb}{\mathbf{b}}
+\providecommand{\vecA}{\mathbf{v}}
+\providecommand{\vecB}{\mathbf{u}}
+\providecommand{\vecRand}{\mathbf{r}}
+\providecommand{\vecH}{\mathbf{h}}
+\providecommand{\vecV}{\mathbf{v}}
+\providecommand{\vecX}{\mathbf{x}}
+\providecommand{\vecY}{\mathbf{y}}
+\providecommand{\DistBinom}[2]{\mathrm{Bin}\pth{#1,#2}}
+\providecommand{\DistGeom}[1]{\mathrm{Geom}\pth{#1}}
+\providecommand{\Sample}{\mathsf{R}}
+\providecommand{\lcm}{\mathop{\mathrm{lcm}}}
+\providecommand{\bdiv}{\mathop{\mathrm{div}}}
+\providecommand{\poly}{\mathrm{poly}}
+\providecommand{\Group}{\mathcal{G}}
+\providecommand{\GroupA}{\mathcal{H}}
+\providecommand{\algGCD}{\Algorithm{EuclidGCD}}
+\providecommand{\gOp}{\times}
+\providecommand{\gIdent}{\mathsf{i}}
+\providecommand{\ordX}[2][\!]{\mathop{\mathrm{o{r}d}}\pth[#1]{#2}}
+\providecommand{\Line}{\ell}
+\providecommand{\LevelChar}{\mathbb{L}}
+\providecommand{\AtMostKLevelChar}{\LevelChar_{\leq k}}
+\providecommand{\AtMostKLevel}[1]{\LevelChar_{\leq k} \pth{ #1}}
+\providecommand{\LineSet}{\mathsf{L}}
+\providecommand{\ArrX}[1]{\EuScript{A}\pth{#1}}
+\providecommand{\Matousek}{Matou{\v s}ek}
+\providecommand{\Erdos}{Erd{\H o}s}
+\providecommand{\Lovasz}{Lov\'asz}
+\providecommand{\ProblemC}[1]{{\textsf{\textcolor{red}{#1}}}}
+\providecommand{\ComplexityClass}[1]{{{\textcolor[named]{OliveGreen}{% \textsc{#1}}}}}
+\providecommand{\NPHard}{{\ComplexityClass{NP-Hard}}%}
+\providecommand{\NPComplete}{\ComplexityClass{NP-Complete}%}
+\providecommand{\APXHard}{\ComplexityClass{APX-Hard}%}
+\providecommand{\NPC}{\ComplexityClass{NPC}%}
+\providecommand{\NP}{\ComplexityClass{NP}%}
+\providecommand{\POLYT}{\ComplexityClass{P}}
+\providecommand{\envFrame}[1]{\begin{center}\fbox{\begin{minipage}[c]{0.75\textwidth}{#1}\end{minipage}}\end{center}}
+\providecommand{\mysqrt}[1]{\ts\!\!\sqrt{#1}}
+\providecommand{\SegSet}{\mathsf{S}}
+\providecommand{\ArrVD}[1]{\Arr^{|} \pth{#1}}
+\providecommand{\RIC}{\textsf{RIC}}
+\providecommand{\ArrB}{\EuScript{B}}
+\providecommand{\TreeOpt}{\EuScript{T}_\mathrm{opt}}
+\providecommand{\TreeOptA}{\EuScript{T}_\mathrm{opt}'}
+\providecommand{\DepthExt}[2]{\mathrm{depth}_{#1}\pth{#2}}
+\providecommand{\depthX}[1]{\mathrm{depth}\pth{#1}}
+\providecommand{\TreeA}{\EuScript{U}}
+\providecommand{\TreeB}{\EuScript{V}}
+\providecommand{\Trap}{\sigma}
+\providecommand{\TrapA}{\sigma'}
+\providecommand{\TrapB}{\sigma''}
+\providecommand{\SampleA}{\mathsf{R}'}
+\providecommand{\AllRegions}{\mathcal{T}}
+\providecommand{\RegionsSet}[1]{\mathcal{F}\pth{#1}}
+\providecommand{\RegionsHeavy}[2]{\mathcal{F}_{\!\geq#1}\pth{#2}}
+\providecommand{\NumOfRegionsZero}[1]{\ExChar \!f\pth{#1}}
+\providecommand{\NumOfRegions}[2]{\ExChar\! f_{\!\geq #1}\pth[]{#2}}
+\providecommand{\ObjSet}{\mathsf{S}}
+\providecommand{\WeightX}[2][\!]{\omega \pth[#1]{#2}}
+\providecommand{\Edge}{\mathsf{e}}
+\providecommand{\Face}{\mathsf{f}}
+\providecommand{\DefSet}[1]{D\pth{#1}}
+\providecommand{\KillSet}[1]{K\pth{#1}}
+\providecommand{\disk}{D}
+\providecommand{\diskA}{D'}
+\providecommand{\IntervalSet}{\widehat{\mathcal{I}}}
+\providecommand{\GroundSet}{\textsf{X}}
+\providecommand{\FGroundSet}{\mathsf{x}}
+\providecommand{\RangeSet}{{\mathcal{R}}}
+\providecommand{\RangeSetA}{\mathcal{R}'}
+\providecommand{\MeasureChar}{\overline{m}}
+\providecommand{\Measure}[1]{\MeasureChar\pth{#1}}
+\providecommand{\sMeasure}[1]{\overline{s}\pth{#1}}
+\providecommand{\SetA}{\Mh{S}}
+\providecommand{\SetB}{\Mh{T}}
+\providecommand{\SetC}{\Mh{N}}
+\providecommand{\VCProj}[2]{#1_{|#2}}
+\providecommand{\VCDim}{\mathrm{dim}_{\VC}}
+\providecommand{\Dim}{\delta}
+\providecommand{\DimA}{\delta'}
+\providecommand{\PntSetB}{{{\mathsf{Q}}}}
+\providecommand{\PntSetC}{{{\mathsf{R}}}}
+\providecommand{\Growth}[2]{{\EuScript{G}}_{#1}\pth{#2}}
+\providecommand{\ShatterFunc}[1]{\pi_{#1}}
+\providecommand{\Distribution}{\EuScript{D}}
+\providecommand{\Error}{\EuScript{E}}
+\providecommand{\bd}{{\partial}}
+\providecommand{\eps}{{\varepsilon}}
+\providecommand{\clmlab}[1]{\label{claim:#1}}
+\providecommand{\clmref}[1]{\HLink{Claim}{claim:#1}}
+\providecommand{\CHX}[1]{{\mathcal{CH}}\pth{#1}}
+\providecommand{\ts}{\hspace{0.6pt}}
+\providecommand{\qedsign}{\hfill{\hfill\myqedsymbol}}
+\providecommand{\QED}{{\hfill{\hfill\qedsymbol}}}
+\providecommand{\num}{\alpha}
+\providecommand{\NEW}[1]{#1}
+\providecommand{\HLinkShort}[2]{\hyperref[#2]{#1\ref*{#2}}}
+\providecommand{\HLink}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\providecommand{\HLinkPage}[2]{\hyperref[#2]{#1~\ref*{#2}% $_\text{p\pageref{#2}}$}}
+\providecommand{\HLinkSuffix}[3]{\hyperref[#2]{#1\ref*{#2}{#3}}}
+\providecommand{\HLinkPageSuffix}[3]{\hyperref[#2]{#1\ref*{#2}% #3$_\text{p\pageref{#2}}$}}
+\providecommand{\figlab}[1]{\label{fig:#1}}
+\providecommand{\figref}[1]{\HLink{Figure}{fig:#1}}
+\providecommand{\exelab}[1]{\label{exer:#1}}
+\providecommand{\exeref}[1]{Exercise~\ref{exer:#1}}
+\providecommand{\deflab}[1]{\label{def:#1}}
+\providecommand{\defref}[1]{\HLink{Definition}{def:#1}}
+\providecommand{\defrefY}[2]{\hyperref[def:#2]{#1}}
+\providecommand{\defrefpage}[1]{\HLinkPage{Definition}{def:#1}}
+\providecommand{\etal}{\textit{et~al.}}
+\providecommand{\obslab}[1]{\label{observation:#1}}
+\providecommand{\obsref}[1]{\HLink{Observation}{observation:#1}}
+\providecommand{\obsrefY}[2]{\hyperref[observation:#2]{#1}}
+\providecommand{\exmlab}[1]{\label{example:#1}}
+\providecommand{\exmref}[1]{\HLink{Example}{example:#1}}
+\providecommand{\remlab}[1]{\label{rem:#1}}
+\providecommand{\remref}[1]{\HLink{Remark}{rem:#1}}
+\providecommand{\chaplab}[1]{\label{chap:#1}}
+\providecommand{\itemlab}[1]{\label{item:#1}}
+\providecommand{\itemref}[1]{\HLinkSuffix{}{item:#1}{}}
+\providecommand{\tedlab}[1]{\label{tedium:#1}}
+\providecommand{\tedref}[1]{\HLink{Tedium}{tedium:#1}}
+\providecommand{\factlab}[1]{\label{fact:#1}}
+\providecommand{\alglab}[1]{\label{algorithm:#1}}
+\providecommand{\net}{\Mh{\mathcal{N}}}
+\providecommand{\lemlab}[1]{\label{lemma:#1}}
+\providecommand{\lemref}[1]{\HLink{Lemma}{lemma:#1}}
+\providecommand{\lemrefY}[2]{\hyperref[lemma:#2]{#1}}
+\providecommand{\lemrefpage}[1]{\HLinkPage{Lemma}{lemma:#1}}
+\providecommand{\lemrefshort}[1]{\HLinkShort{L}{lemma:#1}}
+\providecommand{\eqlab}[1]{\label{equation:#1}}
+\providecommand{\Eqrefbare}[1]{\HLinkSuffix{(}{equation:#1}{)}}
+\providecommand{\Eqref}[1]{\HLinkSuffix{Eq.~(}{equation:#1}{)}}
+\providecommand{\Eqrefpage}[1]{\HLinkPageSuffix{Eq.~(}{equation:#1}{)}}
+\providecommand{\seclab}[1]{\label{sec:#1}}
+\providecommand{\secref}[1]{\HLink{Section}{sec:#1}}
+\providecommand{\secrefY}[2]{\hyperref[sec:#2]{#1}}
+\providecommand{\secrefpage}[1]{\HLinkPage{Section}{sec:#1}}
+\providecommand{\thmlab}[1]{{\label{theo:#1}}}
+\providecommand{\thmref}[1]{\HLink{Theorem}{theo:#1}}
+\providecommand{\thmrefY}[2]{\hyperref[theo:#2]{#1}}
+\providecommand{\thmrefpage}[1]{\HLinkPage{Theorem}{theo:#1}}
+\providecommand{\corlab}[1]{\label{cor:#1}}
+\providecommand{\corref}[1]{\HLink{Corollary}{cor:#1}}
+\providecommand{\ceil}[1]{\left\lceil {#1} \right\rceil}
+\providecommand{\floor}[1]{\left\lfloor {#1} \right\rfloor}
+\providecommand{\brc}[1]{\left\{ {#1} \right\}}
+\providecommand{\brk}[1]{\mleft[{#1}\mright]}
+\providecommand{\pbrcS}[1]{\left[ {#1} \right]}
+\providecommand{\dotprod}[2]{{#1}\cdot{#2}}
+\providecommand{\MakeBig}{}
+\providecommand{\MakesBig}{}
+\providecommand{\MakeSBig}{}
+\providecommand{\MakeVBig}{}
+\providecommand{\DistChar}{\Mh{\mathsf{d}}}
+\providecommand{\DistSetY}[2]{\DistChar\pth{#1,#2}}
+\providecommand{\distG}[2]{\DistChar_\Graph\pth{#1, #2}}
+\providecommand{\DistMtrCharX}[1]{\DistChar_{#1}}
+\providecommand{\dY}[2]{\DistChar\pth{#1, #2}}
+\providecommand{\dGY}[2]{\DistChar_\Graph\pth{#1, #2}}
+\providecommand{\cset}{\mathcal{C}}
+\providecommand{\MTR}{\mathcal{M}}
+\providecommand{\DistMtr}[2]{\DistChar\pth{#1,#2}}
+\providecommand{\dist}[1]{\left\| {#1} \right\|}
+\providecommand{\norm}[1]{\left\| {#1} \right\|}
+\providecommand{\sep}[1]{\,\left|\, {#1} \bigr.\right.}
+\providecommand{\sepw}[1]{\left|\, {#1} \right.}
+\providecommand{\ProbExt}[2]{\mathop{\mathbf{Pr}}_{#1}\pbrcx{#2}}
+\providecommand{\ProbY}[2]{\ProbLTR^{}_{\!#1}\pbrc{#2}}
+\providecommand{\ExExtS}[2]{\ExSym_{\substack{#1}}\!\pbrcx{#2}}
+\providecommand{\nfrac}[2]{{#1}/{#2}}
+\providecommand{\cardin}[1]{\left| {#1} \right|}
+\providecommand{\IncGraphPage}[4][]{% \IncludeGraphics[page=#4,#1]{\File{#2/#3}}%}
+\providecommand{\cl}{{\mathrm{cl}}}
+\providecommand{\EBRY}[2]{#1_{\langle#2\rangle}}
+\providecommand{\NiceFrac}[2]{% {\raisebox{0.2em}{\ensuremath{#1}}\!\!\!}% {\rotatebox[origin=c]{-20}{\Big/}}% Rotated / {\! \raisebox{-0.2em}{\ensuremath{#2}} }}
+\providecommand{\IfColorMath}[2]{#2}
+\providecommand{\IfPrinterVer}[2]{#1}
+\providecommand{\HSetY}[2]{\Mh{H}\pth{#1, #2}}
+\providecommand{\CHSetY}[2]{\Mh{C}\pth{#1, #2}}
+\providecommand{\Holder}{H\"older}
+\providecommand{\OldOm}{{\mathcal{O}}}
+\providecommand{\NewOm}{{\mathcal{N}}}
+\providecommand{\obj}{\Mh{f}}
+\providecommand{\Wg}{\Mh{\omega}}
+\providecommand{\TotalW}{\Mh{W}}
+\providecommand{\rankY}[2]{{#1}_{ \permut{#2}}}
+\providecommand{\areaX}[1]{\Mh{\mathrm{area}}\pth{#1}}
+\providecommand{\mybinom}[2]{\Bigl(\begin{array}{@{}c@{}}#1\\#2\end{array}\Bigr)}
+\providecommand{\Set}[2]{\left\{ #1 \;\middle\vert\; #2 \right\}}
+\providecommand{\biga}[1]{\vcenter{\hbox{\scalebox{1.5}{\ensuremath#1}}}}
+\providecommand{\CNF}{\TermI{CNF}}
+\providecommand{\ProblemInd}[2]{\textsf{\textcolor{red}{#1}}}
+\providecommand{\NPProblemInd}[4]{\begin{center} \vspace{0.6cm} \fbox{ \begin{minipage}{0.9\linewidth} \vspace{-0.6cm} \hspace{-0.35cm} {\large \bfseries \ProblemInd{#1}{#2}} \vspace{+0.2cm}% \noindent{\textcolor{blue}{\bfseries \textsf{Instance}}:} {#3} \noindent{\textcolor{blue}{\bfseries \textsf{Question}:}} {#4} \end{minipage} } \end{center} \smallskip}
+\providecommand{\NPProblemOpt}[4]{\NPProblemInd{#1}{#2}{#3}{#4}}
+\providecommand{\Hastad}{H{\aa}stad}
+\providecommand{\ANNbr}{\Term{ANN}}
+\providecommand{\LSH}{\TermI{L{S}H}}
+\providecommand{\DS}{\EuScript{D}}
+\providecommand{\DSC}{\mathsf{D}}
+\providecommand{\distH}[2]{\DistChar_{H}\pth{#1, #2}}
+\providecommand{\distHY}[2]{\DistChar_{H}\pth{#1, #2}}
+\providecommand{\DSAprxNearNbr}{\ensuremath{\DataStructure{{\approx% \text{Near{}}}}}% %}
+\providecommand{\DataStructure}[1]{\ensuremath{\DS_{#1}}}
+\providecommand{\DistNN}[2]{\DistChar\pth{#1,#2}}
+\providecommand{\pntc}{\Mh{{p}}}
+\providecommand{\seq}{{\Mh{M}}}
+\providecommand{\cTimes}{\Mh{\beta}}
+\providecommand{\DSTimes}{\Mh{L}}
+\providecommand{\rad}{\Mh{r}}
+\providecommand{\HypercubeX}[1]{\Hypercube^{#1}}
+\providecommand{\kFunctions}[2]{\mathrm{combine}\pth{#1,#2}}
+\providecommand{\WEqualChar}{\Bumpeq}
+\providecommand{\WEqual}[2]{{#1}\WEqualChar{#2}}
+\providecommand{\FamilyAmp}{\FamilyC_{\WEqualChar}}
+\providecommand{\PSPACE}{\ComplexityClass{PSPACE}}
+\providecommand{\PS}{\Mh{P}}
+\providecommand{\PSetFar}{\ensuremath{\PntSet^{}_{\geq}}}
+\providecommand{\DA}{\Mh{D}}
+\providecommand{\uniqX}[1]{\Mh{\mathrm{uniq}}\pth{#1}}
+\providecommand{\diffX}[1]{\mathop{}\!\mathrm{d}#1}
+\providecommand{\Frq}{\Mh{F}}
+\providecommand{\frq}{\Mh{f}}
+\providecommand{\STRM}{\Mh{\mathcal{S}}}
+\providecommand{\strm}{\Mh{{s}}}
+\providecommand{\Turan}{Tur\'an}
+\providecommand{\fGrowX}[1]{\Mh{G}^{}_{\Dim}\pth{#1}}
+\providecommand{\CompressFunc}{\mathtt{Compress}}
+\providecommand{\RSA}{\Term{RSA}}
+\providecommand{\CClassPP}{\CClass{P{}P}}
+\providecommand{\ID}{\mathrm{id}}
+\providecommand{\EncodeFunc}{\text{\ttfamily{Enc}}}
+\providecommand{\DecodeFunc}{\text{\ttfamily{Dec}}}
+\providecommand{\discX}[1]{\mathrm{disc}\pth{#1}}
+\providecommand{\propertyC}{\psi}
+\providecommand{\propertyX}[1]{\propertyC\pth{#1}}
+\providecommand{\numC}{\Gamma}
+\providecommand{\degreeX}[1]{\mathrm{degree}\pth{#1}}
+\providecommand{\ind}{m}
+\providecommand{\nequiv}{\not\equiv}
+\providecommand{\sqcupplus}{\sqcup^+}
+\providecommand{\snark}[1]{% \marginnote{\raggedright\scriptsize\sffamily\color{gray}#1}%}
+\providecommand{\epigraphsize}{\small}
+\providecommand{\AInewX}[1]{\textcolor{red}{\textbf{NEW:} #1}}
+\providecommand{\AIdelX}[1]{\textcolor{green}{\textbf{DEL:} #1}}
+\providecommand{\AIcommentX}[1]{\textcolor{blue}{\textbf{COMMENT:} #1}}
+\providecommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\providecommand{\RetEq}{\ensuremath{\text{`$\boldsymbol =$'}}}
+\providecommand{\RetNEq}{\ensuremath{\text{`$\boldsymbol \ne$'}}}
+\providecommand{\bitY}[2]{\mathrm{bit}\pth{#1,#2}}
+\providecommand{\highlight}[1]{% \colorbox{red!25}{$\displaystyle#1$}}
+\providecommand{\cU}{\mathcal{U}}
+\providecommand{\cH}{\mathcal{H}}
+\providecommand{\cleardoublepage}{}
+\providecommand{\clearpage}{}
+\providecommand{\algRotateUp}{\AlgorithmI{RotateUp}}
+\providecommand{\algRotateRight}{\AlgorithmI{Rotate{}Right}}
+\providecommand{\algRotateLeft}{\AlgorithmI{Rotate{}Left}}
+\providecommand{\RunningTime}{\EuScript{RT}}
+\providecommand{\Rank}{\mathrm{rank}}
+\providecommand{\NotCCCMode}[1]{#1}
+\providecommand{\CCCMode}[1]{}
+\providecommand{\evalEF}{\AlgorithmI{eval{\ensuremath{_{\ExChar f}}}}}
+\providecommand{\Yend}{Y_{\mathrm{end}}}
+\providecommand{\binsY}[2]{\sqcup_{\geq #1}\pth{#2}}
+\providecommand{\ballsY}[2]{\text{\Football}_{\geq #1}\pth{#2}}
+\providecommand{\BLX}[1]{{{\sqcupplus{}}_{\geq #1}}}
+\providecommand{\UBLX}[1]{\Mh{u}_{\geq #1}}
+\providecommand{\BadEvent}{\Mh{\mathcal{B}}}
+\providecommand{\GoodEvent}{\Mh{\mathcal{G}}}
+\providecommand{\pdf}{\textsf{pdf}}
+\providecommand{\cdf}{\textsf{cdf}}
+\providecommand{\distinctX}[1]{\mathrm{set}\pth{#1}}
+\providecommand{\subseq}{\Mh{{{m}}}}
+\providecommand{\subseqA}{\Mh{{{u}}}}
+\providecommand{\pr}{\Mh{\varphi}}
+\providecommand{\DistD}[1]{\Mh{\mathcal{D}}_{#1}}
+\providecommand{\tTimes}{\Mh{T}}
+\providecommand{\MA}{\Mh{\mathsf{N}}}
+\providecommand{\altK}{\nu}
+\providecommand{\Mistakes}{\Mh{\boldsymbol \beta}}
+\providecommand{\mistakes}{\Mh{\beta}}
+\providecommand{\MistakesX}[1]{\Mistakes_{#1}}
+\providecommand{\mistakesY}[2]{\Mh{\beta}_{#1}\pth{#2}}
+\providecommand{\LemmaGrowthImproved}{% For $n \geq 2\Dim$ and $\Dim \geq 1$, we have \begin{math} \;\displaystyle% \pth{\frac{n }{\Dim}}^\Dim% \leq% \Growth{\Dim}{n}% \leq% 2\, \pth{\frac{n e}{\Dim}}^\Dim, \end{math} where $\ds\Growth{\Dim}{n} = \sum_{i=0}^{\Dim} \binom{n}{i}$.}
+\providecommand{\cEFunc}[1]{\Mh{U}\pth{#1}}
+\providecommand{\cFuncX}[1]{\Mh{f}\pth{#1}}
+\providecommand{\Net}{\Mh{{\Sample}}}
+\providecommand{\NetA}{\Mh{{T}}}
+\providecommand{\PFigPage}[1]{% \IncludeGraphics% [page=#1,width=0.22\linewidth]% {\File{figs/ckr_partition}}%}
+\providecommand{\PFigPageY}[2]{% \IncludeGraphics% [page=#1,width=0.22\linewidth]% {\File{figs/#2}}%}
+\providecommand{\sign}{\mathrm{sign}}
+\providecommand{\ExtractFunc}{\mathtt{E{x}t}}
+\providecommand{\costX}[1]{\mathrm{cost}\pth{#1}}
+\providecommand{\codeX}[1]{\mathrm{code}\pth{#1}}
+\providecommand{\lengthX}[1]{\mathrm{l{}e{}n}\pth{#1}}
+\providecommand{\StringsX}[1]{\mathcal{S}\pth{#1}}
+\providecommand{\NotInS}[2]{\overline{S_{{#1},{#2}}}}
+\providecommand{\sring}[1]{\mathrm{ring}\pth[]{#1}}
+\providecommand{\bring}[1]{\mathrm{ring}\pth{#1}}
+\providecommand{\WeightChar}{\omega}
+\providecommand{\MultiX}[1]{% \multicolumn{2}{l}{% \begin{minipage}{0.8\linewidth}% #1% \end{minipage}% }%}
+\providecommand{\algJacobi}{\Algorithm{Jacobi}}
+\providecommand{\vx}{\mathbf{x}}
+\providecommand{\distTY}[2]{\Mh{\rho}\pth{#1, #2}}
+\providecommand{\distTSqY}[2]{\Mh{\rho^2}\pth{#1, #2}}
+\providecommand{\TalagrandBody}{% X}
+\providecommand{\nballs}{\Mh{\mathsf{n}}}
+\providecommand{\nbins}{\Mh{\mathsf{b}}}
+\providecommand{\NHX}[1]{\Mh{h}_{\Mh{\geq} #1}}
+\providecommand{\SolveLP}{{\AlgorithmI{SolveLP}}}
+\providecommand{\Vars}{\Mh{\EuScript{P}}}
+\providecommand{\BEvent}{\Mh{{B}}}
+\providecommand{\BEventA}{\Mh{{C}}}
+\providecommand{\BEventSet}{\Mh{\mathcal{B}}}
+\providecommand{\SetVars}{\Mh{S}}
+\providecommand{\vblX}[1]{\mathrm{v{b}l}\pth{#1}}
+\providecommand{\NbrX}[1]{\Mh{\Gamma}\pth{#1}}
+\providecommand{\NbrCX}[1]{\Mh{\Gamma_{\!\!+}}\pth{#1}}
+\providecommand{\ELogChar}{\Mh{L}}
+\providecommand{\ELogX}[1]{\ELogChar\pth{#1}}

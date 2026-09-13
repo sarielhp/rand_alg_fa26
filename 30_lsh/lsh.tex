@@ -48,7 +48,7 @@
        hypercube}{hypercube!$\hdim$-dimensional hypercube}. A point
     $\pnt = (\pnt_1, \ldots, \pnt_\hdim) \in \Hypercube^\hdim$ can be
     interpreted, naturally, as a binary string
-    $\pnt_1\pnt_2 \ldots \pnt_\hdim$. The \emphi{Hamming distance}
+    $\pnt_1\pnt_2 \ldots \pnt_\hdim$. The \emphOnly{Hamming distance}\index{Hamming distance}
     $\distHY{\pnt}{\pntA}$ between $\pnt, \pntA \in \Hypercube^\hdim$
     is the number of coordinates where $\pnt$ and $\pntA$ disagree.
     %
@@ -60,7 +60,8 @@
 \end{defn}
 
 As we saw previously, to solve the $(1+\eps)$-\ANNbr problem
-efficiently, it is sufficient to solve the \emphi{approximate near
+efficiently, it is sufficient to solve the \emphOnly{approximate near
+   neighbor}\index{approximate near
    neighbor} problem. Namely, given a set $\PntSet$ of $n$ points in
 $\Hypercube^\hdim$, a radius $r>0$, and parameter $\eps >0$, we want
 to decide for a query point $\query$ whether
@@ -74,7 +75,7 @@ $\distH{\query}{\PntSet} = \min_{\pnt \in \PntSet}
     %
     For a set $\PntSet$ of points, a data-structure
     $\DSC = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$ solves the
-    \emphi{approximate near neighbor} problem if, given a query point
+    \emphOnly{approximate near neighbor}\index{approximate near neighbor} problem if, given a query point
     $\query$, the data-structure works as follows.
     \begin{compactitem}
         \item \textsc{Near}: If $\distH{\query}{\PntSet} \leq r$, then
@@ -118,9 +119,9 @@ approximate near neighbor data-structure (i.e., $\DSAprxNearNbr$).
 
 \subsection{Preliminaries}
 
-\newcommand{\subseq}{\Mh{{{m}}}}%
-\newcommand{\subseqA}{\Mh{{{u}}}}%
-\newcommand{\pr}{\Mh{\varphi}}%
+\newcommand{\subseq}{{{m}}}%
+\newcommand{\subseqA}{{{u}}}%
+\newcommand{\pr}{\varphi}%
 
 
 \begin{defn}
@@ -128,14 +129,14 @@ approximate near neighbor data-structure (i.e., $\DSAprxNearNbr$).
     integers $i_1, i_2, \ldots, i_k \in \IntRange{d}$, where
     $\IntRange{d} = \brc{1, \ldots, d}$.  For a point
     $\pnt = (\pntc_1, \ldots, \pntc_d) \in \Re^d$, its
-    \emphi{projection} by $\subseq$, denoted by $\subseq \pnt$ is the
+    \emphOnly{projection}\index{projection} by $\subseq$, denoted by $\subseq \pnt$ is the
     point $\pth{ \pntc_{i_1}, \ldots, \pntc_{i_k}} \in \Re^k$.
     Similarly, the \emph{projection} of a point set
     $\PntSet \subseteq \Re^d$ by $\subseq$ is the point set
     $\subseq \PntSet = \Set{\subseq \pnt}{\pnt \in \PntSet}$.
 \end{defn}
 
-\newcommand{\DistD}[1]{\Mh{\mathcal{D}}_{#1}}
+\newcommand{\DistD}[1]{\mathcal{D}_{#1}}
 
 Given two sequences $\subseq = i^{}_1, \ldots, i^{}_k$ and
 $\subseqA = j^{}_1, \ldots, j^{}_{k'}$, let $\subseq | \subseqA$
@@ -150,7 +151,7 @@ probability $\pr$. Let $\DistD{\pr}$ denote the distribution of such
 sequences of indices.
 
 
-\newcommand{\tTimes}{\Mh{T}}%
+\newcommand{\tTimes}{T}%
 
 \begin{defn}
     \deflab{t:splay}%
@@ -409,7 +410,7 @@ result of the cheap test on item $x$. We have that
     \beta \geq 
     \ProbCond{T(x) = \text{good}}{x \text{ is bad}}.    
 \end{equation*}
-Repeating, the experiment $k$ times, we create a \emphi{$k$-test}
+Repeating, the experiment $k$ times, we create a \emphOnly{$k$-test}\index{$k$-test}
 where we turn an item is good if all $k$ tests return ``good''. We
 then have
 \begin{equation*}
@@ -712,7 +713,7 @@ all the points that collide with $h$ and compute their distance to the
 query point. Next, scan these points one by one and compute their
 distance to $\query$. As soon as encountering a point $\pntB \in
 \PntSet$ such that $\distH{\query}{\pntB} \leq R$, the data-structures
-returns \emphi{true} together with $\pntB$. 
+returns \emphOnly{true}\index{true} together with $\pntB$. 
 
 Let's assume that we know that the expected number of points of
 $\PntSet \setminus \Ball(\query,R)$ (i.e., $R = (1+\eps)r$) that will

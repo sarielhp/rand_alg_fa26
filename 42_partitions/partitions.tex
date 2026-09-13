@@ -27,10 +27,10 @@
 
 
 \begin{defn}
-    A \emphi{metric space} \index{metric space} is a pair
+    A \emphOnly{metric space}\index{metric space} \index{metric space} is a pair
     $(\FMS, \DistChar)$ where $\FMS$ is a set and
     $\DistChar: \FMS \times \FMS \rightarrow [0, \infty)$ is a
-    \emphi{metric}, satisfying the following axioms:
+    \emphOnly{metric}\index{metric}, satisfying the following axioms:
     \begin{compactenumi}
         \item $\DistChar(x,y) = 0$ $\iff$ $x =y$,
         \item $\DistMtr{x}{y}= \DistMtr{y}{x}$, and
@@ -58,7 +58,7 @@ space $(\FMS, \DistChar_G)$.
 
 \begin{defn}
     Let $(\FMS,d)$ be an $n$-point metric space. We denote the
-    \emphi{open ball} of radius $r$ about $x \in \FMS$, by
+    \emphOnly{open ball}\index{open ball} of radius $r$ about $x \in \FMS$, by
     $\Ball(x,r) = \Set{ y \in \FMS }{ \dY{x}{y} < r }$.\index{ball}
 \end{defn}
 
@@ -84,14 +84,14 @@ introduced by such a mapping.
 \begin{defn}
     Let $(\FMS,\DistChar_\FMS)$ and $(\FMSB,\DistChar_\FMSB)$ be two
     metric spaces. A mapping $f:\FMS \to \FMSB$ is an
-    \emphi{embedding}, and it is \emphi{$C$-Lipschitz} if
+    \emphOnly{embedding}\index{embedding}, and it is \emphOnly{$C$-Lipschitz}\index{$C$-Lipschitz} if
     \begin{math}
         \DistChar_Y\bigl(f(x),f(y) \bigr)%
         \leq%
         C \cdot \DistChar_\FMS(x,y)
     \end{math}
     for all $x,y\in \FMS$.  The mapping $f$ is
-    \emphi{$K$-bi-Lipschitz} if there exists a $C > 0$ such that
+    \emphOnly{$K$-bi-Lipschitz}\index{$K$-bi-Lipschitz} if there exists a $C > 0$ such that
     \begin{equation*}
         CK^{-1} \cdot \DistChar_\FMS(x,y)%
         \leq%
@@ -103,7 +103,7 @@ introduced by such a mapping.
     for all $x,y\in \FMS$.
     
     The least $K$ for which $f$ is $K$-bi-Lipschitz is the
-    \emphi{distortion} of $f$, and is denoted $\Distor(f)$. The least
+    \emphOnly{distortion}\index{distortion} of $f$, and is denoted $\Distor(f)$. The least
     distortion with which $\FMS$ may be embedded in $\FMSB$ is denoted
     $c^{}_\FMSB(\FMS)$.  \index{Lipschitz}
     \index{Lipschitz!bi-Lipschitz} \index{distortion}
@@ -213,7 +213,7 @@ demonstrate why algorithmically finite metric spaces are useful.
 \begin{defn}
     \index{Hierarchically well-separated tree}
     \index{HST}
-    \emphi{Hierarchically well-separated tree} (HST) is a metric space
+    \emphOnly{Hierarchically well-separated tree}\index{Hierarchically well-separated tree} (HST) is a metric space
     defined on the leaves of a rooted tree $T$. To each vertex $u\in
     T$ there is associated a label $\Delta_u \ge 0$ such that
     $\Delta_u=0$ if and only if $u$ is a leaf of $T$.  The labels are
@@ -222,7 +222,7 @@ demonstrate why algorithmically finite metric spaces are useful.
     T$ is defined as $\Delta_{\lca(x,y)}$, where $\lca(x,y)$ is the
     least common ancestor of $x$ and $y$ in $T$.
     
-    A HST $T$ is a \emphi{$k$-HST} if for a vertex $v \in T$, we have
+    A HST $T$ is a \emphOnly{$k$-HST}\index{$k$-HST} if for a vertex $v \in T$, we have
     that $\Delta_v \leq \Delta_{\parent(v)}/k$, where $\parent(v)$ is
     the parent of $v$ in $T$.
 
@@ -246,7 +246,7 @@ very simple metrics.
 
 One natural problem we might want to solve on a graph (i.e., finite
 metric space) $(\FMS,\DistChar)$ is to partition it into clusters. One
-such natural clustering is the \emphi{$k$-median clustering}, where we
+such natural clustering is the \emphOnly{$k$-median clustering}\index{$k$-median clustering}, where we
 would like to choose a set $C \subseteq \FMS$ of $k$ centers, such
 that
 $\MdPrc_C(\FMS,\DistChar) = \sum_{\pntA \in \FMS} \DistChar(\pntA, C)$
@@ -286,7 +286,7 @@ be bounded by the distortion of the embedding of $\Graph$ into $\HST$.
 
 Let $(\FMS,d)$ be a finite metric space. Given a partition
 $P=\brc{C_1,\ldots,C_m}$ of $\FMS$, we refer to the sets $C_i$ as
-\emphi{clusters}. We write $\mathcal{P}_\FMS$ for the set of all partitions of
+\emphOnly{clusters}\index{clusters}. We write $\mathcal{P}_\FMS$ for the set of all partitions of
 $\FMS$. For $x\in \FMS$ and a partition $P\in \mathcal{ P}_\FMS$ we denote by
 $P(x)$ the unique cluster of $P$ containing $x$. Finally, the set of all
 probability distributions on $\mathcal{P}_\FMS$ is denoted $\mathcal{D}_\FMS$.
@@ -474,9 +474,10 @@ would like to embed it into a HST. As mentioned above, one can verify
 that for any embedding into HST, the distortion in the worst case is
 $\Omega(n)$.  Thus, we define a randomized algorithm that embed
 $(\FMS,d)$ into a tree. Let $T$ be the resulting tree, and consider
-two points $x,y \in \FMS$. Consider the \emphi{random variable}
+two points $x,y \in \FMS$. Consider the \emphOnly{random variable}\index{random variable}
 $\DistChar_T(x,y)$. We constructed the tree $T$ such that distances never
-shrink; i.e.  $\DistChar(x,y) \leq \DistChar_T(x,y)$. The \emphi{probabilistic
+shrink; i.e.  $\DistChar(x,y) \leq \DistChar_T(x,y)$. The \emphOnly{probabilistic
+   distortion}\index{probabilistic
    distortion} of this embedding is $\max_{x,y}
 \Ex{\frac{\DistChar_T(x,y)}{\DistChar(x,y)}}$.  Somewhat surprisingly, one can
 find such an embedding with logarithmic probabilistic distortion.
@@ -657,7 +658,7 @@ induces as the required clustering.
 
 \subsection{The bounded spread case}
 
-Let $(\FMS,\DistChar)$ be a $n$-point metric. The \emphi{spread} of $\FMS$,
+Let $(\FMS,\DistChar)$ be a $n$-point metric. The \emphOnly{spread}\index{spread} of $\FMS$,
 denoted by
 \begin{equation*}
     \Spread(\FMS)%

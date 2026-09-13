@@ -62,9 +62,9 @@
 \end{figure}
 
 Given a set $\SegSet$ of $n$ segments in the plane, its
-\emphi{arrangement}, denoted by $\ArrX{\bigl.\SegSet}$, is the
+\emphOnly{arrangement}\index{arrangement}, denoted by $\ArrX{\bigl.\SegSet}$, is the
 decomposition of the plane into faces, edges, and vertices. The
-\emphi{vertices} of $\ArrX{\bigl.\SegSet}$ are the endpoints, or the
+\emphOnly{vertices}\index{vertices} of $\ArrX{\bigl.\SegSet}$ are the endpoints, or the
 intersection points of the segments of $\SegSet$, the
 \emphic{edges}{edge} are the maximal connected portions of the
 segments not containing any vertex, and the \emphic{faces}{face} are
@@ -111,9 +111,9 @@ might be arbitrarily complicated. Instead, we will prefer to break the
 arrangement into smaller canonical tiles.
 
 
-To this end, a \emphi{vertical trapezoid} is a quadrangle with two
+To this end, a \emphOnly{vertical trapezoid}\index{vertical trapezoid} is a quadrangle with two
 vertical sides. The breaking of the faces into such trapezoids is the
-\emphi{vertical decomposition} of the arrangement
+\emphOnly{vertical decomposition}\index{vertical decomposition} of the arrangement
 $\ArrX{\bigl.\SegSet}$.
 
 
@@ -122,7 +122,7 @@ $\ArrX{\bigl.\SegSet}$.
 
 
 Formally, for a subset $\Sample \subseteq \SegSet$, let
-$\ArrVD{\bigl.\Sample}$ denote the \emphi{vertical decomposition} of
+$\ArrVD{\bigl.\Sample}$ denote the \emphOnly{vertical decomposition}\index{vertical decomposition} of
 the plane formed by the arrangement $\ArrX{\bigl. \Sample}$ of the
 segments of $\Sample$. This is the partition of the plane into
 interior disjoint vertical trapezoids formed by erecting vertical
@@ -223,9 +223,10 @@ the new arrangement. (Note that the figure does not show all the
 trapezoids in the vertical decomposition.)
 
 To facilitate this, we need to compute the trapezoids of $\ArrB_{i-1}$
-that intersect $\seg_i$. This is done by maintaining a \emphi{conflict
+that intersect $\seg_i$. This is done by maintaining a \emphOnly{conflict
+   graph}\index{conflict
    graph}.  Each trapezoid $\sigma \in \ArrVD{\bigl.\SegSet_{i-1}}$
-maintains a \emphi{conflict list} $\cl(\sigma)$ of \emph{all} the
+maintains a \emphOnly{conflict list}\index{conflict list} $\cl(\sigma)$ of \emph{all} the
 segments of $\SegSet$ that intersect its interior.  In particular, the
 conflict list of $\sigma$ cannot contain any segment of
 $\SegSet_{i-1}$, and as such it contains only the segments of $\SegSet
@@ -701,7 +702,8 @@ is the subset of $\ObjSet$ defining the region $\Trap$ (the precise
 requirements from this set are specified in the axioms below).  We
 assume that for every $\Trap \in \AllRegions$,
 $\cardin{\DefSet{\Trap}} \leq d$ for a (small) constant $d$. The
-constant $d$ is sometime referred to as the \emphi{combinatorial
+constant $d$ is sometime referred to as the \emphOnly{combinatorial
+   dimension}\index{combinatorial
    dimension}. \index{dimension!combinatorial} In the case of
 \thmref{v:d}, each trapezoid $\Trap$ is defined by at most four
 segments (or lines) of $\ObjSet$ that define the region covered by the
@@ -710,7 +712,7 @@ trapezoid $\Trap$, and this set of segments is $\DefSet{\Trap}$.  See
 
 \index{set!stopping}
 
-The \emphi{stopping set} $\KillSet{ \Trap }$ of $\Trap$ is the set of
+The \emphOnly{stopping set}\index{stopping set} $\KillSet{ \Trap }$ of $\Trap$ is the set of
 objects of $\ObjSet$ such that including any object of $\KillSet{
    \Trap }$ in $\Sample$ prevents $\Trap$ from appearing in
 $\RegionsSet{\Sample }$.  In many applications $\KillSet{ \Trap }$ is
@@ -776,7 +778,7 @@ region, when it is being created by an \RIC algorithm.  The
     Consider a set $\ObjSet$ of $n$ points in the plane. A vertex on
     the convex hull is defined by the point defining the vertex, and
     the two edges before and after it on the convex hull. To this end,
-    a \emphi{certified vertex} of the convex hull (say this vertex is
+    a \emphOnly{certified vertex}\index{certified vertex} of the convex hull (say this vertex is
     $\pntA$) is a triplet $(\pnt, \pntA, \pntB)$, such that $\pnt,
     \pntA$ and $\pntB$ are consecutive vertices of $\CHX{\ObjSet}$
     (say, in clockwise order).  Observe, that computing the
@@ -812,7 +814,7 @@ region, when it is being created by an \RIC algorithm.  The
     In the following, assume that each face of any convex-hull of a
     subset of points of $\ObjSet$ is a triangle. As such, a face of
     the convex-hull would be defined by three points.  Formally, the
-    \emphi{butterfly} of an edge $\Edge$ of $\CHX{\Sample}$ is
+    \emphOnly{butterfly}\index{butterfly} of an edge $\Edge$ of $\CHX{\Sample}$ is
     $(\Edge, \pnt, \pntA)$, where $pnt, \pntA \in \Sample$, and such
     that all the points of $\Sample$ are on the same side as $\pntA$
     of the plane spanned by $\Edge$ and $\pnt$ (we have symmetric
@@ -1574,7 +1576,8 @@ work by Clarkson and Shor \cite{cs-arscg-89}, which is historically
 inaccurate as the technique was developed by Clarkson
 \cite{c-arscg-88}. Instead of mildly confusing the matter by referring
 to it as the Clarkson technique, we decided to make sure to really
-confuse the reader and refer to it as the \emphi{moments
+confuse the reader and refer to it as the \emphOnly{moments
+   technique}\index{moments
    technique}. The Clarkson technique \cite{c-arscg-88} is in fact
 more general and implies a connection between the number of ``heavy''
 regions and ``light'' regions. The general framework can be traced
@@ -1660,7 +1663,7 @@ luckily one can use a lazy strategy that performs this cleanup only a
 logarithmic number of times (i.e., you perform a cleanup in an
 iteration if the iteration number is, say, a power of $2$). This
 strategy complicates the analysis a bit; see \cite{bds-lric-95} for
-more details on this \emphi{lazy randomized incremental construction}
+more details on this \emphOnly{lazy randomized incremental construction}\index{lazy randomized incremental construction}
 \index{random incremental construction!lazy} technique. An alternative
 technique was suggested by the author for the (more restricted) case
 of planar arrangements; see \cite{h-twpa-00}. The idea is to compute
@@ -1695,7 +1698,7 @@ Cuttings also can be computed in higher dimensions for hyperplanes. In
 the plane, cuttings can also be computed for well-behaved curves; see
 \cite{sa-dsstg-95}.
 
-Another fascinating concept is \emphi{shallow cuttings}. These are
+Another fascinating concept is \emphOnly{shallow cuttings}\index{shallow cuttings}. These are
 cuttings covering only portions of the arrangement that are in the
 ``bottom'' of the arrangement. \Matousek came up with the concept
 \cite{m-rph-92}.  See \cite{aes-vdsl3-99, cch-smcpg-09} for extensions

@@ -22,7 +22,8 @@
 \subsection{Pairwise independence}
 
 \begin{defn}
-    A set of random variables $X_1, \ldots, X_n$ is \emphi{pairwise
+    A set of random variables $X_1, \ldots, X_n$ is \emphOnly{pairwise
+       independent}\index{pairwise
        independent}, if for any pair of values $\alpha, \beta$, and
     any two indices $i,j$, we have that
     \begin{equation*}
@@ -36,7 +37,7 @@ Namely, the variables are independent if you look at pairs of
 variables. Compare this to the much stronger property of independence.
 \begin{defn}
     A set of random variables $X_1, \ldots, X_n$ is
-    \emphi{independent}, if for any $t$, and any $t$ values
+    \emphOnly{independent}\index{independent}, if for any $t$, and any $t$ values
     $\alpha_1, \ldots, \alpha_t$, and any $t$ indices
     $i_1,\ldots, i_t$, we have that
     \begin{equation*}
@@ -97,9 +98,10 @@ $Y_i = \bigotimes_{j: \bitY{i}{j} = 1} X_j$, where $\otimes$ is the
     $\beta \in B \setminus B'$, then we have
     \begin{align*}
       \ProbCond{Y_{i} = v}{ Y_{i'} = v' }%
-      &=%
+      &\EQ%
         \ProbCond{\Bigl.\smash \bigotimes_{j: \bitY{i}{j} = 1} X_j= v}{ Y_{i'} = v' }%        
-        =%
+        \\&
+        \EQ%
         \ProbCond{\Bigl. X_\beta \otimes
         {\Bigl.\smash{\bigotimes_{j: \bitY{i}{j} = 1} X_j}}=
         v}{ Y_{i'} = v' }%
@@ -227,7 +229,8 @@ are $k$-wise independent.
 \subsection{Definition}
 
 \begin{defn}
-    A set of variables $X_1, \ldots, X_n$ are \emphi{$k$-wise
+    A set of variables $X_1, \ldots, X_n$ are \emphOnly{$k$-wise
+       independent}\index{$k$-wise
        independent} if for any set $I = \{i_1, i_2, \ldots, i_t\}$ of
     indices, for $t \leq k$, and any set of values $v_1, \ldots, v_t$,
     we have that
@@ -251,12 +254,12 @@ $t=k$.
 \begin{defn}
     For a number $p$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$.
     
-    For two integer numbers $x$ and $y$, the \emphi{quotient} of $x/y$
-    is $x \bdiv y = \floor{x/y}$. The \emphi{remainder} of $x/y$ is
+    For two integer numbers $x$ and $y$, the \emphOnly{quotient}\index{quotient} of $x/y$
+    is $x \bdiv y = \floor{x/y}$. The \emphOnly{remainder}\index{remainder} of $x/y$ is
     $x \bmod y = x - y \floor{x/y}$. If the $x \bmod y = 0$, than $y$
-    \emphi{divides} $x$, denoted by $y \divides x$.  We use
+    \emphOnly{divides}\index{divides} $x$, denoted by $y \divides x$.  We use
     $\alpha \equiv \beta \pmod{p}$ or $\alpha \equiv_p \beta$ to
-    denote that $\alpha$ and $\beta$ are \emphi{congruent modulo $p$};
+    denote that $\alpha$ and $\beta$ are \emphOnly{congruent modulo $p$}\index{congruent modulo $p$};
     that is $\alpha \bmod p = \beta \bmod p$ -- equivalently,
     $p \divides \pth[]{\alpha - \beta}$.
 \end{defn}
@@ -277,7 +280,7 @@ $t=k$.
             
             \item For any $x \in \brc{1,\ldots, p-1}$ there exists a
             unique $y$ such that $xy \equiv 1 \pmod{p}$. The number
-            $y$ is the \emphi{inverse} of $x$, and is denoted by
+            $y$ is the \emphOnly{inverse}\index{inverse} of $x$, and is denoted by
             $x^{-1}$ or $1/x$.
         \end{compactenumA}
     \end{lemma}
@@ -356,7 +359,7 @@ $t=k$.
 
 \subsection{Construction}
 
-Consider the following matrix, aka the \emphi{Vandermonde matrix},
+Consider the following matrix, aka the \emphOnly{Vandermonde matrix}\index{Vandermonde matrix},
 defined by $n$ variables:
 \begin{equation*}
     V=\begin{bmatrix}
@@ -448,8 +451,8 @@ defined by $n$ variables:
        \alpha_{i}^{k-1}}$. We have that
     $f( \alpha_i , \mathsf{b}) = \DotProd{\salpha_i}{\mathsf{b}} \bmod
     p$. This translates into the linear system
-    \begin{equation*}
-        \pth{\begin{matrix}
+    \begin{align*}
+        &\pth{\begin{matrix}
             \salpha_1\\
             \salpha_2\\
             \vdots\\
@@ -466,7 +469,9 @@ defined by $n$ variables:
             v_2\\
             \vdots\\
             v_k
-        \end{matrix}} \qquad\text{ where }\qquad%
+     \end{matrix}}
+  \\
+  &\qquad\text{ where }\quad%
      \mathsf{M} = %
      \begin{bmatrix}
        1 & \alpha_1 & \alpha_1^2 & \cdots & \alpha_1^{n-1}\\
@@ -475,7 +480,7 @@ defined by $n$ variables:
        \vdots & \vdots & \vdots & \ddots &\vdots \\
        1 & \alpha_n & \alpha_n^2 & \cdots & \alpha_n^{n-1}
      \end{bmatrix}.
-    \end{equation*}
+    \end{align*}
     The matrix $\mathsf{M}$ is the Vandermonde matrix, and by
     \clmref{v:m:invertiable} it is invertible. We thus get there
     exists a unique solution to this system of linear equations
@@ -624,24 +629,27 @@ moment variant of Chebychev inequality.
     \lemlab{cheby:higher}%
     %
     For a random variable $X$, we have that
-    \begin{math}
+    \begin{equation*}
         \ds%
         \Prob{\cardin{X - \Ex{X}}
-      \geq%
-      t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}  
-      \leq
-      \frac{1}{t^k}
-  \end{math}
+           \geq%
+           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}  
+        \leq
+        \frac{1}{t^k}
+    \end{equation*}
 \end{lemma}
 \begin{proof}
     Setting $Z = \cardin{X - \Ex{X}}^k$, and 
     raising the inequality by a power of $k$, we have
     \begin{align*}
-      \Prob{\cardin{X - \Ex{X}} \geq%
-      t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
-      = %
+        \Prob{\cardin{X - \Ex{X}}
+           \geq%
+           t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
+        &
+        \EQ %
       \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
-      =%
+      \\&
+      \EQ%
       \Prob{Z \geq t^k \Ex{Z}}%
       \leq%
       \frac{1}{t^k},
@@ -668,21 +676,22 @@ interesting example.
 \begin{proof}    
     Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
     computing
-    \begin{equation}
+    \begin{align*}
         M_k(X)%
-        =%
+        &=%
         \Ex{  X^{k}}%
         =%
         \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
         =%
         \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
+        \\&
         =%
         \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
         \Ex{X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
         \eqlab{m:k}
-    \end{equation}
+    \end{align*}
     Consider a term in the above summation, where one of the indices
     (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
     independence, we have
@@ -730,12 +739,13 @@ interesting example.
     Since $k$ is even, we have $\Ex{X^k} = \Ex{|X|^k}$, and by
     \lemref{cheby:higher}, we have
     \begin{align*}
-      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-      =%
-      \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
-      \leq 
-      \Prob{ \cardin{X} \geq%
-      t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
+        \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+        &\EQ%
+        \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
+        \\&
+        \LEQ% 
+        \Prob{ \cardin{X} \geq%
+           t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
     \end{align*}
 \end{proof}
 
@@ -754,7 +764,7 @@ independent. We readily get the following.
 
 \begin{defn}
     Given $n$ random variables $X_1, \ldots, X_n$ they are
-    \emphi{$k$-wise independent}, if for any $k$ of them (i.e.,
+    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ of them (i.e.,
     $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
     we have\
     \begin{equation*}

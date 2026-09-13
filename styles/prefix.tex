@@ -12,6 +12,7 @@
 \expandafter\ifx\csname opt@lwarp.sty\endcsname\relax\else\def\LWR@isWarp{1}\fi
 
 \if1\LWR@isWarp
+  \def\warpMode{1}%
   \IfFileExists{styles/prefix_lwarp.tex}{\input{styles/prefix_lwarp}}{\input{prefix_lwarp}}%
 \else
   \IfFileExists{styles/prefix_latex.tex}{\input{styles/prefix_latex}}{\input{prefix_latex}}%

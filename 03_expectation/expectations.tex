@@ -56,7 +56,7 @@ familiar with these definitions can happily skip this section.
 
 \paragraph*{Sample space, $\sigma$-algebra, and probability.}
 
-A \emphi{sample space} $\Omega$ is the set of all possible outcomes of an
+A \emphOnly{sample space}\index{sample space} $\Omega$ is the set of all possible outcomes of an
 experiment. We also have a family of events $\Family$, where every member
 of $\Family$ is a subset of $\Omega$. Formally, we require that $\Family$ is a
 $\sigma$-algebra over $\Omega$.
@@ -64,8 +64,8 @@ $\sigma$-algebra over $\Omega$.
 
 
 \begin{defn}
-    A single element $s$ of $\Omega$ is an \emphi{elementary event} or an
-    \emphi{atomic event}\footnote{Do not read this footnote, it is
+    A single element $s$ of $\Omega$ is an \emphOnly{elementary event}\index{elementary event} or an
+    \emphOnly{atomic event}\index{atomic event}\footnote{Do not read this footnote, it is
        tedium. Strictly speaking, elements $\omega \in \Omega$ are sample outcomes,
        while singleton subsets $\{\omega\} \subseteq \Omega$ in $\Family$
        are elementary events. In discrete probability the terms are often
@@ -77,7 +77,7 @@ $\sigma$-algebra over $\Omega$.
 
 \begin{defn}
     A family $\Family$ of subsets of $\Omega$ is a
-    \emphi{$\sigma$-algebra} if:
+    \emphOnly{$\sigma$-algebra}\index{$\sigma$-algebra} if:
     \begin{compactenumi}
         \item $\Family$ is not empty (e.g., $\Omega \in \Family$),
         \item if $X \in \Family$ then $\overline{X} = \pth[]{\Omega
@@ -86,7 +86,7 @@ $\sigma$-algebra over $\Omega$.
     \end{compactenumi}
     More generally, we require that if $X_i \in \Family$, for
     $i \in \NNN = \{1, 2, \ldots\}$, then $\cup_i X_i \in \Family$.  A
-    member of $\Family$ is an \emphi{event}.
+    member of $\Family$ is an \emphOnly{event}\index{event}.
 \end{defn}
 
 
@@ -100,8 +100,8 @@ As a concrete example, if we are rolling a die\footnote{Formally, a dice
 and $\Family$ would be the power set of all possible subsets of $\Omega$.
 
 \begin{defn}
-    A \emphi{probability measure} is a mapping $\ProbLTR:\Family
-    \rightarrow [0,1]$ assigning \emphi{probabilities} to events. The
+    A \emphOnly{probability measure}\index{probability measure} is a mapping $\ProbLTR:\Family
+    \rightarrow [0,1]$ assigning \emphOnly{probabilities}\index{probabilities} to events. The
     function $\ProbLTR$ needs to have the following properties:
     \begin{compactenumi}
         \item \textsc{Additive}: for $X, Y \in \Family$ disjoint sets, we
@@ -121,7 +121,7 @@ and $\Family$ would be the power set of all possible subsets of $\Omega$.
     \begin{align*}
       \Prob{\bigl. \smash{\cup_{i=1}^{n} C_i} } \leq \sum_{i=1}^{n} \Prob{C_i}.
     \end{align*}
-    This is known as the \emphi{union bound}.  If $C_1, \ldots, C_n$ are
+    This is known as the \emphOnly{union bound}\index{union bound}.  If $C_1, \ldots, C_n$ are
     \emph{disjoint} events then
     \begin{align*}
       \Prob{\cup_{i=1}^{n} C_i} = \sum_{i=1}^{n} \Prob{C_i}.
@@ -130,14 +130,14 @@ and $\Family$ would be the power set of all possible subsets of $\Omega$.
 
 
 \begin{defn}
-    A \emphi{probability space} is a triple $(\Omega, \Family,
+    A \emphOnly{probability space}\index{probability space} is a triple $(\Omega, \Family,
     \ProbLTR)$, where $\Omega$ is a sample space, $\Family$ is a
     $\sigma$-algebra defined over $\Omega$, and $\ProbLTR$ is a
     probability measure.
 \end{defn}
 
 \begin{defn}
-    A \emphi{random variable} $f$ is a mapping from $\Omega$ into some set
+    A \emphOnly{random variable}\index{random variable} $f$ is a mapping from $\Omega$ into some set
     $\FamilyB$ (typically $\reals$). We require that the probability of
     the random variable to take on any value in a given subset of values
     is well defined. Formally, for any measurable subset
@@ -159,7 +159,7 @@ Going back to the die example\footnote{An example to die for,
 random variable. Similarly, let $X$ be one if the number rolled is larger
 than $3$, and zero otherwise. Clearly $X$ is a random variable.
 
-We denote the \emphi{probability} of a random variable $X$ to get the
+We denote the \emphOnly{probability}\index{probability} of a random variable $X$ to get the
 value $x$, by $\Prob{X=x}$ (or sometimes $\Prob{x}$, if we are lazy).
 
 
@@ -172,7 +172,7 @@ value $x$, by $\Prob{X=x}$ (or sometimes $\Prob{x}$, if we are lazy).
 
 \begin{defn}[Expectation]
     The {expectation} of a random variable $X$ is its weighted
-    average. Formally, the \emphi{expectation} of a discrete random
+    average. Formally, the \emphOnly{expectation}\index{expectation} of a discrete random
     variable $X$ is
     \begin{align*}
       \Ex{\bigl. X} = \sum_{x} x \Prob{ \bigl. X = x }.
@@ -183,7 +183,7 @@ value $x$, by $\Prob{X=x}$ (or sometimes $\Prob{x}$, if we are lazy).
 
 
 \begin{defn}%[Conditional Probability.]
-    The \emphi{conditional probability} of the event $X=x$ given event
+    The \emphOnly{conditional probability}\index{conditional probability} of the event $X=x$ given event
     $Y=y$ is the probability that $X=x$ given that $Y=y$, provided
     $\Prob{Y=y} > 0$. We denote this quantity by $\ProbCond{X=x}{ Y=y}$.
 \end{defn}
@@ -215,7 +215,7 @@ we have that
 \end{align*}
 
 \begin{defn}
-    Two random variables $X$ and $Y$ are \emphi{independent} if
+    Two random variables $X$ and $Y$ are \emphOnly{independent}\index{independent} if
     \begin{equation*}
         \Prob{X = x \sep{Y=y}} = \Prob{X = x},
     \end{equation*}
@@ -316,9 +316,9 @@ we have that
     \begin{equation*}
         \Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2
     \end{equation*}
-    denote the \emphi{variance} of $X$, where $\mu_X = \Ex{
+    denote the \emphOnly{variance}\index{variance} of $X$, where $\mu_X = \Ex{
        X}$. Intuitively, this tells us how concentrated the distribution
-    of $X$ is around its mean $\mu_X$.  The \emphi{standard deviation} of
+    of $X$ is around its mean $\mu_X$.  The \emphOnly{standard deviation}\index{standard deviation} of
     $X$, denoted by $\sigma_X$, is the quantity $\sqrt{\Var{ X}}$.
 \end{defn}
 
@@ -340,7 +340,8 @@ we have that
 \begin{defn}[Bernoulli distribution]
     Assume that one flips a coin and gets $1$ (heads) with probability
     $p$, and $0$ (tails) with probability $q = 1-p$. Let $X$ be this
-    random variable. The variable $X$ has a \emphi{Bernoulli
+    random variable. The variable $X$ has a \emphOnly{Bernoulli
+       distribution}\index{Bernoulli
        distribution} with parameter $p$.
     
     We have that $\Ex{ X} = 1\cdot p + 0 \cdot(1-p) = p$, and
@@ -364,7 +365,7 @@ we have that
     Assume that we repeat a Bernoulli experiment $n$ times
     (independently!). Let $X_1, \ldots, X_n$ be the resulting random
     variables, and let $X = X_1 + \cdots + X_n$. The variable $X$ has the
-    \emphi{binomial distribution} with parameters $n$ and $p$. We denote
+    \emphOnly{binomial distribution}\index{binomial distribution} with parameters $n$ and $p$. We denote
     this by $X \sim \DistBinom{n}{p}$. We have
     \begin{align*}
       b(k;n,p)%
@@ -389,7 +390,7 @@ we have that
     Consider a sequence $X_1,X_2, \ldots $ of independent Bernoulli
     trials with probability $p$ for success. Let $X$ be the number of
     trials one has to perform till encountering the first success. The
-    distribution of $X$ is a \emphi{geometric distribution} with
+    distribution of $X$ is a \emphOnly{geometric distribution}\index{geometric distribution} with
     parameter $p$. We denote this by $X \sim \DistGeom{p}$.
 \end{defn}
 
@@ -546,7 +547,7 @@ becomes the following set of two clauses:
     x_{4} \lor \overline{x_{1}} \lor x_{2}.
 \end{equation*}
 
-Note, that \ProblemC{Max 3SAT} is a \emphi{maximization problem}.
+Note, that \ProblemC{Max 3SAT} is a \emphOnly{maximization problem}\index{maximization problem}.
 
 \begin{defn}
     \index{approximation!maximization problem}%
@@ -566,7 +567,7 @@ variables is the linearity of expectation property defined above.
 \begin{defn}
     For an event $\Event$, let $X$ be a random variable which is $1$
     if $\Event$ occurred, and $0$ otherwise. The random variable $X$
-    is an \emphi{indicator variable}.
+    is an \emphOnly{indicator variable}\index{indicator variable}.
 \end{defn}
 
 \begin{observation}
@@ -839,7 +840,7 @@ clauses.
 
 Consider a graph $\G =( \VV,\EE)$ with $n$ vertices and $m$ edges. We
 would like to color it with $k$ colors. As a reminder, a
-\emphi{coloring} of a graph by $k$ colors, is an assignment
+\emphOnly{coloring}\index{coloring} of a graph by $k$ colors, is an assignment
 $\chi:\VV \rightarrow \IRX{k}$ of a color to each vertex of $\G$, out
 of the $k$ possible colors $\IRX{k} = \{1,2,\ldots, k\}$. A coloring
 of an edge $uv \in \EE$ is \emph{valid} if $\chi(u) \neq \chi(v)$.

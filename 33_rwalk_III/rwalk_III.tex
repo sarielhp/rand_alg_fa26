@@ -75,16 +75,16 @@ a unique stationary distribution $\pi$.
 \begin{defn}
     \deflab{commute:time}%
     %
-    The \emphi{hitting time} $\MCExSteps{u}{v}$ is the expected number
+    The \emphOnly{hitting time}\index{hitting time} $\MCExSteps{u}{v}$ is the expected number
     of steps in a random walk that starts at $u$ and ends upon first
     reaching $v$.
     
-    The \emphi{commute time} between $u$ and $v$ is denoted by
+    The \emphOnly{commute time}\index{commute time} between $u$ and $v$ is denoted by
     $\CommuteTime{u}{v} = \MCExSteps{u}{v} + \MCExSteps{v}{u}$.
     
     Let $\CoverTime_u(G)$ denote the expected length of a walk that
     starts at $u$ and ends upon visiting every vertex in $\Graph$ at least
-    once. The \emphi{cover time} of $\Graph$ denotes by $\CoverTime(G)$ is
+    once. The \emphOnly{cover time}\index{cover time} of $\Graph$ denotes by $\CoverTime(G)$ is
     defined by $\CoverTime(G) = \max_u \CoverTime_u(G)$.
 \end{defn}
 
@@ -102,7 +102,7 @@ a unique stationary distribution $\pi$.
         \exelab{lollipop}%
         \index{graph!lollipop} %
         %
-        Let $L_{2n}$ be the $2n$-vertex \emphi{lollipop graph}, this
+        Let $L_{2n}$ be the $2n$-vertex \emphOnly{lollipop graph}\index{lollipop graph}, this
         graph consists of a clique on $n$ vertices, and a path on the
         remaining $n$ vertices. There is a vertex $u$ in the clique
         which is where the path is attached to it. Let $v$ denote the
@@ -159,9 +159,9 @@ a unique stationary distribution $\pi$.
 \end{example}
 
 \begin{defn}
-    A $n \times n$ matrix $\Matrix$ is \emphi{stochastic} if all its
+    A $n \times n$ matrix $\Matrix$ is \emphOnly{stochastic}\index{stochastic} if all its
     entries are non-negative and for each row $i$, it holds $\sum_{k}
-    \Matrix_{ik} =1$. It is \emphi{doubly stochastic} if in addition,
+    \Matrix_{ik} =1$. It is \emphOnly{doubly stochastic}\index{doubly stochastic} if in addition,
     for any $i$, it holds $\sum_{k} \Matrix_{ki} =1$.
 \end{defn}
 
@@ -245,8 +245,8 @@ see \thmref{amazing}.)
 A \emphic{resistive electrical network}{electrical network} is an
 undirected graph. Each edge has \emphic{branch resistance}{resistance}
 associated with it. The electrical flow is determined by two laws:
-\emphi{Kirchhoff's law} (preservation of flow - all the flow coming
-into a node, leaves it) and \emphi{Ohm's law} (the voltage across a
+\emphOnly{Kirchhoff's law}\index{Kirchhoff's law} (preservation of flow - all the flow coming
+into a node, leaves it) and \emphOnly{Ohm's law}\index{Ohm's law} (the voltage across a
 resistor equals the product of the resistance times the current
 through it). Explicitly, Ohm's law states
 \begin{align*}
@@ -255,7 +255,7 @@ through it). Explicitly, Ohm's law states
 
 
 
-The \emphi{effective resistance} between nodes $u$ and $v$ is the
+The \emphOnly{effective resistance}\index{effective resistance} between nodes $u$ and $v$ is the
 voltage difference between $u$ and $v$ when one ampere is injected
 into $u$ and removed from $v$ (or injected into $v$ and removed from
 $u$). The effective resistance is always bounded by the branch

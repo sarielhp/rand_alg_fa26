@@ -41,7 +41,7 @@ We are interested in the problem sending messages over a noisy
 channel. We will assume that the channel noise is ``nicely'' behaved.
 
 \begin{defn}
-    The input to a \emphi{binary symmetric channel} with parameter $p$
+    The input to a \emphOnly{binary symmetric channel}\index{binary symmetric channel} with parameter $p$
     is a sequence of bits $x_1, x_2, \ldots,$ and the output is a
     sequence of bits $y_1,y_2, \ldots,$ such that
     $\Prob{x_i = y_i} = 1-p$ independently for each $i$.
@@ -64,10 +64,10 @@ channel, we need to figure out where is the optimal choice as far as
 the amount of information sent.
 
 \begin{defn}
-    A \emphi{$(k,n)$ encoding function}
+    A \emphOnly{$(k,n)$ encoding function}\index{$(k,n)$ encoding function}
     $\EncodeFunc: \brc{0,1}^k \rightarrow \brc{0,1}^n$ takes as input
     a sequence of $k$ bits and outputs a sequence of $n$ bits. A
-    \emphi{$(k,n)$ decoding function}
+    \emphOnly{$(k,n)$ decoding function}\index{$(k,n)$ decoding function}
     $\DecodeFunc: \brc{0,1}^n \rightarrow \brc{0,1}^k$ takes as input
     a sequence of $n$ bits and outputs a sequence of $k$ bits.
 \end{defn}
@@ -486,7 +486,7 @@ deep) observation.
 
 % The above observation is one of the main tools in a powerful
 % technique to proving various claims in mathematics, known as the
-% \emphi{probabilistic method}.
+% \emphOnly{probabilistic method}\index{probabilistic method}.
 
 \begin{lemma}
     For the codewords $X_0, \ldots, X_K$, the probability of failure

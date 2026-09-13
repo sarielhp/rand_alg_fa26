@@ -1,0 +1,455 @@
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+       
+\BookMode{\newpage}%
+
+\noindent%
+\ChapterNumPage{29}{230}
+\Chapter{Approximating the Number of Distinct Elements in a Stream}
+
+\QuotePExt{%
+   ``See? Genuine-sounding indignation. I programmed that myself. It's
+   the first thing you need in a university environment: the ability
+   to take offense at any slight, real or imagined.''%
+}{Robert Sawyer}{Factoring Humanity}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+~
+
+% \bigskip%
+
+\bigskip%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Counting number of distinct elements}
+
+\subsection{First order statistic}
+
+Let $X_1, \ldots, X_u$ be $u$ random variables uniformly distributed
+in $[0,1]$. Let $Y = \min (X_1, \ldots, X_u)$. The value $Y$ is the
+\emphi{first order statistic} of $X_1,\ldots, X_u$.
+
+\newcommand{\pdf}{\textsf{pdf}\xspace}
+\newcommand{\cdf}{\textsf{cdf}\xspace}
+
+For a continuous variable $X$, the \emphi{probability density
+   function} (i.e., \emphi{\pdf}) is the ``probability'' of $X$ having
+this value. Since this is not well defined, one looks on the
+\emphi{cumulative distribution function} $F(x) = \Prob{X \leq }$. The
+\pdf is then the derivative of the \cdf.  Somewhat abusing notations,
+the \pdf of the $X_i$s is $\Prob{X_i=x} = 1$.
+
+The following proof is somewhat dense, check any standard text on
+probability for more details.
+
+\begin{lemma}
+    The \emph{probability density function} of $Y$ is
+    \begin{math}
+        f(x) = \binom{u}{1} 1 (1-x)^{u-1}.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    Considering the \pdf of $X_1$ being $x$, and all other $X_i$s
+    being bigger. We have that this \pdf is
+    \begin{equation*}
+        g(x)
+        =%
+        \Prob{ (X_1 = x) \cap \smash{\bigcap_{i=2}^u} (X_i>X_1)\Bigr.}
+        = 
+        \ProbCond{\Bigl. \smash{\bigcap_{i=2}^u} (X_i>X_1)}{X_1=x} \Prob{X_1=x}
+        =%
+        (1-x)^{u-1}.
+    \end{equation*}
+    Since every one of the $X_i$ has equal probability to realize $Y$,
+    we have $f(x) = u g(x)$.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{order:stat}%
+    %
+    We have $\Ex{Y} = \frac{1}{u+1}$,
+    $\Ex{Y^2} = \frac{2}{(u+1)(u+2)}$, and
+    $\Var{Y}=\frac{u}{(u+1)^2 (u+2)}$.
+\end{lemma}
+\begin{proof}
+    Using integration by guessing, we have
+    \begin{align*}
+      \Ex{Y}%
+      &=%
+        \int_{y=0}^1 y \Prob{Y=y} \diffX{y}%
+        =%
+        \int_{y=0}^1 y \cdot \binom{u}{1} 1  (1-y)^{u-1} \diffX{y}%
+        =%
+        \int_{y=0}^{1} u y (1-y)^{u-1} \diffX{y}%
+      \\&%
+      =%
+      \Bigl[ -y(1-y)^{u} - \frac{(1-y)^{u+1}}{u+1} \Bigr]_{y=0}^{1}%
+      =%
+      \frac{1}{u+1}.
+    \end{align*}
+
+    Using integration by guessing again, we have
+    \begin{align*}
+      \Ex{Y^2}%
+      &=%
+        \int_{y=0}^1 y^2 \Prob{Y=y} \diffX{y}%
+        =%
+        \int_{y=0}^1 y^2 \cdot \binom{u}{1} 1  (1-y)^{u-1} \diffX{y}%
+        =%
+        \int_{y=0}^{1} u y^2 (1-y)^{u-1} \diffX{y}%
+      \\&%
+      =%
+      \Bigl[
+      -y^2(1-y)^{u} - \frac{2y(1-y)^{u+1}}{u+1}
+      - \frac{2(1-y)^{u+2}}{(u+1)(u+2)}
+      \Bigr]_{y=0}^{1}%
+      =%
+      \frac{2}{(u+1)(u+2)}.
+    \end{align*}
+    
+    We conclude that
+    \begin{equation*}
+        \Var{Y}%
+        =%
+        \Ex{X^2} -\pth{\Ex{X}}^2%
+        =%
+        \frac{2}{(u+1)(u+2)} -
+        \frac{1}{(u+1)^2} 
+        =%
+        \frac{1}{u+1} \pth{ \frac{2}{u+2} - \frac{1}{u+1}}
+        =%
+        \frac{u}{(u+1)^2 (u+2)}.        
+    \end{equation*}
+\end{proof}
+
+\subsection{The algorithm}
+
+\paragraph*{A single estimator.}
+Assume that we have a perfectly random hash function $h$ that randomly
+maps $N = \brc{1,\ldots, n}$ to $[0,1]$. Assume that the stream has
+$u$ unique numbers in $N$. Then the set
+$\{h(\strm_1),\ldots, h(\strm_m)\}$ contains $u$ random numbers
+uniformly distributed in $[0.1]$. The algorithm as such, would compute
+$X = \min_i h(\strm_i)$.
+
+\paragraph*{Explanation.}
+Note, that $X$ is \emph{not} an estimator for $u$ -- instead, as
+$\Ex{X} = 1/(u+1)$, we are estimating $1/(u+1)$. The key observation
+is that an $1 \pm \eps$ estimator for $1/(u+1)$, is $1 \pm O(\eps)$
+estimator for $u+1$, which is in turn an $1 \pm O(\eps)$ estimator for
+$u$.
+
+
+\begin{lemma}
+    Let $\eps, \BadProb \in (0,1)$ be parameters. Given a stream
+    $\STRM$ of items from $\{1,\ldots, n\}$ one can return an estimate
+    $X$, such that
+    $\Prob{ (1-\eps/4)\frac{1}{u+1} \leq X \leq
+       (1+\eps/4)\frac{1}{u+1}} \geq 1-\BadProb$, where $u$ is the
+    number of unique elements in $\STRM$. This requires
+    $O\pth{ \frac{1 }{\eps^2 } \log \frac{1}{\BadProb}}$ space.
+\end{lemma}
+\begin{proof}
+    The basic estimator $Y$ has $\mu = \Ex{Y} = \frac{1}{u+1}$ and
+    $\nu = \Var{Y}=\frac{u}{(u+1)^2 (u+2)}$. We now plug this
+    estimator into the mean/median framework. By \lemref{order:stat},
+    for $c$ some absolute constant, this requires maintaining $M$
+    estimators, where $M$ is larger than
+    \begin{equation*}
+        c \frac{4\cdot 16 \nu}{\eps^2 \mu^2 } \log \frac{1}{\BadProb}
+        = 
+        O\pth{  \frac{u^2 }{\eps^2 u^2 } \log \frac{1}{\BadProb}}
+        = 
+        O\pth{  \frac{1 }{\eps^2  } \log \frac{1}{\BadProb}}.
+    \end{equation*}
+\end{proof}
+
+Observe that if
+$ (1-\eps/4)\frac{1}{u+1} \leq X \leq (1+\eps/4)\frac{1}{u+1}$ then
+\begin{equation*}
+    \frac{u+1}{1-\eps/4} -1  \geq \frac{1}{X} -1  \geq
+    \frac{u+1}{1+\eps/4}     - 1,
+\end{equation*}
+which implies
+\begin{equation*}
+    (1+\eps) u%
+    \geq%
+    \frac{(1+\eps/4)u}{1-\eps/4}
+    \geq
+    \frac{u+\eps/4}{1-\eps/4}
+    \geq%
+    \frac{1}{X} -1
+    \geq
+    \frac{u+1}{1+\eps/4}     - 1
+    \geq
+    (1-\eps)u.
+\end{equation*}
+Namely, $1/X -1$ is a good estimator for the number of distinct
+elements.
+
+\paragraph*{The algorithm revisited.}
+Compute $X$ as above, and output the quantity $1/X-1$.
+
+\bigskip
+
+This immediately implies the following.
+
+\begin{lemma}
+    Under the unreasonable assumption that we can sample perfectly
+    random functions from $\{1,\ldots, n\}$ to $[0,1]$, and storing
+    such a function requires $O(1)$ words, then one can estimate the
+    number of unique elements in a stream, using
+    $O( \eps^{-2} \log \BadProb^{-1})$ words.
+\end{lemma}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\distinctX}[1]{\mathrm{set}\pth{#1}}
+
+\section{Sampling from a stream with ``low quality'' randomness}
+
+Assume that we have a stream of elements
+$\STRM = \strm_1, \ldots, \strm_m$, all taken from the set
+$\{1,\ldots, n\}$.  In the following, let $\distinctX{S}$ denote the
+set of values that appear in $S$. That is
+\begin{equation*}
+    \Frq_0 = \Frq_0(\STRM) = \cardin{\distinctX{S}}
+\end{equation*}
+is the number of distinct values in the stream $\STRM$.
+
+
+Assume that we have a random sequence of bits
+$\mathcal{B} \equiv B_1, \ldots, B_n$, such that $\Prob{B_i=1} =p$,
+for some $p$. Furthermore, we can compute $B_i$ efficiently. Assume
+that the bits of $\mathcal{B}$ are pairwise independent.
+
+
+
+\paragraph*{The sampling algorithm.}
+When the $i$\th arrives $\strm_i$, we compute $B_{\strm_i}$. If this
+bit is $1$, then we insert $\strm_i$ into the random sample $\Sample$
+(if it is already in $\Sample$, there is no need to store a second
+copy, naturally).
+
+
+This defines a natural random sample
+\begin{equation*}
+    R = \Set{i}{B_i =1 \text{ and } i \in S} \subseteq S.
+\end{equation*}
+
+\begin{lemma}
+    \lemlab{f:e:2:ev}%
+    %
+    For the above random sample $R$, let $X = \cardin{R}$. We have
+    that $\Ex{X} = p \nu$ and $\Var{X} = p \nu - p^2 \nu$, where
+    $\nu = \Frq_0(\STRM)$ is the number of district elements in $S$.
+\end{lemma}
+\begin{proof}
+    Let $X = \cardin{R}$, and we have
+    \begin{equation*}
+        \Ex{X} = \Ex{\smash{\sum_{i \in S}} B_i \Bigr.}%
+        =%
+        \sum_{i \in S} \Ex{B_i} %
+        =%
+        p \nu.
+    \end{equation*}
+    As for the $\Ex{X^2}$, we have
+    \begin{equation*}
+        \Ex{X^2}%
+        =%
+        \Ex{\pth{\smash{\sum_{i \in S}} B_i }^2 \Bigr.}%
+        =%
+        \sum_{i \in S} \Ex{B_i^2} %
+        +
+        2 \sum_{i,j \in S,\, i < j} \Ex{B_i B_j}
+        =%
+        p \nu
+        +
+        2 \sum_{i,j \in S,\, i < j} \Ex{B_i}\Ex{ \smash{B_j}}    
+        =%
+        p \nu + 2p^2 \binom{\nu}{2} .
+    \end{equation*}
+    
+    As such, we have
+    \begin{align*}
+      \Var{X}
+      &=%
+        \Var{\cardin{R}} %
+        =%
+        \Ex{X^2} - \pth{\Ex{X}}^2%
+        =%
+        p \nu + 2p^2 \binom{\nu}{2} - p^2 \nu^2
+        =%
+        p \nu + 2p^2 \frac{\nu(\nu-1)}{2} - p^2 \nu^2
+      \\&%
+      =%
+      p \nu + p^2 \nu(\nu-1) - p^2 \nu^2
+      =%
+      p \nu - p^2 \nu.
+    \end{align*}
+\end{proof}
+  
+\begin{lemma}
+    \lemlab{estimator}%
+    %
+    Let $\eps \in (0,1/4)$.  Given $O(1/\eps^2)$ space, and a
+    parameter $N$. Consider the task of estimating the size of
+    $\Frq_0 = \cardin{\distinctX{\STRM}}$, where $\Frq_0 > N/4$.
+    Then, the algorithm described below outputs one of the following:
+    \begin{compactenumA}
+        \item $\Frq_0 > 2N$.
+        \item Output a number $\rho$ such that
+        $(1-\eps)\Frq_0 \leq \rho \leq (1+\eps)\Frq_0$.
+    \end{compactenumA}
+    (Note, that the two options are not disjoint.)  The output of this
+    algorithm is correct, with probability $\geq 7/8$.
+\end{lemma}
+\begin{proof}
+    We set $p= \frac{c}{N\eps^2}$, where $c$ is a constant to be
+    determined shortly. Let $T = p N = O(1/\eps^2)$. We sample a
+    random sample $R$ from $S$, by scanning the elements of $S$, and
+    adding $i\in S$ to $R$ if $B_i=1$, If the random sample is larger
+    than $8T$, at any point, then the algorithm outputs that
+    $\cardin{S} > 2N$.
+
+    In all other cases, the algorithm outputs $\cardin{R} /p$ as the
+    estimate for the size of $S$, together with $R$.
+
+    To bound the failure probability, consider first the case that
+    $N/4 < \cardin{\distinctX{\STRM}}$. In this case, we have by the
+    above, that
+    \begin{equation*}
+        \Prob{\cardin{X - \Ex{X}} > \eps \Ex{X}}%
+        \leq%
+        \Prob{\cardin{X - \Ex{X}} > \eps
+           \frac{\Ex{X}}{\sqrt{\Var{X}}}
+           \sqrt{\Var{X}}}%
+        \leq%
+        \eps^2 \frac{\Var{X}}{(\Ex{X})^2}
+        \leq \frac{1}{8},
+    \end{equation*}
+    if $\frac{\Var{X}}{\eps^2 (\Ex{X})^2} \leq \frac{1}{8}$, For
+    $\nu = \Frq_0 \geq N/4$, this happens if
+    $\frac{p \nu}{\eps^2 p^2 \nu^2} \leq \frac{1}{8}$. This in turn is
+    equivalent to $8/\eps^2 \leq p \nu $. This is in turn happens if
+    \begin{equation*}
+        \frac{c}{N\eps^2} \cdot \frac{N}{4} \geq \frac{8}{\eps^2},
+    \end{equation*}
+    which implies that this holds for $c=32$.  Namely, the algorithm
+    in this case would output a $(1\pm\eps)$-estimate for
+    $\cardin{S}$.
+
+    If the sample get bigger than $8T$, then the above readily implies
+    that with probability at least $7/8$, the size of $S$ is at least
+    $(1-\eps)8T/p > 2N$, Namely, the output of the algorithm is
+    correct in this case.~
+\end{proof}
+  
+\begin{lemma}
+    \lemlab{f:e:0:resolution}%
+    %
+    Let $\eps \in (0,1/4)$ and $\BadProb \in (0,1)$.  Given
+    $O(\eps^{-2} \log \BadProb^{-1})$ space, and a parameter $N$, and
+    the task is to estimate $\Frq_0$ of $\STRM$, given that
+    $\Frq_0 > N/4$.  Then, there is an algorithm that would output one
+    of the following:
+    \begin{compactenumA}
+        \item $\Frq_0 > 2N$.
+        \item Output a number $\rho$ such that
+        $(1-\eps)\Frq_0 \leq \rho \leq (1+\eps)\Frq_0$.
+    \end{compactenumA}
+    (Note, that the two options are not disjoint.)  The output of this
+    algorithm is correct, with probability $\geq 1- \BadProb$.
+\end{lemma}
+
+\begin{proof}
+    We run $O( \log \BadProb^{-1})$ copies of the of
+    \lemref{estimator}. If half of them returns that $\Frq_0 > 2N$,
+    then the algorithm returns that $\Frq_0 > 2N$. Otherwise, the
+    algorithm returns the median of the estimates returned, and return
+    it as the desired estimated. The correctness readily follows by a
+    repeated application of Chernoff's inequality.
+\end{proof}
+
+
+\begin{lemma}
+    Let $\eps \in (0,1/4)$.  Given $O(\eps^{-2} \log^2 n)$ space, one
+    can read the stream $\STRM$ once, and output a number $\rho$, such
+    that $(1-\eps)\Frq_0 \leq \rho \leq (1+\eps)\Frq_0$. The estimate
+    is correct with high probability (i.e., $\geq 1-1/n^{O(1)}$).
+\end{lemma}
+\begin{proof}
+    Let $N_i = 2^i$, for $i=1, \ldots, M = \ceil{\lg n}$. Run $M$
+    copies of \lemref{f:e:0:resolution}, for each value of $N_i$, with
+    $\BadProb = 1/n^{O(1)}$. Let $Y_1, \ldots, Y_M$ be the outputs of
+    these algorithms for the stream. A prefix of these outputs, are
+    going to be ``$\Frq_0 > 2N_i$'', Let $j$ be the first $Y_j$ that
+    is a number. Return this number as the desired estimate. The
+    correctness is easy -- the first estimate that is a number, is a
+    correct estimate with high probability. Since $N_M \geq n$, it
+    also follows that $Y_M$ must be a number. As such, there is a
+    first number in the sequence, and the algorithm would output an
+    estimate.
+
+    More precisely, there is an index $i$, such that
+    $N_i/4 \leq \Frq_0 \leq 2\Frq_0$, and $Y_i$ is a good estimate,
+    with high probability. If any of the $Y_j$, for $j < i$, is an
+    estimate, then it is correct (again) with high probability.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{median:estimator}
+
+   \IncFragment{Chebychev}
+   \IncFragment{chernoff_small_delta}
+   \IncFragment{k_wise_independent_mod_p}
+
+   
+%   \IncFragment{chernoff:small:delta:1}
+   % \IncFragment{normal:distribution}
+   % \IncFragment{A:N:N:PLEB:Euclidean}
+   % \IncFragment{A:N:N:PLEB:slow}
+   % \IncFragment{H:S:T:Euclidean}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{mr-ra-95}
+
+\ChapterEnd{}
+
+% -----------

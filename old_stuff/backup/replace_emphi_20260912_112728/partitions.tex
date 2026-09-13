@@ -1,0 +1,1072 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% partitions
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+% \begin{document}
+\ChapterNumPage{42}{327}
+
+\Chapter{Finite Metric Spaces and Partitions}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Finite Metric Spaces}
+
+
+
+\begin{defn}
+    A \emphi{metric space} \index{metric space} is a pair
+    $(\FMS, \DistChar)$ where $\FMS$ is a set and
+    $\DistChar: \FMS \times \FMS \rightarrow [0, \infty)$ is a
+    \emphi{metric}, satisfying the following axioms:
+    \begin{compactenumi}
+        \item $\DistChar(x,y) = 0$ $\iff$ $x =y$,
+        \item $\DistMtr{x}{y}= \DistMtr{y}{x}$, and
+        \item $\DistMtr{x}{y} + \DistMtr{y}{z} \geq \DistMtr{x}{z}$
+        (triangle inequality).
+    \end{compactenumi}
+\end{defn}
+
+The plane, $\Re^2$, with the regular Euclidean distance is a metric
+space.
+
+Of special interest is the finite case, where $\FMS$ is an $n$-point
+set. Then, the function $\DistChar$ can be specified by $\binom{n}{2}$
+real numbers. Alternatively, one can think about $(\FMS,\DistChar)$ as
+a weighted complete graph, where positive weights are specified on the
+edges, and these weights comply with the triangle inequality.
+
+Finite metric spaces rise naturally from (sparse) graphs.  Indeed, let
+$\Graph=(\FMS,\Edges)$ be an undirected weighted graph defined over
+$\FMS$, and let $\dGY{x}{y}$ be the length of the shortest path
+between $x$ and $y$ in $\Graph$. It is easy to verify that
+$(\FMS, \DistChar_G)$ is a finite metric space. As such if the graph
+$\Graph$ is sparse, it provides a compact representation to the finite
+space $(\FMS, \DistChar_G)$.
+
+\begin{defn}
+    Let $(\FMS,d)$ be an $n$-point metric space. We denote the
+    \emphi{open ball} of radius $r$ about $x \in \FMS$, by
+    $\Ball(x,r) = \Set{ y \in \FMS }{ \dY{x}{y} < r }$.\index{ball}
+\end{defn}
+
+Underling our discussion of metric spaces are algorithmic
+applications. The hardness of various computational problems depends
+heavily on the structure of the finite metric space. Thus, given a
+finite metric space, and a computational task, it is natural to try to
+map the given metric space into a new metric where the task at hand
+becomes easy.
+
+\begin{example}
+    Computing the diameter of a point set is not trivial in two
+    dimensions (if one wants near linear running time), but is easy in
+    one dimension. Thus, if we could map points in two dimensions into
+    points in one dimension, such that the diameter is preserved, then
+    computing the diameter becomes easy. This approach yields an
+    efficient approximation algorithm, see \exeref{diam:approx} below.
+\end{example}
+
+Of course, this mapping from one metric space to another, is going to
+introduce error.  Naturally, one would like to minimize the error
+introduced by such a mapping.
+\begin{defn}
+    Let $(\FMS,\DistChar_\FMS)$ and $(\FMSB,\DistChar_\FMSB)$ be two
+    metric spaces. A mapping $f:\FMS \to \FMSB$ is an
+    \emphi{embedding}, and it is \emphi{$C$-Lipschitz} if
+    \begin{math}
+        \DistChar_Y\bigl(f(x),f(y) \bigr)%
+        \leq%
+        C \cdot \DistChar_\FMS(x,y)
+    \end{math}
+    for all $x,y\in \FMS$.  The mapping $f$ is
+    \emphi{$K$-bi-Lipschitz} if there exists a $C > 0$ such that
+    \begin{equation*}
+        CK^{-1} \cdot \DistChar_\FMS(x,y)%
+        \leq%
+        \DistChar_Y\bigl(f(x),f(y)\bigr)%
+        \leq%
+        C\cdot
+        \DistChar_\FMS(x,y),
+    \end{equation*}
+    for all $x,y\in \FMS$.
+    
+    The least $K$ for which $f$ is $K$-bi-Lipschitz is the
+    \emphi{distortion} of $f$, and is denoted $\Distor(f)$. The least
+    distortion with which $\FMS$ may be embedded in $\FMSB$ is denoted
+    $c^{}_\FMSB(\FMS)$.  \index{Lipschitz}
+    \index{Lipschitz!bi-Lipschitz} \index{distortion}
+\end{defn}
+
+Informally, if $f:\FMS \to \FMSB$ has distortion $K$, then the
+distances in $\FMS$ and $f(\FMS) \subseteq \FMSB$ are the same up to a
+factor of $K$ (one might need to scale up the distances by some
+constant $C$).
+
+
+
+There are several powerful results about low distortion embeddings
+that would be presented:
+\begin{compactenumI}
+    \smallskip%
+    \item \textbf{Probabilistic trees}. Every finite metric can be randomly
+    embedded into a tree such that the ``expected'' distortion for a
+    specific pair of points is $O( \log n)$.
+
+    \smallskip%
+    \item \textbf{Bourgain embedding}. Any $n$-point metric space can be
+    embedded into (finite dimensional) euclidean metric space with
+    $O( \log n )$ distortion.
+
+    \smallskip%
+    \item \textbf{Johnson-Lindenstrauss lemma}. Any $n$-point set in
+    Euclidean space with the regular Euclidean distance can be
+    embedded into $\Re^k$ with distortion $(1+\eps)$, where
+    $k = O(\eps^{-2} \log n)$.
+\end{compactenumI}
+
+
+
+\section{Examples} 
+
+
+\paragraph*{What is distortion?}
+When considering a mapping $f:\FMS \rightarrow \Re^d$ of a metric
+space $(\FMS, \DistChar)$ to $\Re^d$, it would useful to observe that
+since $\Re^d$ can be scaled, we can consider $f$ to be an expansion
+(i.e., no distances shrink).  Furthermore, we can assume that there is
+at least one pair of points $x, y \in \FMS$, such that
+$\DistChar(x,y) = \dist{x-y}$. As such, we have
+$\Distor(f) = \max_{x,y} \frac{\dist{x - y}}{\DistChar(x,y)}$.
+
+%\begin{center}
+%\end{center}
+
+\bigskip%
+\noindent%
+\begin{minipage}{0.85\linewidth}
+\paragraph*{Why is distortion necessary?}
+Consider the a graph $\Graph=(\Vertices,\Edges)$ with one vertex $s$
+connected to three other vertices $a, b, c$, where the weights on the
+edges are all one (i.e., $\Graph$ is the star graph with three leafs).
+We claim that $\Graph$ can not be embedded into Euclidean space with
+distortion $\leq \sqrt{2}$.  Indeed, consider the associated metric
+space $(\Vertices,\DistChar_G)$ and an (expansive) embedding
+$f: \Vertices \rightarrow \Re^d$.
+\end{minipage}%
+\begin{minipage}{0.15\linewidth}
+    \hfill%
+    {\includegraphics{\File{figs/star}}}
+\end{minipage}
+\smallskip%
+
+Consider the triangle formed by $\triangle = a'b' c'$, where
+$a' = f(a), b'= f(b)$ and $c' =f(c)$. Next, consider the following
+quantity $\max \pth{ \dist{a'-s'},\dist{b'-s'},\dist{c'-s'}}$ which
+lower bounds the distortion of $f$. This quantity is minimized when
+$r= \dist{a'-s'}=\dist{b'-s'}=\dist{c'-s'}$. Namely, $s'$ is the
+center of the smallest enclosing circle of $\triangle$. However, $r$
+is minimized when all the edges of $\triangle$ are of equal length,
+and are of length $\DistChar_G(a,b) = 2$. It follows that
+$\Distor(f) \geq r \geq 2/\sqrt{3}$.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/star_2}}
+    \caption{The equilateral triangle and its enclosing circle.}
+    \figlab{star:2}
+\end{figure}
+This quantity is minimized when
+$r= \dist{a'-s'}=\dist{b'-s'}=\dist{c'-s'}$. Namely, $s'$ is the
+center of the smallest enclosing circle of $\triangle$. However, $r$
+is minimized when all the edges of $\triangle$ are of equal length and
+are of length $\dGY{a}{b} = 2$. Observe that the height of the
+equilateral triangle with sidelength $2$ is $h = \sqrt{3}$, and the
+radius of its inscribing circle is $r = (2/3)h = 2 /\mysqrt{3}$; see
+\figref{star:2}. As such, it follows that
+$\Distor(f) \geq r = 2/\sqrt{3}$.
+
+Note that the above argument is independent of the target dimension
+$\hdim$. A packing argument shows that embedding the star graph with
+$n$ leaves into $\Re^\hdim$ requires distortion
+$\Omega\pth{n^{1/\hdim}}$; see \exeref{star:distortion}.  It is known
+that $\Omega(\log n)$ distortion is necessary in the worst case when
+embedding a graph into Euclidean space (this is shown using
+expanders).  A proof of distortion $\Omega\pth{ \log n / \log \log n}$
+is sketched in the bibliographical notes.
+
+\subsection{Hierarchical Tree Metrics}
+
+The following metric is quite useful in practice, and nicely
+demonstrate why algorithmically finite metric spaces are useful.
+\begin{defn}
+    \index{Hierarchically well-separated tree}
+    \index{HST}
+    \emphi{Hierarchically well-separated tree} (HST) is a metric space
+    defined on the leaves of a rooted tree $T$. To each vertex $u\in
+    T$ there is associated a label $\Delta_u \ge 0$ such that
+    $\Delta_u=0$ if and only if $u$ is a leaf of $T$.  The labels are
+    such that if a vertex $u$ is a child of a vertex $v$ then
+    $\Delta_u\leq \Delta_v$. The distance between two leaves $x,y\in
+    T$ is defined as $\Delta_{\lca(x,y)}$, where $\lca(x,y)$ is the
+    least common ancestor of $x$ and $y$ in $T$.
+    
+    A HST $T$ is a \emphi{$k$-HST} if for a vertex $v \in T$, we have
+    that $\Delta_v \leq \Delta_{\parent(v)}/k$, where $\parent(v)$ is
+    the parent of $v$ in $T$.
+
+    \deflab{hst}
+\end{defn}
+
+Note that a HST is a very limited metric. For example, consider the
+cycle $G = C_n$ of $n$ vertices, with weight one on the edges, and
+consider an expansive embedding $f$ of $\Graph$ into a HST $\HST$. It is easy
+to verify, that there must be two consecutive nodes of the cycle, which
+are mapped to two different subtrees of the root $r$ of $\HST$. Since
+$\HST$ is expansive, it follows that $\Delta_r \geq n/2$. As such,
+$\Distor(f) \geq n/2$. Namely, HSTs fail to faithfully represent even
+very simple metrics.
+
+ 
+
+
+\subsection{Clustering}
+\seclab{clustering}
+
+One natural problem we might want to solve on a graph (i.e., finite
+metric space) $(\FMS,\DistChar)$ is to partition it into clusters. One
+such natural clustering is the \emphi{$k$-median clustering}, where we
+would like to choose a set $C \subseteq \FMS$ of $k$ centers, such
+that
+$\MdPrc_C(\FMS,\DistChar) = \sum_{\pntA \in \FMS} \DistChar(\pntA, C)$
+is minimized, where
+$\DistChar(\pntA,C) = \min_{c \in C} \DistChar(\pntA, c)$ is the
+distance of $\pntA$ to its closest center in $C$.
+
+It is known that finding the optimal $k$-median clustering in a
+(general weighted) graph is NP-complete. As such, the best we can hope
+for is an approximation algorithm. However, if the structure of the
+finite metric space $(\FMS,\DistChar)$ is simple, then the problem can be
+solved efficiently. For example, if the points of $\FMS$ are on the
+real line (and the distance between $a$ and $b$ is just
+$\cardin{a-b}$), then $k$-median can be solved using dynamic
+programming.
+
+Another interesting case is when the metric space $(\FMS,\DistChar)$ is a
+HST. Is not too hard to prove the following lemma. See
+\exeref{k:median:clustering}.
+\begin{lemma}
+    Let $(\FMS,\DistChar)$ be a HST defined over $n$ points, and let $k >
+    0$ be an integer. One can compute the optimal $k$-median
+    clustering of $\FMS$ in $O(k^2 n )$ time.
+
+    \lemlab{k:median}
+\end{lemma}
+
+Thus, if we can embed a general graph $\Graph$ into a HST $\HST$, with low
+distortion, then we could approximate the $k$-median clustering on $\Graph$
+by clustering the resulting HST, and ``importing'' the resulting
+partition to the original space. The quality of approximation, would
+be bounded by the distortion of the embedding of $\Graph$ into $\HST$.
+
+
+
+\section{Random Partitions}
+
+Let $(\FMS,d)$ be a finite metric space. Given a partition
+$P=\brc{C_1,\ldots,C_m}$ of $\FMS$, we refer to the sets $C_i$ as
+\emphi{clusters}. We write $\mathcal{P}_\FMS$ for the set of all partitions of
+$\FMS$. For $x\in \FMS$ and a partition $P\in \mathcal{ P}_\FMS$ we denote by
+$P(x)$ the unique cluster of $P$ containing $x$. Finally, the set of all
+probability distributions on $\mathcal{P}_\FMS$ is denoted $\mathcal{D}_\FMS$.
+
+The following partition scheme is due to \cite{ckr-aazep-04}.
+
+\newcommand{\PFigPage}[1]{%
+   \IncludeGraphics%
+   [page=#1,width=0.22\linewidth]%
+   {\File{figs/ckr_partition}}%
+}
+
+\begin{figure}[t]    
+    \PFigPage{1}%
+    \hfill%
+    \PFigPage{2}%
+    \hfill%
+    \PFigPage{3}%
+    \hfill%
+    \PFigPage{4}%
+
+    \smallskip%
+    
+    \PFigPage{5}%
+    \hfill%
+    \PFigPage{6}%
+    \hfill%
+    \PFigPage{7}%
+    \hfill%
+    \PFigPage{8}%
+
+    \smallskip%
+
+    \PFigPage{9}%
+    \hfill%
+    \PFigPage{10}%
+    \hfill%
+    \PFigPage{11}%
+    \hfill%
+    \PFigPage{12}%
+
+
+    \caption{An example of the partition of a square (induced by a set
+       of points) as described in \secref{partitions}.}
+    \figlab{partition:square}
+\end{figure}
+
+\begin{figure}[t]
+    \centerline{%
+       \IncludeGraphics%
+       [page=13,width=0.22\linewidth]%
+       {\File{figs/ckr_partition}}%
+    }%
+    \caption{The resulting partition.}
+\end{figure}
+
+
+\subsection{Constructing the partition}
+\seclab{partitions}
+
+Consider a given metric space $(\FMS, \DistChar)$, where $\FMS$ is a
+set of $n$ points.
+
+Let $\Delta = 2^u$ be a prescribed parameter, which is the required
+diameter of the resulting clusters.  Choose, uniformly at random, a
+permutation $\pi$ of $\FMS$ and a random value $\alpha \in
+\pbrcS{\nfrac{1}{4},\nfrac{1}{2}}$. Let $R = \alpha \Delta$, and
+observe that it is uniformly distributed in the interval $[\Delta/4,
+\Delta/2]$.
+
+The partition is now defined as follows: A point $x\in \FMS$ is assigned
+to the cluster $C_y$ of $y$, where $y$ is the first point in the
+permutation in distance $\leq R$ from $x$. Formally,
+\begin{equation*}
+C_y = \brc{ x \in \FMS \sep{ x \in \Ball(y, R) \textrm { and } \pi(y)
+      \leq \pi(z) \textrm{ for all $z \in \FMS$ with } x \in \Ball(z,
+      R)}}.
+\end{equation*}
+Let $P = \{C_y\}_{y \in \FMS}$ denote the resulting partition.
+
+Here is a somewhat more intuitive explanation: Once we fix the radius
+of the clusters $R$, we start scooping out balls of radius $R$
+centered at the points of the random permutation $\pi$. At the $i$\th
+stage, we scoop out only the remaining mass at the ball centered at
+$x_i$ of radius $r$, where $x_i$ is the $i$\th point in the random
+permutation.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Properties}
+
+The following lemma quantifies the probability of a (crystal) ball of
+radius $t$ centered at a point $x$ is fully contained in one of the
+clusters of the partition? (Otherwise, the crystal ball is of course
+broken.)
+
+\begin{lemma}
+    \lemlab{FRT}%
+    %
+    Let $(\FMS,d)$ be a finite metric space, $\Delta = 2^u$ a prescribed
+    parameter, and let $P$ be the partition of $\FMS$ generated by the
+    above random partition. Then the following holds:
+    \begin{compactenumi}
+        \item For any $C \in P$, we have $\diam(C) \leq \Delta$.
+    
+        \item Let $x$ be any point of $\FMS$, and $t$ a parameter $\leq
+        \Delta/8$.  Then,
+        \begin{equation*}
+            \Prob{\bigl. \Ball(x,t) \nsubseteq P(x)}%
+            \leq%
+            \frac{8t}{\Delta} \ln \frac{b}{a},
+        \end{equation*}
+        where $a = |\Ball(x, \Delta/8)|$, and
+        $b = |\Ball(x, \Delta)|$.
+    \end{compactenumi}
+\end{lemma}
+\begin{proof}
+    Since $C_y \subseteq \Ball(y, R)$, we have that $\diam(C_y) \leq
+    \Delta$, and thus the first claim holds.
+        
+    Let $U$ be the set of points of $\Ball(x, \Delta)$, such that $w
+    \in U$ iff $\Ball(w,R) \cap \Ball(x,t) \ne \emptyset$.  Arrange
+    the points of $U$ in increasing distance from $x$, and let $w_1,
+    \ldots, w_{b'}$ denote the resulting order, where $b'=
+    \cardin{U}$.  Let $I_k = [d(x, w_k)-t, d(x,w_k)+t]$ and write
+    $\Event_k$ for the event that $w_k$ is the first point in $\pi$
+    such that $\Ball(x,t) \cap C_{w_k} \neq \emptyset$, and yet
+    $\Ball(x,t) \nsubseteq C_{w_k}$.  Note that if $w_k \in \Ball(x,
+    \Delta/8)$, then $\Prob{\Event_k} = 0$ since $\Ball(x, t)
+    \subseteq \Ball(x, \Delta/8) \subseteq \Ball(w_k, \Delta/4)
+    \subseteq \Ball(w_k, R)$.
+    
+    In particular, $w_1, \ldots, w_a \in \Ball(x,\Delta/8)$ and as
+    such $\Prob{ \Event_1} = \cdots = \Prob{ \Event_a} = 0$.  Also,
+    note that if $\DistChar(x, w_k)< R- t$ then $\Ball(w_k, R)$ contains
+    $\Ball(x, t)$ and as such $\Event_k$ can not happen. Similarly, if
+    $\DistChar(x, w_k) > R + t$ then $\Ball(w_k, R) \cap \Ball(x, t) =
+    \emptyset$ and $\Event_k$ can not happen. As such, if $\Event_k$
+    happen then $R-t \leq \DistChar(x,w_k) \leq R+t$. Namely, if
+    $\Event_k$ happen then $R \in I_k$. Namely, $\Prob{ \Event_k } =
+    \Prob{ \Event_k \cap (R \in I_k) } = \Prob{R \in I_k} \cdot \Prob{
+       \Event_k\,|\,R \in I_k}$. Now, $R$ is uniformly distributed in
+    the interval $[\Delta/4, \Delta/2]$, and $I_k$ is an interval of
+    length $2t$. Thus, $\Prob{R \in I_k} \leq 2t/(\Delta/4) =
+    8t/\Delta$. 
+    
+    Next, to bound $\Prob{ \Event_k\,|\,R \in I_k}$, we observe that
+    $w_1, \ldots, w_{k-1}$ are closer to $x$ than $w_k$ and their
+    distance to $\Ball(x,t)$ is smaller than $R$. Thus, if any of them
+    appear before $w_k$ in $\pi$ then $\Event_k$ does not
+    happen. Thus, $\Prob{ \Event_k\,|\,R \in I_k}$ is bounded by the
+    probability that $w_k$ is the first to appear in $\pi$ out of
+    $w_1, \ldots, w_k$. But this probability is $1/k$, and thus
+    $\Prob{ \Event_k\,|\,R \in I_k} \leq 1/k$.
+    
+    We are now ready for the kill. Indeed,
+    \begin{align*}
+      \Prob{\Ball(x,t) \nsubseteq P(x)}%
+      &=%
+        \sum_{k=1}^{b'} \Prob{\Event_k} = \sum_{k=a+1}^{b'} \Prob{\Event_k}
+        =%
+        \sum_{k=a+1}^{b'} \Prob{R \in I_k} \cdot \Prob{\mathcal
+        E_k\,|\,R \in I_k}     %
+      \\&
+      \leq%
+      \sum_{k=a+1}^{b'} \frac{8t}{\Delta} \cdot \frac{1}{k}%
+      \leq%
+      \frac{8t}{\Delta} \ln \frac{b'}{a}%
+      \leq%
+      \frac{8t}{\Delta} \ln \frac{b}{a},
+    \end{align*}
+    since $\sum_{k=a+1}^b \frac{1}{k} \leq \int_{a}^b \frac{dx}{x} =
+    \ln \frac{b}{a}$ and $b' \leq b$.
+\end{proof}
+
+
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+
+\section{Probabilistic embedding into trees}
+
+In this section, given $n$-point finite metric $(\FMS,\DistChar)$. we
+would like to embed it into a HST. As mentioned above, one can verify
+that for any embedding into HST, the distortion in the worst case is
+$\Omega(n)$.  Thus, we define a randomized algorithm that embed
+$(\FMS,d)$ into a tree. Let $T$ be the resulting tree, and consider
+two points $x,y \in \FMS$. Consider the \emphi{random variable}
+$\DistChar_T(x,y)$. We constructed the tree $T$ such that distances never
+shrink; i.e.  $\DistChar(x,y) \leq \DistChar_T(x,y)$. The \emphi{probabilistic
+   distortion} of this embedding is $\max_{x,y}
+\Ex{\frac{\DistChar_T(x,y)}{\DistChar(x,y)}}$.  Somewhat surprisingly, one can
+find such an embedding with logarithmic probabilistic distortion.
+
+
+
+
+\begin{theorem}
+    Given $n$-point metric $(\FMS,d)$ one can randomly embed it into a
+    $2$-HST  with probabilistic distortion $\leq 24 \ln n$.
+
+    \thmlab{H:S:T}
+\end{theorem}
+
+\begin{proof}
+    The construction is recursive. Let $\diam(P)$, and
+    compute a random partition of $\FMS$ with cluster diameter
+    $\diam(P)/2$, using the construction of \secref{partitions}. We
+    recursively construct a $2$-HST for each cluster, and hang the
+    resulting clusters on the root node $v$, which is marked by
+    $\Delta_v = \diam(P)$. Clearly, the resulting tree is a $2$-HST.
+    
+    For a node $v \in T$, let $\FMS(v)$ be the set of points of $\FMS$
+    contained in the subtree of $v$.
+
+    For the analysis, assume $\diam(P)=1$, and consider two points
+    $x,y \in \FMS$. We consider a node $v \in T$ to be in level $i$ if
+    $\level(v) = \ceil{\lg \Delta_v } =i$. The two points $x$ and $y$
+    correspond to two leaves in $T$, and let $\widehat{u}$ be the least common
+    ancestor of $x$ and $y$ in $t$. We have $\DistChar_T(x,y) \leq
+    2^{\level(v)}$. Furthermore, note that along a path the levels are
+    strictly monotonically increasing.
+    
+    Being more conservative, let $w$ be the first ancestor of $x$,
+    such that $\Ball = \Ball \bigl( x,\DistChar(x,y) \bigr)$ is not
+    completely contained in $\FMS({u_1}), \ldots, \FMS({u_m})$, where
+    $u_1, \ldots, u_m$ are the children of $w$. Clearly,
+    $\level(w) > \level\pth{\widehat{ u}}$. Thus,
+    $\DistChar_T(x,y) \leq 2^{\level(w)}$.
+    
+    Consider the path $\sigma$ from the root of $T$ to $x$, and let
+    $\Event_i$ be the event that $\Ball$ is not fully contained in
+    $\FMS(v_i)$, where $v_i$ is the node of $\sigma$ of level $i$ (if
+    such a node exists). Furthermore, let $Y_i$ be the indicator
+    variable which is $1$ if $\Event_i$ is the first to happened out
+    of the sequence of events $\Event_0, \Event_{-1}, \ldots$.
+    Clearly, $\DistChar_T(x,y) \leq \sum Y_i 2^i$.
+    
+    Let $t = \DistChar(x,y)$ and $j = \floor{\lg \DistChar(x,y)}$, and $n_i =
+    \cardin{\Ball(x,2^i)}$ for $i=0, \ldots, -\infty$. We have
+    \begin{equation*}
+    \Ex{ \DistChar_T(x,y)} \leq \sum_{i=j}^{0} \Ex{Y_i} 2^i \leq
+    \sum_{i=j}^{0} 2^i \Prob{ \Event_i \cap \overline{\Event_{i-1}}
+       \cap \overline{\Event_{i-1}} \cdots \overline{\Event_{0}}} \leq
+    \sum_{i=j}^{0} 2^i \cdot \frac{8t}{2^i} \ln \frac{n_i}{n_{i-3}},
+    \end{equation*}
+    by \lemref{FRT}. Thus,
+    \begin{equation*}
+    \Ex{ \DistChar_T(x,y)} \leq 8t \ln \pth{\prod_{i=j}^{0}
+       \frac{n_i}{n_{i-3}}}
+    \leq 8t \ln \pth{ n_0 \cdot n_1 \cdot n_2 }
+    \leq 24 t \ln n.
+    \end{equation*}
+    It thus follows, that the expected distortion for $x$ and $y$ is
+    $\leq 24 \ln n$.
+\end{proof}
+
+\subsection{Application: approximation algorithm for $k$-median clustering}
+
+Let $(\FMS,\DistChar)$ be a $n$-point metric space, and let $k$ be an
+integer number. We would like to compute the optimal $k$-median
+clustering. Number, find a subset $\Copt \subseteq \FMS$, such that
+$\MdPrc_{\Copt}(\FMS,\DistChar)$ is minimized, see \secref{clustering}. To
+this end, we randomly embed $(\FMS,\DistChar)$ into a HST $\HST$ using
+\thmref{H:S:T}. Next, using \lemref{k:median}, we compute the optimal
+$k$-median clustering of $\HST$. Let $C$ be the set of centers
+computed. We return $C$ together with the partition of $\FMS$ it
+induces as the required clustering.
+
+\begin{theorem}
+    Let $(\FMS,\DistChar)$ be a $n$-point metric space. One can compute in
+    polynomial time a $k$-median clustering of $\FMS$ which has
+    expected price $O\pth{ \alpha \log n }$, where $\alpha$ is the
+    price of the optimal $k$-median clustering of $(\FMS,\DistChar)$.
+\end{theorem}
+
+\begin{proof}
+    The algorithm is described above, and the fact that its running
+    time is polynomial can be easily be verified. To prove the bound
+    on the quality of the clustering, for any point $p \in \FMS$, let
+    $\CenterPnt(p)$ denote the closest point in $\Copt$ to $p$
+    according to $\DistChar$, where $\Copt$ is the set of $k$-medians
+    in the optimal clustering.  Let $C$ be the set of $k$-medians
+    returned by the algorithm, and let $\HST$ be the HST used by the
+    algorithm. We have
+    \begin{equation*}
+        \beta%
+        =%
+        \MdPrc_C(\FMS,\DistChar) \leq \MdPrc_C(\FMS,\DistChar_\HST) \leq
+        \MdPrc_{\Copt}(\FMS,\DistChar_\HST) \leq \sum_{p \in \FMS}
+        \DistChar_\HST(p, \Copt) \leq \sum_{p \in \FMS} \DistChar_\HST(p,
+        \CenterPnt(p)).
+    \end{equation*}
+    Thus, in expectation we have
+    \begin{align*}
+      \Ex{\beta}%
+      &= %
+        \Ex{ \Bigl. \smash{\sum_{p \in \FMS} \DistChar_\HST(p,
+        \CenterPnt(p))}}%
+        =%
+        \sum_{p \in \FMS} \Ex{ \DistChar_\HST(p, \CenterPnt(p))} =  \sum_{p \in
+        \FMS} O \pth{ \DistChar(p, \CenterPnt(p)) \log n }
+      \\&%
+      =%
+      O\pth{ \Bigl. \smash{ (\log n)
+      \sum_{p \in \FMS} \DistChar(p, \CenterPnt(p)) }}%
+      =%
+      O \pth{ \MdPrc_{\Copt}(\FMS,\DistChar) \log n},
+    \end{align*}
+    by linearity of expectation and \thmref{H:S:T}.
+\end{proof}
+
+
+
+
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+
+\section{Embedding any metric space into Euclidean space}
+
+\newcommand{\PFigPageY}[2]{%
+   \IncludeGraphics%
+   [page=#1,width=0.22\linewidth]%
+   {\File{figs/#2}}%
+}
+\begin{figure}
+    \PFigPageY{1}{partition_0_1_a}%
+    \hfill%
+    \PFigPageY{1}{partition_0_1_b}%
+    \hfill%
+    \PFigPageY{1}{partition_0_1_c}%
+    \hfill%
+    \PFigPageY{1}{partition_0_1_d}%
+
+    \caption{Examples of the sets resulting from the partition of
+       \figref{partition:square} and taking clusters into a set with
+       probability $1/2$. }
+\end{figure}
+
+\begin{lemma}
+    Let $(\FMS,\DistChar)$ be a metric, and let $Y \subset \FMS$. Consider
+    the mapping $f:\FMS \rightarrow \Re$, where $f(x) = \DistChar(x,Y)= 
+    \min_{y \in Y} \DistChar( x, y)$. Then for any $x,y \in \FMS$, we have
+    $\cardin{f(x) - f(y)} \leq \DistChar(x,y)$. Namely $f$ is
+    nonexpansive.
+\end{lemma}
+
+\begin{proof}
+    Indeed, let $x'$ and $y'$ be the closet points of $Y$, to $x$ and
+    $y$, respectively. Observe that
+    \begin{equation*}
+        f(x)%
+        =%
+        \DistChar(x, x')%
+        \leq%
+        \DistChar(x,y')%
+        \leq%
+        \DistChar( x,y) + \DistChar(y, y')%
+        =%
+        \DistChar(x,y) + f(y)
+    \end{equation*}
+    by the triangle inequality. Thus, $f(x) - f(y) \leq \DistChar(x,y)$.
+    By symmetry, we have $f(y) - f(x) \leq \DistChar(x,y)$. Thus,
+    $\cardin{f(x) - f(y)} \leq \DistChar(x,y)$.
+\end{proof}
+
+
+\subsection{The bounded spread case}
+
+Let $(\FMS,\DistChar)$ be a $n$-point metric. The \emphi{spread} of $\FMS$,
+denoted by
+\begin{equation*}
+    \Spread(\FMS)%
+    =%
+    \frac{\diam(\FMS)}{\min_{x,y \in \FMS, x \ne y} \DistChar(x,y)},
+\end{equation*}
+ is the ratio between the diameter of $\FMS$
+and the distance between the closest pair of points.
+
+\begin{theorem}
+    \thmlab{Bourgain:weak:spread}%
+    %
+    Given a $n$-point metric $\FMSC = (\FMS,d)$, with spread
+    $\Spread$, one can embed it into Euclidean space $\Re^k$ with
+    distortion $O\bigl( \sqrt{\ln \Phi} \ln n\bigr)$, where
+    $k= O \pth{ \ln \Phi \ln n}$.
+\end{theorem}
+
+\begin{proof}
+    Assume that $\diam(\FMSC) = \Spread$ (i.e., the smallest distance
+    in $\FMSC$ is $1$), and let $r_i = 2^{i-2}$, for $i=1,\ldots,
+    \alpha$, where $\alpha=\ceil{\lg \Spread}$.  Let $P_{i,j}$ be a
+    random partition of $P$ with diameter $r_i$, using
+    \thmref{H:S:T}, for $i=1,\ldots, \alpha$ and $j=1,\ldots, \beta$,
+    where $\beta = \ceil{ c \log n}$ and $c$ is a large enough
+    constant to be determined shortly.
+    
+    For each cluster of $P_{i,j}$ randomly toss a coin, and let
+    $V_{i,j}$ be the all the points of $\FMS$ that belong to clusters
+    in $P_{i,j}$ that got '$T$' in their coin toss. For a point $u \in
+    x$, let
+    \begin{equation*}
+        f_{i,j}(x)%
+        =%
+        \DistChar(x, \FMS \setminus V_{i,j})%
+        =%
+        \min_{v \in \FMS \setminus V_{i,j}} \DistChar(x,v),    
+    \end{equation*}
+    for $i=0,\ldots, m$
+    and $j=1,\ldots, \beta$. Let $F: \FMS \rightarrow \Re^{(m+1) \cdot
+       \beta}$ be the embedding, such that
+    \begin{equation*}
+        F(x)%
+        =%
+        \bigl(
+        \underbrace{f_{0,1}(x), f_{0,2}(x), \ldots,
+           f_{0,\beta}(x)}_{\text{first n resolution block}},
+        f_{1,1}(x),
+        f_{1,2}(x),
+        \ldots, f_{1,\beta}(x), \ldots, f_{m,1}(x), f_{m,2}(x), \ldots,
+        f_{\alpha,\beta}(x)\bigr).        
+    \end{equation*}
+
+    
+    Next, consider two points $x,y \in \FMS$, with distance $\phi=
+    \DistChar(x,y)$. Let $k$ be an integer such that $r_u \leq \phi/2 \leq
+    r_{u+1}$. Clearly, in any partition of $P_{u,1}, \ldots,
+    P_{u,\beta}$ the points $x$ and $y$ belong to different clusters.
+    Furthermore, with probability half $x \in V_{u,j}$ and $y \notin
+    V_{u,j}$ or $x \notin V_{u,j}$ and $y \in
+    V_{u,j}$, for $1 \leq j \leq \beta$.
+    
+    Let $\Event_j$ denote the event that $\Ball(x,\rho) \subseteq
+    V_{u,j}$ and $y \notin V_{u,j}$, for $j=1,\ldots, \beta$, where
+    $\rho=\phi /(64 \ln n)$. By \lemref{FRT}, we have
+    \begin{equation*}
+    \Prob{\Ball(x,\rho) \nsubseteq P_{u,j}(x) } \leq \frac{8\rho}{r_u}
+    \ln n \leq \frac{\phi}{8r_u}
+    \leq 1/2.
+    \end{equation*}
+    Thus, 
+    \begin{align*}
+      \Prob{\Event_j}%
+      &=%
+        \Prob{\pth{\Ball(x,\rho) \subseteq
+        P_{u,j}(x) \MakeBig }
+        \cap \pth{x \in V_{u,j}} \cap \pth{ y \notin V_{u,j}} }%
+      \\&%
+      =%
+      \Prob{\Ball(x,\rho) \subseteq P_{u,j}(x) } \cdot 
+      \Prob{ x \in V_{u,j}} \cdot
+      \Prob{ y \notin V_{u,j} } \geq 1/8,
+    \end{align*}
+    since those three events are independent.  Notice, that if
+    $\Event_j$ happens, than $f_{u,j}(x) \geq \rho$ and
+    $f_{u,j}(y)=0$.
+    
+    Let $X_j$ be an indicator variable which is $1$ if $\Event_j$
+    happens, for $j=1,\ldots,\beta$. Let $Z = \sum_j X_j$, and we have
+    $\mu = \Ex{Z } = \Ex{ \sum_j X_j} \geq \beta/8$. Thus, the
+    probability that only $\beta/16$ of
+    $\Event_1, \ldots, \Event_\beta$ happens, is
+    $\Prob{Z < (1-1/2)\Ex{Z}}$. By the Chernoff inequality, we have
+    $\Prob{Z < (1-1/2)\Ex{Z}} \leq \exp \pth{ - \mu 1/(2\cdot 2^2)} =
+    \exp \pth{ -\beta/64} \leq 1/n^{10}$, if we set $c=640$.
+    
+    Thus, with high probability
+    \begin{equation*}
+    \dist{F(x) - F(y)} \geq \sqrt{\sum_{j=1}^{\beta} \pth{f_{u,j}(x) -
+          f_{u,j}(y)}^2 }\geq \sqrt{ \rho^2 \frac{\beta}{16}} = 
+    \sqrt{\beta} \frac{\rho}{4} = \phi \cdot \frac{\sqrt{\beta}}{256
+          \ln n}.
+    \end{equation*}    
+    On the other hand, $\cardin{f_{i,j}(x) - f_{i,j}(y)} \leq
+    \DistChar(x,y) = \phi \leq 64 \rho \ln n$. Thus,
+    \begin{equation*}
+    \dist{F(x) - F(y)} \leq \sqrt{\alpha \beta \pth{64 \rho \ln n}^2 } 
+    \leq 64 \sqrt{\alpha \beta} \rho \ln n = \sqrt{\alpha \beta} \cdot
+    \phi.
+    \end{equation*}
+    
+    Thus, setting $G(x) = F(x) \frac{256 \ln n}{\sqrt{\beta}}$, we get
+    a mapping that maps two points of distance $\phi$ from each other
+    to two points with distance in the range $\pbrc{\phi , \phi \cdot
+       \sqrt{\alpha \beta} \cdot \frac{256 \ln n}{\sqrt{\beta}} 
+    }$. Namely, $G(\cdot)$ is an embedding with distortion $O(
+    \sqrt{\alpha} \ln n) = O( \sqrt{\ln \Phi} \ln n)$.
+
+    The probability that $\Graph$ fails on one of the pairs, is
+    smaller than $(1/n^{10}) \cdot \binom{n}{2} < 1/n^{8}$. In
+    particular, we can check the distortion of $\Graph$ for all
+    $\binom{n}{2}$ pairs, and if any of them fail (i.e., the
+    distortion is too big), we restart the process.
+\end{proof}
+
+
+
+\subsection{The unbounded spread case}
+
+Our next task, is to extend \thmref{Bourgain:weak:spread} to the case
+of unbounded spread. Indeed, let $(\FMS,d)$ be a $n$-point metric, such
+that $\diam(\FMS) \leq 1/2$. Again, we look on the different resolutions
+$r_1, r_2, \ldots$, where $r_i = 1/2^{i-1}$. For each one of those
+resolutions $r_i$, we can embed this resolution into $\beta$
+coordinates, as done for the bounded case. Then we concatenate the
+coordinates together.
+
+There are two problems with this approach: (i) the number of resulting
+coordinates is infinite, and (ii) a pair $x,y$, might be distorted a
+``lot'' because it contributes to all resolutions, not only to its
+``relevant'' resolutions.
+
+Both problems can be overcome with careful tinkering. Indeed, for a
+resolution $r_i$, we are going to modify the metric, so that it
+ignores short distances (i.e., distances $\leq r_i/n^2$).  Formally,
+for each resolution $r_i$, let $G_i =(\FMS,\widehat{E_i})$ be the
+graph where two points $x$ and $y$ are connected if $\DistChar(x,y) \leq
+r_i/n^2$.  Consider a connected component $C \in G_i$. For any two
+points $x, y \in C$, we have $\DistChar(x,y) \leq n( r_i/n^2 ) \leq
+r_i/n$. Let $\FMS_i$ be the set of connected components of $G_i$, and
+define the distances between two connected components $C, C' \in
+\FMS_i$, to be $\DistChar_i(C, C') = \DistChar(C, C') = \min_{c \in C, c' \in
+   C'} \DistChar(c, c')$.
+
+It is easy to verify that $(\FMS_i, \DistChar_i)$ is a metric space (see
+\exeref{partition:induce:metric}).  Furthermore, we can naturally
+embed $(\FMS,\DistChar)$ into $(\FMS_i, \DistChar_i)$ by mapping a point $x
+\in \FMS$ to its connected components in $\FMS_i$.  Essentially
+$(\FMS_i,\DistChar_i)$ is a snapped version of the metric $(\FMS,d)$, with
+the advantage that $\Spread\pth{ (\FMS, \DistChar_i) } = O(n^2)$. We now
+embed $\FMS_i$ into $\beta = O(\log n)$ coordinates. Next, for any
+point of $\FMS$ we embed it into those $\beta$ coordinates, by using
+the embedding of its connected component in $\FMS_i$. Let $E_i$ be the
+embedding for resolution $r_i$.  Namely, $E_i(x) = (f_{i,1}(x),
+f_{i,2}(x), \ldots, f_{i,\beta}(x))$, where $f_{i,j}(x) = \min(
+\DistChar_i(x, \FMS \setminus V_{i,j}), 2r_i )$.  The resulting embedding
+is $F(x) = \oplus E_i(x) = (E_1(x), E_2(x), \ldots, )$.
+
+Since we slightly modified the definition of $f_{i,j}(\cdot)$, we have
+to show that $f_{i,j}(\cdot)$ is nonexpansive. Indeed, consider two
+points $x,y \in \FMS_i$, and observe that
+\begin{equation*}
+\cardin{f_{i,j}(x) - f_{i,j}(y) } \leq \cardin{\DistChar_i(x, V_{i,j}) - 
+\DistChar_i(y, V_{i,j})} \leq \DistChar_i(x,y) \leq  \DistChar(x,y),
+\end{equation*}
+as a simple case analysis\footnote{Indeed, if
+   $f_{i,j}(x) < \DistChar_i(x, V_{i,j})$ and
+   $f_{i,j}(y) < \DistChar_i(x, V_{i,j})$ then $f_{i,j}(x) = 2 r_i$
+   and $f_{i,j}(y) = 2 r_i$, which implies the above inequality.  If
+   $f_{i,j}(x) = \DistChar_i(x, V_{i,j})$ and
+   $f_{i,j}(y) = \DistChar_i(x, V_{i,j})$ then the inequality
+   trivially holds. The other option is handled in a similar fashion.}
+shows.
+
+
+
+For a pair $x,y \in \FMS$, and let $\phi =\DistChar(x,y)$.  To see that
+$F(\cdot)$ is the required embedding (up to scaling), observe that, by
+the same argumentation of \thmref{Bourgain:weak:spread}, we have that
+with high probability 
+\begin{equation*}
+    \dist{F(x)- F(y)} \geq \phi \cdot \frac{\sqrt{\beta}}{256 \ln n}.
+\end{equation*}
+To get an upper bound on this distance, observe that for $i$ such that
+$r_i > \phi n^2$, we have $E_i(x) = E_i(y)$. Thus,
+\begin{align*}
+  \dist{F(x) - F(y)}^2%
+  &=%
+    \sum_i \dist{E_i(x) - E_i(y)}^2 = \sum_{i, r_i <
+    \phi n^2} \dist{E_i(x) - E_i(y)}^2\\
+  &=%
+    \sum_{i, \phi/n^2 < r_i < \phi
+    n^2 } \dist{E_i(x) - E_i(y)}^2 + \sum_{i, r_i < \phi/ n^2 }
+    \dist{E_i(x) - E_i(y)}^2 \\
+  &=%
+    \beta \phi^2 \lg \pth{n^4} +
+    \sum_{i, r_i < \phi/n^2} (2r_i)^2 \beta
+    \leq 4\beta \phi^2 \lg n + \frac{4\phi^2\beta}{n^4 }
+    \leq 5\beta \phi^2 \lg n.
+\end{align*}
+Thus, $\dist{F(x) - F(y)} \leq \phi \sqrt{5 \beta \lg n}$. We conclude,
+that with high probability, $F(\cdot)$ is an embedding of $\FMS$ into
+Euclidean space with distortion $\nfrac{\pth{\phi \sqrt{5 \beta \lg
+         n}}}{\pth{\phi \cdot \frac{\sqrt{\beta}}{256 \ln n}}} = O(
+\log^{3/2} n)$. 
+
+We still have to handle the infinite number of coordinates problem.
+However, the above proof shows that we care about a resolution $r_i$
+(i.e., it contributes to the estimates in the above proof) only if
+there is a pair $x$ and $y$ such that $r_i/n^2 \leq \DistChar(x,y) \leq r_i
+n^2$. Thus, for every pair of distances there are $O( \log n)$
+relevant resolutions. Thus, there are at most $\eta = O(n^2 \beta \log
+n) = O(n^2 \log^2 n)$ relevant coordinates, and we can ignore all the
+other coordinates. Next, consider the affine subspace $h$ that spans
+$F(P)$. Clearly, it is $n-1$ dimensional, and consider the projection
+$G:\Re^\eta \rightarrow \Re^{n-1}$ that projects a point to its
+closest point in $h$. Clearly, $G(F(\cdot))$ is an embedding with the
+same distortion for $P$, and the target space is of dimension
+$n-1$. 
+
+Note, that all this process succeeds with high probability. If it
+fails, we try again.  We conclude:
+
+\begin{theorem}[Low quality Bourgain theorem]
+    \thmlab{Bourgain:low:quality}%
+    %
+    Given a $n$-point metric $M$, one can embed it into Euclidean
+    space of dimension $n-1$, such that the distortion of the
+    embedding is at most $O(\log^{3/2} n)$.
+\end{theorem}
+
+Using the Johnson-Lindenstrauss lemma, the dimension can be further
+reduced to $O(\log n)$. Being more careful in the proof, it is
+possible to reduce the dimension to $O(\log n)$ directly.
+
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+
+
+\section{Bibliographical notes}
+
+The partitions we use are due to Calinescu \etal{}
+\cite{ckr-aazep-04}. The idea of embedding into spanning trees is due
+to Alon \etal{} \cite{akpw-gtgak-95}, which showed that one can get a
+probabilistic distortion of $2^{O \pth{\sqrt{\log n \log \log n}}}$.
+Yair Bartal realized that by allowing trees with additional vertices,
+one can get a considerably better result. In particular, he showed
+\cite{b-pamsa-96} that probabilistic embedding into trees can be done
+with polylogarithmic average distortion. He later improved the
+distortion to $O( \log n \log \log n)$ in \cite{b-aamtm-98}. Improving
+this result was an open question, culminating in the work of
+Fakcharoenphol \etal{} \cite{frt-tbaam-04} which achieve the optimal
+$O(\log n)$ distortion.
+
+Our proof of \lemref{FRT} (which is originally from
+\cite{frt-tbaam-04}) is taken from \cite{klmn-mdnem-05}. The proof of
+\thmref{Bourgain:low:quality} is by Gupta \cite{g-efm-00}.
+
+A good exposition of metric spaces is available in \Matousek{}
+\cite{m-ldg-02}. 
+
+
+\paragraph*{Embedding into spanning trees.}
+
+The above embeds the graph into a Steiner tree. A more useful
+representation, would be a random embedding into a spanning
+tree. Surprisingly, this can be done, as shown by \si{Emek} \etal
+\cite{eest-lsst-08}. This was improved to
+$O( \log n \cdot \log \log n \cdot ( \log \log \log n)^3
+)$\footnote{Truely a polyglot of logs.} by Abraham \etal
+\cite{abn-ntlss-08, abn-ntlsst-08-arxiv}.
+
+\paragraph*{Alternative proof of the tree embedding result.}
+
+Interestingly, if one does not care about the optimal distortion, one
+can get similar result (for embedding into probabilistic trees), by
+first embedding the metric into Euclidean space, then reduce the
+dimension by the Johnson-Lindenstrauss lemma, and finally, construct
+an HST by constructing a quadtree over the points. The ``trick'' is to
+randomly translate the quadtree. It is easy to verify that this yields
+$O( \log^4 n)$ distortion. See the survey by Indyk \cite{i-aaldg-01}
+for more details. This random shifting of quadtrees is a powerful
+technique that was used in getting several result, and it is a crucial
+ingredient in Arora \cite{a-ptase-98} approximation algorithm for
+Euclidean TSP.
+
+
+
+
+
+
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+%-----------------------------------------------------------------------
+
+
+\section{Exercises}
+
+\begin{exercise}[Clustering for HST]
+    \exelab{k:median:clustering}%
+    %
+    Let $(\FMS,\DistChar)$ be a HST defined over $n$ points, and let $k >
+    0$ be an integer. Provide an algorithm that computes the optimal
+    $k$-median clustering of $\FMS$ in $O(k^2 n )$ time.
+    
+    \Hint{Transform the HST into a tree where every node has only two
+       children. Next, run a dynamic programming algorithm on this
+       tree.}
+\end{exercise}
+
+
+\begin{exercise}[Partition induced metric] ~
+    \exelab{partition:induce:metric}
+
+    \begin{compactenuma}
+        \item Give a counter example to the following claim: Let
+        $(\FMS,\DistChar)$ be a metric space, and let $P$ be a
+        partition of $\FMS$. Then, the pair $(P,\DistChar')$ is a
+        metric, where
+        $\DistChar'(C, C') = \DistChar(C, C')=\min_{x \in C, y \in C'}
+        \DistChar(x,y)$ and $C, C' \in P$.
+        
+        \item Let $(\FMS,\DistChar)$ be a $n$-point metric space, and
+        consider the set
+        $U = \brc{ i \sep{ 2^i \leq \DistChar(x,y) \leq 2^{i+1},
+              \text{ for } x,y \in \FMS}}$. Prove that
+        $\cardin{U} = O(n)$. Namely, there are only $n$ different
+        resolutions that ``matter'' for a finite metric space.
+    \end{compactenuma}
+\end{exercise}
+
+
+\remove{
+\begin{exercise}
+    \exelab{HST:det:bad}%
+    %
+    Show a finite metric space, such that for any embedding into HST,
+    the distortion of the embedding is $\Omega(n)$ in the worst case.
+\end{exercise}
+}
+
+\begin{exercise}[Computing the diameter via embeddings]~
+    \exelab{diam:approx}%
+    %
+    \begin{compactenuma}
+        \item \Hardness{1} Let $\ell$ be a line in the plane, and
+        consider the embedding $f:\Re^2 \rightarrow \ell$, which is
+        the projection of the plane into $\ell$.  Prove that $f$ is
+        $1$-Lipschitz, but it is not $K$-bi-Lipschitz for any constant
+        $K$.
+        
+        \item \Hardness{3} Prove that one can find a family of
+        projections $\Family$ of size $O(1/\sqrt{\eps})$, such that for any
+        two points $x,y \in \Re^2$, for one of the projections $f \in
+        \Family$ we have $\DistChar(f(x), f(y)) \geq (1-\eps)\DistChar(x,y)$.
+        
+        \item \Hardness{1} Given a set $P$ of $n$ in the plane, given
+        a $O(n/\sqrt{\eps})$ time algorithm that outputs two points
+        $x,y \in P$, such that $\DistChar(x,y) \geq (1-\eps)\Diam(P)$,
+        where $\Diam(P) = \max_{z,w\in P} \DistChar(z,w)$ is the
+        diameter of $P$.
+        
+        \item \Hardness{2} Given $P$, show how to extract, in $O(n)$
+        time, a set $Q\subseteq P$ of size $O(\eps^{-2})$, such that
+        $\Diam(Q)\geq (1-\eps/2)\Diam(P)$. (Hint: Construct a grid of
+        appropriate resolution.)
+        
+        In particular, give an $(1-\eps)$-approximation algorithm to
+        the diameter of $P$ that works in $O(n + \eps^{-2.5})$ time.
+        (There are slightly faster approximation algorithms known for
+        approximating the diameter.)
+    \end{compactenuma}
+\end{exercise}
+
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+
+\section*{Acknowledgments}
+
+The presentation in this write-up follows closely the insightful
+suggestions of Manor Mendel.
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+
+
+
+\ChapterEnd{}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% partitions - end of file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

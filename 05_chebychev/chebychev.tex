@@ -179,7 +179,7 @@ where $\mu_X = \Ex{X}$.
     utility in scenarios where full mutual independence is impossible or
     computationally costly to construct, such as universal hashing and
     streaming algorithms.  Without going into this here, a group of
-    variables $X_1, \ldots, X_n$ are \emphi{mutually independent} (i.e.,
+    variables $X_1, \ldots, X_n$ are \emphOnly{mutually independent}\index{mutually independent} (i.e.,
     independent) if knowing the value of all variables except one, does
     not provide any information about the value of this singleton
     variable. Pairwise independence on the other hand requires this
@@ -196,7 +196,7 @@ where $\mu_X = \Ex{X}$.
 \begin{example}[Variance of a binomial distribution]
     Let $Y_1, \ldots, Y_m$ are independent random $0/1$ variables that are
     each one with probability $p$ (i.e., a single $Y_i$ is a
-    \emphi{Bernoulli random variable} taking value $1$ with probability
+    \emphOnly{Bernoulli random variable}\index{Bernoulli random variable} taking value $1$ with probability
     $p$ and $0$ with probability $1-p$).  Let $Y = \sum_{i=1}^m Y_i$, and
     observe that $Y$ has a binomial distribution with parameters $m$ and
     $p$.  That is, $Y \sim \DistBinom{m}{p}$. Thus, for all $i$, we have
@@ -375,7 +375,7 @@ $\numC$.
 
 We are given a set $U = \brc{u_1,\ldots, u_n}$ of $n$ distinct numbers. Let
 $\EBRY{U}{i}$ denote the $i$\th smallest number in $U$---that is,
-$\EBRY{U}{i}$ is the element of \emphi{rank} $i$ in $U$.
+$\EBRY{U}{i}$ is the element of \emphOnly{rank}\index{rank} $i$ in $U$.
 
 \begin{lemma}
     \lemlab{good:interval}%
@@ -675,10 +675,11 @@ in the calculations here\footnote{It is easy to verify the floor function
 algorithm clearly returns the desired element (the analysis below shows
 that the probability of running an infinite number of rounds is zero,
 which implies that the algorithm terminates almost surely\footnote{In
-   probability, \emphi{almost surely} means it happens with probability
-   $1$, so there is really no almost about it. It is probability's way of
-   politely stating there is no escape---for example, almost surely we are
-   all going to regret writing/reading this footnote.}).
+   probability, \emphOnly{almost surely}\index{almost surely} means it
+   happens with probability $1$, so there is really no almost about
+   it. It is probability's way of politely stating there is no escape---for
+   example, almost surely we are all going to regret writing/reading this
+   footnote.}).
 
 
 \paragraph*{Running time.}

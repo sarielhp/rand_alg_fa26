@@ -1,0 +1,377 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+\ChapterNumPage{4}{28}
+
+
+\Chapter{Analyzing QuickSort and Quick{}Select via Expectation}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\noindent%
+\QuotePExt{%
+   \indent%
+   NOBODY expects the Spanish Inquisition! Our chief weapon is
+   surprise...surprise and fear...fear and surprise.... Our two
+   weapons are fear and surprise...and ruthless efficiency.... Our
+   \emph{three} weapons are fear, surprise, and ruthless
+   efficiency...and an almost fanatical devotion to the Pope.... Our
+   \emph{four}...no... \emph{Amongst} our weapons.... Amongst our
+   weaponry...are such elements as fear, surprise.... }%
+{The Spanish Inquisition}%
+{ Monty Python}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{QuickSort}
+
+Let the input be a set $T = \brc{t_1,\ldots,t_n}$ of $n$ items to be
+sorted. We remind the reader that the \QuickSort{} algorithm randomly
+picks a pivot element (uniformly), splits the input into two subarrays of
+all the elements smaller than the pivot, and those larger than the pivot,
+and then it recurses on these two subarrays (the pivot is not included in
+these two subproblems). Here we will show that the expected running time
+of \QuickSort is $O(n\log n)$.
+
+
+
+
+Let $S_1, \ldots, S_n$ be the elements in their sorted order (i.e., the output
+order).  Let $X_{ij}=1$ be the indicator variable which is $1$ $\iff$
+\QuickSort{} compares $S_i$ to $S_j$, and let $p_{ij}$ denote the
+probability that this happens. Clearly, the number of comparisons
+performed by the algorithm is $C = \sum_{i<j} X_{ij}$.  By linearity of
+expectations, we have
+\begin{align*}
+  \Ex{\bigl. C}%
+  =%
+  \Ex{ \sum\nolimits_{i < j} X_{ij}}%
+  =%
+  \sum_{i < j} \Ex{X_{ij}}%
+  =%
+  \sum_{i<j} p_{ij}.
+\end{align*}
+
+We want to bound $p_{ij}$, the probability that $S_i$ is compared to
+$S_j$.  Consider the last recursive call involving both $S_i$ and
+$S_j$. Clearly, the pivot at this step must be one of $S_i,\ldots,S_j$, all
+equally likely. Indeed, $S_i$ and $S_j$ were separated in the next
+recursive call.
+
+Observe that $S_i$ and $S_j$ get compared if and only if the pivot is
+$S_i$ or $S_j$. Thus, the probability of this is $2/(j-i+1)$. Indeed,
+\begin{align*}
+  p_{ij}%
+  =%
+  \ProbCond{S_i\text{ or }S_j \text{ picked}}%
+  { \text{picked pivot from } S_i,\ldots, S_j}%
+  =%
+  \frac{2}{j-i+1}.
+\end{align*}
+
+Thus,
+\begin{align*}
+    \sum_{i=1}^n \sum_{j>i} p_{ij}
+    &= \sum_{i=1}^n \sum_{j>i} \frac{2}{j-i+1}
+    = \sum_{i=1}^n \sum_{k=1}^{n-i+1} \frac{2}{k} \\
+    &\le 2\sum_{i=1}^n \sum_{k=1}^{n} \frac{1}{k}
+    \le 2 n H_n \le n + 2n \ln n ,
+\end{align*}
+where $H_n$ is the \emphi{harmonic number}\footnote{Using integration
+   to bound summation, we have $H_n \leq 1 + \int_{x=1}^{n}
+   \frac{1}{x} dx \leq 1 + \ln n$.  Similarly, $H_n \geq
+   \int_{x=1}^{n} \frac{1}{x} dx = \ln n$.}
+\begin{math}
+    H_n = \sum_{i=1}^n {1}/{i}.
+\end{math}
+We thus proved the following result.
+
+\begin{lemma}
+    \QuickSort{} performs in expectation at most $n + 2n \ln n$
+    comparisons, when sorting $n$ elements.
+\end{lemma}
+
+Note that this holds for all inputs. No assumption on the input is
+made. Similar bounds holds not only in expectation, but also with high
+probability.
+
+This raises the question of how the algorithm pick a random element?  We
+assume we have access to a random source that can get us a number between
+$1$ and $n$ uniformly.
+
+\chgY{Note, that}{Note that} the algorithm always works, but it might take quadratic
+time in the worst case.
+
+
+\begin{remark}[Wait, wait, wait]
+    Let us do the key argument in the above more slowly, and more
+    carefully. \chgY{Imagine, that}{Imagine that} before running \QuickSort{} we choose for
+    every element a random priority, which is a real number in the
+    range $[0,1]$. Now, we re-implement \QuickSort{} such that it
+    always \chgY{pick}{picks} the element with the lowest random priority (in the
+    given subproblem) to be the pivot. One can verify that this
+    variant and the standard implementation have the same running
+    time. Now, $a_i$ gets compares to $a_j$ if and only if all the
+    elements $a_{i+1}, \ldots, a_{j-1}$ have random priority larger
+    than both the random priority of $a_i$ and the random priority of
+    $a_j$. But the probability that one of two elements would have the
+    lowest random-priority out of $j-i+1$ elements is $2 * 1/(j-i+1)$,
+    as claimed.
+\end{remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Section{Quick{}Select{}: Median selection in linear time}
+
+\SubSection{Analysis via expectation and indicator variables}
+
+We remind the reader that \QuickSelect receives an array
+$\Array[1\ldots n]$ of $n$ real numbers, and a number $k$, and returns the
+element of rank $k$ in the sorted order of the elements of $\Array$, see
+\figref{quick:select}.  We can of course use \QuickSort, and just return
+the $k$\th element in the sorted array, but a more efficient algorithm
+would be to modify \QuickSelect, so that it recurses on the subproblem
+that contains the element we are interested in. Formally, \QuickSelect
+chooses a random pivot, splits the array according to the pivot. This
+implies that we now know the rank of the pivot, and if its equal to
+$\median$, we return it. Otherwise, we recurse on the subproblem
+containing the required element (modifying $\median$ as we go down the
+recursion).  Namely, \QuickSelect is a modification of \QuickSort
+performing only a single recursive call (instead of two).
+
+As before, to bound the expected running time, we will bound the
+expected number of comparisons. As before, let $S_1, \ldots, S_n$ be
+the elements of $t$ in their sorted order.  Now, for $i < j$, let
+$X_{ij}$ be the indicator variable that is one if $S_i$ is being
+compared to $S_j$ during the execution of \QuickSelect. There are
+several possibilities to consider:
+\begin{compactenumi}
+    \item If $i < j < \median$: Here, $S_i$ is being compared to
+    $S_j$, if and only if the first pivot in the range $S_i, \ldots,
+    S_k$ is either $S_i$ or $S_j$.  The probability for that is
+    $2/(k-i+1)$. As such, we have that
+    \begin{align*}
+      \alpha_1%
+      &=%
+        \Ex{\smash{\sum_{i< j <\median}} X_{ij}\Bigr.}%
+        =
+        \Ex{\biggl. \smash{\sum_{i=1}^{\median-2} \sum_{j=i+1}^{\median-1}} X_{ij}}%
+        =%
+        \sum_{i=1}^{\median-2} \sum_{j=i+1}^{\median-1}
+        \frac{2}{\median-i+1}\\
+        &=%
+        \sum_{i=1}^{\median-2} \frac{2(\median-i-1)}{\median-i+1}%
+        \leq%
+        2\pth{\bigl. \median-2}.
+    \end{align*}
+    
+    \item If $\median < i < j$: Using the same analysis as above, we
+    have that $\Prob{X_{ij}=1} = 2/(j-\median+1)$. As such,
+    \begin{align*}
+        \alpha_2
+        &= \Ex{\sum_{j=\median+1}^n \sum_{i=\median+1}^{j-1}
+           X_{ij}}%
+        =%
+        \sum_{j=\median+1}^n \sum_{i=\median+1}^{j-1}
+        \frac{2}{j-\median+1}\\
+        &=%
+        \sum_{j=\median+1}^n \frac{2 (j-\median-1)}{j-\median+1}%
+        \leq%
+        2 \pth[]{\Bigl. n-\median}.
+    \end{align*}
+    
+    \item $i < \median < j$: Here, we compare $S_i$ to $S_j$ if and
+    only if the first \chgY{indicator}{pivot} \remX{Changed "indicator" to "pivot" as it refers to the element chosen.} in the range $S_i, \ldots, S_j$ is
+    either $S_i$ or $S_j$. As such, $\Ex{ X_{ij} } = \Prob{X_{ij}=1} =
+    2/(j-i+1)$.  As such, we have
+    \begin{align*}
+        \alpha_3= \Ex{\sum_{i=1}^{\median-1} \sum_{j=\median+1}^n
+           X_{ij}} = \sum_{i=1}^{\median-1} \sum_{j=\median+1}^n
+        \frac{2}{j-i+1}.
+    \end{align*}
+    Observe that for a fixed $\Delta = j-i+1$, we are going to handle
+    the gap $\Delta$ in the above summation, at most $\Delta-2$
+    times. As such, $\alpha_3 \leq \sum_{\Delta=3}^{n} \nfrac{2
+       (\Delta-2)}{\Delta} \leq 2 n$.
+    
+    \item $i=\median$.  We have $\displaystyle \alpha_4 =
+    \sum_{j=\median+1}^n\Ex{X_{ij}} =
+    \sum_{j=\median+1}^n\frac{2}{j-\median+1} = \ln n + 1$.
+    
+    \item $j=\median$.  We have $\displaystyle \alpha_5 =
+    \sum_{i=1}^{\median-1}\Ex{X_{ij}} =
+    \sum_{i=1}^{\median-1}\frac{2}{\median-i+1} \leq \ln \median +1$.
+\end{compactenumi}
+Thus, the expected number of comparisons performed by \QuickSelect is
+bounded by 
+\begin{align*}
+    \sum_i \alpha_i
+    &\leq 2(\median-2) + 2 ( n-\median)+2n+\ln n + 1 + \ln \median \\
+    &= 4n -2 + \ln n + \ln \median.
+\end{align*}
+
+\begin{theorem}
+    In expectation, \QuickSelect performs at most
+    $4n -2 + \ln n + \ln \median$ comparisons, when selecting the
+    $\median$\th element out of $n$ elements.
+\end{theorem}
+
+A different approach can reduce the number of comparisons (in
+expectation) to $1.5n + o(n)$. More on that later in the course.
+
+
+
+
+\SubSection{Analysis of Quick{}Select via conditional expectations}
+
+
+
+Consider the problem of given a set $X$ of $n$ numbers, and a
+parameter $k$, to output the $k$\th smallest number (which is the
+number with \emphi{rank} $k$ in $X$). This can be easily be done by
+modifying \QuickSort{} only to perform one recursive call.  See
+\figref{quick:select} for a pseud-code of the resulting algorithm.
+
+\begin{figure}
+    \centerline{%
+       \AlgorithmBox{%
+          \QuickSelect{}($\Array\IRY{1}{n}, k$%
+          ) \+\\
+          \CodeComment{%
+             // Input: $\Array\IRY{1}{n}$ array with $n$ numbers,
+             parameter $k$. }\\
+          \CodeComment{// Assume all numbers in $t$  are distinct.}\\
+          \CodeComment{// Task: Return $k$\th smallest number in $\Array$.}\\
+          $y \leftarrow $ random element of $\Array$.\\
+          $r \leftarrow $ rank of $y$ in $\Array$.\\
+          \If $r= k$ \Then \Return $y$\\
+          $\Array_< = $ array with all elements in $\Array$ $<$ than $y$\\
+          $\Array _> = $ all elements in $\Array$ $>$ than $y$\\
+          \CodeComment{// By assumption
+             $\cardin{\Array_<} + \cardin{\Array_>} + 1
+             = \cardin{\Array}$.}\\
+          \If $r < k$ \Then \+\\
+          \Return \QuickSelect{}( $\Array_>$, $k - r $ )\-\\
+          \Else\+\\
+          \Return \QuickSelect{}( $\Array_<$, $k$ )%
+       }%
+    }
+    \caption{\QuickSelect pseudo-code.}
+    \figlab{quick:select}
+\end{figure}
+
+Intuitively, at each iteration of \QuickSelect{} the input size
+shrinks by a constant factor, leading to a linear time algorithm.
+
+\begin{theorem}
+    Given a set $X$ of $n$ numbers, and any integer $k$, the expected
+    running time of \QuickSelect{}($X, n$) is $O(n)$.
+\end{theorem}
+\begin{proof}
+    Let $X_1 = X$, and $X_i$ be the set of numbers in the $i$\th level
+    of the recursion. Let $y_i$ and $r_i$ be the random element and
+    its rank in $X_i$, respectively, in the $i$\th iteration of the
+    algorithm. Finally, let $n_i = \cardin{X_i}$. Observe that the
+    probability that the pivot $y_i$ is in the ``middle'' of its
+    subproblem is
+    \begin{align*}
+      \alpha = \Prob{\smash{ \frac{n_i}{4} \leq r_i \leq \frac{3}{4}
+      n_i} \Bigr.}
+      \geq \frac{1}{2},
+    \end{align*}
+    and if this happens then
+    \begin{align*}
+        n_{i+1} \leq \max\pth{ r_i-1, n_{i} - r_i } \leq
+        \frac{3}{4}n_i.
+    \end{align*}
+    We conclude that 
+    \begin{align*}
+      \ExCond{ n_{i+1}}{ n_i}%
+      &\LEQ %
+        \Prob{\MakeBig y_i\text{ in the middle}} \frac{3}{4} n_i +
+        \Prob{\MakeBig y_i\text{ not in the middle}}
+        n_i\\
+        &\LEQ%
+        \alpha \frac{3}{4}n_i + \pth[]{1-\alpha} n_i%
+        \EQ%
+        n_i \pth{ 1 - \alpha / 4}%
+        \\&
+        \LEQ%
+        n_i \pth{ 1 - (1/2) / 4}%
+        \\&
+        \EQ %
+        (7/8) n_i.
+    \end{align*}
+    Now, we have that 
+    \begin{align*}
+      m_{i+1}%
+      &\EQ%
+        \Ex{n_{i+1}\MakeBig}%
+        \EQ%}
+        \Ex{\ExCond{ n_{i+1}}{ n_i}}%
+        \LEQ%
+        \Ex{(7/8)n_i}%
+        \\&
+        \EQ %
+        (7/8) \Ex{n_i}
+        \EQ%
+        (7/8) m_i
+        \EQ%
+        (7/8)^i m_0
+        \\&%
+        \EQ
+        (7/8)^i n,
+    \end{align*}
+    since for any two random variables we have that $\Ex{X} =
+    \Ex{\Ex{X \sep{ Y} }}$. In particular, the expected running time
+    of \QuickSelect is proportional to
+    \begin{align*}
+        \Ex{\sum_i n_i }%
+        =%
+        \sum_i \Ex{ \MakeBig n_i} %
+        \leq%
+        \sum_i m_i = \sum_i (7/8)^i n = O(n),
+    \end{align*}
+    as desired.
+\end{proof}
+
+\section{Bibliographical notes}
+
+The \QuickSort algorithm and the \QuickSelect algorithm (originally named
+\textsc{Find}) were introduced by Hoare \cite{h-a6q-61, h-a6f-61,
+   h-q-62}.  The elegant indicator-variable analysis of \QuickSort
+and \QuickSelect presented here is standard and can be found in the
+textbooks by Motwani and Raghavan \cite{mr-ra-95} and
+Mitzenmacher and Upfal \cite{mu-pcrpt-17}.  The continuous
+perspective using random priorities in $[0,1]$ is closely related to
+Cartesian trees and randomized search trees (treaps) by Seidel and Aragon
+\cite{sa-rst-96}.
+
+The first linear-time worst-case deterministic selection algorithm (the ``median-of-medians'' algorithm)
+was developed by Blum \etal \cite{bfprt-tbs-73}.
+Floyd and Rivest \cite{fr-etbs-75, fr-a4s-75} introduced an algorithm
+that achieves $1.5n + o(n)$ expected comparisons for median selection.
+
+
+\ChapterEnd{}
+
+% -------------------------------------------------------------------------
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: t
+% End: 
+

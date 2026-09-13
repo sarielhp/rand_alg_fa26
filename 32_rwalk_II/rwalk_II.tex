@@ -40,7 +40,7 @@ For a sequence $\sigma$ of symbols, let $\#(\sigma,X)$ be the number
 of times the symbol $X$ appears in $\sigma$.
 \begin{defn}
     A sequence/word $\sigma$ of length $2n$ elements/characters made out of two
-    symbols $X$ and $Y$, is \emphi{balanced}, if
+    symbols $X$ and $Y$, is \emphOnly{balanced}\index{balanced}, if
     \smallskip%
     \begin{compactenumI}
         \item $X$ appears $n$ times (i.e., $\#(\sigma, X) = n$),
@@ -49,13 +49,13 @@ of times the symbol $X$ appears in $\sigma$.
         least as large as the number of $Y$s.
     \end{compactenumI}
     \smallskip%
-    Such a string is known as a \emphi{Dyck word}. If $X$ and $Y$ are
+    Such a string is known as a \emphOnly{Dyck word}\index{Dyck word}. If $X$ and $Y$ are
     the open and close parenthesis characters, respectively, then the
     word is a balanced/valid parenthesis pattern.
 \end{defn}
 
 \begin{defn}
-    The \emphi{Catalan number}, denoted by $C_n$, is the number of
+    The \emphOnly{Catalan number}\index{Catalan number}, denoted by $C_n$, is the number of
     balanced strings of length $2n$.
 \end{defn}
 
@@ -63,7 +63,7 @@ There are many other equivalent definitions of Catalan number.
 
 \begin{defn}
     A sequence $\sigma$ made out of two symbols $X$ and $Y$ is
-    \emphi{dominating}, if for any non-empty prefix of $\sigma$, the
+    \emphOnly{dominating}\index{dominating}, if for any non-empty prefix of $\sigma$, the
     number of $X$s is strictly larger than the number of $Y$s.
 \end{defn}
 
@@ -381,12 +381,13 @@ arrive to $n$ in such a settings.
 \section{Markov chains}
 
 Let $\MCSpc$ denote a state space, which is either finite or
-countable.  A \emphi{Markov chain} is at one state at any given time.
-There is a \emphi{transition probability} $\MCPrb_{ij}$, which is the
+countable.  A \emphOnly{Markov chain}\index{Markov chain} is at one state at any given time.
+There is a \emphOnly{transition probability}\index{transition probability} $\MCPrb_{ij}$, which is the
 probability to move to the state $j$, if the Markov chain is currently
 at state $i$. As such, $\sum_{j} \MCPrb_{ij} = 1$ and $\forall i,j$ we
 have $0 \leq \MCPrb_{ij} \leq 1$. The matrix $\,\MCPrbM = \brc{
-   \MCPrb_{ij} }_{ij}\,$ is the \emphi{transition probabilities
+   \MCPrb_{ij} }_{ij}\,$ is the \emphOnly{transition probabilities
+   matrix}\index{transition probabilities
    matrix}.
 
 \begin{equation*}
@@ -411,12 +412,12 @@ have $0 \leq \MCPrb_{ij} \leq 1$. The matrix $\,\MCPrbM = \brc{
 The Markov chain start at an initial state $X_0$, and at each point in
 time moves according to the transition probabilities. This form a
 sequence of states $\brc{X_t}$. We have a distribution over those
-sequences. Such a sequence would be referred to as a \emphi{history}.
+sequences. Such a sequence would be referred to as a \emphOnly{history}\index{history}.
 
 Similar to Martingales, the behavior of a Markov chain in the future,
 depends only on its location $X_t$ at time $t$, and does not depends
 on the earlier stages that the Markov chain went through. This is the
-\emphi{memorylessness property} of the Markov chain, and it follows as
+\emphOnly{memorylessness property}\index{memorylessness property} of the Markov chain, and it follows as
 $\MCPrb_{ij}$ is independent of time. Formally, the memorylessness
 property is
 \begin{equation*}
@@ -430,7 +431,8 @@ property is
 The initial state of the Markov chain might also be chosen randomly in
 some cases.
 
-For states $i,j \in \MCSpc$, the \emphi{$t$-step transition
+For states $i,j \in \MCSpc$, the \emphOnly{$t$-step transition
+   probability}\index{$t$-step transition
    probability} is $\MCPrbT{i}{j}{t} = \Prob{X_t = j \sep{ X_0 =
       i}}$. The probability that we visit $j$ for the first time,
 starting from $i$ after $t$ steps, is denoted by
@@ -475,8 +477,9 @@ $\MCExSteps{i}{j} = \infty$ in this case.
     prefix balanced; that is, the number of $1$s is always bigger (or
     equal) for any prefix of this sequence.
     
-    Strings with this property are known as \emphi{Dyck words}, and
-    the number of such words of length $2m$ is the \emphi{Catalan
+    Strings with this property are known as \emphOnly{Dyck words}\index{Dyck words}, and
+    the number of such words of length $2m$ is the \emphOnly{Catalan
+       number}\index{Catalan
        number} $C_{m} = \frac{1}{m+1} \binom{2m}{m}$. As such, the
     probability of the random walk to visit $0$ for the first time
     (starting from $0$) after $2n$ steps, is
@@ -510,7 +513,7 @@ vertices, and the transition probability $\MCPrbY{i}{j}$ is the weight
 assigned to the edge $\dirEdge{i}{j}$. Note that we include only edges
 with $\MCPrbY{i}{j} > 0$.
 \begin{defn}
-    A \emphi{strong component} (or a \emph{strong connected
+    A \emphOnly{strong component}\index{strong component} (or a \emph{strong connected
        component}) of a directed graph $\Graph$ is a maximal subgraph
     $C$ of $\Graph$ such that for any pair of vertices $i$ and $j$ in
     the vertex set of $C$, there is a directed path from $i$ to $j$,
@@ -518,7 +521,7 @@ with $\MCPrbY{i}{j} > 0$.
 \end{defn}
 
 \begin{defn}
-    A strong component $C$ is a \emphi{final strong component}\, if
+    A strong component $C$ is a \emphOnly{final strong component}\index{final strong component}\, if
     there is no edge going from a vertex in $C$ to a vertex that is
     not in $C$.
 \end{defn}
@@ -532,7 +535,7 @@ state is persistent if and only if it lies in a final strong
 component.
 
 \begin{defn}
-    A Markov chain is \emphi{irreducible} if its underlying graph
+    A Markov chain is \emphOnly{irreducible}\index{irreducible} if its underlying graph
     consists of a single strong component.
 \end{defn}
 
@@ -542,7 +545,7 @@ persistent.
 \begin{defn}
     Let
     $\MCPVec{t} = \pth[]{ q_1^{(t)}, q_2^{(t)}, \ldots, q_n^{(t)} }\,$
-    be the \emphi{state probability vector} (also known as the
+    be the \emphOnly{state probability vector}\index{state probability vector} (also known as the
     distribution of the chain at time $t$), to be the row vector whose
     $i$\th component is the probability that the chain is in state $i$
     at time $t$.
@@ -555,7 +558,7 @@ The key observation is that
 Namely, a Markov chain is fully defined by $\MCPVec{0}$ and $\MCPrbM$.
 
 \begin{defn}
-    A \emphi{stationary distribution} for a Markov chain with the
+    A \emphOnly{stationary distribution}\index{stationary distribution} for a Markov chain with the
     transition matrix $\MCPrbM$ is a probability distribution $\pi$
     such that $\pi = \pi \MCPrbM$.
 \end{defn}
@@ -567,7 +570,7 @@ distribution exists, then the Markov chain, given enough time, will
 converge to the stationary distribution.
 
 \begin{defn}
-    The \emphi{periodicity} of a state $i$ is the maximum integer $T$
+    The \emphOnly{periodicity}\index{periodicity} of a state $i$ is the maximum integer $T$
     for which there exists an initial distribution $\MCPVec{0}$ and
     positive integer $a$ such that, for all $t$, if at time $t$ we
     have $q_i^{(t)} >0$ then $t$ belongs to the arithmetic progression

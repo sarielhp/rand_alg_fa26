@@ -364,12 +364,12 @@ quite surprising.
 \subsection{Upper bound}
 
 \begin{defn}
-    The \emphi{load} of a bin is the number of balls in it. The
-    \emphi{height} of a ball, is the load of the bin it was inserted
+    The \emphOnly{load}\index{load} of a bin is the number of balls in it. The
+    \emphOnly{height}\index{height} of a ball, is the load of the bin it was inserted
     into, just after it was inserted.
 \end{defn}
 
-%\newcommand{\UBLX}[1]{\Mh{u}_{\geq #1}}%
+%\newcommand{\UBLX}[1]{u_{\geq #1}}%
 
 Some notations:
 \begin{compactenumA}
@@ -389,8 +389,8 @@ Some notations:
     $\binsY{i}{t} \leq \ballsY{i}{t}$.
 \end{observation}
 
-\newcommand{\BadEvent}{\Mh{\mathcal{B}}}%
-\newcommand{\GoodEvent}{\Mh{\mathcal{G}}}%
+\newcommand{\BadEvent}{\mathcal{B}}%
+\newcommand{\GoodEvent}{\mathcal{G}}%
 
 
 Let $\BLX{i} = \binsY{i}{n}$ be the number of bins, in the end of the
@@ -715,7 +715,7 @@ be stolen from the previous ball, etc.
 \section{Escalated choices}
 
 A variant that seems to work even better in practice, is the following
-\emphi{escalated choices} algorithm: The idea is to try more than one
+\emphOnly{escalated choices}\index{escalated choices} algorithm: The idea is to try more than one
 bin only if you need to. To this end, try a random bin. If it is
 empty, then the algorithm stores the ball in it. Otherwise, the
 algorithm tries harder. In the $j$\th iteration, for $j >1$, the

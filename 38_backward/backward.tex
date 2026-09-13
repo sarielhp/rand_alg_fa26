@@ -13,7 +13,7 @@
 \Version{1.0}
 
 
-The idea of \emphi{backwards analysis} (or backward analysis) is a
+The idea of \emphOnly{backwards analysis}\index{backwards analysis} (or backward analysis) is a
 technique to analyze randomized algorithms by imagining as if it was
 running backwards in time, from output to input. Most of the more
 interesting applications of backward analysis are in Computational
@@ -207,9 +207,9 @@ improves the current distance only for few vertices.
 \begin{defn}
     \deflab{metric:space}%
     % 
-    A \emphi{metric space} is a pair $(\FMS, \DistChar)$ where $\FMS$
+    A \emphOnly{metric space}\index{metric space} is a pair $(\FMS, \DistChar)$ where $\FMS$
     is a set and $\DistChar: \FMS \times \FMS \rightarrow [0, \infty)$
-    is a \emphi{metric} satisfying the following axioms: (i)
+    is a \emphOnly{metric}\index{metric} satisfying the following axioms: (i)
     $\DistMtr{x}{y} = 0$ if and only if $x =y$, (ii)
     $\DistMtr{x}{y}=\DistMtr{y}{x}$, and (iii)
     $\DistMtr{x}{y} + \DistMtr{y}{z} \geq \DistMtr{x}{ z}$ (triangle
@@ -217,7 +217,8 @@ improves the current distance only for few vertices.
 \end{defn}
 
 For example, $\Re^2$ with the regular Euclidean distance is a metric
-space. In the following, we assume that we are given \emphi{black-box
+space. In the following, we assume that we are given \emphOnly{black-box
+   access}\index{black-box
    access} to $\DistMtrCharX{\MTR}$. Namely, given two points
 $\pnt, \pntA \in \FMS$, we assume that $\DistMtr{\pnt}{ \pntA}$ can be
 computed in constant time.
@@ -226,7 +227,8 @@ Another standard example for a finite metric space is a graph $\Graph$
 with non-negative weights $\WeightX{\cdot}$ defined on its edges.  Let
 $\distG{x}{y}$ denote the shortest path (under the given weights)
 between any $x,y \in \VerticesX{\Graph}$. It is easy to verify that
-$\distG{\cdot}{\cdot}$ is a metric.  In fact, any \emphi{finite
+$\distG{\cdot}{\cdot}$ is a metric.  In fact, any \emphOnly{finite
+   metric}\index{finite
    metric} (i.e., a metric defined over a finite set) can be
 represented by such a weighted graph.
 
@@ -236,7 +238,7 @@ represented by such a weighted graph.
     \deflab{net}%
     % 
     For a point set $\PntSet$ in a metric space with a metric
-    $\DistChar$, and a parameter $r>0$, an $r$-\emphi{net} of
+    $\DistChar$, and a parameter $r>0$, an $r$-\emphOnly{net}\index{net} of
     $\PntSet$ is a subset $\cset \subseteq \PntSet$, such that
     \begin{compactenumi}
         \item for every $\pnt, \pntA \in \cset$, $\pnt \neq \pntA$, we
@@ -349,12 +351,12 @@ is inspired to a large extent by such an analysis as in
     
     In particular, let $\Event_{i+1}$ be the event that $\delta(v)$
     changed in iteration $(i+1)$ -- we will refer to such an iteration
-    as being \emphi{active}. If iteration $(i+1)$ is active then one
+    as being \emphOnly{active}\index{active}. If iteration $(i+1)$ is active then one
     of the points of $S_i$ is $\pi_{i+1}$. However, $\pi_{i+1}$ has a
     uniform distribution over the vertices of $S_{i}$, and in
     particular, if $\Event_{i+1}$ happens then $s_{i+1} \leq s_i/2$,
     with probability at least half, and we will refer to such an
-    iteration as being \emphi{lucky}. (It is possible that
+    iteration as being \emphOnly{lucky}\index{lucky}. (It is possible that
     $s_{i+1} < s_i$ even if $\Event_{i+1}$ does not happen, but this
     is only to our benefit.)  After $O( \log n)$ lucky iterations the
     set $S_i$ is empty, and we are done. Clearly, if both the $i$\th

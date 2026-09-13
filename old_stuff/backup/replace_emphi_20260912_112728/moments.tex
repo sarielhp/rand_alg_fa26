@@ -1,0 +1,1756 @@
+% -------------------------------------------------------- moments
+% 
+% 09/24/10 - Did a pass.
+% 
+% Status: Done
+% --------------------------------------------------------
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{53}{418}
+
+
+
+
+\Chapter{Sampling and the Moments Technique}
+
+
+
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+\QuotePExt{Sun and rain and bush had made the site look old, like the
+   site of a dead civilization. The ruins, spreading over so many
+   acres, seemed to speak of a final catastrophe. But the civilization
+   wasn't dead. It was the civilization I existed in and in fact was
+   still working towards. And that could make for an odd feeling: to
+   be among the ruins was to have your time-sense unsettled. You felt
+   like a ghost, not from the past, but from the future. You felt that
+   your life and ambition had already been lived out for you and you
+   were looking at the relics of that life. You were in a place where
+   the future had come and gone.}%
+{A bend in the river}%
+{V. S. Naipaul}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+% \title{The Clarkson-Shor Technique via Exponential Decay}
+
+% \maketitle
+
+
+\section{Vertical decomposition}
+\seclab{vertical:decomposition}
+
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/arrangement}}
+    \caption{The arrangement of a set of segments in the plane.}
+    \figlab{arrangement}
+\end{figure}
+
+Given a set $\SegSet$ of $n$ segments in the plane, its
+\emphi{arrangement}, denoted by $\ArrX{\bigl.\SegSet}$, is the
+decomposition of the plane into faces, edges, and vertices. The
+\emphi{vertices} of $\ArrX{\bigl.\SegSet}$ are the endpoints, or the
+intersection points of the segments of $\SegSet$, the
+\emphic{edges}{edge} are the maximal connected portions of the
+segments not containing any vertex, and the \emphic{faces}{face} are
+the connected components of the complement of the union of the
+segments of $\SegSet$.  These definitions are depicted in
+\figref{arrangement}.
+
+\NEW{%
+   For numerical reasons (and also conceptually), a symbolic
+   representation would be better than a numerical one. Thus, an
+   intersection vertex would be represented by two pointers to the
+   segments that their intersection is this vertex. Similarly, an edge
+   would be represented as a pointer to the segment that contains it,
+   and two pointers to the vertices forming its endpoints.
+   
+   Naturally, we are assuming here that we have geometric primitives
+   that can resolve any decision problem of interest that involve a
+   few geometric entities. For example, for a given segment $\seg$ and
+   a point $\pnt$, we would be interested in deciding if $\pnt$ lies
+   vertically below $\seg$.  From a theoretical point of view, all
+   these primitives require a constant amount of computation, and are
+   ``easy''. In the real world, numerical issues and degeneracies make
+   implementing these primitives surprisingly challenging. We are
+   going to ignore this major headache here, but the reader should be
+   aware of it.
+   
+}
+
+We will be interested in computing the arrangement
+$\ArrX{\bigl.\SegSet}$ and a representation of it that makes it easy
+to manipulate. In particular, we would like to be able to quickly
+resolve questions of the type
+%\smallskip%
+\begin{compactenumi}[leftmargin=3em]
+    \item are two points in the same face?
+    \item can one traverse from one point to the other without
+    crossing any segment?
+
+\end{compactenumi}
+% \smallskip%
+The naive representation of each face as polygons (potentially with
+holes) is not conducive to carrying out such tasks, since a polygon
+might be arbitrarily complicated. Instead, we will prefer to break the
+arrangement into smaller canonical tiles.
+
+
+To this end, a \emphi{vertical trapezoid} is a quadrangle with two
+vertical sides. The breaking of the faces into such trapezoids is the
+\emphi{vertical decomposition} of the arrangement
+$\ArrX{\bigl.\SegSet}$.
+
+
+
+
+
+
+Formally, for a subset $\Sample \subseteq \SegSet$, let
+$\ArrVD{\bigl.\Sample}$ denote the \emphi{vertical decomposition} of
+the plane formed by the arrangement $\ArrX{\bigl. \Sample}$ of the
+segments of $\Sample$. This is the partition of the plane into
+interior disjoint vertical trapezoids formed by erecting vertical
+walls through each vertex of $\ArrVD{\bigl.\Sample}$.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics[scale=0.8]{\File{figs/vertical}}
+    \caption{The vertical decomposition of an arrangement of segments.}
+    \figlab{vert:decomp}
+\end{figure}
+A \emphic{vertex}{vertical decomposition!vertex} of
+$\ArrVD{\bigl.\Sample}$ is either an endpoint of a segment of
+$\Sample$ or an intersection point of two of its segments. From each
+such vertex we shoot up (similarly, down) a vertical ray till it hits
+a segment of $\Sample$ or it continues all the way to infinity.  See
+\figref{vert:decomp}.
+
+Note that a vertical trapezoid is defined by at most four segments:
+two segments defining its ceiling and floor and two segments defining
+the two intersection points that induce the two vertical walls on its
+boundary. Of course, a vertical trapezoid might be degenerate and thus
+be defined by fewer segments (i.e., an unbounded vertical trapezoid or
+a triangle with a vertical segment as one of its sides).
+
+
+Vertical decomposition breaks the faces of the arrangement that might
+be arbitrarily complicated into entities (i.e., vertical trapezoids)
+of constant complexity. This makes handling arrangements (decomposed
+into vertical trapezoid) much easier computationally.
+
+
+In the following, we assume that the $n$ segments of $\SegSet$ have
+$k$ pairwise intersection points overall, and we want to compute the
+arrangement $\Arr = \ArrX{\bigl.\SegSet}$; namely, compute the edges,
+vertices, and faces of $\ArrX{\bigl.\SegSet}$. One possible way is the
+following: Compute a random permutation of the segments of $\SegSet$:
+$\SegSet = \permut{\seg_1, \ldots, \seg_n}$. Let $\SegSet_i =
+\permut{\seg_1,\ldots, \seg_i}$ be the prefix of length $i$ of
+$\SegSet$. Compute $\ArrVD{\bigl.\SegSet_i}$ from
+$\ArrVD{\bigl.\SegSet_{i-1}}$, for $i=1, \ldots, n$.  Clearly,
+$\ArrVD{\bigl.\SegSet} = \ArrVD{\bigl.\SegSet_n}$, and we can extract
+$\ArrX{\bigl.  \SegSet }$ from it. Namely, in the $i$\th iteration, we
+insert the segment $\seg_i$ into the arrangement
+$\ArrVD{\bigl.\SegSet_{i-1}}$.
+
+This technique of building the arrangement by inserting the segments
+one by one is called \emphic{randomized incremental
+   construction}{random incremental construction}.
+
+\NEW{%
+\paragraph*{Who need these pesky arrangements anyway?}
+
+The reader might wonder who needs arrangements? As a concrete
+examples, consider a situation where you are give several maps of a
+city containing different layers of information (i.e., streets map,
+sewer map, electric lines map, train lines map, etc). We would like to
+compute the overlay map formed by putting all these maps on top of
+each other. For example, we might be interested in figuring out if
+there are any buildings lying on a planned train line, etc.
+
+More generally, think about a set of general constraints in
+$\Re^d$. Each constraint is bounded by a surface, or a patch of a
+surface. The decomposition of $\Re^d$ formed by the arrangement of
+these surfaces gives us a description of the parametric space in a way
+that is algorithmically useful. For example, finding if there is a
+point inside all the constraints, when all the constraints are induced
+by linear inequalities, is linear programming. Namely, arrangements
+are a useful way to think about any parametric space partitioned by
+various constraints.
+
+}
+
+\subsection{Randomized incremental construction (\RIC{})}
+
+\index{random incremental construction}
+
+Imagine that we had computed the arrangement $\ArrB_{i-1} =
+\ArrVD{\bigl.  \SegSet_{i-1} }$. In the $i$\th iteration we compute
+$\ArrB_i$ by inserting $\seg_i$ into the arrangement
+$\ArrB_{i-1}$. This involves splitting some trapezoids (and merging
+some others).
+
+
+\begin{figure}[t]
+    \centerline{\IncludeGraphics[scale=0.99]{\File{figs/merge}}}
+    \caption{}
+    \figlab{merge:v:d}
+\end{figure}
+
+As a concrete example, consider \figref{merge:v:d}. Here we insert
+$\seg$ in the arrangement. To this end we split the ``vertical
+trapezoids'' $\triangle \pnt \pntA \pntC$ and
+$\triangle \pntD \pntA \pntC$, each into three trapezoids. The two
+trapezoids $\TrapA$ and $\TrapB$ now need to be merged together to
+form the new trapezoid which appears in the vertical decomposition of
+the new arrangement. (Note that the figure does not show all the
+trapezoids in the vertical decomposition.)
+
+To facilitate this, we need to compute the trapezoids of $\ArrB_{i-1}$
+that intersect $\seg_i$. This is done by maintaining a \emphi{conflict
+   graph}.  Each trapezoid $\sigma \in \ArrVD{\bigl.\SegSet_{i-1}}$
+maintains a \emphi{conflict list} $\cl(\sigma)$ of \emph{all} the
+segments of $\SegSet$ that intersect its interior.  In particular, the
+conflict list of $\sigma$ cannot contain any segment of
+$\SegSet_{i-1}$, and as such it contains only the segments of $\SegSet
+\setminus \SegSet_{i-1}$ that intersect its interior.  We also
+maintain a similar structure for each segment, listing all the
+trapezoids of $\ArrVD{\bigl.\SegSet_{i-1}}$ that it currently
+intersects (in its interior). We maintain those lists with cross
+pointers, so that given an entry $(\Trap, s)$ in the conflict list of
+$\sigma$, we can find the entry $(s,\Trap)$ in the conflict list of
+$s$ in constant time.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/split}}
+    \caption{Splitting a trapezoid by a segment.}
+    \figlab{split}
+\end{figure}
+
+Thus, given $\seg_i$, we know what trapezoids need to be split (i.e.,
+all the trapezoids in $\cl(\seg_i)$).  Splitting a trapezoid $\sigma$
+by a segment $\seg_i$ (see \figref{split}) is the operation of computing a set of (at most)
+four trapezoids that cover $\sigma$ and have $\seg_i$ on their
+boundary.  We compute those new trapezoids, and next we need to
+compute the conflict lists of the new trapezoids. This can be easily
+done by taking the conflict list of a trapezoid $\sigma \in
+\cl(\seg_i)$ and distributing its segments among the $O(1)$ new
+trapezoids that cover $\sigma$. Using careful implementation, this
+requires a linear time in the size of the conflict list of $\sigma$.
+
+Note that only trapezoids that intersect $\seg_i$ in their interior
+get split. Also, we need to update the conflict lists for the segments
+(that were not inserted yet).
+
+We next sketch the low-level details involved in maintaining these
+conflict lists.  For a segment $\seg$ that intersects the interior of
+a trapezoid $\sigma$, we maintain the pair $(\seg,\sigma)$. For every
+trapezoid $\sigma$, in the current vertical decomposition, we maintain
+a doubly linked list of all such pairs that contain $\sigma$.
+Similarly, for each segment $\seg$ we maintain the doubly linked list
+of all such pairs that contain $\seg$. Finally, each such pair
+contains two pointers to the location in the two respective lists
+where the pair is being stored.
+
+It is now straightforward to verify that using this data-structure we
+can implement the required operations in linear time in the size of
+the relevant conflict lists.
+
+In the above description, we ignored the need to merge adjacent
+trapezoids if they have identical floor and ceiling -- this can be
+done by a somewhat straightforward and tedious implementation of the
+vertical decomposition data-structure, by providing pointers between
+adjacent vertical trapezoids and maintaining the conflict list sorted
+(or by using hashing) so that merge operations can be done quickly. In
+any case, this can be done in linear time in the input/output size
+involved, as can be verified.
+
+\subsubsection{Analysis}
+
+\begin{claim}
+    The (amortized) running time of constructing $\ArrB_i\,$ from
+    $\ArrB_{i-1}$ is proportional to the size of the conflict lists of
+    the vertical trapezoids in $\ArrB_i \setminus \ArrB_{i-1}$ (and
+    the number of such new trapezoids).
+\end{claim}
+\begin{proof}
+    Observe that we can charge all the work involved in the $i$\th
+    iteration to either the conflict lists of the newly created
+    trapezoids or the deleted conflict lists. Clearly, the running
+    time of the algorithm in the $i$\th iteration is linear in the
+    total size of these conflict lists. Observe that every conflict
+    gets charged twice -- when it is being created and when it is
+    being deleted. As such, the (amortized) running time in the $i$\th
+    iteration is proportional to the total length of the newly created
+    conflict lists.
+\end{proof}
+
+
+Thus, to bound the running time of the algorithm, it is enough to
+bound the expected size of the destroyed conflict lists in $i$\th
+iteration (and sum this bound on the $n$ iterations carried out by the
+algorithm). Or alternatively, bound the expected size of the conflict
+lists created in the $i$\th iteration.
+
+% \myParagraph{Expected size of $\ArrB_i$.}
+
+\begin{lemma}
+    \lemlab{expected:tau}%
+    % 
+    Let $\SegSet$ be a set of $n$ segments (in general
+    position\footnote{In this case, no two intersection points of
+       input segments are the same, no two intersection points (or
+       vertices) have the same $x$-coordinate, no two segments lie on
+       the same line, etc. Making the geometric algorithm work
+       correctly for all degenerate inputs is a huge task that can
+       usually be handled by tedious and careful implementation. Thus,
+       we will always assume general position of the input. In other
+       words, in theory all geometric inputs are inherently good,
+       while in practice they are all evil (as anybody who tried to
+       implement geometric algorithms can testify). The reader is
+       encouraged not to use this to draw any conclusions on the human
+       condition.})  with $k$ intersection points. Let $\ObjSet_i$ be
+    the first $i$ segments in a random permutation of $\ObjSet$.  The
+    expected size of $\,\ArrB_i =\ArrVD{\bigl.\SegSet_i}$, denoted by
+    $\tau(i)$ (i.e., the number of trapezoids in $\ArrB_i$), is
+    $O\pth{ i + k (i/n)^2 }$.
+\end{lemma}
+\begin{proof}
+    Consider\footnote{The proof is provided in excruciating detail to
+       get the reader used to this kind of argumentation. I would
+       apologize for this pain, but it is a minor trifle, not to be
+       mentioned, when compared to the other offenses in this book.} %
+    an intersection point $\pnt = s \cap s'$, where $s, s' \in
+    \SegSet$. The probability that $\pnt$ is present in
+    $\ArrVD{\bigl.\SegSet_i}$ is equivalent to the probability that
+    both $s$ and $s'$ are in $\SegSet_i$. This probability is
+    \begin{equation*}
+        \alpha = \frac{\binom{n-2}{i-2}}{\binom{n}{i}}%
+        = \frac{(n-2)!}{(i-2)! \, (n-i)!} \cdot \frac{i! \,
+           (n-i)!}{n!}%
+        = \frac{i(i-1)}{n(n-1)}.
+    \end{equation*}
+    
+    For each intersection point $\pnt$ in $\ArrX{\bigl. \SegSet }$
+    define an indicator variable $X_\pnt$, which is $1$ if the two
+    segments defining $\pnt$ are in the random sample \index{random
+       sample} $\SegSet_i$ and $0$ otherwise. We have that
+    $\Ex{X_\pnt}=\alpha$, and as such, by linearity of expectation,
+    the expected number of intersection points in the arrangement
+    $\Arr\pth{\SegSet_i}$ is
+    \begin{equation*}
+        \Ex{ \sum_{\pnt \in V} X_{\pnt}} = \sum_{\pnt \in V} \Ex{
+           X_{\pnt}} = \sum_{\pnt \in V} \alpha = k \alpha,
+    \end{equation*}
+    where $V$ is the set of $k$ intersection points of $\ArrX{
+       \bigl. \SegSet }$.  Also, every endpoint of a segment of
+    $\SegSet_i$ contributed its two endpoints to the arrangement
+    $\Arr\pth{\SegSet_i}$. Thus, we have that the expected number of
+    vertices in $\Arr\pth{\SegSet_i}$ is
+    \begin{equation*}
+        2i + \frac{i(i-1)}{n(n-1)}k.
+    \end{equation*}
+    Now, the number of trapezoids in $\ArrVD{\bigl.\SegSet_i}$ is
+    proportional to the number of vertices of $\Arr\pth{\SegSet_i}$,
+    which implies the claim.
+\end{proof}
+
+
+% -----------------------------------------------------------
+
+\subsection{Backward analysis}
+\seclab{backward:analysis}
+
+In the following, we would like to consider the total amount of work
+involved in the $i$\th iteration of the algorithm. The way to analyze
+these iterations is (conceptually) to run the algorithm for the first
+$i$ iterations and then run ``backward'' the last iteration.
+
+So, imagine that the overall size of the conflict lists of the
+trapezoids of $\ArrB_i$ is $W_i$ and the total size of the conflict
+lists created only in the $i$\th iteration is $C_i$.
+
+We are interested in bounding the expected size of $C_i$, since this
+is (essentially) the amount of work done by the algorithm in this
+iteration. Observe that the structure of $\ArrB_i$ is defined
+independently of the permutation $\SegSet_i$ and depends only on the
+(unordered) set $\SegSet_i = \brc{\seg_1, \ldots, \seg_i}$. So, fix
+$\SegSet_i$. What is the probability that $\seg_i$ is a specific
+segment $\seg$ of $\SegSet_i$?  Clearly, this is $1/i$ since this is
+the probability of $\seg$ being the last element in a permutation of
+the $i$ elements of $\SegSet_i$ (i.e., we consider a random
+permutation of $\SegSet_i$).
+
+Now, consider a trapezoid $\Trap \in \ArrB_i$. If $\Trap$ was created
+in the $i$\th iteration, then $\seg_i$ must be one of the (at most
+four) segments that define it. Indeed, if $\seg_i$ is not one of the
+segments that define $\Trap$, then $\Trap$ existed in the vertical
+decomposition before $\seg_i$ was inserted.  Since $\ArrB_i$ is
+independent of the internal ordering of $\SegSet_i$, it follows that
+$\Prob{ \sigma \in (\ArrB_i \setminus \ArrB_{i-1})} \leq 4/i$. In
+particular, the overall size of the conflict lists in the end of the
+$i$\th iteration is
+\begin{equation*}
+    W_i = \sum_{\sigma \in \ArrB_i} {|\cl(\sigma)|}.
+    % \eqlab{conflict:lists:1}
+\end{equation*}
+As such, the expected overall size of the conflict lists created in
+the $i$\th iteration is
+\begin{equation*}
+  \Ex{ C_i \sep{ \ArrB_i }} \leq \sum_{\sigma \in \ArrB_i}
+  \frac{4}{i} \cardin{\cl(\sigma)\MakeSBig} \leq \frac{4}{i} W_i.
+\end{equation*}
+By \lemref{expected:tau}, the expected size of $\ArrB_i$ is $O\pth{i +
+   k i^2/n^2}$. Let us guess (for the time being) that on average the
+size of the conflict list of a trapezoid of $\ArrB_i$ is about
+$O(n/i)$.  In particular, assume that we know that
+\begin{equation*}
+    \Ex{\bigl. W_i}%
+    =%
+    O\pth{ \, \Bigl( i + \frac{i^2}{n^2} k \Bigr) \frac{n}{i}}%
+    =%
+    O\pth{ n + k \frac{i}{n} },
+    % \eqlab{conflict:lists:2}
+\end{equation*}
+by \lemref{expected:tau}, implying
+\begin{equation}
+    \Ex{\bigl. C_i }%
+    =%
+    \Ex{  \Bigl. \ExCond{C_i}{ \bigl. \ArrB_i } }%
+    \leq%
+    \Ex{ \frac{4}{i} W_i}%
+    =%
+    \frac{4}{i} \Ex{ \bigl. W_i }%
+    =%
+    O \pth{ \frac{4}{i}
+       \, \pth{n + \frac{k i}{n} } \, }%
+    =%
+    O\pth{\frac{n}{i} +
+       \frac{k}{n}},
+    \eqlab{conflict:lists:3}
+\end{equation}
+using \lemref{conditional:expectation}.  In particular, the expected
+(amortized) amount of work in the $i$\th iteration is proportional to
+$\Ex{\bigl. C_i}$. Thus, the overall expected running time of the
+algorithm is
+\begin{equation*}
+    \Ex{ \sum_{i=1}^{n} C_i }%
+    =%
+    \sum_{i=1}^{n} O\pth{\frac{n}{i} + \frac{k}{n}}%
+    =%
+    O\pth{\Bigl. n\log{n} + k }.
+\end{equation*}
+
+\begin{theorem}
+    \thmlab{v:d}%
+    % 
+    Given a set $\SegSet$ of $n$ segments in the plane with $k$
+    intersections, one can compute the vertical decomposition of
+    $\ArrX{\bigl. \SegSet }$ in expected $O(n \log{n} + k )$ time.
+\end{theorem}
+
+\myParagraph{Intuition and discussion.} %
+What remains to be seen is how we came up with the guess that the
+average size of a conflict list of a trapezoid of $\ArrB_i$ is about
+$O(n/i)$.  Note that using $\eps$-nets implies that the bound
+$O((n/i)\log{i})$ holds with constant probability (see
+\thmref{epsilon:net}) for all trapezoids in this arrangement. As
+such, this result is only slightly surprising. To prove this, we
+present in the next section a ``strengthening'' of $\eps$-nets to
+geometric settings.
+
+To get some intuition on how we came up with this guess, consider a
+set $\PntSet$ of $n$ points on the line and a random sample
+\index{random sample} $\Sample$ of $i$ points from $\PntSet$. Let
+$\IntervalSet$ be the partition of the real line into (maximal) open
+intervals by the endpoints of $\Sample$, such that these intervals do
+not contain points of $\Sample$ in their interior.
+
+Consider an interval (i.e., a one-dimensional trapezoid) of
+$\IntervalSet$.  It is intuitively clear that this interval (in
+expectation) would contain $O(n/i)$ points. Indeed, fix a point $x$ on
+the real line, and imagine that we pick each point with probability
+$i/n$ to be in the random sample. The random variable which is the
+number of points of $\PntSet$ we have to scan starting from $x$ and
+going to the right of $x$ till we ``hit'' a point that is in the
+random sample behaves like a geometric variable with probability
+$i/n$, and as such its expected value is $n/i$. The same argument
+works if we scan $\PntSet$ to the left of $x$. We conclude that the
+number of points of $\PntSet$ in the interval of $\IntervalSet$ that
+contains $x$ but does not contain any point of $\Sample$ is $O(n/i)$
+in expectation.
+
+Of course, the vertical decomposition case is more involved, as each
+vertical trapezoid is defined by four input segments. Furthermore, the
+number of possible vertical trapezoids is larger.  Instead of proving
+the required result for this special case, we will prove a more
+general result which can be applied in a lot of other settings.
+
+
+\section{General settings}
+\seclab{moments:general}
+
+
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}%
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}%
+
+\newcommand{\MultiX}[1]{%
+   \multicolumn{2}{l}{%
+      \begin{minipage}{0.8\linewidth}%
+          #1%
+      \end{minipage}%
+   }%
+}
+\begin{figure}[t]
+    \begin{tabular}{c|p{0.37\linewidth}|p{0.45\linewidth}}
+      Notation
+      & What it means
+      & Example: Vertical decomposition of segments\\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \hline\hline%
+      \Tstrut{}$\ObjSet$
+      & Set of $n$ objects
+      & segments
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      $\Sample \subseteq \ObjSet$
+      & Subset of objects
+      &
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \specialrule{.13em}{0em}{0em}
+      % \hline
+      \Tstrut{}
+      $\Trap$
+      &
+        Notation for a region induced by some objects of $\ObjSet$
+      & A vertical trapezoid
+      \\
+      \hline
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      $\DefSet{\Trap} \subseteq \ObjSet$
+      & \emph{Defining set} of $\Trap$: Minimal set of objects inducing $\Trap$.
+      & Subset of segments defining $\Trap$. See
+        \figref{stopping:set}.
+      \\
+      \hline  
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \Tstrut{}%
+      $\KillSet{\Trap} \subseteq \ObjSet$
+      & \emph{Stopping set} of $\Trap$: All objects in $\ObjSet$ that
+        prevents $\Trap$ from being created.
+      &
+        All segments in $\ObjSet$ that intersects the interior of the
+        vertical trapezoid $\Trap$.
+        See
+        \figref{stopping:set}.  \smallskip
+      \\
+      \hline
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \Tstrut{}$d$
+      & \emph{Combinatorial dimension}: Max size of defining set.
+      & $d=4$: Every vertical trapezoid is defined by at most four
+        segments.
+      \\
+      \hline
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \Tstrut{}
+      \Bstrut{}
+      $\WeightX{\Trap}$
+      &
+        $\WeightX{\Trap}=
+        \cardin{\KillSet{\Trap}}$: \emph{Weight} of $\Trap$.
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \specialrule{.13em}{0em}{0em}
+      \Tstrut{}
+      $\RegionsSet{\Sample}\bigr.$
+      & \emph{Decomposition}: Set of regions defined by $\Sample$
+      & Set of vertical trapezoids defined by $\Sample$
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \hline
+      \Tstrut{}%
+      $\AllRegions = \AllRegions\pth{\ObjSet}$
+      &
+        Set of all possible regions defined by subsets of $\ObjSet$
+      &
+        Set of all vertical trapezoids that can be induced by the segments
+        of $\ObjSet$. %
+      \\
+      \hline
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      $\CSProbFull{r}{d}{k}{n}$
+      &
+        \multicolumn{2}{l}{
+        \begin{minipage}{0.8\linewidth}     
+            \Tstrut{}Probability of a region $\Trap \in \ObjSet$ to
+            appear in the decomposition of a random sample
+            $\Sample \subseteq \ObjSet$ of size $r$, where $\Trap$ is
+            defined by $d$ objects, and its stopping set is of size
+            $k$.  \smallskip
+        \end{minipage}
+        }
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \hline
+      \Tstrut
+      $\Trap \in \RegionsSet{\Sample}$
+      &
+        \multicolumn{2}{l}{
+        \begin{minipage}{0.8\linewidth}     
+            $\Trap$ is \emph{$t$-heavy} if
+            $\WeightX{\Trap} \geq t { n}/{r}$, where
+            $r= \cardin{\Sample}$.
+        \end{minipage}}
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      $\RegionsHeavy{t}{\Sample}$
+      &
+        \multicolumn{2}{l}{
+        \begin{minipage}{0.8\linewidth}     
+            Set of all $t$-heavy regions of $\RegionsSet{\Sample}$
+        \end{minipage}}
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \hline
+      \Tstrut{}
+      $\NumOfRegionsZero{r}$
+      &
+        \MultiX{
+        $\NumOfRegionsZero{r} = \Ex{
+        \cardin{\MakesBig\RegionsSet{\Sample}}}$:
+        Expected complexity of decomposition for sample of size
+        $r$}
+      \\
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+      \hline
+      \Tstrut{}
+      $\NumOfRegions{t}{r}$
+      &
+        \MultiX{%
+        \Tstrut{}
+        $\NumOfRegions{t}{r} = \Ex{
+        \cardin{\RegionsHeavy{t}{\Sample}}}$:
+        Expected number of regions that are $t$ heavy in the decomposition
+        of a random sample of size $r$.
+        \smallskip%
+        }
+      \\
+      \hline
+    \end{tabular}
+    \caption{Notation used in the analysis.}
+\end{figure}
+\let\MultiX\undefined
+
+
+
+\subsection{Notation} %
+Let $\ObjSet$ be a set of objects.  For a subset
+$\Sample \subseteq \ObjSet$, we define a collection of `regions'
+denoted by $\RegionsSet{\Sample}$.  For the case of vertical
+decomposition of segments (i.e., \thmref{v:d}), the objects are
+segments, the regions are trapezoids, and $\RegionsSet{\Sample}$ is
+the set of vertical trapezoids in $\ArrVD{\bigl.\Sample}$.  Let
+\begin{equation*}
+    \AllRegions = \AllRegions\pth{\ObjSet} = \bigcup_{\Sample
+       \subseteq \ObjSet} \RegionsSet{\Sample}
+\end{equation*}
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/vertical_2}}
+    \caption{$\DefSet{\Trap}= \{b,c, d,e\}$ and $\KillSet{\Trap} = \{ f\}$.}
+    \figlab{stopping:set}
+\end{figure}
+
+denote the set of \emphic{all possible regions}{moments technique!all
+   regions} defined by subsets of $\ObjSet$.
+
+
+In the vertical trapezoids case, the set $\AllRegions$ is the set of
+all vertical trapezoids that can be defined by any subset of the given
+input segments.
+
+
+We associate two subsets $\DefSet{\Trap}$,
+$\KillSet{\Trap} \subseteq \ObjSet$ with each region
+$\Trap \in \AllRegions$.
+
+
+\index{set!defining}
+
+The \emphic{defining set}{defining set} $\DefSet{ \Trap }$ of $\Trap$
+is the subset of $\ObjSet$ defining the region $\Trap$ (the precise
+requirements from this set are specified in the axioms below).  We
+assume that for every $\Trap \in \AllRegions$,
+$\cardin{\DefSet{\Trap}} \leq d$ for a (small) constant $d$. The
+constant $d$ is sometime referred to as the \emphi{combinatorial
+   dimension}. \index{dimension!combinatorial} In the case of
+\thmref{v:d}, each trapezoid $\Trap$ is defined by at most four
+segments (or lines) of $\ObjSet$ that define the region covered by the
+trapezoid $\Trap$, and this set of segments is $\DefSet{\Trap}$.  See
+\figref{stopping:set}.
+
+\index{set!stopping}
+
+The \emphi{stopping set} $\KillSet{ \Trap }$ of $\Trap$ is the set of
+objects of $\ObjSet$ such that including any object of $\KillSet{
+   \Trap }$ in $\Sample$ prevents $\Trap$ from appearing in
+$\RegionsSet{\Sample }$.  In many applications $\KillSet{ \Trap }$ is
+just the set of objects intersecting the cell $\Trap$; this is also
+the case in \thmref{v:d}, where $\KillSet{\Trap}$ is the set of
+segments of $\SegSet$ intersecting the interior of the trapezoid
+$\Trap$ (see \figref{stopping:set}).  Thus, the stopping set of a
+region $\Trap$, in many cases, is just the conflict list of this
+region, when it is being created by an \RIC algorithm.  The
+\emphic{weight}{weight!region} of $\Trap$ is $\WeightX{\Trap} =
+\cardin{\KillSet{\Trap}}$.
+
+% \medskip
+
+\bigskip
+
+\begin{defn}[Framework axioms]
+    \deflab{framework:axioms}%
+    %
+    Let $\ObjSet, \RegionsSet{\Sample}, \DefSet{\Trap}$, and
+    $\KillSet{\Trap}$ be such that for any subset
+    $\Sample \subseteq \ObjSet$, the set $\RegionsSet{\Sample}$
+    satisfies the following axioms:
+    \begin{compactenumi}
+        \item \itemlab{axiom:1} For any
+        $\Trap \in \RegionsSet{\Sample}$, we have
+        $\DefSet{\Trap} \subseteq \Sample$ and
+        $\Sample \cap \KillSet{\Trap} = \emptyset$.
+    
+        \item \itemlab{axiom:2} If $\DefSet{\Trap} \subseteq \Sample$
+        and $\KillSet{ \Trap }\cap \Sample=\emptyset$, then
+        $\Trap\in \RegionsSet{\Sample}$.
+    \end{compactenumi}
+\end{defn}
+
+
+\subsubsection{Examples of the general framework}
+
+\begin{compactenumA}
+    \item \textbf{Vertical decomposition.} %
+    Discussed above.
+
+    \smallskip
+    
+    \item \textbf{Points on a line.}  %
+    Let $\ObjSet$ be a set of $n$ points on the real line. For a set
+    $\Sample \subseteq \ObjSet$, let $\RegionsSet{\Sample}$ be the set
+    of atomic intervals of the real lines formed by $\Sample$; that
+    is, the partition of the real line into maximal connected sets
+    (i.e., intervals and rays) that do not contain a point of
+    $\Sample$ in their interior.
+    
+    Clearly, in this case, an interval $\Interval \in
+    \RegionsSet{\Sample}$ the defining set of $\Interval$ (i.e.,
+    $\DefSet{ \Interval }$) is the set containing the (one or two)
+    endpoints of $\Interval$ in $\Sample$. The stopping set of an
+    $\Interval$ is the set $\KillSet{ \Interval }$, which is the set
+    of all points of $\ObjSet$ contained in $\Interval$.
+    
+    \smallskip
+    \item \textbf{Vertices of the convex-hull in 2d.}
+    % 
+    Consider a set $\ObjSet$ of $n$ points in the plane. A vertex on
+    the convex hull is defined by the point defining the vertex, and
+    the two edges before and after it on the convex hull. To this end,
+    a \emphi{certified vertex} of the convex hull (say this vertex is
+    $\pntA$) is a triplet $(\pnt, \pntA, \pntB)$, such that $\pnt,
+    \pntA$ and $\pntB$ are consecutive vertices of $\CHX{\ObjSet}$
+    (say, in clockwise order).  Observe, that computing the
+    convex-hull of $\ObjSet$ is equivalent to computing the set of
+    certified vertices of $\ObjSet$.
+    
+    For a set $\Sample \subseteq \ObjSet$, let $\RegionsSet{\Sample}$
+    denote the set of certified vertices of $\Sample$ (i.e., this is
+    equivalent to the set of vertices of the convex-hull of
+    $\Sample$. For a certified vertex $\Trap \in
+    \RegionsSet{\Sample}$, its defining set is the set of three
+    vertices $\pnt, \pntA, \pntB$ that (surprise, surprise) define
+    it. Its stopping set, is the set of all points in $\ObjSet$, that
+    either on the ``wrong'' side of the line spanning $\pnt \pntA$, or
+    on the ``wrong'' side of the line spanning $\pntA
+    \pntB$. Equivalently, $\KillSet{\Trap}$ is the set of all points
+    $\pntC \in \ObjSet \setminus \Sample$, such that the convex-hull
+    of $\pnt, \pntA, \pntB$, and $\pntC$ does not form a convex
+    quadrilateral.
+    
+    \smallskip
+    \item \textbf{Edges of the convex-hull in 3d.}  Let $\ObjSet$ be a
+    set of points in three dimensions.  An edge $\Edge$ of the
+    convex-hull of a set $\Sample \subseteq \ObjSet$ of points in
+    $\Re^3$ is defined by two vertices of $\ObjSet$, and it can be
+    certified as being on the convex hull $\CHX{\Sample}$, by the two
+    faces $\Face, \Face'$ adjacent to $\Edge$. If all the points of
+    $\Sample$ are on the ``right'' side of both these two faces then
+    $\Edge$ is an edge of the convex hull of $\Sample$.  Computing all
+    the certified edges of $\ObjSet$ is equivalent to computing the
+    convex-hull of $\ObjSet$.
+    
+    In the following, assume that each face of any convex-hull of a
+    subset of points of $\ObjSet$ is a triangle. As such, a face of
+    the convex-hull would be defined by three points.  Formally, the
+    \emphi{butterfly} of an edge $\Edge$ of $\CHX{\Sample}$ is
+    $(\Edge, \pnt, \pntA)$, where $pnt, \pntA \in \Sample$, and such
+    that all the points of $\Sample$ are on the same side as $\pntA$
+    of the plane spanned by $\Edge$ and $\pnt$ (we have symmetric
+    condition requiring that all the points of $\ObjSet$ are on the
+    same as $\pnt$ of the plane spanned by $\Edge$ and $\pntA$).
+    
+    For a set $\Sample \subseteq \PntSet$, let $\RegionsSet{\Sample}$
+    be its set of butterflies.  Clearly, computing all the butterflies
+    of $\ObjSet$ (i.e., $\RegionsSet{\ObjSet}$) is equivalent to
+    computing the convex-hull of $\ObjSet$.
+    
+    For a butterfly $\Trap = \pth{\Edge, \pnt, \pntA} \in
+    \RegionsSet{\Sample}$ its defining set (i.e., $\DefSet{\Trap}$) is
+    a set of four points (i.e., the two points defining its edge
+    $\Edge$, and the to additional vertices defining the two faces
+    $Face$ and $\Face'$ adjacent to it). Its stopping set
+    $\KillSet{\Trap}$, is the set of all the points of
+    $\ObjSet\setminus \Sample$ that of different sides of the plane
+    spanned by $\Edge$ and $\pnt$ (resp. $\Edge$ and $\pntA$) than
+    $\pntA$ (resp. $\pnt$) [here, the stopping set is the union of
+    these two sets].
+
+    \smallskip%
+    \item \textbf{Delaunay triangles in 2d.}  For a set of $\ObjSet$
+    of $n$ points in the plane. Consider a subset
+    $\Sample \subseteq \ObjSet$. A \emphic{Delaunay
+       circle}{Delaunay!circle} of $\Sample$ is a disc $\disk$ that
+    has three points $\pnt_1, \pnt_2, \pnt_3$ of $\Sample$ on its
+    boundary, and no points of $\Sample$ in its interior. Naturally,
+    these three points define a \emphic{Delaunay
+       triangle}{Delaunay!triangle}
+    $\triangle = \triangle \pnt_1 \pnt_2 \pnt_3$. The defining set is
+    $\DefSet{\triangle} = \brc{\pnt_1, \pnt_2, \pnt_3}$, and the
+    stopping set $\KillSet{\triangle}$ is the set of all points in
+    $\ObjSet$ that are contained in the interior of the disk $\disk$.
+    
+\end{compactenumA}
+
+\subsection{Analysis}
+
+In the following, $\ObjSet$ is a set of $n$ objects complying with
+\itemref{axiom:1} and \itemref{axiom:2} of \defref{framework:axioms}.
+
+\bigskip
+
+\myParagraph{The challenge.}
+%
+What makes the analysis not easy is that there are dependencies
+between the defining set of a region and its stopping set (i.e.,
+conflict list). In particular, we have the following difficulties
+\begin{compactenumA}
+    \item The defining set might be of different sizes depending on
+    the region $\Trap$ being considered.
+
+    \item Even if all the regions have a defining set of the same size
+    $d$ (say, $4$ as in the case of vertical trapezoids), it is not
+    true that every $d$ objects define a valid region. For example,
+    for the case of segments, the four segments might be vertically
+    separated from each other (i.e., think about them as being four
+    disjoint intervals on the real line), and they do not define a
+    vertical trapezoid together. Thus, our analysis is going to be a
+    bit loopy loop -- we are going to assume we know how many regions
+    exists (in expectation) for a random sample of certain size, and
+    use this to derive the desired bounds.
+\end{compactenumA}
+
+
+\subsubsection{On the probability of a region to be created}
+
+
+Inherently, to analyze a randomized algorithm using this framework, we
+will be interested in the probability that a certain region would be
+created. Thus, let
+\begin{equation*}
+    \CSProbFull{r}{d}{k}{n}
+\end{equation*}
+denote the probability that a region $\Trap \in \AllRegions$ appears
+in $\RegionsSet{\Sample}$, where its defining set is of size $d$, its
+stopping set is of size $k$, $\Sample$ is a random sample
+\index{random sample} of size $r$ from a set $\ObjSet$, and
+$n=\cardin{\ObjSet}$.  \NEW{ Specifically, $\Trap$ is a
+   \emph{feasible} region that might be created by an algorithm
+   computing $\RegionsSet{\Sample}$.}
+
+
+\bigskip
+
+\myParagraph{The sampling model.}  %
+%
+For describing algorithms it is usually easier to work with samples
+created by picking a subset of a certain size (without repetition)
+from the original set of objects. Usually, in the algorithmic
+applications this would be done by randomly permuting the objects and
+interpreting a prefix of this permutation as a random
+sample. Insisting on analyzing this framework in the ``right''
+sampling model creates some non-trivial technical pain.
+
+
+
+\begin{lemma}
+    \lemlab{c:s:probability}%
+    % 
+    We have that $\ds\,\CSProbFull{r}{d}{k}{n} \approx
+    \pth{1-\frac{r}{n}}^k \pth{\frac{r}{n}}^d$. Formally,
+    \begin{equation}
+        \frac{1}{2^{2d}} \;
+        \pth{ 1 - 4 \cdot \frac{ r}{n} }^{k}
+        \pth{\frac{r}{n}}^d
+        \;\leq \;
+        \CSProbFull{r}{d}{k}{n}
+        \;\leq\; 2^{2d} \;
+        \pth{ 1 - \frac{1}{2} \cdot \frac{r}{n} }^{k}
+        \,\pth{\frac{r}{n}}^d.
+        \eqlab{c:s:probability}
+    \end{equation}    
+\end{lemma}
+
+\begin{proof}
+    Let $\Trap$ be the region under consideration that is defined by
+    $d$ objects and having $k$ stoppers (i.e.,
+    $k=\KillSet{\Trap}$). We are interested in the probability of
+    $\Trap$ being created when taking a sample of size $r$ (without
+    repetition) from a set $\ObjSet$ of $n$ objects. Clearly, this
+    probability is $\CSProbFull{r}{d}{k}{n} = {\binom{n-d-k}{r-d}}
+    \;/\; { \binom{n}{r}}$, as we have to pick the $d$ defining
+    objects into the random sample and avoid picking any of the $k$
+    stoppers. A tedious but careful calculation, delegated to
+    \secref{c:s:estimate}, implies \Eqref{c:s:probability}.
+    
+    Instead, here is an elegant argument for why this estimate is
+    correct in a slightly different sampling model. We pick every
+    element of $\ObjSet$ into the sample $\Sample$ with probability
+    $r/n$, and this is done independently for each object. In
+    expectation, the random sample is of size $r$, and clearly the
+    probability that $\Trap$ is created is the probability that we
+    pick its $d$ defining objects (that is, $(r/n)^d$) multiplied by
+    the probability that we did not pick any of its $k$ stoppers (that
+    is, $(1-r/n)^k$).
+\end{proof}
+
+\begin{remark}
+    The bounds of \Eqref{c:s:probability} hold only when $r, d$, and
+    $k$ are in certain (reasonable) ranges. For the sake of simplicity
+    of exposition we ignore this minor issue. With care, all our
+    arguments work when one pays careful attention to this minor
+    technicality.
+\end{remark}
+
+
+
+\subsubsection{On exponential decay}
+
+For any natural number $r$ and a number $t >0$, consider $\Sample$ to
+be a random sample \index{random sample} of size $r$ from $\ObjSet$
+without repetition.  A region $\Trap \in \RegionsSet{\Sample}$ as
+being \emphic{$t$-heavy}{heavy!t@$t$-heavy} if
+$\WeightX{\Trap} \geq t \ds \cdot \frac{ n}{r}$. Let
+$\RegionsHeavy{t}{\Sample}$ denote all the $t$-heavy regions of
+$\RegionsSet{\Sample}$.\footnote{These are the regions that are at
+   least $t$ times overweight. Speak about an obesity problem.} %\
+
+\NEW{Intuitively, and somewhat incorrectly, we expect the average
+   weight of a region of $\RegionsSet{\Sample}$ to be roughly $n/r$. }
+We thus expect the size of this set to drop fast as $t$
+increases. Indeed, \lemref{c:s:probability} tells us that a trapezoid
+of weight $t\, (n/r)$ has probability
+\begin{align*}
+    \CSProbFull{r}{d}{t\cdot \frac{n}{r}}{n}%
+    &\approx %
+    \pth{1-\frac{r}{n}}^{t\,(n/r)} \pth{\frac{r}{n}}^d %
+    \approx %
+    \exp\pth{-t} \cdot \pth{\frac{r}{n}}^d %
+    \approx %
+    \exp\pth{\bigl.-t+1} \cdot \pth{1-\frac{r}{n}}^{n/r}
+    \pth{\frac{r}{n}}^d%
+    \\
+    &\approx %
+    \exp\pth{-t+1} \cdot \CSProbFull{r}{d}{n/r}{n}
+\end{align*}
+to be created, since $(1-r/n)^{n/r} \approx 1/e$. Namely, a $t$-heavy
+region has exponentially lower probability to be created than a region
+of weight $n/r$. We next formalize this argument.
+
+
+
+
+\begin{lemma}
+    \lemlab{e:x:p:help}%
+    % 
+    Let $r \leq n$ and let $t$ be parameters, such that
+    $1 \leq t \leq r/d$. Furthermore, let $\Sample$ be a sample of
+    size $r$, and let $\SampleA$ be a sample of size $r'=\floor{r/t}$,
+    both from $\ObjSet$.  Let $\Trap \in \AllRegions$ be a region with
+    weight $\WeightX{\Trap} \geq t\,(n/r)$.  Then,
+    \begin{math}
+        \Bigl.\ds \Prob{\bigl. \Trap \in \RegionsSet{\Sample}} =
+        O\pth{ \exp\pth{-{t}/{2}\bigr.} t^d \,{\Prob{\bigl. \Trap \in
+                 \RegionsSet{\SampleA}} } }
+\end{math}
+.
+    % \end{equation*}
+\end{lemma}
+
+
+\begin{proof}
+    For the sake of simplicity of exposition, assume that
+    $k = \WeightX[]{\Trap} = t\,(n/r)$.  By \lemref{c:s:probability}
+    (i.e., \Eqref{c:s:probability}) we have
+    \begin{align*}
+      \frac{\Prob{\Trap \in \RegionsSet{\Sample}}}{ \Prob{\Trap \in
+      \RegionsSet{\SampleA}}}%
+      &=%
+        \frac{\CSProbFull{r}{d}{k}{n}} {\CSProbFull{r'}{d}{k}{n}}
+        % 
+          \leq \frac{2^{2d}\pth{ 1 - \frac{1}{2} \cdot \frac{r}{n} }^{k}
+          \,\pth{\frac{r}{n}}^d}{%
+          \frac{1}{2^{2d}} \; \pth{ 1 - 4 \frac{ r'}{n} }^{k}
+          \pth{\frac{r'}{n}}^d}
+          \leq%
+          2^{4d}\exp \pth{ - \frac{kr}{2n} } \pth{ 1 + 8 \frac{
+          r'}{n} }^{k} \pth{\frac{r}{r'}}^d%
+      \\&%
+      \leq 2^{4d}\exp
+      \pth{ 8 \frac{ kr'}{n}- \frac{kr}{2n} }
+      \,\pth{\frac{r}{r'}}^d
+      = 2^{4d}\exp \pth{ 8 \frac{ tn \floor{r/t}}{nr}-
+      \frac{tnr}{2nr} } \pth{\frac{r}{\floor{r/t}}}^d = O
+      \pth{ \exp\pth{-t/2} t^d },
+    \end{align*}
+    since $1/(1-x) \leq 1+2x$ for $x \leq 1 /2$ and $1+y \leq \exp
+    \pth{y}$, for all $y$. (The constant in the above $O(\cdot)$
+    depends exponentially on $d$.)
+\end{proof}
+
+Let
+\begin{equation*}
+    \NumOfRegionsZero{r} = \Ex{
+       \cardin{\MakesBig\RegionsSet{\Sample}}}%
+    \quad \text{and}\quad%
+    \NumOfRegions{t}{r} = \Ex{
+       \cardin{\RegionsHeavy{t}{\Sample}}},
+\end{equation*}
+where the expectation is over random subsets $\Sample \subseteq
+\ObjSet$ of size $r$. Note that $\NumOfRegionsZero{r} =
+\NumOfRegions{0}{r}$ is the expected number of regions created by a
+random sample of size $r$. In words, $\NumOfRegions{t}{r}$ is the
+expected number of regions in a structure created by a sample of $r$
+random objects, such that these regions have weight which is $t$ times
+larger than the ``expected'' weight (i.e., $n/r$).  In the following,
+we assume that $\NumOfRegionsZero{r}$ is a monotone increasing
+function.
+
+\begin{lemma}[The exponential decay lemma]
+    \lemlab{exponential:decay}%
+    % 
+    Given a set $\ObjSet$ of $n$ objects and parameters $r \leq n$ and
+    $1 \leq t \leq r/d$, where $d = \max_{\Trap \in \AllRegions\pth
+       {\ObjSet}} \cardin{\DefSet{\Trap}}$, if axioms (i) and (ii)
+    above hold for any subset of $\ObjSet$, then
+    \begin{equation}
+        \NumOfRegions{t}{r}  %=
+        = O\bigl( t^d
+        \exp\pth{-t/2} \,  \NumOfRegionsZero{ r}
+        \bigr).
+        \eqlab{exponential:decay}
+    \end{equation}    
+\end{lemma}
+\begin{proof}
+    Let $\Sample$ be a random sample of size $r$ from $\ObjSet$ and
+    let $\SampleA$ be a random sample of size $r' = \floor{r/t}$ from
+    $\ObjSet$.  Let $H = \bigcup_{X \subseteq \ObjSet, \cardin{X} = r}
+    \RegionsHeavy{t}{X}$ denote the set of all $t$-heavy regions that
+    might be created by a sample of size $r$.  In the following, the
+    expectation is taken over the content of the random samples
+    $\Sample$ and $\SampleA$.
+    
+    For a region $\Trap$, let $X_\Trap$ be the indicator variable that
+    is $1$ if and only if $\Trap \in \RegionsSet{\Sample}$. By
+    linearity of expectation and since $\Ex{X_\Trap} = \Prob{\Trap\in
+       \RegionsSet{\Sample}}$, we have
+    \begin{align*}
+      \NumOfRegions{t}{r}%
+      &=%
+        \Ex{\bigl.\cardin{ \RegionsHeavy{t}{\Sample}} }%
+        =%
+        \Ex{\Bigl. \smash{\sum_{\Trap\in H} X_\Trap}} %
+        =%
+        \sum_{\Trap\in H} \Ex{\bigl.X_\Trap  } %
+        =%
+        \sum_{\Trap\in H} \Prob{\Trap\in \RegionsSet{\Sample}
+        \MakesBig } %
+      \\
+      &=%
+        O \Bigl( t^d \exp(-t/2) \sum_{\Trap\in H} \Prob{\Trap\in
+        \RegionsSet{\SampleA}} \Bigr)%
+        % 
+        =%
+        O \Bigl( t^d \exp(-t/2) \sum_{\Trap\in \AllRegions}
+        \Prob{\Trap\in \RegionsSet{\SampleA}}\Bigr)%
+      \\&%
+      =%
+      O \pth{ t^d \exp(-t/2)\, \NumOfRegionsZero{r'}}%
+      =%
+      O \pth{ t^d \exp(-t/2)\, \NumOfRegionsZero{r}},
+    \end{align*}
+    by \lemref{e:x:p:help} and since $\NumOfRegionsZero{r}$ is a
+    monotone increasing function.
+\end{proof}
+% \newpage
+
+\raggedbottom
+
+%\widowpenalty=1000
+%\clubpenalty=1000
+\subsubsection{Bounding the moments}
+
+Consider a different randomized algorithm that in a first round
+samples $r$ objects, $\Sample \subseteq \ObjSet$ (say, segments),
+computes the arrangement induced by these $r$ objects (i.e.,
+$\ArrVD{\bigl.\Sample}$), and then inside each region $\Trap$ it
+computes the arrangement of the $\WeightX{\Trap}$ objects intersecting
+the interior of this region, using an algorithm that takes
+\begin{math}
+    O\pth{\bigl. {\WeightX{\Trap}}^c }
+\end{math}
+time, where $c > 0$ is
+some fixed constant. The overall expected running time of this
+algorithm is
+\begin{equation*}
+    \Ex{\Bigl. \smash{ \sum_{\Trap \in \RegionsSet{\Sample}} \pth{
+             \bigl. \WeightX[]{\Trap} }^c}}.
+\end{equation*}
+We are now able to bound this quantity.
+
+\begin{theorem}[Bounded moments theorem]
+    \thmlab{cs}%
+    %
+    Let $\Sample \subseteq \ObjSet$ be a random subset of size
+    $r$. Let
+    $\NumOfRegionsZero{r} = \Ex{\bigl. |\RegionsSet{\Sample}| }$ and
+    let $c \geq 1$ be an arbitrary constant. Then,
+    \begin{equation*}
+        \biggl.
+        \Ex{\Bigl. \smash{ \sum_{\Trap \in \RegionsSet{\Sample}}
+              \pth{\bigl.\WeightX{\Trap}}^c}}%
+        =%
+        O \pth{
+           \NumOfRegionsZero{r} \; \pth{\frac{n}{r}}^c\,}.
+    \end{equation*}    
+\end{theorem}
+\smallskip%
+\begin{proof}
+    Let $\Sample \subseteq \ObjSet$ be a random sample \index{random
+       sample} of size $r$. Observe that all the regions with weight
+    in the range $\ds\, \left[(t-1)\tfrac{n}{r} \,, \, t\cdot
+        \frac{n}{r} \MakeSBig\right)\,$ are in the set
+    $\RegionsHeavy{t-1}{\Sample} \setminus \RegionsHeavy{t}{\Sample}
+    $. As such, we have by \lemref{exponential:decay} that
+    \begin{align*}
+      W
+      &=%      
+        \Ex{\Bigl.\smash{\sum_{\Trap \in \RegionsSet{\Sample}}\!\!\! \WeightX{\Trap}^c }}%
+        \leq%
+        \Ex{\Bigl. \smash{ \sum_{t \ge 1} \pth{ t \frac{n}{r} }^c \pth{
+        \cardin{\RegionsHeavy{t-1}{\Sample}} -
+        \cardin{\RegionsHeavy{t}{\Sample} }\, } }}%
+        \leq%
+        \Ex{\Bigl. \smash{ \sum_{t \ge 1} \pth{ t \frac{n}{r} }^c {\MakeSBig
+        \cardin{\RegionsHeavy{t-1}{\Sample}} }\, }}
+        % 
+      \\[2ex]
+      &
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \leq%
+        \pth{\frac{n}{r} }^{c} \sum_{t \ge 0} (t+1)^c 
+        \Ex{\bigl. \cardin{\RegionsHeavy{t}{\Sample} } }
+        =%
+        \pth{ \frac{n}{r} }^c \sum_{t \ge 0} (t+1)^c \,
+        \NumOfRegions{t}{r}%
+        =%
+        \pth{ \frac{n}{r} }^c \sum_{t \ge 0}
+        O\pth{ \pth{t+1}^{\,c \, + \,d} \, \exp(-t/2) \,
+        \NumOfRegionsZero{ r } }
+      \\&
+      =%
+      O\Bigl( \NumOfRegionsZero{r } \, \pth{ \frac{n}{r} }^c
+      \sum_{t \ge 0} \pth{t+1}^{\,c\,+\,d} \, \exp(-t/2)
+      \Bigr)%
+      =%
+      O \pth{ \NumOfRegionsZero{r } 
+      \pth{{\frac{n}{r}} }^c },
+    \end{align*}
+    since $c$ and $d$ are both constants.
+\end{proof}
+
+\section{Applications}
+
+\subsection{Analyzing the \RIC algorithm for %
+   vertical decomposition}
+
+We remind the reader that the input of the algorithm of
+\secref{backward:analysis} is a set $\SegSet$ of $n$ segments with $k$
+intersections, and it uses randomized incremental construction to
+compute the vertical decomposition of the arrangement
+$\ArrX{\bigl.\SegSet}$.
+
+\lemref{expected:tau} shows that the number of vertical trapezoids in
+the randomized incremental construction is in expectation
+$\NumOfRegionsZero{i} = O\pth{ i + k\, (i/n)^2}$.  Thus, by
+\thmref{cs} (used with $c=1$), we have that the total expected size
+of the conflict lists of the vertical decomposition computed in the
+$i$\th step is
+\begin{equation*}
+    \Ex{\bigl. W_i}%
+    =%
+    \Ex{ \Bigl. \smash{\sum_{\Trap \in \ArrB_i} \WeightX{\Trap} } }%
+    =%
+    O \pth{ \NumOfRegionsZero{i}\frac{n}{i}}%
+    =%
+    O \pth{ n + k \frac{i}{n}}.
+\end{equation*}
+
+This is the missing piece in the analysis of
+\secref{backward:analysis}. Indeed, the amortized work in the $i$\th
+step of the algorithm is $O(W_i/i)$ (see \Eqref{conflict:lists:3}),
+and as such, the expected running time of this algorithm is
+\begin{equation*}
+    \Ex{  O \pth{\Bigl.
+          \smash{\sum_{i=1}^n \frac{W_i}{i} }
+       }
+    } %
+    =%
+    O \biggl( \sum_{i=1}^n \frac{1}{i} \Bigl({ n + k \frac{i}{n}} \Bigr) \biggr)%
+    =%
+    O\pth{ n \log n + k }.
+\end{equation*}
+This implies \thmref{v:d}.
+
+
+
+\subsection{Cuttings}
+
+Let $\SegSet$ be a set of $n$ lines in the plane, and let $r$ be an
+arbitrary parameter. A \emphic{$(1/r)$-cutting}{cutting} of $\SegSet$
+is a partition of the plane into constant complexity regions such that
+each region intersects at most $n/r$ lines of $\SegSet$. It is natural
+to try to minimize the number of regions in the cutting, as cuttings
+are a natural tool for performing ``divide and conquer''.
+
+A neat proof of the existence of suboptimal cuttings follows readily
+from the exponential decay lemma.
+
+\begin{lemma}
+    Let $\ObjSet$ be a set of $n$ segments in the plane, and let
+    $\Sample$ be a random sample from $\ObjSet$ of size
+    $\ell = c r \ln r$, where $c$ is a sufficiently large
+    constant. Then, with probability $\geq 1-1/r^{O(1)}$, the vertical
+    decomposition of $\Sample$ is a cutting of size
+    $O( r^2 \log^2 r)$.
+\end{lemma}
+\begin{proof}
+    In our case, the vertical decomposition complexity
+    $\NumOfRegionsZero{ \ell} = O(\ell^2)$ -- as $\ell$ segments have
+    at most $\binom{\ell}{2}$ intersections.  For $t = c \ln r$, a
+    vertical trapezoid $\Trap$ in $\ArrVD{\Sample}$ is bad if
+    $\WeightX{\Trap} > r = t(n/\ell)$. But such a trapezoid is
+    $t$-heavy.  Let $X$ be the random variable that is the number of
+    bad trapezoids in $\ArrVD{\Sample}$. The exponential decay lemma
+    (\lemref{exponential:decay}) states that
+    \begin{equation*}
+        \Ex{X} =
+        \NumOfRegions{t}{\ell}  %=
+        =%
+        O\bigl( t^2
+        \exp\pth{-t/2} \,  \NumOfRegionsZero{ \ell}
+        \bigr)
+        =
+        O\bigl( (c \ln r)^2
+        \exp\pth{-c\ln r/2} \,  \ell^2
+        \bigr)
+        =
+        O\Bigl(  (\ln^2 r)
+        r^{-c /2} \,  (r \log r)^2
+        \Bigr)
+        <%
+        \frac{1}{r^{c/4}},
+    \end{equation*}
+    if $c$ is sufficiently large.  As such, we have
+    $\Prob{X \geq 1} \leq {1}/{r^{c/4}}$ by Markov's inequality.
+\end{proof}
+
+We provide an alternative proof to the above using the $\eps$-net
+theorem.
+\begin{lemma}
+    \lemlab{cuttings:bad}%
+    % 
+    There exists a $(1/r)$-cutting of a set of lines $\SegSet$ in the
+    plane of size $O\pth{ (r\log r)^2 }$.
+\end{lemma}
+
+\begin{proof}
+    Consider the range space having $\SegSet$ as its ground set and
+    vertical trapezoids as its ranges (i.e., given a vertical
+    trapezoid $\Trap$, its corresponding range is the set of all lines
+    of $\SegSet$ that intersect the interior of $\Trap$). This range
+    space has a \VC dimension which is a constant as can be easily
+    verified. Let $X \subseteq \SegSet$ be an $\eps$-net for this
+    range space, for $\eps = 1/r$. By \thmref{epsilon:net} ($\eps$-net
+    theorem), there exists such an $\eps$-net $X$ of this range space,
+    of size $O((1/\eps) \log (1/\eps)) = O(r \log r)$. In fact,
+    \thmref{epsilon:net} states that an appropriate random sample is
+    an $\eps$-net with non-zero probability, which implies, by the
+    probabilistic method, that such a net (of this size) exists.
+
+    Consider the vertical decomposition $\ArrVD{\bigl.X}$, where $X$
+    is as above. We claim that this collection of trapezoids is the
+    desired cutting.
+    
+    The bound on the size is immediate, as the complexity of
+    $\ArrVD{\bigl.X}$ is $O\pth{\cardin{X}^2}$ and $\cardin{X} = O( r
+    \log r)$.
+    
+    As for correctness, consider a vertical trapezoid $\Trap$ in the
+    arrangement $\ArrVD{\bigl.X}$. It does not intersect any of the
+    lines of $X$ in its interior, since it is a trapezoid in the
+    vertical decomposition $\ArrVD{\bigl.X}$. Now, if $\Trap$
+    intersected more than $n/r$ lines of $\SegSet$ in its interior,
+    where $n = \cardin{\SegSet}$, then it must be that the interior of
+    $\Trap$ intersects one of the lines of $X$, since $X$ is an
+    $\eps$-net for $\SegSet$, a contradiction.
+    
+    It follows that $\Trap$ intersects at most $\eps n = n/r$ lines of
+    $\SegSet$ in its interior.
+\end{proof}
+
+
+\begin{claim}
+    Any $(1/r)$-cutting in the plane of $n$ lines contains at least
+    $\Omega\pth{r^2}$ regions.
+\end{claim}
+\begin{proof}
+    An arrangement of $n$ lines (in general position) has $M =
+    \binom{n}{2}$ intersections. However, the number of intersections
+    of the lines intersecting a single region in the cutting is at
+    most $m = \binom{n/r}{2}$. This implies that any cutting must be
+    of size at least $M / m = \Omega\pth{ n^2 / (n/r)^2 } =
+    \Omega\pth{r^2}$.
+\end{proof}
+
+
+\NotAMSMode{\bigskip}
+
+We can get cuttings of size matching the above lower bound using the
+moments technique.
+
+
+\begin{theorem}
+    Let $\SegSet$ be a set of $n$ lines in the plane, and let $r$ be a
+    parameter. One can compute a $(1/r)$-cutting of $\SegSet$ of size
+    $O(r^2)$.
+\end{theorem}
+\begin{proof}
+    Let $\Sample \subseteq \SegSet$ be a random sample \index{random
+       sample} of size $r$, and consider its vertical decomposition
+    $\ArrVD{\bigl.\Sample}$. If a vertical trapezoid $\Trap \in
+    \ArrVD{\bigl.\Sample}$ intersects at most $n/r$ lines of
+    $\SegSet$, then we can add it to the output cutting. The other
+    possibility is that a $\Trap$ intersects $t(n/r)$ lines of
+    $\SegSet$, for some $t > 1$, and let $\cl(\Trap) \subset \SegSet$
+    be the conflict list of $\Trap$ (i.e., the list of lines of
+    $\SegSet$ that intersect the interior of $\Trap$). Clearly, a
+    $(1/t)$-cutting for the set $\cl(\Trap)$ forms a vertical
+    decomposition (clipped inside $\Trap$) such that each trapezoid in
+    this cutting intersects at most $n/r$ lines of $\SegSet$. Thus, we
+    compute such a cutting inside each such ``heavy'' trapezoid using
+    the algorithm (implicit in the proof) of \lemref{cuttings:bad},
+    and these subtrapezoids to the resulting cutting. Clearly, the
+    size of the resulting cutting inside $\Trap$ is $O\pth{ t^2 \log^2
+       t } = O\pth{ t^4 }$. The resulting two-level partition is
+    clearly the required cutting. By \thmref{cs}, the expected size
+    of the cutting is
+    \begin{align*}
+      O\pth{\biggl. \NumOfRegionsZero{r} + \Ex{\Bigl.\smash{ \sum_{\Trap \in
+      \RegionsSet{\Sample}}
+      \Bigl( 2\frac{\WeightX{\Trap}}{n/r} \Bigr)^4} }}%
+      &=%
+        O \pth{ \NumOfRegionsZero{r} + \pth{\frac{r}{n}}^4 \Ex{\Bigl.
+        \smash{\sum_{\Trap \in \RegionsSet{\Sample}}
+        \pth{\WeightX{\Trap}}^4} }}
+        \displaybreak[0]
+      \\[1ex]
+      &\hspace{-1cm} =%
+        O \pth{ \NumOfRegionsZero{r} \, + \, \pth{\frac{r}{n}}^4 
+        \NumOfRegionsZero{r} \pth{\frac{n}{r}}^4 }%
+        =%
+        O\pth{ \MakesBig \NumOfRegionsZero{r}}%
+        =%
+        O\pth{r^2},
+    \end{align*}
+    since $\NumOfRegionsZero{r}$ is proportional to the complexity of
+    $\Arr \pth{\Sample}$ which is $O(r^2)$.
+\end{proof}
+
+
+\section{Bounds on the probability of a %
+   region to be created}
+\seclab{c:s:estimate}
+
+Here we prove \lemref{c:s:probability} in the ``right'' sampling
+model. The casual reader is encouraged to skip this section, as it
+contains mostly tedious (and not very insightful) calculations.
+
+
+Let $\ObjSet$ be a given set of $n$ objects.  Let
+$\CSProbFull{r}{d}{k}{n}$ be the probability that a region $\Trap \in
+\AllRegions$ whose defining set is of size $d$ and whose stopping set
+is of size $k$ appears in $\RegionsSet{\Sample}$, where $\Sample$ is a
+random sample from $\ObjSet$ of size $r$ (without repetition).
+
+\begin{lemma}
+    \lemlab{c:s:first}%
+    % 
+    We have $\ds\CSProbFull{r}{d}{k}{n} =%
+    \frac{\binom{n-d-k}{r-d}} { \binom{n}{r}} =%
+    \frac{\binom{n-d-k}{r-d}}{\binom{n}{r-d}} \cdot
+    \frac{\binom{r}{d}}{\binom{n-(r-d)}{d}}%
+    =%
+    \frac{\binom{n-d-k}{r-d}}{\binom{n-d}{r-d}} \cdot
+    \frac{\binom{r}{d}}{\binom{n}{d}}$\,.
+\end{lemma}
+\begin{proof}
+    So, consider a region $\Trap$ with $d$ defining objects in
+    $\DefSet{\Trap}$ and $k$ detractors in $\KillSet{ \Trap }$.  We
+    have to pick the $d$ defining objects of $\DefSet{\Trap}$ to be in
+    the random sample \index{random sample} $\Sample$ of size $r$ but
+    avoid picking any of the $k$ objects of $\KillSet{\Trap}$ to be in
+    $\Sample$.
+    
+    The second part follows since $\;\ds \binom{n}{r} =
+    {\binom{n}{r-d}\, \binom{n-(r-d)}{d}} \;/\; {\binom{r}{d}}$.
+    Indeed, for the right-hand side first pick a sample of size $r-d$
+    and then a sample of size $d$ from the remaining objects. Merging
+    the two random samples, we get a random sample of size
+    $r$. However, since we do not care if an object is in the first
+    sample or second sample, we observe that every such random sample
+    is being counted $\binom{r}{d}$ times.
+    
+    The third part is easier, as it follows from $\,\ds \binom{n}{r-d}
+    \, \binom{n-(r-d)}{d} = \binom{n}{d} \, \binom{n-d}{r-d}$. The two
+    sides count the different ways to pick two subsets from a set of
+    size $n$, the first one of size $d$ and the second one of size
+    $r-d$.
+\end{proof}
+
+
+\begin{lemma}%
+    \lemlab{b:fraction}%
+    % 
+    For $M \geq m \geq t\geq 0$, we have $\;\ds
+    \pth{\frac{m-t}{M-t}}^t\leq \frac{\binom{m}{t}}{\binom{M}{t}}
+    \leq \pth{\frac{m}{M}}^t$.
+\end{lemma}
+\begin{proof}
+    % (i)
+    We have that $\ds \alpha = \frac{\binom{m}{t}}{\binom{M}{t}} =
+    \frac{m!}{(m-t)!t!}  \frac{(M-t)!t!}{M!} = \frac{m}{M} \cdot
+    \frac{m-1}{M-1} \cdots \frac{m-t+1}{M-t+1} $. Now, since $M \geq
+    m$, we have that $\ds \frac{m-i}{M-i} \leq \frac{m}{M}$, for all
+    $i \geq 0$. As such, the maximum (resp. minimum) fraction on the
+    right-hand size is $m/M$ (resp. $\frac{m-t+1}{M-t+1}$). As such,
+    we have $\,\pth{\frac{m-t}{M-t}}^t \leq
+    \pth{\frac{m-t+1}{M-t+1}}^t \leq \alpha \leq \pth{m/M}^t$.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{exchange:powers}%
+    % 
+    Let $0 \leq X, Y \leq N$. We have that
+    $\,\ds\pth{1-\frac{X}{N}}^Y \leq \pth{1-\frac{Y}{2N}}^X$.
+\end{lemma}
+
+\begin{proof}
+    Since $1-\alpha \leq \exp(-\alpha) \leq (1-\alpha/2)$, for $0 \leq
+    \alpha \leq 1$, it follows that
+    \begin{equation*}
+        \pth{1-\frac{X}{N}}^Y %
+        \leq%
+        \exp \pth{ -\frac{XY}{N}}%
+        =%
+        \pth{\exp \pth{ -\frac{Y}{n}} }^X%
+        \leq%
+        \pth{ 1 -\frac{Y}{2n}}^X.
+    \end{equation*}
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{b:fraction:2}%
+    % 
+    For $2d \leq r \leq n/8$ and $k \leq n/2$, we have that
+    \begin{equation*}
+        \ds \frac{1}{2^{2d}} \; \pth{ 1 - 4 \cdot \frac{ r}{n} }^{k}
+        \pth{\frac{r}{n}}^d \;\leq \; \CSProbFull{r}{d}{k}{n} \;\leq\;
+        2^{2d} \; \pth{ 1 - \frac{1}{2} \cdot \frac{r}{n} }^{k}
+        \,\pth{\frac{r}{n}}^d.
+    \end{equation*}
+\end{lemma}
+
+\begin{proof}
+    By \lemref{c:s:first}, \lemref{b:fraction}, and
+    \lemref{exchange:powers} we have
+    \begin{align*}
+        \CSProbFull{r}{d}{k}{n}%
+      & =%
+        \frac{\binom{n-d-k}{r-d}} {\binom{n-d}{r-d}} \cdot
+        \frac{\binom{r}{d}} {\binom{n}{d}}%
+        \leq%
+        \pth{ \frac{n-d-k}{n-d} }^{r-d} \pth{\frac{r}{n}}^d \;\leq\;
+        \pth{ 1 - \frac{k}{n} }^{r-d} \pth{\frac{r}{n}}^d \leq 2^{d}
+        \; \pth{ 1 - \frac{k}{n} }^{r} \,\pth{\frac{r}{n}}^d
+        \\
+        & \leq 2^{d} \; \pth{ 1 - \frac{r}{2 n} }^{k}
+        \,\pth{\frac{r}{n}}^d,
+    \end{align*}
+    since $k \leq n/2$. As for the other direction, by similar
+    argumentation, we have
+    \begin{align*}
+        \CSProbFull{r}{d}{k}{n}%
+        &=%
+        \frac{\binom{n-d-k}{r-d}}{\binom{n}{r-d}} \cdot
+        \frac{\binom{r}{d}}{\binom{n-(r-d)}{d}}%
+        \;\geq\;
+        \pth{ \frac{n - d-k - (r-d)}{n-(r-d)} }^{r-d}
+        \pth{\frac{r-d}{n-(r-d)-d}}^d\\
+        %---------------------------------------------------------
+        & =%
+        \pth{ 1 - \frac{d+k}{n-(r-d)} }^{r-d}
+        \pth{\frac{r-d}{n-r}}^d \;\geq\; \pth{ 1 - \frac{d+k}{n/2}
+        }^{r} \pth{\frac{r/2}{n}}^d \\%
+        & \geq%
+        \frac{1}{2^d} \pth{ 1 - \frac{4 r}{n} }^{d+k}
+        \pth{\frac{r}{n}}^d%
+        \geq%
+        \frac{1}{2^{2d}} \pth{ 1 - \frac{4 r}{n} }^{k}
+        \pth{\frac{r}{n}}^d,
+    \end{align*}
+    by \lemref{exchange:powers} (setting $N=n/4$, $X=r$, and $Y=d+k$)
+    and since $r \geq 2d$ and $4r/n \leq 1/2$.
+\end{proof}
+
+
+
+
+\section{Bibliographical notes}
+
+The technique described in this chapter is generally attributed to the
+work by Clarkson and Shor \cite{cs-arscg-89}, which is historically
+inaccurate as the technique was developed by Clarkson
+\cite{c-arscg-88}. Instead of mildly confusing the matter by referring
+to it as the Clarkson technique, we decided to make sure to really
+confuse the reader and refer to it as the \emphi{moments
+   technique}. The Clarkson technique \cite{c-arscg-88} is in fact
+more general and implies a connection between the number of ``heavy''
+regions and ``light'' regions. The general framework can be traced
+back to the earlier paper \cite{c-narsc-87}. This implies several
+beautiful results, some of which we cover later in the book.
+% The interested reader is referred to the work by
+% Sharir %on this aspect
+% \cite{s-cstre-01}.
+
+For the full details of the algorithm of
+\secref{vertical:decomposition}, the interested reader is refereed to
+the books \cite{bcko-cgaa-08, by-ag-98}. Interestingly, in some cases
+the merging stage can be skipped; see \cite{h-cctp-00}.
+
+Agarwal \etal \cite{ams-cmfal-98} presented a slightly stronger
+variant than the original version of Clarkson \cite{c-arscg-88} that
+allows a region to disappear even if none of the members of its
+stopping set are in the random sample.  This stronger setting is used
+in computing the vertical decomposition of a single face in an
+arrangement (instead of the whole arrangement). Here an insertion of a
+faraway segment of the random sample \index{random sample} might cut
+off a portion of the face of interest. In particular, in the settings
+of Agarwal \etal{} Axiom (ii) is replaced by the following:
+\begin{enumerate}
+    \item[(ii)] \itemlab{axiom:2:x} %
+    If $\Trap \in \RegionsSet{\Sample}$ and $\SampleA$ is a subset of
+    $\Sample$ with $\DefSet{\Trap } \subseteq \SampleA$, then $\Trap
+    \in \RegionsSet{\SampleA}$.
+\end{enumerate}
+
+
+Interestingly, Clarkson \cite{c-arscg-88} did not prove \thmref{cs}
+using the exponential decay lemma but gave a direct proof. In fact,
+his proof implicitly contains the exponential decay lemma.  We chose
+the current exposition since it is more modular and provides a better
+intuition of what is really going on and is hopefully slightly
+simpler.  In particular, \lemref{c:s:probability} is inspired by the
+work of Sharir \cite{s-cstre-01}.
+
+
+The exponential decay lemma (\lemref{exponential:decay}) was proved by
+Chazelle and Friedman \cite{cf-dvrsi-90}. The work of Agarwal \etal
+\cite{ams-cmfal-98} is a further extension of this result. Another
+analysis was provided by Clarkson \etal \cite{cms-frric-93}.
+
+Another way to reach similar results is using the technique of
+Mulmuley \cite{m-cgitr-94}, which relies on a direct analysis on
+`stoppers' and `triggers'. This technique is somewhat less convenient
+to use but is applicable to some settings where the moments technique
+does not apply directly.  Also, his concept of the omega function
+might explain why randomized incremental algorithms perform better in
+practice than their worst case analysis \cite{m-eahsr-89}.
+
+Backwards analysis in geometric settings was first used by Chew
+\cite{c-bvdcp-86} and was formalized by Seidel \cite{s-barga-93}. It
+is similar to the ``leave one out'' argument used in statistics for
+cross validation. The basic idea was probably known to the Greeks (or
+Russians or French) at some point in time.
+
+(Naturally, our summary of the development is cursory at best and not
+necessarily accurate, and all possible disclaimers apply. A good
+summary is provided in the introduction of \cite{s-barga-93}.)
+
+\myParagraph{Sampling model.}  As a rule of thumb all the different
+sampling approaches are similar and yield similar results.  For
+example, we used such an alternative sampling approach in the
+``proof'' of \lemref{c:s:probability}.  It is a good idea to use
+whichever sampling scheme is the easiest to analyze in figuring out
+what's going on. Of course, a formal proof requires analyzing the
+algorithm in the sampling model its uses.
+
+
+\myParagraph{Lazy randomized incremental construction.}  %
+If one wants to compute a single face that contains a marking point in
+an arrangement of curves, then the problem in using randomized
+incremental construction is that as you add curves, the region of
+interest shrinks, and regions that were maintained should be
+ignored. One option is to perform flooding in the vertical
+decomposition to figure out what trapezoids are still reachable from
+the marking point and maintaining only these trapezoids in the
+conflict graph. Doing it in each iteration is way too expensive, but
+luckily one can use a lazy strategy that performs this cleanup only a
+logarithmic number of times (i.e., you perform a cleanup in an
+iteration if the iteration number is, say, a power of $2$). This
+strategy complicates the analysis a bit; see \cite{bds-lric-95} for
+more details on this \emphi{lazy randomized incremental construction}
+\index{random incremental construction!lazy} technique. An alternative
+technique was suggested by the author for the (more restricted) case
+of planar arrangements; see \cite{h-twpa-00}. The idea is to compute
+only what the algorithm really needs to compute the output, by
+computing the vertical decomposition in an exploratory online
+fashion. The details are unfortunately overwhelming although the
+algorithm seems to perform quite well in practice.
+
+\myParagraph{Cuttings.}  The concept of cuttings was introduced by
+Clarkson. The first optimal size cuttings were constructed by Chazelle
+and Friedman \cite{cf-dvrsi-90}, who proved the exponential decay
+lemma to this end. Our elegant proof follows the presentation by d{}e
+Berg and Schwarzkopf \cite{bs-ca-95}. The problem with this approach
+is that the constant involved in the cutting size is awful%
+\footnote{This is why all computations related to cuttings should be
+   done on a waiter's bill pad. As Douglas Adams put it: ``On a
+   waiter's bill pad, reality and unreality collide on such a
+   fundamental level that each becomes the other and anything is
+   possible, within certain parameters.''}. %
+\Matousek \cite{m-ocfcp-98} showed that there $(1/r)$-cuttings with
+$8r^2 + 6r + 4$ trapezoids, by using level approximation. A different
+approach was taken by the author \cite{h-cctp-00}, who showed how to
+get cuttings which seem to be quite small (i.e., constant-wise) in
+practice. The basic idea is to do randomized incremental construction
+but at each iteration greedily add all the trapezoids with conflict
+list small enough to the cutting being output. One can prove that this
+algorithm also generates $O(r^2)$ cuttings, but the details are not
+trivial as the framework described in this chapter is not applicable
+for analyzing this algorithm.
+
+Cuttings also can be computed in higher dimensions for hyperplanes. In
+the plane, cuttings can also be computed for well-behaved curves; see
+\cite{sa-dsstg-95}.
+
+Another fascinating concept is \emphi{shallow cuttings}. These are
+cuttings covering only portions of the arrangement that are in the
+``bottom'' of the arrangement. \Matousek came up with the concept
+\cite{m-rph-92}.  See \cite{aes-vdsl3-99, cch-smcpg-09} for extensions
+and applications of shallow cuttings.
+
+\myParagraph{Even more on randomized algorithms in geometry.}  We have
+only scratched the surface of this fascinating topic, which is one of
+the cornerstones of ``modern'' computational geometry. The interested
+reader should have a look at the books by Mulmuley \cite{m-cgitr-94},
+Sharir and Agarwal \cite{sa-dsstg-95}, \Matousek{} \cite{m-ldg-02},
+and Boissonnat and Yvinec \cite{by-ag-98}.
+
+
+
+
+\section{Exercises}
+
+\Exercise{Convex hulls incrementally}%
+{10}{c:h:incremental}{%
+   Let $\PntSet$ be a set of $n$ points in the plane.
+   \begin{enumEx}
+       \item Describe a randomized incremental algorithm for computing
+       the convex hull $\CHX{\PntSet}$. Bound the expected running
+       time of your algorithm.
+       
+       \item Assume that for any subset of $\PntSet$, its convex hull
+       has complexity $t$ (i.e., the convex hull of the subset has $t$
+       edges). What is the expected running time of your algorithm in
+       this case?  If your algorithm is not faster for this case (for
+       example, think about the case where $t = O( \log n)$), describe
+       a variant of your algorithm which is faster for this case.
+   \end{enumEx}}{}
+
+
+\Exercise{Compressed quadtree made incremental}%
+{10}{c:q:incremental}{%
+   Given a set $\PntSet$ of $n$ points in $\Re^\hdim$, describe a
+   randomized incremental algorithm for building a compressed quadtree
+   for $\PntSet$ that works in expected $O( \hdim n \log n)$
+   time. Prove the bound on the running time of your algorithm. }
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+   
+   
+   \IncFragment{epsilon_net_theorem}
+   
+   \IncFragment{conditional_expectation}
+   
+}
+
+\ChapterEnd{}
+
+% --------------------------------------------------------
+% 
+% moments - end of file
+% --------------------------------------------------------

@@ -204,7 +204,7 @@ $365$. Surprisingly, the answer is much smaller.
 \begin{lemma}
     Let $X_1, \ldots, X_n$ be $n$ variables picked uniformly, randomly and
     independently from $\IRX{m}=\{1,\ldots, m\}$. Then, the expected number of
-    collisions is $\binom{n}{2}/m$, where a \emphi{collision} is an
+    collisions is $\binom{n}{2}/m$, where a \emphOnly{collision}\index{collision} is an
     unordered pair of indices with equal values.
 \end{lemma}
 \begin{proof}
@@ -356,7 +356,7 @@ The next lemma bounds that probability by bounding its complement.
 
 \subsection{Understanding pileups}
 
-The \emphi{load} of a bin is the number of balls in the bin. Here we are
+The \emphOnly{load}\index{load} of a bin is the number of balls in the bin. Here we are
 interested in the maximum load---what is the maximum number of balls in a
 single bin?
 
@@ -437,7 +437,7 @@ have load at most $O(\log n)$.
 One can prove a better bound, but that requires doing the exact calculations.
 
 \begin{example}[Heavy times.]
-    A ball is \emphi{$k$-heavy} if it there are $k-1$ or more balls that
+    A ball is \emphOnly{$k$-heavy}\index{$k$-heavy} if it there are $k-1$ or more balls that
     collide with it.  What is the expected number of $k$-heavy balls? For
     this to happen, there must be $k-1$ balls that ``conspire'' to
     collide with this ball.  The probability for that is $1/n^{k-1}$ for

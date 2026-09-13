@@ -51,9 +51,9 @@ such a data-structure:
         \item \AlgorithmI{delete}: given $x \in S$ delete $x$ from $S$
     \end{compactenumA}
     \medskip%
-    \item \emphi{Static} structure: $S$ given in advance or changes
+    \item \emphOnly{Static}\index{Static} structure: $S$ given in advance or changes
     very infrequently, main operations are lookups.
-    \item \emphi{Dynamic} structure: $S$ changes rapidly so inserts
+    \item \emphOnly{Dynamic}\index{Dynamic} structure: $S$ changes rapidly so inserts
     and deletes as important as lookups.
 \end{compactenumA}
 
@@ -77,7 +77,7 @@ many applications for fast lookups in networking, security, etc.
 \paragraph*{Hashing and Hash Tables.}%
 
 The hash-table data structure has an associated (hash) table/array $T$
-of size $m$ (the table \emphi{size}).  A hash function
+of size $m$ (the table \emphOnly{size}\index{size}).  A hash function
 $h: \cU \rightarrow \{0,\ldots,m-1\}$. An item $x \in \cU$ hashes to
 slot $h(x)$ in $T$.
 
@@ -89,9 +89,9 @@ to check if $T[h(y)] = y$. This takes constant time.
 
 Unfortunately, \emph{collisions} are unavoidable, and several
 different techniques to handle them.
-Formally, two items $x \neq y$  \emphi{collide} if  $h(x) = h(y)$.
+Formally, two items $x \neq y$  \emphOnly{collide}\index{collide} if  $h(x) = h(y)$.
 
-A standard technique to handle collisions is to use \emphi{chaining}
+A standard technique to handle collisions is to use \emphOnly{chaining}\index{chaining}
 (aka \emph{open hashing}). Here, we handle collisions as follows:
 \smallskip%
 \begin{compactenumA}
@@ -114,7 +114,8 @@ A standard technique to handle collisions is to use \emphi{chaining}
 
 Other techniques for handling collisions include associating a list of
 locations where an element can be (in certain order), and check these
-locations in this order. Another useful technique is \emphi{cuckoo
+locations in this order. Another useful technique is \emphOnly{cuckoo
+   hashing}\index{cuckoo
    hashing} which we will discuss later on: Every value has two
 possible locations. When inserting, insert in one of the locations,
 otherwise, kick out the stored value to its other location. Repeat
@@ -132,7 +133,7 @@ The relevant questions when designing a hashing scheme, include:
     How do we choose $h$?
 \end{enumerate*}
 
-The \emphi{load factor} of the array $T$ is the ratio $n/t$ where
+The \emphOnly{load factor}\index{load factor} of the array $T$ is the ratio $n/t$ where
 $n = |S|$ is the number of elements being stored and $m = \cardin{T}$
 is the size of the array being used.  Typically $n/t$ is a small
 constant smaller than $1$.
@@ -168,7 +169,7 @@ Picking a good hash function in practice is a dark art involving many
 non-trivial considerations and ideas. For parameters $N = |\cU|$,
 $m = |T|$, and $n = |S|$, we require the following:
 \begin{compactenumA}
-    \item $\cH$ is a \emphi{family} of hash functions: each function
+    \item $\cH$ is a \emphOnly{family}\index{family} of hash functions: each function
     $h \in \cH$ should be efficient to evaluate (that is, to compute
     $h(x)$).
     
@@ -201,7 +202,7 @@ $1/m$. $\Prob{h(x) = h(y)} = 1/m$.
 \begin{definition}
     \deflab{2:universal}%
     %
-    A family $\cH$ of hash functions is \emphi{$2$-universal} if for
+    A family $\cH$ of hash functions is \emphOnly{$2$-universal}\index{$2$-universal} if for
     all distinct $x,y \in \cU$, we have $\Prob{h(x) = h(y)} \leq 1/m$.
 \end{definition}
 
@@ -265,7 +266,7 @@ set size falls below quarter the current hash table size.
 If the working $|S|$ stays roughly the same but more than $c|S|$
 operations on table for some chosen constant $c$ (say $10$), rebuild.
 
-The \emphi{amortize} cost of rebuilding to previously performed
+The \emphOnly{amortize}\index{amortize} cost of rebuilding to previously performed
 operations. Rebuilding ensures $O(1)$ expected analysis holds even
 when $S$ changes. Hence $O(1)$ expected look up/insert/delete time
 {\em dynamic} data dictionary data structure!
@@ -280,12 +281,12 @@ when $S$ changes. Hence $O(1)$ expected look up/insert/delete time
 \begin{defn}
     For a number $p$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$.
     
-    For two integer numbers $x$ and $y$, the \emphi{quotient} of $x/y$
-    is $x \bdiv y = \floor{x/y}$. The \emphi{remainder} of $x/y$ is
+    For two integer numbers $x$ and $y$, the \emphOnly{quotient}\index{quotient} of $x/y$
+    is $x \bdiv y = \floor{x/y}$. The \emphOnly{remainder}\index{remainder} of $x/y$ is
     $x \bmod y = x - y \floor{x/y}$. If the $x \bmod y = 0$, than $y$
-    \emphi{divides} $x$, denoted by $y \divides x$.  We use
+    \emphOnly{divides}\index{divides} $x$, denoted by $y \divides x$.  We use
     $\alpha \equiv \beta \pmod{p}$ or $\alpha \equiv_p \beta$ to
-    denote that $\alpha$ and $\beta$ are \emphi{congruent modulo $p$};
+    denote that $\alpha$ and $\beta$ are \emphOnly{congruent modulo $p$}\index{congruent modulo $p$};
     that is $\alpha \bmod p = \beta \bmod p$ -- equivalently,
     $p \divides \pth[]{\alpha - \beta}$.
 \end{defn}
@@ -309,7 +310,7 @@ when $S$ changes. Hence $O(1)$ expected look up/insert/delete time
         \item \lemref{n:t:silly:1}: For any
         $x \in \brc{1,\ldots, p-1}$ there exists a unique $y$ such
         that $xy \equiv 1 \pmod{p}$. The number $y$ is the
-        \emphi{inverse} of $x$, and is denoted by $x^{-1}$ or $1/x$. %
+        \emphOnly{inverse}\index{inverse} of $x$, and is denoted by $x^{-1}$ or $1/x$. %
 
         \item \lemref{r:s:not:equal}: For any numbers
         $x, y \in \ZZ_p$.  If $x \neq y$ then, for any
@@ -332,7 +333,7 @@ when $S$ changes. Hence $O(1)$ expected look up/insert/delete time
 \subsubsection{Constructing a family of $2$-universal hash functions}
 
 For parameters $N = |\cU|$, $m = |T|$, $n = |S|$. Choose a
-\emphi{prime} number $p \ge N$. Let
+\emphOnly{prime}\index{prime} number $p \ge N$. Let
 \begin{equation*}
     \cH = \Set{h_{a,b} }{a,b \in \ZZ_p \text{ and } a \neq 0},
 \end{equation*}
@@ -344,9 +345,9 @@ $|\cH| = p(p-1)$. %
 Once we fix $a$ and $b$, and we are given a value $x$, we compute the
 hash value of $x$ in two stages:
 \begin{compactenumA}
-    \item \emphi{Compute}: $r \leftarrow (a x + b) \pmod p$.
+    \item \emphOnly{Compute}\index{Compute}: $r \leftarrow (a x + b) \pmod p$.
     
-    \item \emphi{Fold}: $r' \leftarrow r \pmod m$%.
+    \item \emphOnly{Fold}\index{Fold}: $r' \leftarrow r \pmod m$%.
 \end{compactenumA}
 
 \begin{lemma}
@@ -397,7 +398,7 @@ hash value of $x$ in two stages:
     \clmlab{bad:pairs}%
     %
     For two distinct numbers $x, y \in \cU$, a pair $a,b$ is
-    \emphi{bad} if $h_{a,b}(x) = h_{a,b}(y)$.  The number of bad pairs
+    \emphOnly{bad}\index{bad} if $h_{a,b}(x) = h_{a,b}(y)$.  The number of bad pairs
     is $\leq p(p-1)/m$.
 \end{claim}
 

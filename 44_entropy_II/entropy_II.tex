@@ -36,7 +36,7 @@
 
 \section{Huffman coding}
 
-A \emphi{binary code} assigns a string of $0$s and $1$s to each
+A \emphOnly{binary code}\index{binary code} assigns a string of $0$s and $1$s to each
 character in the alphabet. A code assigns for each symbol in the input
 a codeword over some other alphabet. Such a coding is necessary, for
 example, for transmitting messages over a wire, were you can send only
@@ -46,9 +46,9 @@ to decode the message sent. A prefix code, is a code where one can
 decipher the message, a character by character, by reading a prefix of
 the input binary string, matching it to a code word (i.e., string),
 and continuing to decipher the rest of the stream. Such a code is a
-\emphi{prefix code}.
+\emphOnly{prefix code}\index{prefix code}.
 
-A binary code (or a prefix code) is \emphi{prefix-free} if no code is
+A binary code (or a prefix code) is \emphOnly{prefix-free}\index{prefix-free} if no code is
 a prefix of any other.  ASCII and Unicode's U{}T{}F-$8$ are both
 prefix-free binary codes. Morse code is a binary code (and also a
 prefix code), but it is not prefix-free; for example, the code for
@@ -141,7 +141,7 @@ This algorithm is due to David Huffman, who developed it in
 resulting code is \emph{asymptotically} gives the best possible
 compression of the data (of course, one can do better compression in
 practice using additional properties of the data and careful
-hacking). This \emphi{Huffman coding} is used widely and is the basic
+hacking). This \emphOnly{Huffman coding}\index{Huffman coding} is used widely and is the basic
 building block used by numerous other compression algorithms.
 
 % To see how such a resulting tree (and the associated code) looks
@@ -299,7 +299,7 @@ probability $p_i$, then this formula is
 \begin{equation*}
 \Entropy{X} = \sum_i \Prob{X = i} \lg \frac{1}{\Prob{X = i}},
 \end{equation*}
-which is the \emphi{entropy} of $X$.
+which is the \emphOnly{entropy}\index{entropy} of $X$.
 
 \begin{theorem}
     Consider an input sequence $S$ of $m$ characters, where the

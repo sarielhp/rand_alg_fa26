@@ -1,0 +1,997 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+\ChapterNumPage{3}{14}
+
+
+\Chapter{Probability and Expectation}
+
+    
+\ChapterPrefix{}
+\ChapterGen{}
+
+\Description{%
+   Probability, conditional probability, independence, expectation,
+   linearity of expectation, Markov's inequality. Approximating
+   $k$-SAT.  }
+
+\noindent%
+\QuotePExt{%
+   \indent%
+   Everybody knows that the dice are loaded
+   
+   Everybody rolls with their fingers crossed
+
+   Everybody knows the war is over
+
+   Everybody knows the good guys lost
+   
+   Everybody knows the fight was fixed
+   
+   The poor stay poor, the rich get rich
+   
+   That's how it goes
+
+   Everybody knows}%
+{Everybody knows}%
+{Leonard Cohen}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Basic probability}
+
+Here we recall some definitions about probability. The reader already
+familiar with these definitions can happily skip this section.
+
+
+\subsection{Formal basic definitions}
+
+\paragraph*{Sample space, $\sigma$-algebra, and probability.}
+
+A \emphi{sample space} $\Omega$ is the set of all possible outcomes of an
+experiment. We also have a family of events $\Family$, where every member
+of $\Family$ is a subset of $\Omega$. Formally, we require that $\Family$ is a
+$\sigma$-algebra over $\Omega$.
+
+
+
+\begin{defn}
+    A single element $s$ of $\Omega$ is an \emphi{elementary event} or an
+    \emphi{atomic event}\footnote{Do not read this footnote, it is
+       tedium. Strictly speaking, elements $\omega \in \Omega$ are sample outcomes,
+       while singleton subsets $\{\omega\} \subseteq \Omega$ in $\Family$
+       are elementary events. In discrete probability the terms are often
+       used interchangeably.}.
+\end{defn}
+
+
+
+
+\begin{defn}
+    A family $\Family$ of subsets of $\Omega$ is a
+    \emphi{$\sigma$-algebra} if:
+    \begin{compactenumi}
+        \item $\Family$ is not empty (e.g., $\Omega \in \Family$),
+        \item if $X \in \Family$ then $\overline{X} = \pth[]{\Omega
+           \setminus X} \; \in\; \Family$, and
+        \item if $X, Y \in \Family$ then $X \cup Y \in \Family$.
+    \end{compactenumi}
+    More generally, we require that if $X_i \in \Family$, for
+    $i \in \NNN = \{1, 2, \ldots\}$, then $\cup_i X_i \in \Family$.  A
+    member of $\Family$ is an \emphi{event}.
+\end{defn}
+
+
+As a concrete example, if we are rolling a die\footnote{Formally, a dice
+   can be either singular or plural, so one should use die formally to
+   make clear when referring to a single dice. You are never going to get
+   back the time you spend reading this footnote.}, then
+\begin{equation*}
+    \Omega=\brc{1,2,3,4,5,6}\
+\end{equation*}
+and $\Family$ would be the power set of all possible subsets of $\Omega$.
+
+\begin{defn}
+    A \emphi{probability measure} is a mapping $\ProbLTR:\Family
+    \rightarrow [0,1]$ assigning \emphi{probabilities} to events. The
+    function $\ProbLTR$ needs to have the following properties:
+    \begin{compactenumi}
+        \item \textsc{Additive}: for $X, Y \in \Family$ disjoint sets, we
+        have that
+        $\Prob{\bigl. X \cup Y } = \Prob{\bigl. X} + \Prob{\bigl. Y}$. More
+        generally, \emphw{$\sigma$-additivity}:
+        $\Prob{\bigcup_{i=1}^\infty X_i} = \sum_{i=1}^\infty \Prob{X_i}$ for pairwise
+        disjoint sets $X_1, X_2, \ldots \in \Family$).
+        \item $\Prob{\Omega} = 1$.
+    \end{compactenumi}
+\end{defn}
+
+
+\begin{observation}
+    Let $C_1, \ldots, C_n$ be random events (not necessarily
+    independent). Then
+    \begin{align*}
+      \Prob{\bigl. \smash{\cup_{i=1}^{n} C_i} } \leq \sum_{i=1}^{n} \Prob{C_i}.
+    \end{align*}
+    This is known as the \emphi{union bound}.  If $C_1, \ldots, C_n$ are
+    \emph{disjoint} events then
+    \begin{align*}
+      \Prob{\cup_{i=1}^{n} C_i} = \sum_{i=1}^{n} \Prob{C_i}.
+    \end{align*}
+\end{observation}
+
+
+\begin{defn}
+    A \emphi{probability space} is a triple $(\Omega, \Family,
+    \ProbLTR)$, where $\Omega$ is a sample space, $\Family$ is a
+    $\sigma$-algebra defined over $\Omega$, and $\ProbLTR$ is a
+    probability measure.
+\end{defn}
+
+\begin{defn}
+    A \emphi{random variable} $f$ is a mapping from $\Omega$ into some set
+    $\FamilyB$ (typically $\reals$). We require that the probability of
+    the random variable to take on any value in a given subset of values
+    is well defined. Formally, for any measurable subset
+    $U \subseteq \FamilyB$\footnote{%
+       In general probability, $\FamilyB$ is endowed with a
+       $\sigma$-algebra $\mathcal{B}$ (e.g., Borel sets on $\reals$) and
+       $f$ is measurable: $f^{-1}(U) \in \Family$ for all
+       $U \in \mathcal{B}$. In discrete probability, every subset $U$ is
+       measurable. Things become much more subtle in the continuous case,
+       as care is needed, giving rise to measure theory. Measure theory
+       is a beautiful topic, but this class is not about it, so we play
+       fast and loose, relying on the reader's intuition.%
+    }, we have that $f^{-1} \pth{U} \in \Family$. That is,
+    $\Prob{ f \in U} = \Prob{ f^{-1}\pth{U}}$ is defined.
+\end{defn}
+
+Going back to the die example\footnote{An example to die for,
+   literally.}, the number on the top of the die when we roll it is a
+random variable. Similarly, let $X$ be one if the number rolled is larger
+than $3$, and zero otherwise. Clearly $X$ is a random variable.
+
+We denote the \emphi{probability} of a random variable $X$ to get the
+value $x$, by $\Prob{X=x}$ (or sometimes $\Prob{x}$, if we are lazy).
+
+
+
+
+
+
+
+\subsection{Expectation and conditional probability}
+
+\begin{defn}[Expectation]
+    The {expectation} of a random variable $X$ is its weighted
+    average. Formally, the \emphi{expectation} of a discrete random
+    variable $X$ is
+    \begin{align*}
+      \Ex{\bigl. X} = \sum_{x} x \Prob{ \bigl. X = x }.
+  \end{align*}
+  If the sum does not converge, the expectation is unbounded.
+\end{defn}
+
+
+
+\begin{defn}%[Conditional Probability.]
+    The \emphi{conditional probability} of the event $X=x$ given event
+    $Y=y$ is the probability that $X=x$ given that $Y=y$, provided
+    $\Prob{Y=y} > 0$. We denote this quantity by $\ProbCond{X=x}{ Y=y}$.
+\end{defn}
+
+%
+One useful way to think about the conditional probability
+$\ProbCond{ X}{Y}$ is as a function mapping each given value $y$ of $Y$
+to the conditional probability distribution of $X$. Since in many cases
+$x$ and $y$ are omitted in the notation, it is somewhat
+confusing\footnote{The text ``Conditional probability specially is mental
+   chaos'' was commented out---I do not know why I wrote it, but it is more
+   or less accurate.}.
+
+
+The conditional probability can be computed using the formula
+\begin{align*}
+    \ProbCond{X=x}{ Y=y}%
+    =%
+    \frac{\Prob{\bigl.\pth{ X=x} \cap
+          \pth{ Y= y} }}{\Prob{Y=y}}%
+    \qquad \text{for } \Prob{Y=y} > 0.
+\end{align*}
+
+For example, let us roll a die and let $X$ be the number we got.  Let $Y$
+be the random variable that is true if the number we get is even. Then,
+we have that
+\begin{align*}
+    \Prob{X=2 \sep{ Y=\text{\upshape true}} } = \frac{1}{3}.
+\end{align*}
+
+\begin{defn}
+    Two random variables $X$ and $Y$ are \emphi{independent} if
+    \begin{equation*}
+        \Prob{X = x \sep{Y=y}} = \Prob{X = x},
+    \end{equation*}
+    for all $x$ and $y$ with $\Prob{Y=y} > 0$.
+\end{defn}
+
+\begin{observation}
+    If $X$ and $Y$ are independent then
+    \begin{equation*}%
+        \ProbCond{X = x}{Y=y} = \Prob{X = x}%
+    \end{equation*}
+    which is equivalent to
+    \begin{equation*}
+        \ds \frac{\Prob{X = x \,\cap\, Y=y}}{\Prob{Y=y}} = \Prob{X = x}.
+    \end{equation*}
+    That is, $X$ and $Y$ are \emph{independent}, if and only if for all
+    $x$ and $y$, we have that
+    \begin{align*}
+      \Prob{\bigl. X = x \,\cap\, Y=y}= \Prob{\bigl. X = x}
+      \Prob{\bigl.  Y=y}.
+    \end{align*}
+\end{observation}
+
+\begin{remark_unnumbered}
+    Informally, and not quite correctly, one possible way to think about
+    the conditional probability $\ProbCond{X=x}{Y=y}$ is that it measures
+    the benefit of having more information. If we know that $Y=y$, do we
+    have any change in the probability of $X=x$?
+\end{remark_unnumbered}
+
+
+\begin{lemma}[Linearity of expectation]
+    \lemlab{linearity:expectation}%
+    %
+    For any two random var\-iables $X$ and $Y$, not necessarily
+    independent, we have
+    \begin{math}
+        \Ex{X+Y} = \Ex{X} + \Ex{Y}.
+    \end{math}
+\end{lemma}
+
+\begin{proof}
+    We have that
+    \begin{align*}
+        \ds \Ex{\bigl. X+Y}%
+        &\EQ%
+        \sum_{\omega \in \Omega} \Prob{ \omega} \pth{ \bigl. X(\omega)
+           + Y(\omega)}%
+        \\&
+        \EQ%
+        \sum_{\omega \in \Omega} \Prob{\omega} X(\omega) +
+        \sum_{\omega \in \Omega} \Prob{\omega} Y(\omega) %
+        \\&
+        \EQ%
+        \Ex{\bigl. X} + \Ex{\bigl. Y}.
+    \end{align*}
+\end{proof}
+
+
+
+
+\begin{lemma}
+    If $X$ and $Y$ are independent random variables, then
+    $\Ex{X Y} = \Ex{X}\Ex{Y}$.
+\end{lemma}
+\begin{proof}
+    Let $U(X)$ and $U(Y)$ denote the sets of all values that $X$ and $Y$
+    can assume, respectively. We have that
+    \begin{align*}
+      \Ex{X Y}
+      &\EQ%
+      \sum_{x \in U(X), y \in U(Y)} xy \Prob{ X = x \text{ and } Y = y}        
+      \\&
+      \EQ%
+        \sum_{x \in U(X), y \in U(Y)} xy \Prob{ X = x} \Prob{ Y = y}        
+      \\&%
+      \EQ%
+      \sum_{x \in U(X)} \sum_{y \in U(Y)} xy \Prob{ X = x} \Prob{ Y = y}        
+      \\&
+      \EQ%
+      \sum_{x \in U(X)} x \Prob{X=x} \sum_{y \in U(Y)} y  \Prob{ Y =
+      y}
+      \\&
+      \EQ%
+      \Ex{X} \, \Ex{Y}.
+    \end{align*}
+\end{proof}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Variance and standard deviation}
+
+
+\begin{defn}[Variance and standard deviation]
+    For a random variable
+    $X$, let
+    \begin{equation*}
+        \Var{ X} = \Ex{ (X -\mu_X)^2 } = \Ex{X^2} - \mu_X^2
+    \end{equation*}
+    denote the \emphi{variance} of $X$, where $\mu_X = \Ex{
+       X}$. Intuitively, this tells us how concentrated the distribution
+    of $X$ is around its mean $\mu_X$.  The \emphi{standard deviation} of
+    $X$, denoted by $\sigma_X$, is the quantity $\sqrt{\Var{ X}}$.
+\end{defn}
+
+\begin{observation}
+    (i) For any constant $c  \in \reals$, we have
+    $\Var{ \bigl. c X} = c^2 \Var{\bigl.  X}$.
+    
+    (ii) For $X$ and $Y$ independent random variables, we have
+    \begin{math}
+        \Var{\bigl. X + Y }%
+        =%
+        \Var{\bigl. X } + \Var{ \bigl. Y }.
+    \end{math}
+\end{observation}
+
+\Section{Some distributions and their moments}
+
+\SubSection{Bernoulli distribution}
+\begin{defn}[Bernoulli distribution]
+    Assume that one flips a coin and gets $1$ (heads) with probability
+    $p$, and $0$ (tails) with probability $q = 1-p$. Let $X$ be this
+    random variable. The variable $X$ has a \emphi{Bernoulli
+       distribution} with parameter $p$.
+    
+    We have that $\Ex{ X} = 1\cdot p + 0 \cdot(1-p) = p$, and
+    \begin{align*}
+        \Var{\bigl. X}%
+        &\EQ%
+        \Ex{X^2} - \mu_X^2%
+        \EQ%
+        \Ex{X^2} - p^2%
+        \EQ%
+        p - p^2
+        \\&
+        \EQ%
+        p \ts (1-p)%
+        \EQ%
+        p q.
+    \end{align*}
+\end{defn}
+
+\begin{defn}[Binomial distribution]
+    Assume that we repeat a Bernoulli experiment $n$ times
+    (independently!). Let $X_1, \ldots, X_n$ be the resulting random
+    variables, and let $X = X_1 + \cdots + X_n$. The variable $X$ has the
+    \emphi{binomial distribution} with parameters $n$ and $p$. We denote
+    this by $X \sim \DistBinom{n}{p}$. We have
+    \begin{align*}
+      b(k;n,p)%
+      =%
+      \Prob{ \bigl. X = k } = \binom{n}{k} p^{k} q^{n-k}.
+    \end{align*}
+    Also, $\Ex{ X } = n p$, and
+    \begin{math}
+        \Var{ X}%
+        =%
+        \Var{ \bigl. \sum_{i=1}^n X_i }%
+        =%
+        \sum_{i=1}^n \Var{ X_i }%
+        = n p q.
+    \end{math}
+\end{defn}
+
+
+\subsection{Geometric distribution}
+
+\begin{defn}
+    Consider a sequence $X_1,X_2, \ldots $ of independent Bernoulli
+    trials with probability $p$ for success. Let $X$ be the number of
+    trials one has to perform till encountering the first success. The
+    distribution of $X$ is a \emphi{geometric distribution} with
+    parameter $p$. We denote this by $X \sim \DistGeom{p}$.
+\end{defn}
+
+\begin{lemma}
+    \lemlab{expectation:geometric}%
+    %
+    For a variable $X \sim \DistGeom{p}$, for 
+    $i \in \{1, 2, \ldots\}$, we have that
+    \begin{math}
+        \Prob{ X = i} = (1-p)^{i-1} p.
+    \end{math}
+    Furthermore, $\Ex{ X} = 1/p$ and $\Var{ X} = (1-p)/p^2$.
+\end{lemma}
+\begin{proof} 
+    The proof of the expectation and variance is included for the sake of
+    completeness, and the reader is of course encouraged to skip this
+    proof.  So, let $f(x) = \sum_{i=0}^\infty x^i = \frac{1}{1-x}$, and
+    observe that $f'(x) = \sum_{i=1}^\infty i x^{i-1} = (1-x)^{-2}$. As such, we
+    have
+    \begin{align*}
+        \Ex{ X}%
+        &\EQ%
+        \sum_{i=1}^\infty i\, (1-p)^{i-1} p
+        \EQ%
+        p f'(1-p)%
+        \EQ%
+        \frac{p}{\pth[]{1 - (1-p)}^2}%
+        \\&
+        \EQ%
+        \frac{1}{p},
+%    \end{align*}
+%    and
+%    \begin{lalign*}
+        \shortintertext{and}
+        \Var{ X}%
+      &\EQ%
+        \Ex{X^2} - \frac{1}{p^2}%
+        \EQ%
+        \sum_{i=1}^\infty i^2 \, (1-p)^{i-1} p - \frac{1}{p^2}
+      \\&%
+      \EQ%
+        p + p(1-p) \sum_{i=2}^\infty i^2 \, (1-p)^{i-2} -
+        \frac{1}{p^2}.%
+    \end{align*}
+    
+    Observe that
+    \begin{align*}
+        f''(x)
+        &\EQ%
+        \sum_{i=2}^\infty i (i-1) x^{i-2}%
+%        \\&
+        \EQ%
+        \pth{ (1-x)^{-1}}''%
+%        \\&%
+        \EQ
+        \frac{2}{(1-x)^3}.
+    \end{align*}
+    As such, we have that
+    \begin{align*}
+        \Delta(x)%
+        &\EQ
+        \sum_{i=2}^\infty i^2 x^{i-2}%
+%        \\&
+        \EQ%
+        \sum_{i=2}^\infty i(i-1) x^{i-2} + \sum_{i=2}^\infty i
+        x^{i-2}%
+        \\&
+        \EQ%
+        f''(x) +\frac{1}{x} \sum_{i=2}^\infty i x^{i-1}%
+%        \\&
+        \EQ%
+        f''(x) +\frac{1}{x} \pth{f'(x) - 1}%
+%        \\&%
+        \\&
+        \EQ%
+        \frac{2}{(1-x)^3} + \frac{1}{x} \pth[]{ \frac{1}{(1-x)^2} -1
+        }%
+        \\&
+        \EQ%
+        \frac{2}{(1-x)^3} + \frac{1}{x} \pth[]{ \frac{1 -
+              (1-x)^2}{(1-x)^2} }%
+        \\&%
+        \EQ%
+        \frac{2}{(1-x)^3} + \frac{1}{x} \cdot{ \frac{x (2-x)}
+           {(1-x)^2} }%
+        \\&%
+        \EQ%
+        \frac{2}{(1-x)^3} + \frac{2-x} {(1-x)^2}. %
+    \end{align*}
+    As such, we have that
+    \begin{align*}
+      \Var{ X}%
+      &\EQ%
+        p + p(1-p)\, \Delta(1-p) - \frac{1}{p^2}%
+        \\&
+        \EQ %
+        p + p(1-p) \pth{\frac{2}{p^3} + \frac{1+p}{p^2}} -
+        \frac{1}{p^2}%
+        \\&
+        \EQ%
+        p + \frac{2(1-p)}{p^2} + \frac{1-p^2}{p} - \frac{1}{p^2}%
+        \\&%        
+        \EQ%
+        \frac{p^3 + 2(1-p) + p-p^3 -1 }{p^2}%
+        \\&
+        \EQ%
+        \frac{ 1-p }{p^2}.
+    \end{align*}
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\Section{Application: Approximating \TPDF{$3$}{3}SAT}
+\seclab{k:sat:expectation}
+
+Let $F$ be a boolean formula with $n$ variables in \CNF{} form, with $m$
+clauses, where each clause has exactly $k$ literals. We claim that a
+random assignment for $F$, where values $0$ and $1$ are picked with
+probability $1/2$, satisfies in expectation $(1-2^{-k}) m$ of the
+clauses.
+
+
+
+We remind the reader that an instance of \ProblemC{3SAT} is a boolean
+formula, for example $F=(x_{1} \lor x_{2} \lor x_{3})\land (x_{4} \lor
+\overline{x_{1}} \lor x_{2})$\remX{Using standard Boolean connectives $\lor, \land$ avoids potential confusion with algebraic sum/product.}, and the decision problem is to decide if the
+formula has a satisfiable assignment.  Interestingly, we can turn this
+into an optimization problem.
+
+\NPProblemOpt{Max 3SAT}{3SAT!3SAT Max}{A collection of clauses:
+   $C_{1},\ldots,C_{m}.$}%
+{Find the assignment to $x_{1},\dots,x_{n}$ that satisfies the maximum
+   number of clauses.}%
+
+Clearly, since \ProblemC{3SAT} is \NPComplete{} it implies that
+\ProblemC{Max 3SAT} is \NPHard{}. In particular, the formula $F$
+becomes the following set of two clauses:
+\begin{equation*}
+    x_{1} \lor x_{2} \lor x_{3} \quad\text{and}\quad
+    x_{4} \lor \overline{x_{1}} \lor x_{2}.
+\end{equation*}
+
+Note, that \ProblemC{Max 3SAT} is a \emphi{maximization problem}.
+
+\begin{defn}
+    \index{approximation!maximization problem}%
+    Algorithm \Algorithm{Alg} for a maximization problem achieves an
+    approximation factor $\alpha$ if for all inputs, we have:
+    \begin{equation*}
+        \frac{\Algorithm{Alg}(G)}{\mathrm{Opt}(G)}\geq\alpha.
+    \end{equation*}
+\end{defn}
+
+In the following, we present a \emphic{randomized
+   algorithm}{algorithm!randomized}---it is allowed to access a source of
+random bits in making decisions. A key property we need about random
+variables is the linearity of expectation property defined above.
+
+
+\begin{defn}
+    For an event $\Event$, let $X$ be a random variable which is $1$
+    if $\Event$ occurred, and $0$ otherwise. The random variable $X$
+    is an \emphi{indicator variable}.
+\end{defn}
+
+\begin{observation}
+    \obslab{indic:expectation}%
+    %
+    For an indicator variable $X$ of an event $\Event$, we have
+    \begin{align*}
+      \Ex{\bigl. X}%
+      =%
+      0 \cdot \Prob{\bigl.X = 0} + 1 \cdot \Prob{\bigl.X = 1}%
+      =%
+      \Prob{\bigl.X = 1}%
+      =%
+      \Prob{\bigl. \Event}.
+    \end{align*}
+\end{observation}
+
+
+\begin{theorem}
+    \thmlab{3:max:s:a}%
+    %
+    One can achieve (in expectation) a $(7/8)$-approximation to
+    \ProblemC{Max 3SAT} in polynomial time. Specifically, consider a
+    $3$SAT formula $F$ with $n$ variables and $m$ clauses, and consider
+    the randomized algorithm that assigns each variable value $0$ or $1$
+    with equal probability (independently to each variable).  This
+    assignment satisfies $(7/8)m$ clauses in \emph{expectation}.
+\end{theorem}
+
+\begin{proof}
+    Let $x_1,\ldots, x_n$ be the $n$ variables used in the given instance.
+    The algorithm works by randomly assigning values to
+    $x_1,\ldots, x_n$, independently, with equal probability, from
+    $\{0, 1\}$, for each one of the variables.
+
+    Let $Y_{i}$ be the indicator variable that is $1$ if (and only if)
+    the $i$\th clause is satisfied by the generated random assignment,
+    and $0$ otherwise, for $i=1,\ldots, m$. Formally, we have
+    \begin{equation*}
+        Y_{i} = \begin{cases}
+            1 & C_{i}\text{ is satisfied by the generated assignment,}\\
+            0 & \text{otherwise.}
+        \end{cases}
+    \end{equation*}
+      
+    Now, the number of clauses satisfied by the given assignment is
+    $Y=\sum_{i=1}^{m}Y_{i}$.  We claim that $\Ex{Y} = (7/8)m$, where
+    $m$ is the number of clauses in the input. Indeed, we have
+    \begin{equation*}
+        \Ex{Y\bigl.}%
+        =%
+        \Ex{\Bigl. \smash{\sum_{i=1}^{m}Y_{i}}}%
+        =%
+        \sum_{i=1}^{m}\Ex{Y_{i} \bigl.},
+    \end{equation*}
+    by linearity of expectation. The probability that $Y_{i} = 0$ is
+    exactly the probability that all three literals appearing in the
+    clause $C_i$ are evaluated to \FALSE. Since the three literals, say
+    $\ell_1, \ell_2, \ell_3$, are instances of three distinct variables, these
+    three events are independent, and as such the probability for this
+    happening is
+    \begin{align*}
+        \Prob{\Bigl.Y_{i}
+           =
+           0 \bigl.}%
+        &\EQ%
+        \Prob{\Bigl. (\ell_1 = 0) \wedge (\ell_2 = 0) \wedge (\ell_3 = 0)} 
+        \\&
+        \EQ%
+        \Prob{ \ell_1 = 0 }
+        \Prob{\ell_2 = 0 }
+        \Prob{\ell_3 = 0 }
+        \\&
+        \EQ%
+        \frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}
+        \EQ
+        \frac{1}{8}.
+    \end{align*}
+    (Another way to see this, is to observe that since $C_i$ has
+    exactly three literals, there is only one possible assignment to
+    the three variables appearing in it, such that the clause
+    evaluates to \FALSE. Now, there are eight ($8$) possible assignments
+    to this clause, and thus the probability of picking a \FALSE
+    assignment is $1/8$.) Thus,
+    \begin{equation*}
+        \Prob{Y_{i}=1 \bigl.}%
+        =%
+        1-\Prob{ \bigl. Y_{i}=0 \ts }%
+        =%
+        \frac{7}{8},
+    \end{equation*}
+    and
+    \begin{equation*}
+        \Ex{Y_{i} \bigl.}%
+        =%
+        \Prob{Y_{i}=0 \bigl. } \cdot 0 + \Prob{Y_{i}=1 \bigl. } \cdot 1%
+        =%
+        \frac{7}{8}.
+    \end{equation*}        
+    Namely,
+    $\Ex{\text{\# of clauses sat}} = \Ex{ Y } =
+    \sum_{i=1}^{m}\Ex{Y_{i}} = (7/8) m$. Since the optimal solution
+    satisfies at most $m$ clauses, the claim follows.
+\end{proof}
+
+\medskip
+
+Curiously, \thmref{3:max:s:a} is stronger than what one usually
+would be able to get for an approximation algorithm. Here, the
+approximation quality is independent of how well the optimal solution
+does (since the optimal can satisfy at most $m$ clauses, we get a
+$(7/8)$-approximation).  Curious{}er and
+curious{}er\footnote{``Curious{}er and curious{}er!''  cried Alice (she
+   was so much surprised, that for the moment she quite forgot how to
+   speak good English).''---\emph{Alice's Adventures in Wonderland},
+   Lewis Carroll}, the algorithm does not even look at the input when
+generating the random assignment.
+
+
+\Hastad~\cite{h-soir-01} proved that one can do no better; that is, for
+any constant $\eps > 0$, one cannot approximate \ProblemC{3SAT} in
+polynomial time (unless $\POLYT = \NP$) to within a factor of
+$7/8 + \eps$. It is pretty amazing that a trivial algorithm like the above
+is essentially optimal.
+
+\begin{remark}
+    For $k \geq 3$, the above implies a $(1-2^{-k})$-approximation algorithm
+    for \ProblemC{Max $k$SAT}, as long as the clauses each have at least
+    $k$.
+\end{remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Markov's inequality}
+
+\subsection{Markov's inequality}
+
+We remind the reader that for a random variable $Y$ assuming real values,
+its {expectation} is $ \Ex {Y} = \sum_{y} y \cdot \Prob{ Y=y}$.  Similarly, for
+a function $f(\cdot)$, we have $\Ex{f(Y)} = \sum_{y} f(y) \cdot \Prob{Y=y}$.
+
+\begin{fragment}{Markov}
+    \begin{theorem}[Markov's Inequality]
+        \thmlab{Markov}%
+        %
+        Let $Y$ be a random variable assuming only non-negative
+        values. Then for all $t >0$, we have
+        \begin{equation*}
+            \Prob{\bigl. Y \geq t} \leq \frac{\Ex{\bigl. Y \ts }}{t}.
+        \end{equation*}
+    \end{theorem}
+\end{fragment}
+\begin{proof}
+    Indeed,
+    \begin{align*}
+      \Ex{\bigl. Y}%
+      &=%
+        \sum_{y\geq t} y \Prob{\bigl. Y = y} + \sum_{y < t} y \Prob{Y
+        = y }%
+        \geq%
+        \sum_{y\geq t} y \Prob{\bigl. Y = y}%
+      \\&%
+      \geq%
+      \sum_{y\geq t} t \Prob{\bigl. Y = y}%
+      =%
+      t \Prob{ \bigl. Y \geq t}.
+    \end{align*}
+\end{proof}
+
+Markov's inequality is tight, as the following exercise testifies.
+\begin{exercise}
+    For any (integer) $k >1$, define a non-negative random variable $X_k$
+    such that
+    $\displaystyle \Prob{ \MakeBig X_k \geq k \Ex{X_k}} = {1}/{k}$.
+\end{exercise}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\subsection{Example: Approximating  \TPDF{$k$}{k}SAT}
+
+In \secref{k:sat:expectation} we saw a surprisingly simple algorithm
+that, for a formula $F$ that is $3$SAT with $n$ variables and $m$
+clauses, in expectation (in linear time) it finds an assignment that
+satisfies $(7/8)m$  of the clauses (for simplicity, here we set
+$k=3$).
+
+The problem is that the guarantee is only in expectation---and the
+assignment being output by the algorithm might satisfy far fewer
+clauses. Namely, we would like to convert a guarantee that is in
+expectation into a high-probability guarantee. So, let
+$\eps,\BadProb \in (0,1/2)$ be two parameters. We would like an algorithm
+that outputs an assignment that satisfies (say) $(1-\eps)(7/8)m$ clauses,
+with probability $\geq 1- \BadProb$.
+
+To this end, the new algorithm runs the previous algorithm
+\begin{equation*}
+    u = \ceil{\frac{1}{\eps}\ln \frac{1}{\BadProb}}
+\end{equation*}
+times, and returns the assignment satisfying the largest number of
+clauses.
+
+\begin{lemma}
+    Given a $3$SAT formula with $n$ variables and $m$ clauses, and
+    parameters $\eps, \BadProb \in (0,1/2)$, the above algorithm
+    returns an assignment that satisfies $\geq (1-\eps)(7/8)m$ clauses
+    of $F$, with probability $\geq 1 - \BadProb$. The running time of
+    the algorithm is $O( \eps^{-1} (n + m) \log \BadProb^{-1} )$.
+\end{lemma}
+
+\begin{proof}
+    Let $Z_i$ be the number of clauses \emph{not} satisfied by the $i$\th
+    random assignment considered by the algorithm. Observe that
+    $\Ex{Z_i} = m/8$, as the probability of a clause not to be satisfied
+    is $1/2^3$. The $i$\th iteration \emph{fails} if
+    \begin{align*}
+        m - Z_i < (1-\eps)(7/8)m
+        \quad&\implies\quad%
+        Z_i%
+        >%
+        m\bigl( 1- (1-\eps)7/8\bigr)
+        \\&%
+        =%
+        \bigl( 1 + 7\eps \bigr) \frac{m}{8}
+        =%        
+        \bigl( 1 + 7\eps \bigr) \Ex{Z_i}.
+    \end{align*}
+    Thus,
+    by \thmrefY{Markov's inequality}{Markov},
+    the $i$\th iteration fails with probability
+    \begin{align*}
+        p%
+        &=%
+        \Prob{ m - Z_i < (1-\eps)(7/8)m}%
+        =%
+        \Prob{Z_i > ( 1 + 7\eps ) \Ex{Z_i}\bigr.}%
+        \\&<%
+        \frac{\Ex{Z_i}}{( 1 + 7\eps ) \Ex{Z_i}}%
+        =%
+        \frac{1}{ 1 + 7\eps }%
+        <%
+        1-\eps,%
+    \end{align*}
+    since 
+    $( 1 + 7\eps )(1-\eps) = 1 +6\eps - 7\eps^2 > 1$, for $\eps <
+    1/2$.
+
+    For the algorithm to fail, all $u$ iterations must fail. Since
+    $1-x \leq \exp(-x)$, we have that
+    \begin{equation*}
+        p^u %
+        \leq
+        (1-\eps)^u
+        \leq
+        \exp( -\eps)^u
+        \leq
+        \exp( -\eps u)
+        \leq
+        \exp\pth{-\eps  \ceil{\frac{1}{\eps}\ln \frac{1}{\BadProb}}}%
+        \leq%
+        \BadProb.
+    \end{equation*}
+\end{proof}
+
+\subsection{Example: Coloring a graph}
+
+Consider a graph $\G =( \VV,\EE)$ with $n$ vertices and $m$ edges. We
+would like to color it with $k$ colors. As a reminder, a
+\emphi{coloring} of a graph by $k$ colors, is an assignment
+$\chi:\VV \rightarrow \IRX{k}$ of a color to each vertex of $\G$, out
+of the $k$ possible colors $\IRX{k} = \{1,2,\ldots, k\}$. A coloring
+of an edge $uv \in \EE$ is \emph{valid} if $\chi(u) \neq \chi(v)$.
+
+\begin{lemma}
+    Consider a random coloring $\chi$ of the vertices of a graph
+    $\G =(\VV,\EE)$, where each vertex is assigned a color randomly
+    and uniformly from $\IRX{k}$. Then, the expected number of edges
+    with invalid coloring is $m/k$, where $m = \cardin{\EdgesX{\G}}$
+    is the number of edges in $\G$.
+\end{lemma}
+
+\begin{proof}
+    Let $\EE = \{ e_1, \ldots, e_m\}$. Let $X_i$ be an indicator variable that
+    is $1$ $\iff$ $e_i$ is invalidly colored (i.e., monochromatic) by
+    $\chi$. Let $e_i =u_iv_i$. We have that
+    \begin{equation*}
+        \Prob{ X_i = 1}
+        =%
+        \Prob{\chi(u_i) = \chi(v_i) }
+        =
+        \frac{1}{k}.
+    \end{equation*}
+    Indeed, conceptually color $u_i$ first, and $v_i$ later. The
+    probability that $v_i$ would be assigned the same color as $u_i$
+    is $1/k$. Let $Z$ be the random variable that is the number of
+    edges that are invalid for $\chi$. We have that
+    $Z = \sum_{i} X_i$. By \lemrefY{linearity of
+       expectations}{linearity:expectation}, and the
+    \obsrefY{expectation of an indicator variable}{indic:expectation},
+    we have
+    \begin{equation*}
+        \Ex{Z}
+        =%
+        \sum_{i=1}^m \Ex{X_i}
+        =%
+        \sum_{i=1}^m \Prob{X_i = 1 }
+        =
+        \sum_{i=1}^m \frac{1}{k}
+        =
+        \frac{m}{k}.
+    \end{equation*}
+\end{proof}
+
+That is pretty good, but what about an algorithm that always succeeds?
+The above algorithm might always somehow give us a bad coloring. Well,
+not to worry.
+
+\begin{lemma}
+    The above random coloring of $\G$ with $k$ colors, has at most
+    $2m/k$ invalid edges, with probability $\geq 1/2$.
+\end{lemma}
+\begin{proof}
+    We have that $\Ex{Z} = m/k$. As such, by \thmrefY{Markov's
+       inequality}{Markov}, we have that
+    \begin{equation*}
+        \Prob{ Z > 2m/k  }
+        \leq 
+        \Prob{ Z \geq 2m/k  }
+        \leq%
+        \frac{\Ex{Z}}{2m/k}
+        =
+        \frac{m/k}{2m/k}
+        =
+        \frac{1}{2}.
+    \end{equation*}
+    Thus,
+    \begin{equation*}
+        \Prob{Z \leq 2m/k}
+        =%
+        1- \Prob{Z > 2m/k}
+        \geq
+        1 - \frac{1}{2}
+        =
+        \frac{1}{2}.
+    \end{equation*}
+\end{proof}
+
+In particular, consider the modified algorithm---it randomly colors the
+graph $\G$. If there are at most $2m/k$ invalid edges, it outputs the
+coloring, and stops. Otherwise, it retries. The probability of every
+iteration to succeed is $p \geq 1/2$, and as such, the number of
+iterations behaves like a geometric random variable. It follows, that in
+expectation, the number of iterations is at most
+\lemrefY{$1/p \leq2$}{expectation:geometric}. Thus, the expected running
+time of this algorithm is $O(m)$. Indeed, let $R$ be the number of
+iterations performed by the algorithm. We have that the expected running
+time is proportional to
+\begin{equation*}
+    \Ex{R m } = m\Ex{R}  = 2m.
+\end{equation*}
+
+Note, that this is not the full picture. Indeed,
+$\Prob{R = i} \leq 1/2^{i-1}$. So the probability of this algorithm taking
+long to terminate decreases exponentially.
+
+\subsubsection{Getting a valid coloring}
+
+\paragraph{A fun algorithm.}
+A natural approach is to run the above algorithm for $k=\sqrt{m}$ (assume
+it is an integer). Then identify all the invalid edges, and invalidate
+the color of all the vertices involved. We now repeat the coloring
+algorithm on these invalid vertices and invalid edges, again using random
+coloring, but now using colors $\{k+1, \ldots, 2k\}$.  If after this round,
+there is at most $1$ invalid edge (if there is exactly one, recolor one
+of its endpoints with a fresh color $2k+1$), output the valid
+coloring. If there are $2$ or more invalid edges, the algorithm
+fails.
+
+\begin{lemma}
+    The above algorithm succeeds with probability at least $1/2$.
+\end{lemma}
+\begin{proof}
+    Let $Y$ be the number of invalid edges at the end of the second
+    round. For an edge to be invalid, its coloring must have failed in
+    both rounds, and the probability for that is exactly
+    $(1/k)\cdot(1/k) = 1/m$ since the two random colorings are
+    independent. As such, arguing as above, we have $\Ex{Y} =1$. By
+    Markov's inequality, we have that
+    \begin{equation*}
+        \Prob{\text{algorithm fails}}
+        =
+        \Prob{Y \geq 2 }
+        \leq
+        \frac{\Ex{Y}}{2}
+        =%
+        \frac{1}{2}.
+    \end{equation*}
+\end{proof}
+
+\begin{remark}
+    This is a toy example---it is not hard to come up with a deterministic
+    algorithm that uses (say) $\sqrt{2m} + 2$ colors (how?  think about
+    it). However, this algorithm is a nice distributed algorithm---after
+    three rounds of communication, it colors the graph in a valid way,
+    with probability at least $1/2$.
+\end{remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\ChapterEnd{}
+
+% -------------------------------------------------------------------------
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: t
+% End: 

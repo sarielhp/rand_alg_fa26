@@ -51,13 +51,13 @@ the algorithm description is relatively straightforward.
 
 \subsubsection{Prime and coprime}
 For integer numbers $x$ and $y$, let $x \divides y$ denotes that $x$
-divides $y$. The \emph{greatest common divisor} (\emphi{g{c}d}) of two
+divides $y$. The \emph{greatest common divisor} (\emphOnly{g{c}d}\index{g{c}d}) of two
 numbers $x$ and $y$, denoted by $\gcd(x,y)$, is the largest integer
 that divides both $x$ and $y$. The \emph{least common multiple}
-(\emphi{l{c}m}) of $x$ and $y$, denoted by $\lcm(x,y) = xy /
+(\emphOnly{l{c}m}\index{l{c}m}) of $x$ and $y$, denoted by $\lcm(x,y) = xy /
 \gcd(x,y)$, is the smallest integer $\alpha$, such that $x \divides
 \alpha$ and $y \divides \alpha$. An integer number $p > 0$ is
-\emphi{prime} if it is divisible only by $1$ and itself (we will
+\emphOnly{prime}\index{prime} if it is divisible only by $1$ and itself (we will
 consider $1$ not to be prime).
 
 Some standard definitions:
@@ -73,7 +73,7 @@ Some standard definitions:
     x - y \floor{x/y}.
 \end{align*}
 \index{quotient,remainder,coprime}%
-The remainder $x \bmod y$ is sometimes referred to as \emphi{residue}.
+The remainder $x \bmod y$ is sometimes referred to as \emphOnly{residue}\index{residue}.
 
 % \pagebreak
 
@@ -141,14 +141,14 @@ addition, subtraction, etc) with total of $\ell$ bits takes $O\pth{
 \end{proof}
 
 We use $\alpha \equiv \beta \pmod{n}$ or $\alpha \equiv_n \beta$ to
-denote that $\alpha$ and $\beta$ are \emphi{congruent modulo $n$};
+denote that $\alpha$ and $\beta$ are \emphOnly{congruent modulo $n$}\index{congruent modulo $n$};
 that is $\alpha \bmod n = \beta \bmod n$. Or put differently, we have
 $n \divides \pth[]{\alpha - \beta}$. The set $\ZZ_n = \brc{0, \ldots,
    n-1 \Bigl. }$ form a \emph{group} under addition modulo $n$ (see
 \defrefpage{group} for a formal definition of a group).  The more
 interesting creature is $\ZZ_n^* = \brc{x \sep{ x \in \brc{1,\ldots,
          n}, x > 0, \text{ and } \gcd(x, n) =1}}$, which is a
-\emphi{group} modulo $n$ under multiplication.
+\emphOnly{group}\index{group} modulo $n$ under multiplication.
 
 \begin{remark}
     \remlab{totient}%
@@ -268,7 +268,7 @@ before can spend some time proving this).
 \subsubsection{Euler totient function}
 \seclab{totient}%
 \mbox{}\\
-The \emphi{Euler totient function} $\phi(n) = \cardin{\ZZ_n^*}$ is the
+The \emphOnly{Euler totient function}\index{Euler totient function} $\phi(n) = \cardin{\ZZ_n^*}$ is the
 number of positive integer numbers that at most $n$ and are
 coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
 
@@ -277,7 +277,7 @@ coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
     %
     Let $n=p_1^{k_1} \cdots p_t^{k_t}$, where the $p_i$s are prime
     numbers and the $k_i$s are positive integers (this is the
-    \emphi{prime factorization} of $n$). Then 
+    \emphOnly{prime factorization}\index{prime factorization} of $n$). Then 
     \begin{math}
         \ds \phi(n) = \prod_{i=1}^t p_{i}^{k_i -1} (p_{i} -1).
     \end{math}
@@ -313,7 +313,7 @@ coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
 \begin{defn}
     \deflab{group}%
     %
-    A \emphi{group} is a set, $\Group$, together with an operation
+    A \emphOnly{group}\index{group} is a set, $\Group$, together with an operation
     $\gOp$ that combines any two elements $a$ and $b$ to form another
     element, denoted $a \gOp b$ or $ab$. To qualify as a group, the
     set and operation, $(\Graph, \gOp)$, must satisfy the following:
@@ -326,7 +326,7 @@ coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
         we have $(a \gOp b) \gOp c = a \gOp (b \gOp c)$.
 
         \item (\textsc{Identity element}) There exists an
-        element $\gIdent \in \Group$, called the \emphi{identity element},
+        element $\gIdent \in \Group$, called the \emphOnly{identity element}\index{identity element},
         such that for every element $a \in \Group$, the equation $\gIdent
         \gOp a = a \gOp \gIdent = a$ holds.
 
@@ -335,7 +335,7 @@ coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
         \gOp a = \gIdent$.
     \end{compactenumA}
     \smallskip%
-    A group is \emphi{abelian} (aka, \emphi{commutative group}) if for
+    A group is \emphOnly{abelian}\index{abelian} (aka, \emphOnly{commutative group}\index{commutative group}) if for
     all $a,b \in \Group$, we have that $a \gOp b = b \gOp a$.
 \end{defn}
 
@@ -352,7 +352,7 @@ x^{-1}$. Indeed, if there was another inverse $z$, then $y = y \gOp
 \subsubsection{Subgroups}
 
 For a group $\Group$, a subset $\GroupA \subseteq \Group$ that is also
-a group (under the same operation) is a \emphi{subgroup}.
+a group (under the same operation) is a \emphOnly{subgroup}\index{subgroup}.
 
 For $x, y \in \Group$, let us define $x \sim y$ if $x/y \in
 \GroupA$. Here $x/y = x y^{-1}$ and $y^{-1}$ is the inverse of $y$ in
@@ -385,7 +385,8 @@ easy.
     \Group$ be a subgroup.  Consider the set $\Group / \GroupA = \brc{
        [x] \sep{ x \in \Group}}$. We claim that $\cardin{\bigl. [x]} =
     \cardin{\bigl. [y]}$ for any $x,y \in \Group$.  Furthermore
-    $\Group/ \GroupA$ is a group (that is, the \emphi{quotient
+    $\Group/ \GroupA$ is a group (that is, the \emphOnly{quotient
+       group}\index{quotient
        group}), with $[x] \gOp [y] = [x \gOp y]$.
 \end{lemma}
 \begin{proof}
@@ -440,15 +441,15 @@ easy.
 
 
 In particular, for an element $g \in \Group$, we define its
-\emphi{order} as $\ordX{g} = \cardin{\bigl. \permut{g}}$, which
+\emphOnly{order}\index{order} as $\ordX{g} = \cardin{\bigl. \permut{g}}$, which
 clearly is the minimum positive integer $m$, such that $g^m =
 \gIdent$. Indeed, for $j > m$, observe that $g^j = g^{j \bmod m} \in X
 = \brc{ \gIdent, g, g^2, \ldots, g^{m-1}}$, which implies that
 $\permut{g} = X$.
 
-A group $\Group$ is \emphi{cyclic}, if there is an element $g \in
+A group $\Group$ is \emphOnly{cyclic}\index{cyclic}, if there is an element $g \in
 \Group$, such that $\permut{g} = \Group$. In such a case $g$ is a
-\emphi{generator} of $\Group$.
+\emphOnly{generator}\index{generator} of $\Group$.
 
 \begin{lemma}
     \lemlab{power:of:size}%
@@ -561,7 +562,7 @@ $\ZZ_p^*$ is cyclic, let us go back shortly to the totient function.
 \begin{defn}
     \deflab{field}%
     %
-    A \emphi{field} is an algebraic structure $\permut{\Field, +, *,
+    A \emphOnly{field}\index{field} is an algebraic structure $\permut{\Field, +, *,
        0, 1}$ consisting of two abelian groups:
     \begin{compactenumA}
         \item $\Field$ under $+$, with $0$ being the identity element.
@@ -569,7 +570,8 @@ $\ZZ_p^*$ is cyclic, let us go back shortly to the totient function.
         \item $\Field \setminus \brc{0}$ under $*$, with $1$ as the
         identity element (here $0 \neq 1$).
     \end{compactenumA}
-    Also, the following property (\emphi{distributivity of
+    Also, the following property (\emphOnly{distributivity of
+       multiplication over addition}\index{distributivity of
        multiplication over addition}) holds:
     \begin{align*}
         \forall a,b,c \in \Field \qquad a * (b + c) = (a*b) + (a*c).
@@ -770,7 +772,7 @@ direct.
 \subsubsection{Quadratic residue}
 
 \begin{defn}
-    An integer $\alpha$ is a \emphi{quadratic residue} modulo a
+    An integer $\alpha$ is a \emphOnly{quadratic residue}\index{quadratic residue} modulo a
     positive integer $n$, if $\gcd(\alpha, n)=1$ and for some integer
     $\beta$, we have $\alpha \equiv \beta^2 \pmod {n}$.
 \end{defn}
@@ -845,7 +847,7 @@ direct.
 % $\jSym{a}{b}$
 
 For an odd prime $p$, and an integer $a$ with $\gcd(a,n)=1$, the
-\emphi{Legendre symbol} $\lSym{a}{p}$ is one if $a$ is a quadratic
+\emphOnly{Legendre symbol}\index{Legendre symbol} $\lSym{a}{p}$ is one if $a$ is a quadratic
 residue modulo $p$, and $-1$ otherwise (if $p \divides a$, we define
 $\lSym{a}{p} = 0$). Euler's criterion (\thmref{euler:criterion})
 implies the following equivalent definition.
@@ -854,7 +856,7 @@ implies the following equivalent definition.
 \begin{defn}
     \deflab{l:symbol}%
     %
-    The \emphi{Legendre symbol}, for a prime number $p$, and $a\in
+    The \emphOnly{Legendre symbol}\index{Legendre symbol}, for a prime number $p$, and $a\in
     \ZZ_p^*$, is
     \begin{align*}
         \lSym{a}{p} = a^{(p-1)/2} \pmod p.
@@ -969,7 +971,7 @@ The following is easy to verify.
 
 
 
-\begin{theorem}[\emphi{Law of quadratic reciprocity}]
+\begin{theorem}[\emphOnly{Law of quadratic reciprocity}\index{Law of quadratic reciprocity}]
     \thmlab{reciprocity:l}%
     %
     If $p$ and $q$ are distinct odd primes, then 
@@ -1017,7 +1019,8 @@ The following is easy to verify.
 
 \begin{defn}
     For any integer $a$, and an odd number $n$ with prime
-    factorization $n=p_1^{k_1} \cdots p_t^{k_t}$, its \emphi{Jacobi
+    factorization $n=p_1^{k_1} \cdots p_t^{k_t}$, its \emphOnly{Jacobi
+       symbol}\index{Jacobi
        symbol} is
     \begin{align*}
         \jSym{a}{n} = \prod_{i=1}^t \lSym{a}{p_i}^{k_i}.
@@ -1046,7 +1049,7 @@ The following is easy to verify.
     which is obviously true.
 \end{proof}
 
-\begin{lemma}[\emphi{Law of quadratic reciprocity}]
+\begin{lemma}[\emphOnly{Law of quadratic reciprocity}\index{Law of quadratic reciprocity}]
     \lemlab{reciprocity:j}%
     %
     For $n$ and $m$ positive odd integers, we have that 

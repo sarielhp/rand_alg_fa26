@@ -1,0 +1,489 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\ChapterNumPage{49}{390}
+
+\Chapter{Expanders III - The Zig Zag Product}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{Gradually, but not as gradually as it seemed to some parts
+   of his brain, he began to infuse his tones with a sarcastic
+   wounding bitterness. Nobody outside a madhouse, he tried to imply,
+   could take seriously a single phrase of this conjectural, nugatory,
+   deluded, tedious rubbish. Within quite a short time he was
+   contriving to sound like an unusually fanatical Nazi trooper in
+   charge of a book-burning reading out to the crowd excerpts from a
+   pamphlet written by a pacifist, Jewish, literate Communist. A
+   growing mutter, half-amused, half-indignant, arose about him, but
+   he closed his ears to it and read on. Almost unconsciously he began
+   to adopt an unnameable foreign accent and to read faster and
+   faster, his head spinning. As if in a dream he heard Welch
+   stirring, then whispering, then talking at his side. he began
+   punctuating his discourse with smothered snorts of derision. He
+   read on, spitting out the syllables like curses, leaving
+   mispronunciations, omissions, spoonerisms uncorrected, turning over
+   the pages of his script like a score-reader following a presto
+   movement, raising his voice higher and higher. At last he found his
+   final paragraph confronting him, stopped, and look at his
+   audience.}{Kingsley Amis}{Lucky Jim}
+
+
+ 
+
+\section{Building a large expander with constant degree}
+
+\subsection{Notations}
+
+For a vertex $v \in V(\Graph)$, we will denote by
+$\NXExt{v}{\Graph}{i} = \NX{v}{i}$ the $i$\th neighbor of $v$ in the
+graph $\Graph$ (we order the neighbors of a vertex in an arbitrary
+order).
+
+The regular graphs we next discuss have \emphi{consistent
+   labeling}. That is, for a regular graph $\Graph$ (we assume here
+that $\Graph$ is regular). This means that if $u$ is the $i$\th
+neighbor $v$ then $v$ is the $i$\th neighbor of $u$. Formally, this
+means that $\NX{\NX{v}{i}}{i} = v$, for all $v$ and $i$.  This is a
+non-trivial property, but its easy to verify that the low quality
+expander of \thmref{explicit} has this property. It is also easy to
+verify that the complete graph can be easily be made into having
+consistent labeling (exercise). These two graphs would be sufficient
+for our construction.
+
+
+
+
+
+\subsection{The Zig-Zag product}
+
+At this point, we know how to construct a good ``small'' expander. The
+question is how to build a large expander (i.e., large number of
+vertices) and with constant degree.
+
+The intuition of the construction is the following: It is easy to
+improve the expansion qualities of a graph by squaring it. The problem
+is that the resulting graph $\Graph$ has a degree which is too
+large. To overcome this, we will replace every vertex in $\Graph$ by a
+copy of a small graph that is connected and has low degree. For
+example, we could replace every vertex of degree $d$ in $\Graph$ by a
+path having $d$ vertices. Every such vertex is now in charge of
+original edge of the graph. Naturally, such a replacement operation
+reduces the quality of the expansion of the resulting graph. In this
+case, replacing a vertex with a path is a potential ``disaster'',
+since every such subpath increases the lengths of the paths of the
+original graph by a factor of $d$ (and intuitively, a good expander
+have ``short'' paths between any pair of vertices).
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/replacement}}
+    \caption{An example of a replacement product.}
+    \figlab{replacement}
+\end{figure}
+
+
+Consider a ``large'' $(n,D)$-graph $\Graph$ and a ``small''
+$(D,d)$-graph $\GraphB$. As a first stage, we replace every vertex of
+$\Graph$ by a copy of $\GraphB$.  The new graph $\GraphC$ has
+$\RangeI{n}\times\RangeI{D}$ as a vertex set.  Here, the edge $v u \in
+V(\Graph)$, where $u=v[i]$ and $v=u[j]$, is replaced by the edge
+connecting $(v,i) \in V(\GraphC)$ with $(u,j) \in V(\GraphC)$. We will
+refer to this resulting edge $(v,i)(u,j)$ as a \emphi{long}
+edge. Also, we copy all the edges of the small graph to each one of
+its copies. That is, for each $i\in \RangeI{n}$, and $uv \in
+E(\GraphB)$, we add the edge $(i,u) (i,v)$ to $\GraphC$, which is a
+\emphi{short} edge. We will refer to $\GraphC$, which is a $(nD,
+d+1)$-graph, as a \emphi{replacement product} of $\Graph$ and
+$\GraphB$, denoted by $\RProd{\Graph}{\GraphB}$. See \figref{replacement}
+for an example.
+
+\begin{figure}[t]
+    \centering
+    \IncludeGraphics{\File{figs/zigzag_path}}
+    \caption{A zig-zag-zig path in the replacement product graph.}
+    \figlab{zigzag:path}
+\end{figure}
+
+Again, intuitively, we are losing because the expansion of the
+resulting graph had deteriorated too much. To overcome this problem,
+we will perform local shortcuts to shorten the  paths in the
+resulting graph (and thus improve its expansion properties). A
+\emphi{zig-zag-zig path} in the replacement product graph $\GraphC$,
+is a three edge path $e_1 e_2 e_3$, where $e_1$ and $e_3$ are short
+edges, and the middle edge $e_2$ is a long edge.  That is, if $e_1 =
+(i,u) (i,v)$, $e_2 = (i,v)(j,v')$, and $e_3=(j,v')(j,u')$, then $e_1,
+e_2, e_3 \in E(\GraphC)$, $ij \in E(\Graph)$, $uv \in E(\GraphB)$ and
+$v'u' \in E(\GraphB)$. Intuitively, you can think about $e_1$ as a
+small ``zig'' step in $\GraphB$, $e_2$ is a long ``zag'' step in
+$\Graph$, and finally $e_3$ is a ``zig'' step in $\GraphB$ (see \figref{zigzag:path}).
+
+
+Another way of representing a zig-zag-zig path $v_1 v_2 v_3 v_4$
+starting at the vertex $v_1 = (i,v) \in V(\GraphD)$, is to
+parameterize it by two integers $\ell, \ell'\in\RangeI{d}$, where
+\[
+v_1 = (i,v), \;\;\;\; v_2 = \pth[]{i,\NXExt{v}{\GraphB}{\ell}}
+\;\;\;\; 
+v_3 =
+\pth{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}},
+\NXExt{v}{\GraphB}{\ell}}
+%\NX{v}{\ell}}
+\;\;\;\; 
+v_4 =
+\pth{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}} \;, \;\;
+\NXExt{\pth{\NXExt{v}{\GraphB}{\ell}\MakeSBig}}{\GraphB}{\ell'}}.
+%
+%v_3 = \pth{\NX{i}{\NX{v}{\ell}},\NX{\NX{v}{\ell}}{\ell'}}.
+\]
+
+Let $Z$ be the set of all (unordered) pairs of vertices of $\GraphC$
+connected by such a zig-zag-zig path. Note, that every vertex $(i,v)$
+of $\GraphC$ has $d^2$ paths having $(i,v)$ as an end point.  Consider
+the graph $\GraphD = (V(\GraphC), Z)$. The graph $\GraphD$ has $nD$
+vertices, and it is $d^2$ regular. Furthermore, since we shortcut all
+these zig-zag-zig paths in $\GraphC$, the graph $\GraphD$ is a much
+better expander (intuitively) than $\GraphC$. We will refer to the
+graph $\GraphD$ as the \emphi{zig-zag} product of $\Graph$ and
+$\GraphB$.
+
+
+\begin{defn}
+    The \emphi{zig-zag product} of $(n,D)$-graph $\Graph$ and a
+    $(D,d)$-graph $\GraphB$, is the $(nD, d^2)$ graph $\GraphD =
+    \ZProd{\Graph}{\GraphB}$, where the set of vertices is
+    $\RangeI{n}\times\RangeI{D}$ and for any $v \in \RangeI{n}$, $i
+    \in \RangeI{D}$, and $\ell, \ell' \in \RangeI{d}$ we have in
+    $\GraphD$ the edge connecting the vertex $(i,v)$ with the vertex
+    $\pth[]{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}} \,,
+       \,\,
+       \NXExt{\pth{\NXExt{v}{\GraphB}{\ell}\MakeSBig}}{\GraphB}{\ell'}}$.
+\end{defn}
+
+\begin{remark}
+    We need the resulting zig-zag graph to have consistent
+    labeling. For the sake of simplicity of exposition, we are just
+    going to assume this property.
+\end{remark}
+
+
+We next bound the tension of the zig-zag product graph.
+
+\begin{theorem}
+    We have $\DialX{\ZProd{\Graph}{\GraphB}} \leq \BiDialX{\Graph}
+    \pth[]{\BiDialX{\GraphB}}^2$.  and
+    $\BiDialX{\ZProd{\Graph}{\GraphB}} \leq \BiDialX{\Graph}
+    \pth[]{\BiDialX{\GraphB}}^2$.
+\end{theorem}
+
+\begin{proof}
+    Let $\Graph = \pth{\RangeI{n}, E}$ be a $(n,D)$-graph and $\GraphB
+    = \pth{\RangeI{D}, E'}$ be a $(D,d)$-graph. Fix any function $f:
+    \RangeI{n}\times \RangeI{D} \rightarrow \Re$, and observe that
+    \begin{align*}
+        \psi &= \ExExt{\substack{u,v \in \RangeI{n} \\
+              k,\ell \in \RangeI{D}}\,}{\cardin{f(u,k) - f(v,\ell)}^2}
+        = \ExExt{ k,\ell \in \RangeI{D} \,}{\ExExt{u,v \in \RangeI{n}}
+           {\cardin{f(u,k) - f(v,\ell)}^2}}\\
+        &\leq \ExExt{ k,\ell \in \RangeI{D} \,}{ \BiDialX{\Graph}
+           \ExExt{uv \in E(\Graph)} {\cardin{f(u,k) - f(v,\ell)}^2}} %
+        % 
+        = \BiDialX{\Graph} \underbrace{\ExExt{ k,\ell \in \RangeI{D} \,}{
+              \ExExtS{u \in \RangeI{n}\\
+                    p \in \RangeI{D}}
+                 {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}}_{=\Delta_1}.
+       \end{align*}
+       Now,
+    \begin{align*}
+        %
+        \Delta_1 &= \ExExtS{u \in \RangeI{n}\\
+              \ell \in \RangeI{D} \,}{
+           \ExExt{k, p \in \RangeI{D}}
+           {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}
+        \;\; \leq \;\;  \ExExtS{u \in \RangeI{n}\\
+              \ell \in \RangeI{D} \,}{
+           \BiDialX{\GraphB}
+           \ExExt{k p \in E(\GraphB)}
+           {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}\\
+        %
+        &=  \BiDialX{\GraphB}
+        \underbrace{\ExExtS{u \in \RangeI{n}\\
+              \ell \in \RangeI{D} \,}{
+              \ExExtS{p \in \RangeI{D}\\
+                 j \in \RangeI{d}}
+              {\cardin{f\pth{u,\NX{p}{j}} - f\pth{
+                       \NX{u}{p},\ell}}^2}}}_{=\Delta_2}.
+    \end{align*}
+    Now,
+    \begin{align*}
+        \Delta_2
+        &= 
+        \ExExtS{   j \in \RangeI{d}\\
+           \ell \in \RangeI{D} \,}{
+           \ExExtS{u \in \RangeI{n}\\
+              p \in \RangeI{D}}
+           {\cardin{f\pth{u,\NX{p}{j}} - f\pth{ \NX{u}{p},\ell}}^2}}
+        =
+        {\ExExtS{j \in \RangeI{d}\\
+              \ell \in \RangeI{D} \,}{
+              \ExExtS{v \in \RangeI{n}\\
+                 p \in \RangeI{D} }
+              {\cardin{f\pth{\NX{v}{p},\NX{p}{j}} - f\pth{
+                       v,\ell}}^2}}}
+        \\
+        &=  \ExExtS{
+           j \in \RangeI{d}\\
+           v \in \RangeI{n} \,}{%
+           \ExExtS{
+              p \in \RangeI{D}\\
+              \ell \in \RangeI{D} }
+           {\cardin{f\pth{\NX{v}{p},\NX{p}{j}} - f\pth{ v,\ell}}^2}}\\
+        &= \BiDialX{\GraphB}\underbrace{ \ExExtS{
+           j \in \RangeI{d}\\
+           v \in \RangeI{n} \,}{ \ExExtS{ p \ell \in E(\GraphB) }
+        {\cardin{f\pth{\NX{v}{p},\NX{p}{j}} - f\pth{ v,\ell}}^2}}}_{=\Delta_3}.
+    \end{align*}
+    Now, we have
+    \begin{align*}
+        \Delta_3 &= \ExExtS{
+           j \in \RangeI{d}\\
+           v \in \RangeI{n} \,}{ \ExExtS{
+              p \in \RangeI{D}\\
+              i \in \RangeI{d} }
+           {\cardin{f\pth{\NX{v}{p},\NX{p}{j}} - f\pth{ v,\NX{p}{i}}}^2}}
+        = \ExExtS{
+           \pth[]{u,k}\pth[]{\ell,v} \in E\pth[]{ \ZProd{\Graph}{\GraphB}}}
+           {\cardin{f\pth{u, k} - f\pth{ \ell, v} \MakeBig}},
+    \end{align*}
+    as $\pth[]{\NX{v}{p},\NX{p}{j}}$ is adjacent to $\pth[]{\NX{v}{p},
+       p}$ (a short edge), which is in turn adjacent to $\pth[]{v, p}$
+    (a long edge), which is adjacent to $\pth[]{ v,\NX{p}{i}}$ (a
+    short edge). Namely, $\pth[]{\NX{v}{p},\NX{p}{j}}$ and $\pth[]{
+       v,\NX{p}{i}}$ form the endpoints of a zig-zag path in the
+    replacement product of $\Graph$ and $\GraphB$. That is, these two
+    endpoints are connected by an edge in the zig-zag product graph.
+    Furthermore, it is easy to verify that each zig-zag edge get
+    accounted for in this representation exactly once, implying the
+    above inequality. Thus, we have $\psi \leq \BiDialX{\Graph}
+    \pth{\BiDialX{\GraphB}}^2 \Delta_3$, which implies the claim.
+
+    The second claim follows by similar argumentation.
+\end{proof}
+
+
+\subsection{Squaring}
+
+The last component in our construction, is
+\emphi{squaring}{squaring!graph} a graph. Given a $(n,d)$-graph
+$\Graph$, consider the multigraph $\Graph^2$ formed by connecting any vertices
+connected in $\Graph$ by a path of length $2$. Clearly, if $\Mtrx$ is
+the adjacency matrix of $\Graph$, then the adjacency matrix of
+$\Graph^2$ is the matrix $\Mtrx^2$. Note, that $\pth{\Mtrx^2}_{ij}$ is
+the number of distinct paths of length $2$ in $\Graph$ from $i$ to
+$j$. Note, that the new graph might have self loops, which does not
+effect our analysis, so we keep them in. 
+
+\begin{lemma}
+    Let $\Graph$ be a $(n,d)$-graph.  The graph $\Graph^2$ is a
+    $(n,d^2)$-graph. Furthermore $\BiDialX{\Graph^2} =
+    \frac{\pth{\BiDialX{\Graph}}^2}{2\BiDialX{\Graph} - 1}$.
+\end{lemma}
+
+\begin{proof}
+    The graph $\Graph^2$ has eigenvalues $\pth{\TEV{1}(\Graph)}^2,
+    \ldots, \pth{\TEV{1}(\Graph)}^2$ for its matrix $\TMtrx^2$. As
+    such, we have that
+    \[
+    \EVal\pth{\Graph^2} = \max\pth{\TEV{2}\pth{\Graph^2},
+       -\TEV{n}\pth{\Graph^2}}.
+    \]
+    Now, $\TEV{1}\pth{\Graph^2} = 1$. Now, if $\TEV{2}(\Graph) \geq
+    \cardin{\TEV{n}(\Graph)} < 1$ then $\EVal\pth{\Graph^2} =
+    \TEV{2}\pth{\Graph^2} = \pth{\TEV{2}\pth{\Graph}}^2 =
+    \pth{\EVal\pth{\Graph}}^2$.
+
+    If $\TEV{2}(\Graph) < \cardin{\TEV{n}(\Graph)}$ then
+    $\EVal\pth{\Graph^2} = \TEV{2}\pth{\Graph^2} = 
+    \pth{\TEV{n}\pth{\Graph}}^2 = \pth{\EVal\pth{\Graph}}^2$..
+    
+    Thus, in either case $\EVal\pth{\Graph^2} =
+    \pth{\EVal\pth{\Graph}}^2$. Now, By \lemref{b:i:expansion}
+    $\BiDialX{\Graph} = \frac{1}{1-\EVal\pth{\Graph}}$, which implies
+    that $\EVal(\Graph) = 1- 1/\BiDialX{\Graph}$, and thus
+    \begin{align*}
+        \BiDialX{\Graph^2}%
+        = %
+        \frac{1}{1-\EVal\pth{\Graph^2}}%
+        =%
+        \frac{1}{1-\pth{\EVal\pth{\Graph}}^2}%
+        =%
+        \frac{1}{1-\pth{1- \frac{1}{\BiDialX{\Graph}}}^2}%
+        =%
+        \frac{\BiDialX{\Graph}}{2- \frac{1}{\BiDialX{\Graph}}}%
+        =%
+        \frac{\pth{\BiDialX{\Graph}}^2}{2\BiDialX{\Graph} - 1}.
+    \end{align*}
+\end{proof}
+
+
+\subsection{The construction}
+
+So, let build an expander using \thmref{explicit}, with parameters
+$r=7$ $q=2^4=32$. Let $d= q^2 = 256$.  The resulting graph $\GraphB$
+has $N=q^{r+1} = d^4$ vertices, and it is $d=q^2$
+regular. Furthermore, $\TEV{i}\leq r/q= 7/32$, for all $i\geq 2$. As
+such, we have
+\[
+\DialX{\GraphB}=
+\BiDialX{\GraphB} = \frac{1}{1-7/32} = \frac{32}{25}.
+\]
+Let $\Graph_0$ be any graph that its square is the complete graph over
+$n_0 = N+1$ vertices. Observe that $\Graph_0^2$ is $d^4$-regular. Set
+$\Graph_i = \pth{\ZProd{\Graph_{i-1}^2}{\GraphB}}$, Clearly, the graph
+$\Graph_i$ has
+\[
+n_i = n_{i-1} N
+\]
+vertices. The graph $\ZProd{\Graph_{i-1}^2}{\GraphB}$ is $d^2$
+regular. As far as the bi-tension, let $\alpha_i =
+\BiDialX{\Graph_i}$. We have that
+\[
+\alpha_i = 
+\frac{\alpha_{i-1}^2}{2\alpha_{i-1} -1 }
+\pth{\BiDialX{\GraphB}}^2
+=
+\frac{\alpha_{i-1}^2}{2\alpha_{i-1} -1 }
+\pth{\frac{32}{25}}^2 \leq 
+1.64 \frac{\alpha_{i-1}^2}{2\alpha_{i-1} -1 }.
+\]
+
+It is now easy to verify, that $\alpha_i$ can not be bigger than
+$5$.
+
+\begin{theorem}
+    For any $i \geq 0$, one can compute deterministically a graph
+    $G_i$ with $n_i = (d^4+1)d^{4i}$ vertices, which is $d^2$ regular,
+    where $d=256$. The graph $G_i$ is a $(1/10)$-expander.
+\end{theorem}
+
+\begin{proof}
+    The construction is described above. As for the expansion, since
+    the bi-tension bounds the tension of a graph, we have that
+    $\DialX{\Graph_i} \leq \BiDialX{\Graph_i} \leq 5$. Now, by
+    \lemref{tension:to:expansion}, we have that $\Graph_i$ is a
+    $\delta$-expander, where $\delta \geq 1/(2\DialX{\Graph_i}) \geq
+    1/10$.
+\end{proof}
+
+
+
+
+
+\section{Bibliographical notes}
+
+
+
+A good survey on expanders is the monograph by Hoory \etal
+\cite{hlw-egta-06}. The small expander construction is from the paper
+by Alon \etal \cite{ass-eccde-08} (but its originally from the work by
+Along and Roichman \cite{ar-rcge-94}). The work by Alon \etal
+\cite{ass-eccde-08} contains a construction of an expander that is
+constant degree, which is of similar complexity to the one we
+presented here. Instead, we used the zig-zag expander construction
+from the influential work of Reingold \etal \cite{rvw-ewzzg-02}. Our
+analysis however, is from an upcoming paper by Mendel and Naor
+\cite{mn-tcnls-08}. This analysis is arguably reasonably simple (as
+simplicity is in the eye of the beholder, we will avoid claim that its
+the simplest), and (even better) provide a good intuition and a
+systematic approach to analyzing the expansion.
+
+We took a creative freedom in naming notations, and the name tension
+and bi-tension are the author's own invention.
+
+
+\section{Exercises}
+
+\begin{exercise}[\textsc{Expanders made easy.}]
+    By considering a random bipartite three-regular graph on $2n$
+    vertices obtained by picking three random permutations between the
+    two sides of the bipartite graph, prove that there is a $c>0$ such
+    that for every $n$ there exits a $(2n,3,c)$-expander. (What is the
+    value of $c$ in your construction?)
+\end{exercise}
+
+
+\begin{exercise}[\textsc{Is your consistency in vain?}]
+    In the construction, we assumed that the graphs we are dealing
+    with when building expanders have consistent labeling.  This can
+    be enforced by working with bipartite graphs, which implies
+    modifying the construction slightly.
+    \begin{compactenumA}
+        \item Prove that a $d$-regular bipartite graph always has a
+        consistent labeling (hint: consider matchings in this graph).
+
+        \item Prove that if $\Graph$ is bipartite so is the graph
+        $\Graph^3$ (the cubed graph).
+
+        \item Let $\Graph$ be a $(n,D)$-graph and let $\GraphB$ be a
+        $(D,d)$-graph. Prove that if $\Graph$ is bipartite then
+        $\Graph \ZProd{\Graph}{\GraphB}$ is bipartite.
+
+        \item Describe in detail a construction of an expander that
+        is: (i) bipartite, and (ii) has consistent labeling at every
+        stage of the construction (prove this property if necessary).
+        For the $i$\th graph in your series, what is its vertex
+        degree, how many vertices it has, and what is the quality of
+        expansion it provides?
+    \end{compactenumA}
+\end{exercise}
+
+\begin{exercise}[\textsc{Tension and bi-tension}.]
+    \points{30}
+
+    Disprove (i.e., give a counter example) that there exists a
+    universal constant $c$, such that for any connected graph
+    $\Graph$, we have that $\DialX{\Graph} \leq \BiDialX{\Graph} \leq
+    c \DialX{\Graph}$.
+\end{exercise}
+
+
+
+
+\subsection*{Acknowledgments}
+
+Much of the presentation was followed suggestions by Manor Mendel. He
+also contributed some of the figures.
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{b_i_expansion}
+   \IncFragment{tension_expansion}
+   \IncFragment{explicit}
+
+
+%   \IncFragment{expansion:lemma}
+%   \IncFragment{m:expander}
+%   \IncFragment{orthonormal:basis:d}
+}
+
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+%--------------------------------------------------------------------
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

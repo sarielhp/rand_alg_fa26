@@ -59,12 +59,12 @@ $\mathbb{R}^2$, define
 \Grid_r(\pnt) := \pth{\;\MakeVBig\floor{\frac{x}{r}} \, r \;\;,\;\;
    \floor{\frac{y}{r}} \, r \;} \;\; \in \Re^2.
 \]
-The number $r$ is the \emphi{width} of the \emphi{grid}
+The number $r$ is the \emphOnly{width}\index{width} of the \emphOnly{grid}\index{grid}
 $\Grid_r$. Observe that $\Grid_r$ partitions the plane into square
 regions, which are \emph{grid cells}. Formally, for any
 $i,j \in \mathbb{Z}$, the intersection of the half-planes
 $x \geq r i$, $x < r(i+1)$, $y \geq r j$ and $y < r(j+1)$ is a
-\emphi{grid cell}.  Further a \emphi{grid cluster} is a block of
+\emphOnly{grid cell}\index{grid cell}.  Further a \emphOnly{grid cluster}\index{grid cluster} is a block of
 $3\times 3$ contiguous grid cells.
 
 For a point set $\PntSet$, and a parameter $r$, the partition of
@@ -258,7 +258,7 @@ be $O(nk)$. But we can do even better!
     
     Thus, we need to bound $\Prob{ X_i=1} = \Prob{r_i < r_{i-1}}$. To
     bound this quantity, fix the points of $\PntSet_i$, and randomly
-    permute them. A point $\pntA \in \PntSet_i$ is \emphi{critical} if
+    permute them. A point $\pntA \in \PntSet_i$ is \emphOnly{critical}\index{critical} if
     $\ClosestPair\pth{ \PntSet_i \setminus \brc{\pntA}} >
     \ClosestPair\pth{\PntSet_i}$.
     \begin{compactenumA}
@@ -299,7 +299,7 @@ be $O(nk)$. But we can do even better!
 
 
 \thmref{closest:pair} is a surprising result, since it implies that
-\emphi{uniqueness} (i.e., deciding if $n$ real numbers are all
+\emphOnly{uniqueness}\index{uniqueness} (i.e., deciding if $n$ real numbers are all
 distinct) can be solved in linear time. However, there is a lower
 bound of $\Omega(n \log n)$ on uniqueness, using the comparison tree
 model. This reality dysfunction, can be easily explained, once one

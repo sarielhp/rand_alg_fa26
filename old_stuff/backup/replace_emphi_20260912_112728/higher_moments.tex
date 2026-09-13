@@ -1,0 +1,479 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{9}{73}
+
+\Chapter{Higher Moments and Some Inequalities}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteOptExt{%
+   \indent%
+   During a native rebellion in German East Africa, the Imperial
+   Ministry in Berlin issued the following order to its
+   representatives on the ground: “The natives are to be instructed
+   that on pain of harsh penalties, every rebellion must be announced,
+   in writing, six weeks before it breaks out.”  }%
+{Dead Funny: Humor in Hitler's Germany}%
+{Rudolph Herzog}
+
+
+\section{Higher moment inequalities}
+\seclab{h:m:i}
+
+The following is the higher
+moment variant of Chebychev inequality.
+\begin{lemma}
+    \lemlab{cheby:higher}%
+    %
+    For a random variable $X$, we have that
+    \begin{math}
+        \ds%
+        \Prob{\cardin{X - \Ex{X}}
+      \geq%
+      t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}
+      \leq
+      \frac{1}{t^k}
+  \end{math}
+\end{lemma}
+\begin{proof}
+    Setting $Z = \cardin{X - \Ex{X}}^k$, and
+    raising the inequality by a power of $k$, we have
+    \begin{align*}
+      \Prob{\cardin{X - \Ex{X}} \geq%
+      t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
+      = %
+      \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
+      =%
+      \Prob{Z \geq t^k \Ex{Z}}%
+      \leq%
+      \frac{1}{t^k},
+    \end{align*}
+    by Markov's inequality.
+\end{proof}
+
+\subsubsection{Random walk on the integers}
+
+The problem is that computing (or even bounding) the $k$\th moment
+$M_k(X) = \Ex{|X-\Ex{X}|^k}$ is usually not easy. Let us do it for one
+interesting example.
+
+\begin{lemma}
+    \lemlab{moments:r:w}%
+    %
+    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{compactenumi}
+        \item $\Ex{X} = 0$.
+        \item $\Ex{X^2} = n$.
+
+        \item $\Ex{X^4} = 6n^2 - 5n$.
+
+        \item $\Ex{ X^{k}} \leq n^{k/2} (k/2)^k$.  if is $k$ even.
+    \end{compactenumi}
+\end{lemma}
+\begin{proof}
+    Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
+    computing
+    \begin{equation}
+        M_k(X)%
+        =%
+        \Ex{  X^{k}}%
+        =%
+        \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
+        =%
+        \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
+           X_{i_k} }%
+        =%
+        \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
+        \Ex{X_{i_1} X_{i_2} \cdots
+           X_{i_k} }%
+        \eqlab{m:k}
+    \end{equation}
+    Consider a term in the above summation, where one of the indices
+    (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
+    independence, we have
+    \begin{align*}
+      \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
+      =
+      \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
+    \end{align*}
+    since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
+    have a unique index disappear. A term that does not disappear is
+    going to be of the form
+    \begin{equation*}
+        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
+           X_{i_\ell}^{\alpha_\ell}}
+        =%
+        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
+        \Ex{ X_{i_\ell}^{\alpha_\ell}}
+    \end{equation*}
+    where $\alpha_i \geq 2$, and $\sum_i \alpha_i = k$. Observe that
+    \[
+        \Ex{X_1^t} =\begin{cases}
+            0 & t \text{ is odd}\\
+            1 & t \text{ is even.}
+        \end{cases}
+    \]
+    As such, all the terms in the summation of \Eqref{m:k} that have
+    value that is not zero, have value one. These terms corresponds to
+    tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
+    $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
+    furthermore, each such value appears an even number of times in
+    $T$ (here $k/2$ is an integer as $k$ is even by assumption). We
+    conclude that the total number of such tuples is at most
+    \[
+        n^{k/2} (k/2)^k.
+    \]
+    Note, that this is a naive bound -- indeed, we choose the $k/2$
+    values that are in $I(T)$, and then we generate the tuple $T$, by
+    choosing values for each coordinate separately. We thus conclude
+    that
+    \begin{equation*}
+        M_k(X) = \Ex{  X^{k}}%
+        \leq n^{k/2} (k/2)^k.
+    \end{equation*}
+
+    We can do better for the specific cases $k=2$ and $k=4$. Indeed,
+    we have
+    \begin{equation*}
+        M_2(X)%
+        =%
+        \Ex{  X^{2}}%
+        =%
+        \sum_{i=1}^n \Ex{X_i^2} + 2\sum_{i < j} \Ex{X_i X_j}
+        =%
+        n.
+    \end{equation*}
+    And
+    \begin{equation*}
+        M_4(X)%
+        =%
+        \Ex{  X^{4}}%
+        =%
+        \sum_{i=1}^n \Ex{X_i^4} + \binom{4}{2}\sum_{i \neq j} \Ex{X_i^2 X_j^2}
+        =%
+        n + 6 n(n-1)
+        =%
+        6n^2 - 5n.
+    \end{equation*}
+
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{h:m}%
+    %
+    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    \textbf{\textcolor{red}{[Note: There seems to be replication in the text here with the proof of \lemref{moments:r:w}.]}}
+
+    Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
+    computing
+    \begin{equation}
+        M_k(X)%
+        =%
+        \Ex{  X^{k}}%
+        =%
+        \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
+        =%
+        \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
+           X_{i_k} }%
+        =%
+        \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
+        \Ex{X_{i_1} X_{i_2} \cdots
+           X_{i_k} }%
+        \eqlab{m:k:II}
+    \end{equation}
+    Consider a term in the above summation, where one of the indices
+    (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
+    independence, we have
+    \begin{align*}
+      \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
+      =
+      \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
+    \end{align*}
+    since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
+    have a unique index disappear. A term that does not disappear is
+    going to be of the form
+    \begin{equation*}
+        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
+           X_{i_\ell}^{\alpha_\ell}}
+        =%
+        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
+        \Ex{ X_{i_\ell}^{\alpha_\ell}}
+    \end{equation*}
+    where $\alpha_i \geq 2$, and $\sum_i \alpha_i = k$. Observe that
+    \[
+        \Ex{X_1^t} =\begin{cases}
+            0 & t \text{ is odd}\\
+            1 & t \text{ is even.}
+        \end{cases}
+    \]
+    As such, all the terms in the summation of \Eqref{m:k:II} that have
+    value that is not zero, have value one. These terms corresponds to
+    tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
+    $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
+    furthermore, each such value appears an even number of times in
+    $T$ (here $k/2$ is an integer as $k$ is even by assumption). We
+    conclude that the total number of such tuples is at most
+    \[
+        n^{k/2} (k/2)^k.
+    \]
+    Note, that this is a naive bound -- indeed, we choose the $k/2$
+    values that are in $I(T)$, and then we generate the tuple $T$, by
+    choosing values for each coordinate separately. We thus conclude
+    that
+    \begin{equation*}
+        M_k(X) = \Ex{  X^{k}}%
+        \leq n^{k/2} (k/2)^k.
+    \end{equation*}
+
+    Since $k$ is even, we have $\Ex{X^k} = \Ex{|X|^k}$, and by
+    \lemref{cheby:higher}, we have
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+      =%
+      \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
+      \leq
+      \Prob{ \cardin{X} \geq%
+      t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
+    \end{align*}
+\end{proof}
+
+
+\begin{corollary}
+    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. For
+    $X = \sum_{i=1}^n X_i$, and any $k$, we have
+    $\Prob{|X| \geq k \sqrt{n}} \leq 1/2^k$.
+\end{corollary}
+
+Observe, that the above proof did not require all the variables to be
+purely independent -- it was enough that they are $k$-wise
+independent. We readily get the following.
+
+\begin{defn}
+    Given $n$ random variables $X_1, \ldots, X_n$ they are
+    \emphi{$k$-wise independent}, if for any $k$ of them (i.e.,
+    $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
+    we have\
+    \begin{equation*}
+        \Prob{\Bigl. \smash{\bigcap_{\ell=1}^k} \bigl(X_{i_{\ell}} = v_\ell\bigr)}%
+        \,=\,%
+        \prod_{\ell=1}^k \Prob{  X_{i_{\ell}} = v_\ell }.
+    \end{equation*}
+\end{defn}
+Informally, variables are $k$-wise independent, if any
+$k$ of them (on their own) looks totally random.
+
+\begin{lemma}
+    Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
+    random independent variables, that are $k$-wise independent, such
+    that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\smash{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}\Bigr.}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
+\end{lemma}
+
+\section{More inequalities involving expectations}
+
+\subsection{Cauchy–Schwarz inequality for expectations}
+
+\begin{theorem}
+    Let $X, Y$ be two random variables (not necessarily
+    independent). We have that
+    \begin{equation*}
+        \cardin{\Ex{ XY }}
+        \leq \sqrt{ \Ex{X^2}}  \sqrt{ \Ex{Y^2}} .
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    By Cauchy–Schwarz inequality, what else, we have
+    \begin{align*}
+      \cardin{\Ex{ XY \bigr.}\Bigr.}
+      &=
+        \cardin{\sum_{(x,y) \in \Sigma} \Prob{ X=x \cap Y=y} xy}
+        =
+        \cardin{\sum_{(x,y) \in \Sigma} \sqrt{\Prob{ X=x \cap Y=y}} x
+        \sqrt{\Prob{ X=x \cap Y=y}}y}
+      \\&
+      \leq
+      \sum_{(x,y) \in \Sigma} \pth{\sqrt{\Prob{ X=x \cap Y=y}} x}^2
+      \sum_{(x,y) \in \Sigma}  \pth{\sqrt{\Prob{ X=x \cap Y=y}}y}^2
+      \\&
+      =
+      \sum_{x} \Prob{ X=x } x^2
+      \sum_{y}  \Prob{Y=y}y^2
+      =
+      \Ex{\smash{X^2}} \Ex{\smash{Y^2}}.
+    \end{align*}
+\end{proof}
+
+\subsection{Paley–Zygmund inequality}
+
+The following is an inequality somewhat similar in spirit to
+Chebychev's inequality.
+
+\begin{theorem}
+    \thmlab{paley:zygmund}%
+    %
+    For $Z \geq 0$  a random variable with bounded variance, and
+    $\theta \in [0,1]$, we have
+    \begin{equation*}
+        \Prob{Z > \theta \Ex{Z}\bigr.}
+        \geq%
+        (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}.
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    Let $B$ be an indicator random variable that is $1$ $\iff$
+    $Z \leq \theta \Ex{Z}$, and let $\overline{B} = 1- B$. Observe
+    that
+    $\gamma = \Ex{\ts\smash{\smash{\overline{B}}^2}\ts}\Bigr.=
+    \Ex{\ts\smash{\overline{B}}\ts\bigr.} = \Prob{Z > \theta
+       \Ex{Z}\bigr.}$.  Observe that
+    $\Ex{Z B \bigr.} \leq \max |Z B| \leq \theta \Ex{Z}$.  We thus
+    have
+    \begin{align*}
+      \Ex{Z} = \Ex{Z (B + \overline{B}) }
+      =%
+      \Ex{Z B \bigr.} + \Ex{ \smash{Z \overline{B} } \bigr.}
+      \leq
+      \theta \Ex{Z} +
+      \sqrt{\Ex{Z^2}} \sqrt{ \Ex{\ts\smash{\smash{\overline{B}}^2}\ts } \bigr. }
+      =
+      \theta \Ex{Z} +
+      \sqrt{\Ex{Z^2}}  \sqrt{\gamma}.
+    \end{align*}
+    Rearranging, we have
+    \begin{align*}
+      (1-\theta)\Ex{Z}
+      \leq
+      \sqrt{\Ex{Z^2}}  \sqrt{\gamma}
+      \qquad\implies\qquad
+      (1-\theta)^2\frac{\Ex{Z}^2}{\Ex{Z^2}}
+      \leq
+      \gamma
+      =
+      \Prob{Z > \theta
+      \Ex{Z}\bigr.}
+    \end{align*}
+\end{proof}
+
+
+\subsection{Bounding the random walk away from zero}
+
+
+\begin{lemma}
+    \lemlab{away:from:0}%
+    %
+    Let $X_1, \ldots, X_n$ be $n$ random independent variables such
+    that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$, and let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{\sqrt{n}}{2}}
+      \geq%
+      \frac{1}{11}.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    Let $Z = X^2$ and observe that $Z \geq 0$.  By
+    \lemref{moments:r:w}, we have $\Ex{Z} = n$, and
+    $\Ex{Z^2} = 6n^2 - 5n$. For any $\theta \in [0,1]$, by
+    \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}}, we have
+    \begin{equation*}
+        \Prob{ Z > \theta n}
+        =%
+        \Prob{Z > \theta \Ex{Z}\bigr.}
+        \geq%
+        (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}
+        =
+        (1-\theta)^2 \frac{n^2}{6n^2 - 5n}
+        \geq% 
+        \frac{(1-\theta)^2}{6}.
+    \end{equation*}
+    Thus, for $\theta = 1/4$, we have
+    \begin{equation*}
+        \Prob{\cardin{X} > \frac{\sqrt{n}}{2}}
+        =%
+        \Prob{ Z > n/4}
+        \geq
+        \frac{(1-1/4)^2}{6}
+        =
+        \frac{9}{96}
+        \geq
+        \frac{1}{11}.
+    \end{equation*}
+\end{proof}
+
+\subsubsection{Why Chebychev's inequality does not work in this case}
+
+Let us try to derive the above using Chebychev.  By
+\lemref{moments:r:w}, we have $\Ex{Z} = n$, and
+$\Ex{Z^2} = 6n^2 - 5n$. Thus, we have
+\begin{equation*}
+    \Var{Z} = \Ex{\smash{Z^2}} - \Ex{Z}^2 = 6n^2 - 5n - n
+    =%
+    6(n^2 - n).
+\end{equation*}
+By Chebychev inequality, we have
+\begin{equation*}
+    \Prob{ |Z - \Ex{Z}| > t \sqrt{\Var{Z}}} \leq \frac{1}{t^2}.
+\end{equation*}
+But since the standard deviation here is bigger than the expectation,
+that is not going to work. Indeed, solving for
+$ t \sqrt{\Var{Z}} = \Ex{Z}/2$, we have
+\begin{math}
+    t = \frac{\Ex{Z}^2}{4\Var{Z}} \approx \frac{1}{24}.
+\end{math}
+But Chebychev's inequality is useful only if $t > 1$.
+
+\bigskip
+
+It seems the \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}} is
+useful when the standard deviation is larger than the expectation, but
+not too much larger.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newpage
+\StandAloneMode{
+   \section{Tools from previous lecture}
+   
+   
+   \IncFragment{Markov}
+   
+
+}
+
+
+\nocite{mr-ra-95}
+
+\ChapterEnd{}
+
+   % -------------------------------------------------------------------------
+
+
+   % Local Variables:
+   % mode: latex TeX-master: t End:

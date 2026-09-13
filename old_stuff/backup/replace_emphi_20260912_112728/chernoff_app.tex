@@ -1,0 +1,552 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{16}{136}
+
+\Chapter{Applications of Chernoff's Inequality}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+\section{QuickSort{} is Quick}
+
+We revisit \QuickSort{}. We remind the reader that the running time of
+\QuickSort{} is proportional to the number of comparisons performed by
+the algorithm. Next, consider an arbitrary element $u$ being
+sorted. Consider the $i$\th level recursive subproblem that contains
+$u$, and let $S_i$ be the set of elements in this subproblems. We
+consider $u$ to be \emph{successful} in the $i$\th level, if
+$\cardin{S_{i+1}} \leq \cardin{S_i}/2$. Namely, if $u$ is successful,
+then the next level in the recursion involving $u$ would include a
+considerably smaller subproblem. Let $X_i$ be the indicator variable
+which is $1$ if $u$ is successful.
+
+We first observe that if \QuickSort{} is applied to an array with $n$
+elements, then $u$ can be successful at most $T = \ceil{\lg n}$ times,
+before the subproblem it participates in is of size one, and the
+recursion stops. Thus, consider the indicator variable $X_i$ which is
+$1$ if $u$ is successful in the $i$\th level, and zero otherwise. Note
+that the $X_i$s are independent, and $\Prob{X_i = 1} = 1/2$.
+
+If $u$ participates in $v$ levels, then we have the random variables
+$X_1, X_2, \ldots, X_v$. To make things simpler, we will extend this
+series by adding independent random variables, such that
+$\Prob`{X_i=1}=1/2$, for $i\geq v$. Thus, we have an infinite sequence
+of independent random variables, that are 0/1 and get $1$ with
+probability $1/2$. The question is how many elements in the sequence
+we need to read, till we get $T$ ones.
+
+\begin{lemma}
+    Let $X_1, X_2,\ldots$ be an infinite sequence of independent
+    random $0/1$ variables. Let $M$ be an arbitrary parameter. Then
+    the probability that we need to read more than $2M + 4t\sqrt{M}$
+    variables of this sequence till we collect $M$ ones is at most
+    $2\exp \pth{-t^2}$, for $t \leq \sqrt{M}$. If $t \geq \sqrt{M}$
+    then this probability is at most $2\exp \pth{- t \sqrt{M}}$.
+
+    \lemlab{easy:quick:sort}
+\end{lemma}
+
+\begin{proof}
+    Consider the random variable $Y = \sum_{i=1}^L X_i$, where $L = 2M
+    + 4t \sqrt{M}$. Its expectation is $L/2$, and using the Chernoff
+    inequality, we get
+    \begin{align*}
+      \alpha%
+      &=%
+        \Prob{\bigl. Y \leq M}%
+        \leq%
+        \Prob{\cardin{Y - {L}/{2}} \geq {L}/{2} - M \bigr.}%
+        \leq%
+        2\exp \Bigl(-\tfrac{2}{L}\pth{{L}/{2} - M}^2 \Bigr)\\
+      &\leq%
+        2\exp \Bigl(-{2}\bigl({M + 2t \sqrt{M} - M}\bigr)^2 / L \Bigr)
+        \leq%
+        2\exp\pth{-2\bigl(2t \sqrt{M} \bigr)^2 / L}%
+        =%
+        2\exp \Bigl(-\frac{8t^2 M}{L} \Bigr),
+    \end{align*}
+    by \corref{Chernoff:0:1}. For $t \leq \sqrt{M}$ we have that
+    $L = 2M + 4t\sqrt{M} \leq 8M$, as such in this case
+    $\Prob{Y \leq M} \leq 2\exp \pth{-t^2}$.
+
+    If $t \geq \sqrt{M}$, then $\displaystyle \alpha = 2\exp
+    \pth{-\frac{8t^2 M}{2M + 4t\sqrt{M}}} \leq 2\exp \pth{-\frac{8t^2
+          M}{6t\sqrt{M}}} \leq 2\exp \pth{- t \sqrt{M}}.  $
+\end{proof}
+
+
+Going back to the \QuickSort{} problem, we have that if we sort $n$
+elements, the probability that $u$ will participate in more than $L =
+(4+c)\ceil{\lg n} = 2\ceil{\lg n} + 4 c\sqrt{\lg n} \sqrt{\lg n }$, is
+smaller than $2\exp \pth{ - c\sqrt{\lg n} \sqrt{\lg n } } \leq 1/n^c$,
+by \lemref{easy:quick:sort}. There are $n$ elements being sorted, and
+as such the probability that any element would participate in more
+than $(4+c+1)\ceil{\lg n}$ recursive calls is smaller than $1/n^{c}$.
+\begin{lemma}
+    For any $c > 0$, the probability that \QuickSort{} performs more
+    than $(6+c)n\lg n$, is smaller than $1/n^{c}$.
+\end{lemma}
+
+
+
+\section{How many times can the minimum change?}
+
+Let $\Pi = \pi_1 \ldots \pi_n$ be a random permutation of $\brc{1,
+   \ldots, n}$. Let $\Event_i$ be the event that $\pi_i$ is the
+minimum number seen so far as we read $\Pi$; that is, $\Event_i$ is
+the event that $\pi_i = \min_{k=1}^i \pi_k$. Let $X_i$ be the
+indicator variable that is one if $\Event_i$ happens. We already seen,
+and it is easy to verify, that $\Ex{X_i} = 1/i$. We are interested in
+how many times the minimum might change\footnote{The answer, my
+   friend, is blowing in the permutation.}; that is $Z=\sum_i X_i$,
+and how concentrated is the distribution of $Z$.  The following is
+maybe surprising.
+
+\begin{lemma}
+    The events $\Event_1, \ldots, \Event_n$ are independent (as such,
+    the variables $X_1, \ldots, X_n$ are independent).
+\end{lemma}
+
+\begin{proof}
+    Exercise.
+    % See homework.
+\end{proof}
+\remove{%
+\begin{proof}
+    The trick is to think about the sampling process in a different
+    way, and then the result readily follows. Indeed, we randomly pick
+    a permutation of the given numbers, and set the first number to be
+    $\pi_n$. We then, again, pick a random permutation of the
+    remaining numbers and set the first number as the penultimate
+    number (i.e., $\pi_{n-1}$) in the output permutation. We repeat
+    this process till we generate the whole permutation.
+
+    Now, consider $1 \leq i_1 < i_2 < \ldots < i_k \leq n$, and
+    observe that
+    \begin{math}
+        \Prob{\Bigl. \Event_{i_k} \sep{ \Event_{i_1} \cap \ldots \cap
+              \Event_{i_{k-1}} }}%
+        = \Prob{\Event_{i_k}},%
+    \end{math}
+    since by our thought experiment, $\Event_{i_k}$ is determined
+    before all the other variables $\Event_{i_{k-1}}, \ldots,
+    \Event_{i_1}$, and these variables are inherently not effected by
+    this event happening or not. As such, we have
+    \begin{align*}
+        \Prob{\Bigl. \Event_{i_1} \cap \Event_{i_2} \cap \ldots \cap
+           \Event_{i_k} }%
+        &=%
+        \Prob{\Bigl. \Event_{i_k} \sep{ \Event_{i_1} \cap \ldots \cap
+              \Event_{i_{k-1}} }} \Prob{ \Event_{i_1} \cap \ldots \cap
+           \Event_{i_{k-1}} }%
+        \\&%
+        =%
+        \Prob{\Bigl. \Event_{i_k}} \Prob{\Bigl. \Event_{i_1} \cap
+           \Event_{i_2} \cap \ldots \cap \Event_{i_{k-1}} }%
+        =%
+        \prod_{j=1}^k \Prob{\Event_{i_j}} = \prod_{j=1}^k
+        \frac{1}{i_j},
+    \end{align*}
+    by induction.
+\end{proof}
+}
+%Now, we have that
+
+\begin{theorem}
+    Let $\Pi=\pi_1 \ldots \pi_n$ be a random permutation of
+    $1, \ldots, n$, and let $Z$ be the number of times, that $\pi_i$
+    is the smallest number among $\pi_1, \ldots, \pi_i$, for
+    $i=1,\ldots, n$. Then, we have that for $t \geq 2e$ that
+    $\Prob{Z > t \ln n} \leq 1/ n^{t \ln 2}$, and for
+    $t \in \pbrc[]{1, 2e}$, we have that
+    $\Prob{\bigl. Z > t \ln n} \leq 1/ n^{(t-1)^2/4}$.
+\end{theorem}
+
+\begin{proof}
+    Follows readily from Chernoff's inequality, as $Z=\sum_i X_i$ is a
+    sum of independent indicator variables, and, since by linearity of
+    expectations, we have
+    \begin{equation*}
+        \mu%
+        =%
+        \Ex{\bigl. Z}%
+        =%
+        \sum_i \Ex{\big. X_i}%
+        =%
+        \sum_{i=1}^n \frac{1}{i}%
+        \geq%
+        \int_{x=1}^{n+1} \frac{1}{x} \mathrm{d}x%
+        =%
+        \ln (n+1)%
+        \geq%
+        \ln n.
+    \end{equation*}
+    Next, we set $\delta = t-1$, and use \thmref{Chernoff:simplified}.
+\end{proof}
+
+
+\section{Routing in a parallel computer}
+\seclab{routing}
+
+
+Let $\Graph$ be a graph of a network, where every node is a processor.
+The processor communicate by sending packets on the edges.  Let
+$\bigl[0, \ldots, N -1 \bigr]$ denote be vertices (i.e., processors)
+of $\Graph$, where $N = 2^n$, and $\Graph$ is the hypercube. As such,
+each processor is identified by a binary string
+$b_1b_2\ldots b_n \in \brc{0,1}^n$. Two nodes are connected if their
+binary string differs only in a single bit. Namely, $\Graph$ is the
+binary \emphi{hypercube} over $n$ bits.
+
+We want to investigate the best routing strategy for this network
+topology. We assume that every processor need to send a message to a
+single other processor. This is represented by a permutation $\pi$,
+and we would like to figure out how to send the messages encoded by
+the permutation while creating minimum delay/congestion.
+
+Specifically, in our model, every edge has a FIFO queue\footnote{First
+   in, first out queue. I sure hope you already knew that.} of the
+packets it has to transmit. At every clock tick, the message in front
+of the queue get sent. All the processors start sending their packets
+(to the destination specified by the permutation) in the same time.
+
+A routing scheme is \emphi{oblivious} if every node that has to
+forward a packet, inspect the packet, and depending only on the
+content of the packet decides how to forward it. That is, such a
+routing scheme is local in nature, and does not take into account
+other considerations. Oblivious routing is of course a bad idea -- it
+ignores congestion in the network, and might insist routing things
+through regions of the hypercube that are ``gridlocked''.
+
+
+\begin{theorem}[\cite{kkt-tborh-91}]
+    For any deterministic oblivious permutation routing algorithm on a
+    network of $N$ nodes each of out-degree $n$, there is a
+    permutation for which the routing of the permutation takes
+    $\Omega\pth{\! \sqrt{N/n}\, }$ units of time (i.e., ticks).
+\end{theorem}
+
+\begin{proof} (\textsc{Sketch.)}  The above is implied by a nice
+    averaging argument -- construct, for every possible destination,
+    the routing tree of all packets to this specific node. Argue that
+    there must be many edges in this tree that are highly congested in
+    this tree (which is NOT the permutation routing we are looking
+    for!). Now, by averaging, there must be a single edge that is
+    congested in ``many'' of these trees. Pick a source-destination
+    pair from each one of these trees that uses this edge, and
+    complete it into a full permutation in the natural way. Clearly,
+    the congestion of the resulting permutation is high.  For the
+    exact details see \cite{kkt-tborh-91}.
+\end{proof}
+
+\paragraph*{How do we send a packet?}
+
+We use \emphi{bit fixing}.  Namely, the packet from the $i$ node,
+always go to the current adjacent node that have the first different
+bit as we scan the destination string $d(i)$. For example, packet from
+$(0000)$ going to $(1101)$, would pass through $(1000)$, $(1100)$,
+$(1101)$.
+
+\paragraph*{The routing algorithm.}
+We assume each edge have a FIFO queue. The routing algorithm is
+depicted in \figref{route}.
+
+
+\begin{figure}
+    \begin{center}
+        \fbox{\begin{minipage}{0.85\linewidth}
+               \Algorithm{RandomRoute}( $v_0,\ldots, v_{N-1}$)\\
+               \CodeComment{\qquad\qquad// $v_i$: Packet at node $i$
+                  to be routed to node $d(i)$.}
+
+              \begin{compactenumi}
+                  \item Pick a \emph{random} intermediate destination
+                  $\sigma(i)$ from $[1, \ldots, N]$. Packet $v_i$
+                  travels to $\sigma(i)$.
+
+                  \CodeComment{\qquad// Here random sampling is done
+                     with \emph{\textbf{replacement}}.\\%
+                     $\Bigl.$\qquad// Several packets might travel to
+                     the same destination.}
+
+
+                  \item Wait till all the packets arrive to
+                  their intermediate destination.
+
+                  \item Packet $v_i$ travels from $\sigma(i)$
+                  to its destination $d(i)$.
+              \end{compactenumi}
+              % \smallskip
+          \end{minipage}}%
+       \vspace{-0.61cm}
+   \end{center}
+
+   \caption{The routing algorithm}
+   \figlab{route}
+\end{figure}
+
+\subsection{Analysis}
+We analyze only step (i) in the algorithm, as (iii) follows from the
+same analysis.  In the following, let $\rho_i$ denote the route taken
+by $v_i$ in (i).
+
+\begin{exercise}
+    Once a packet $v_j$ that travel along a path $\rho_j$ can not
+    leave a path $\rho_i$, and then join it again later. Namely,
+    $\rho_i \cap \rho_j$ is (maybe an empty) path.
+\end{exercise}
+
+\begin{lemma}
+    Let the route of a message $\packet$ follow the sequence of edges
+    $\pi = (e_1, e_2, \ldots, e_k)$. Let $S$ be the set of packets
+    whose routes pass through at least one of $(e_1, \ldots, e_k)$.
+    Then, the delay incurred by $\packet$ is at most $|S|$.
+\end{lemma}
+
+\begin{proof}
+    A packet in $S$ is said to leave $\pi$ at that time step at which
+    it traverses an edge of $\pi$ for the last time. If a packet is
+    ready to follow edge $e_j$ at time $t$, we define its \emph{lag}
+    at time $t$ to be $t-j$. The lag of $\packet$ is initially zero,
+    and the delay incurred by $\packet$ is its lag when it traverse
+    $e_k$. We will show that each step at which the lag of $\packet$
+    increases by one can be charged to a distinct member of $S$.
+
+    We argue that if the lag of $\packet$ reaches $\ell+1$, some
+    packet in $S$ leaves $\pi$ with lag $\ell$. When the lag of
+    $\packet$ increases from $\ell$ to $\ell +1$, there must be at
+    least one packet (from $S$) that wishes to traverse the same edge
+    as $\packet$ at that time step, since otherwise $\packet$ would be
+    permitted to traverse this edge and its lag would not increase.
+    Thus, $S$ contains at least one packet whose lag reach the value
+    $\ell$.
+
+    Let $\tau$ be the last time step at which any packet in $S$ has
+    lag $\ell$. Thus there is a packet $\packetA$ ready to follow edge
+    $e_{\mu}$ at $\tau$, such that $\tau - \mu = \ell$. We argue that
+    some packet of $S$ leaves $\pi$ at time $\tau$ -- this establishes
+    the lemma since once a packet leaves $\pi$, it would never join it
+    again and as such will never again delay $\packet$.
+
+    Since $\packetA$ is ready to follow $e_{\mu}$ at time $\tau$, some
+    packet $\omega$ (which may be $\packetA$ itself) in $S$ traverses
+    $e_\mu$ at time $\tau$. Now $\omega$ must leave $\pi$ at time
+    $\tau$ -- if not, some packet will follow $e_{\mu+1}$ at step
+    $\mu+1$ with lag $\ell$. But this violates the maximality of
+    $\tau$.  We charge to $\omega$ the increase in the lag of
+    $\packet$ from $\ell$ to $\ell+1$. Since $\omega$ leaves $\pi$, it
+    will never be charged again. Thus, each member of $S$ whose route
+    intersects $\pi$ is charge for at most one delay, establishing the
+    lemma.
+\end{proof}
+
+
+% So, let the route of a message $\packet_i$ follow the sequence of
+% edges $\rho_i = (e_1, e_2, \ldots, e_k)$.
+
+Let $H_{i j}$ be an indicator variable that is $1$ if $\rho_i$ and
+$\rho_j$ share an edge, and $0$ otherwise. The total delay for $v_i$
+is at most $ \leq \sum_{j} H_{i j}$.
+
+Crucially, for a fixed $i$, the variables $H_{i1}, \ldots, H_{i N}$
+are independent. Indeed, imagine first picking the destination of
+$v_i$, and let the associated path be $\rho_i$. Now, pick the
+destinations of all the other packets in the network. Since the
+sampling of destinations is done with replacements, whether or not the
+path $\rho_j$ of $v_j$ intersects $\rho_i$, is independent of whether
+$\rho_k$ intersects $\rho_i$. Of course, the probabilities
+$\Prob{ \smash{H_{ij} = 1}}$ and $\Prob{ H_{ik} = 1}$ are probably
+different.  Confusingly, however, $H_{11}, \ldots, H_{N{} N}$ are not
+independent. Indeed, imagine $k$ and $j$ being close vertices on the
+hypercube. If $H_{ij} =1$ then intuitively it means that $\rho_i$ is
+traveling close to the vertex $v_j$, and as such there is a higher
+probability that $H_{ik}=1$.
+
+
+Let
+\begin{equation*}
+    \rho_i = (e_1, \ldots, e_k),
+\end{equation*}
+and let $T(e)$ be the number of packets (i.e., paths) that pass
+through $e$. We have that
+\begin{equation*}
+    \sum_{j=1}^{N} H_{i j}%
+    \leq%
+    \sum_{j=1}^{k} T(e_j) \quad \text{ and thus }\quad \Ex[]{
+       \sum_{j=1}^{N} H_{i j}}%
+    \leq%
+    \Ex[]{ \sum_{j=1}^{k} T(e_j)}.
+\end{equation*}
+Because of symmetry, the variables $T(e)$ have the same distribution
+for all the edges of $\Graph$. On the other hand, the expected length
+of a path is $n/2$, there are $N$ packets, and there are $N {n}/2$
+edges\footnote{Indeed, the hypercube has $N$ vertices, all of degree
+   $n$. As such, the number of edges is $N {n}/2$.}. We conclude
+\begin{equation*}
+    \Ex{ T(e)}
+    =%
+    \frac{\text{Total length of paths}}{\text{\# of edges in graph}}
+    =%
+    \frac{N (n/2)}{N (n/2)}
+    =%
+    1
+\end{equation*}
+$ = 1$. Thus, for $k=\cardin{\rho_i}$, we have
+\begin{equation*}
+    \mu
+    =
+    \Ex{ \smash{\sum_{j=1}^{N}} H_{i j}}
+    \leq%\
+    \Ex{ \smash{\sum_{j=1}^{k}} T(e_j)}%
+    =
+    \Ex{ \biggl. \ExCond{\smash{\sum_{j=1}^{k}} T(e_j)}{\rho_i}}%
+    =
+    \Ex{ \biggl.
+       \smash{\sum_{j=1}^{\cardin{\rho_i}}} \ExCond{T(e_j) }{\rho_i } 
+    }%
+    =
+    \Ex{ \biggl. \smash{\sum_{j=1}^{\cardin{\rho_i}}} 1 }%
+    =%
+    \Ex{ \Bigl. \cardin{\rho_i} }%
+    =%
+    \frac{n}{2}.
+\end{equation*}
+By the Chernoff inequality, specifically \lemref{chernoff:delta:big},
+we have
+\begin{equation*}
+    \Prob{ \sum_{j} H_{i j} > 7n } \leq \Prob{ \sum_{j} H_{i j} >
+       (1+13)\ts \mu } < 2^{-13\mu} \leq 2^{-6n}.
+\end{equation*}
+Since there are $N = 2^n$ packets, we know that with probability $\leq
+2^{-5n}$ all packets arrive to their temporary destination in a delay
+of most $7n$.
+
+\begin{theorem}
+    \thmlab{route}%
+    %
+    Each packet arrives to its destination in $\leq 14n$ stages, in
+    probability at least $1 - 1/N$ (note that this is very
+    conservative).
+\end{theorem}
+
+
+\section{Faraway Strings}
+
+Consider the Hamming distance between binary strings. It is natural to
+ask how many strings of length $n$ can one have, such that any pair of
+them, is of Hamming distance at least $t$ from each other. Consider
+two random strings, generated by picking at each bit randomly and
+independently. Thus, $\Ex{d_H(x,y)} = n/2$, where $d_H(x,y)$ denote
+the hamming distance between $x$ and $y$. In particular, using the
+Chernoff inequality, specifically \corref{Chernoff:0:1}, we have that
+\begin{equation*}
+    \Prob{\bigl.d_H(x,y) \leq n/2 - \Delta} \leq \exp\pth{ -2\Delta^2 /n}.
+\end{equation*}
+Next, consider generating $M$ such string, where the value of $M$
+would be determined shortly. Clearly, the probability that any pair of
+strings are at distance at most $n/2 - \Delta$, is
+\begin{equation*}
+    \alpha \leq \binom{M}{2} \exp\pth{ -2\Delta^2 /n} < M^2 \exp\pth{
+       -2\Delta^2 /n}.
+\end{equation*}
+If this probability is smaller than one, then there is some
+probability that all the $M$ strings are of distance at least $n/2 -
+\Delta$ from each other. Namely, there exists a set of $M$ strings
+such that every pair of them is far. We used here the fact that if an
+event has probability larger than zero, then it exists. Thus, set
+$\Delta = n/4$, and observe that
+\begin{equation*}
+    \alpha < M^2 \exp\pth{ -2n^2 /16n} = M^2 \exp\pth{ -n /8}.
+\end{equation*}
+Thus, for $M = \exp(n/16)$, we have that $\alpha < 1$. We conclude:
+\begin{lemma}
+    \lemlab{faraway}%
+    %
+    There exists a set of $\exp(n/16)$ binary strings of length $n$,
+    such that any pair of them is at Hamming distance at least $n/4$
+    from each other.
+\end{lemma}
+
+This is our first introduction to the beautiful technique known as the
+probabilistic method --- we will hear more about it later in the
+course.
+
+
+This result has also interesting interpretation in the Euclidean
+setting. Indeed, consider the sphere $\SphereChar$ of radius
+$\sqrt{n}/2$ centered at $(1/2, 1/2, \ldots, 1/2) \in \Re^n$. Clearly,
+all the vertices of the binary hypercube $\brc{0,1}^n$ lie on this
+sphere. As such, let $P$ be the set of points on $\SphereChar$ that
+exists according to \lemref{faraway}. A pair $p,q$ of points of $P$
+have \emph{Euclidean} distance at least
+$\sqrt{d_H(p,q)} = \sqrt{n/4} = \sqrt{n}/2$ from each other. We
+conclude:
+
+\begin{lemma}
+    Consider the unit hypersphere $\SphereChar$ in $\Re^n$. The sphere
+    $\SphereChar$ contains a set $Q$ of points, such that each pair of
+    points is at (Euclidean) distance at least one from each other,
+    and $\cardin{Q} \geq \exp(n/16)$.
+\end{lemma}
+\begin{proof}
+    Take the above point set, and scale it down by a factor of
+    $\sqrt{n}/2$.
+\end{proof}
+
+\section{Bibliographical notes}
+
+
+\secref{routing} is based on Section 4.2 in \cite{mr-ra-95}.  A
+similar result to \thmref{route} is known for the case of the wrapped
+butterfly topology (which is similar to the hypercube topology but
+every node has a constant degree, and there is no clear symmetry). The
+interested reader is referred to \cite{mu-pcrap-05}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exercises}
+
+\Exercise{More binary strings. More!}%
+{10}%
+{more:binary:strings}%
+{%
+   To some extent, \lemref{faraway} is somewhat silly, as one can
+   prove a better bound by direct argumentation. Indeed, for a fixed
+   binary string $x$ of length $n$, show a bound on the number of
+   strings in the Hamming ball around $x$ of radius $n/4$ (i.e.,
+   binary strings of distance at most $n/4$ from $x$). (Hint:
+   interpret the special case of the Chernoff inequality as an
+   inequality over binomial coefficients.)
+
+   Next, argue that the greedy algorithm which repeatedly pick a
+   string which is in distance $\geq n/4$ from all strings picked so
+   far, stops after picking at least $\exp(n/8)$ strings. %
+}{}
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{c_h_r_0_1}%
+   \IncFragment{Chernoff_simplified}%
+   \IncFragment{chernoff_delta_big}%
+   \IncFragment{c_h_r_0_1}%
+
+}
+
+
+\ChapterEnd{}
+
+%\section{Tail Inequalities}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "chernoff_app"
+%%% End:

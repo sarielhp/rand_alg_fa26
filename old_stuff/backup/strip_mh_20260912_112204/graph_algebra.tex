@@ -1,0 +1,138 @@
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\ChapterNumPage{35}{281}
+
+\Chapter{A Bit on Algebraic Graph Theory}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{``The Party told you to reject the evidence of your eyes
+   and ears. It was their final, most essential
+   command.''}{1984}{George Orwell}
+
+
+\section{Graphs and Eigenvalues}
+
+Consider an undirected graph $\Graph = \Graph(V,E)$ with $n$
+vertices. The adjacency matrix $\Mtrx(\Graph)$ of $\Graph$ is the $n\times
+n$ symmetric matrix where $\Mtrx_{ij} = \Mtrx_{ji}$ is the number of
+edges between the vertices $v_i$ and $v_j$. If $\Graph$ is bipartite,
+we assume that $V$ is made out of two independent sets $X$ and $Y$. In
+this case the matrix $\Mtrx(\Graph)$ can be written in block form.
+
+\newcommand{\MA}{\Mh{\mathsf{N}}}%
+\subsection{Eigenvalues and eigenvectors}
+
+A non-zero vector $v$ is an eigenvector of $\Mtrx$, if there is a
+value $\lambda$, known as the \emphi{eigenvalue} of $v$, such that
+$\Mtrx v = \lambda v$. That is, the vector $v$ is mapped to zero by
+the matrix $\MA = \Mtrx - \lambda I$. This happens only if $\MA$ is
+not full ranked, which in turn implies that $\det(\MA)=0$. We have
+that $f(\lambda ) =\det(\Mtrx - \lambda I)$ is a polynomial of degree
+$n$. It has $n$ roots (not necessarily real), which are the
+\emphi{eigenvalues} of $\Mtrx$. A matrix $\MA \in \Re^{n\times n}$ is
+\emphi{symmetric} if $\MA^T = \MA$.
+
+\begin{lemma}
+    The eigenvalues of a symmetric real matrix $\MA \in \Re^{n \times
+       n}$ are real numbers.
+\end{lemma}
+\begin{proof}
+    Observe that for any real vector $v=(v_1, \ldots, v_n) \in \Re^n$,
+    we have that $\sum_{i=1}^n v_i^2 = \DotProd{v}{v} \geq 0$. As
+    such, for a vector $v$ with eigenvalue $\lambda$, we have
+    \begin{equation*}
+        0 \leq 
+        \DotProd{ \MA v}{\MA v} = (\MA v)^T \MA v
+        = (\lambda v)^T \lambda v
+        = \lambda^2 \DotProd{v}{v}.
+    \end{equation*}
+    Namely, $\lambda^2$ is a non-negative number, which implies that
+    the $\lambda$ is a real number.
+\end{proof}
+
+\begin{lemma}
+    Let $\MA \in \Re^{n \times n}$ be a matrix.  Consider two
+    eigenvectors $v_1, v_2$ that corresponds to two eigenvalues
+    $\lambda_1, \lambda_2$, where $\lambda_1 \neq \lambda_2$. Then
+    $v_1$ and $v_2$ are orthogonal.
+\end{lemma}
+\begin{proof}
+    Indeed, $v_1^T \MA v_2 = \lambda_2 v_1^T v_2$. Similarly, we have
+    $v_1^T \MA v_2 = (\MA^T v_1)^T v_2) =\lambda_1 v_1^T v_2$. We
+    conclude that either $\lambda_1 = \lambda_2$, or $v_1$ and $v_2$
+    are orthogonal (i.e., $v_1^T v_2 = 0$).
+\end{proof}
+
+
+\subsection{Eigenvalues and eigenvectors of a graph}
+
+Since $\MA = \Mtrx(\Graph)$ the adjacency matrix of an undirected
+graph is symmetric, all its eigenvalues exists and are real numbers
+$\lambda_1 \geq \lambda_2 \dots\geq \lambda_n$, and their
+corresponding orthonormal basis vectors are $e_1,\ldots, e_n$.
+
+
+
+We will
+need the following theorem.
+
+
+\begin{fragment}{f_t_algebraic_graph}
+\begin{theorem}[Fundamental theorem of algebraic graph theory]
+    \thmlab{{f:t:algebraic:graph}}%
+    %
+    Let $\Graph= \Graph(V,E)$ be an undirected (multi)graph with
+    maximum degree $d$ and with $n$ vertices.  Let
+    $\lambda_1\geq\lambda_2\geq \cdots \geq \lambda_n$ be the
+    eigenvalues of $\Mtrx(\Graph)$ and the corresponding orthonormal
+    eigenvectors are $e_1,\ldots, e_n$. The following holds.
+    \begin{compactenumi}
+        \item If $\Graph$ is connected then $\lambda_2 < \lambda_1$.
+
+        \item For $i=1,\ldots, n$, we have
+        $\cardin{\lambda_i} \leq d$.
+
+        \item $d$ is an eigenvalue if and only if $\Graph$ is regular.
+
+        \item If $\Graph$ is $d$-regular then the eigenvalue
+        $\lambda_1=d$ has the eigenvector $e_1 = \frac{1}{\sqrt{n}}
+        (1,1,1, \ldots, 1)$.
+
+        \item The graph $\Graph$ is bipartite if and only if for every
+        eigenvalue $\lambda$ there is an eigenvalue $-\lambda$ of the
+        same multiplicity.
+
+        \item Suppose that $\Graph$ is connected. Then $\Graph$ is bipartite if
+        and only if $-\lambda_1$ is an eigenvalue.
+
+        \item If $\Graph$ is $d$-regular and bipartite, then $\lambda_n =
+        d$ and $e_n=\frac{1}{\sqrt{n}} ( 1,1, \ldots, 1, -1, \ldots,
+        -1)$, where there are equal numbers of $1$s and $-1$s in
+        $e_n$.
+    \end{compactenumi}
+\end{theorem}
+\end{fragment}
+
+
+
+\section{Bibliographical Notes}
+
+A nice survey of algebraic graph theory appears in \cite{w-igt-01} and
+in \cite{b-mgt-98}.
+
+
+\ChapterEnd{}
+ 
+
+%---------------------------------------------------------- 

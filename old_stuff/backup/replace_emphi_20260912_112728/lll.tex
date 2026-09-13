@@ -1,0 +1,430 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{51}{403}
+
+\Chapter{The Probabilistic Method III}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+\QuotePExt{At other times you seemed to me either pitiable or
+   contemptible, eunuchs, artificially confined to an eternal
+   childhood, childlike and childish in your cool, tightly fenced,
+   neatly tidied playground and kindergarten, where every nose is
+   carefully wiped and every troublesome emotion is soothed, every
+   dangerous thought repressed, where everyone plays nice, safe,
+   bloodless games for a lifetime and every jagged stirring of life,
+   every strong feeling, every genuine passion, every rapture is
+   promptly checked, deflected and neutralized by meditation
+   therapy.}%
+{The Glass Bead Game}%
+{Hermann Hesse }
+
+\section{The \Lovasz{} Local Lemma}
+
+\begin{lemma}
+    \lemlab{basic}%
+    %
+    \begin{compactenumi}
+        \item $\ds \Prob{A \sep{B \cap C}} = \frac{\Prob{A \cap B
+              \sep{C}}}{\Prob{B \sep C}}$
+        
+        \item Let $\eta_{1},\ldots ,\eta _{n}$ be $n$
+        events which are not necessarily independent. Then,
+        \begin{align*}
+            \ds \Prob{\Bigl. \cap_{i=1}^{n}\eta_{i}}%
+            =%
+            \Prob{\Bigl. \eta_{1}} %
+            * \Prob{\Bigl. \eta_{2}\sep{\eta_{1}}}
+            \Prob{\Bigl. \eta_{3}\sep{\eta_{1}\cap \eta_{2}}}%
+            *\ldots *%
+            \Prob{\Bigl. \eta_{n}\sep{\eta_{1}\cap \ldots \cap
+                  \eta_{n-1}}}.
+        \end{align*}
+    \end{compactenumi}
+\end{lemma}
+
+\begin{proof}
+    (i) We have that
+    \begin{align*}
+    {\frac{\Prob{A \cap B \sep{C}}}
+       {\Prob{B \sep{C}}}} 
+    =
+    {      \frac{\Prob{A \cap B \cap C}}{\Prob{C}}}
+    \!
+    \left/
+    \;
+        {\frac{\Prob{B \cap C}}{\Prob{C}}} \right.
+    =
+    \frac{\Prob{A \cap B \cap C}}
+    {\Prob{B \cap C}} = \Prob{A \sep{B \cap C}}.
+    \end{align*}
+    
+
+    As for (ii), we already saw it and used it in the
+    minimum cut algorithm lecture.
+\end{proof}
+
+\begin{defn}
+    An event $\Event$ is mutually independent of a set of events
+    $\EuScript{C}$, if for any subset $\EuScript{U} \subseteq
+    \EuScript{C}$, we have that 
+    $\Prob{\Event \cap \pth{\bigcap_{\Event' \in U} \Event'}}
+    =\Prob{\Event } \Prob{\bigcap_{\Event' \in U} \Event'}$.
+     
+
+    Let $\Event_1, \ldots, \Event_n$ be events. A \emphi{dependency
+       graph} for these events is a directed graph
+    $\Graph=(\Vertices,\Edges)$, where $\brc{1,\ldots, n}$, such that
+    $\Event_i$ is mutually independent of all the events in $\brc{
+       \Event_j \sep{ (i,j) \notin \Edges}}$.
+\end{defn}
+
+Intuitively, an edge $(i,j)$ in a dependency graph indicates that
+$\Event_i$ and $\Event_j$ have (maybe) some dependency between them.  We are
+interested in settings where this dependency is limited enough, that
+we can claim something about the probability of all these events
+happening simultaneously.
+
+\begin{lemma}[\Lovasz{} Local Lemma]%
+    \lemlab{Lovasz}%
+    %
+    Let $\Graph(\Vertices,\Edges)$ be a dependency graph for events
+    $\Event_1,$ $\ldots, \Event_n$. Suppose that there exist $x_i \in
+    [0,1]$, for $1 \leq i \leq n$ such that $\ds \Prob{\Event_i} \leq
+    x_i \prod_{(i,j) \in E} \pth{1-x_j}$.  Then $\ds
+    \Prob{\cap_{i=1}^{n} \overline{\Event_i}} \geq \prod_{i=1}^{n}
+    \pth{1-x_i}$.
+\end{lemma}
+
+We need the following technical lemma.
+
+\begin{lemma}
+    \lemlab{Lovasz:helper}%
+    %
+    Let $\Graph(\Vertices,\Edges)$ be a dependency graph for events
+    $\Event_1,$ $\ldots, \Event_n$. Suppose that there exist $x_i \in
+    [0,1]$, for $1 \leq i \leq n$ such that $\ds \Prob{\Event_i} \leq
+    x_i \prod_{(i,j) \in E} \pth{1-x_j}$.  Now, let $S$ be a subset of
+    the vertices from $\brc{1, \ldots, n}$, and let $i$ be an index
+    not in $S$.  We have that
+    \begin{align}
+        \Prob{\Event_i \sep{ \cap_{j \in S} \overline{\Event_j}}} \leq
+        x_i.        
+        \eqlab{ind}
+    \end{align}
+\end{lemma}
+
+
+\begin{proof}
+    The proof is by induction on $k = \cardin{S}$.
+
+    For $k = 0$, we have by assumption that $\Prob{\Event_i \sep{ \cap_{j
+             \in S} \overline{\Event_j}}} = \Prob{\Event_i } \leq x_i
+    \prod_{(i,j) \in E} \pth{1-x_j} \leq x_i$.
+    
+    Thus, let $N = \brc{ j \in S \sep{ (i,j) \in E}}$, and
+    let $R = S \setminus N$. If $N = \emptyset$, then we
+    have that $\Event_i$ is mutually independent of the events of
+    $\EuScript{C}(R) = \brc{\Event_j \sep{ j \in R}}$.  Thus, $\Prob{\Event_i
+       \sep{ \cap_{j \in S} \overline{\Event_j}}} = \Prob{\Event_i
+       \sep{ \cap_{j \in R} \overline{\Event_j}}} = \Prob{\Event_i}
+    \leq x_i$, by arguing as above.
+    
+    By \lemref{basic} (i), we have that    
+    \begin{align*}
+    \Prob{\Event_i \sep{\bigcap_{j \in S} \overline{\Event_j}}} =
+    \frac{\Prob{\Event_i \cap \pth{ \cap_{j \in N}
+             \overline{\Event_j} } \sep{ \cap_{m \in R}
+             \overline{\Event_m}}}} {\Prob{\cap_{j \in
+             N}\overline{\Event_j} \sep{ \cap_{m \in R}
+             \overline{\Event_m}} }}.
+    \end{align*}
+    We bound the numerator by
+    \begin{align*}
+    \Prob{\Event_i \cap \pth{ \cap_{j \in N} \overline{\Event_j} }
+       \sep{ \cap_{m \in R} \overline{\Event_m}}} \leq \Prob{\Event_i
+       \sep{ \cap_{m \in R} \overline{\Event_m}}} = \Prob{\Event_i}
+    \leq x_i \prod_{(i,j) \in E} \pth{1-x_j},
+    \end{align*}   
+    since $\Event_i$ is mutually independent of $\EuScript{C}(R)$. As for
+    the denominator, let $N=\brc{j_1, \ldots, j_r}$. We have, by
+    \lemref{basic} (ii), that
+    \begin{eqnarray*}
+        \Prob{ \overline{\Event_{j_1}} \cap \ldots \cap
+           \overline{\Event_{j_r}} \sep{ \cap_{m \in R}
+              \overline{\Event_m}}} \hspace{-4cm}&&\hspace{3.0cm}= 
+        \Prob{\overline{\Event_{j_1}} \sep{
+              \cap_{m \in R} \overline{\Event_m}}}
+        \Prob{\overline{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \;\cap\;
+              \pth{ \cap_{m \in R} \overline{\Event_m}}}} \\
+        &&\cdots 
+        \Prob{\overline{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
+              \ldots \cap \overline{\Event_{j_{r-1}}}
+              \;\cap \; \pth{ \cap_{m \in R} \overline{\Event_m}}}} \\
+        &=& 
+        \pth{1 - \Prob{{\Event_{j_1}} \sep{
+                 \cap_{m \in R} \overline{\Event_m}}}} \;
+        \pth{ 1 - \Prob{{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \cap
+                 \pth{ \cap_{m \in R} \overline{\Event_m}}}}} \\
+        &&\cdots 
+        \pth{ 1 - \Prob{{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
+                 \ldots \cap \overline{\Event_{j_{r-1}}} \;\cap\;
+                 \pth{ \cap_{m \in R} \overline{\Event_m}}}} \;} \\
+        &\geq& \pth{1 -x_{j_1}} \cdots \pth{1 - x_{j_r}}
+        \geq \prod_{(i,j) \in E} \pth{1 -x_j},
+    \end{eqnarray*}
+    by \Eqref{ind} and induction, as every probability term
+    in the above expression has less than $\cardin{S}$ items
+    involved. It thus follows, that 
+    $\Prob{\Event_i \sep{\bigcap_{j \in S} \overline{\Event_j}}} \leq
+    x_i$. 
+\end{proof}
+
+%\bigskip
+
+\noindent\begin{proofExt}{Proof of \Lovasz{} local lemma
+       (\lemref{Lovasz})} Using \lemref{Lovasz:helper}, we have that
+    \begin{align*}
+    \Prob{\cap_{i=1}^{n} \overline{\Event_i}} = \pth{1 -
+       \Prob{\Event_1}} \pth{1 - \Prob{\Event_2 \sep{\overline{\Event_1}}}}
+    \cdots \pth{1 - \Prob{\Event_n \sep{ \cap_{i=1}^{n-1}
+             \overline{\Event_{i}}}}} \geq
+    \prod_{i=1}^{n} \pth{1-x_i}.
+    \end{align*}   
+\end{proofExt}
+
+\bigskip
+
+\begin{corollary}%
+    \corlab{Lovasz}%
+    %
+    Let $\Event_1, \ldots, \Event_n$ be events, with $\Prob{\Event_i} \leq
+    p$ for all $i$. If each event is mutually independent of
+    all other events except for at most $d$, and if
+    $\;e p(d+1)\leq 1$, then $\Prob{\cap_{i=1}^{n}
+       \overline{\Event_{i}}} > 0$.    
+\end{corollary}
+
+\begin{proof}
+    If $d = 0$ the result is trivial, as the events are
+    independent. Otherwise, there is a dependency graph,
+    with every vertex having degree at most $d$. Apply
+    \lemref{Lovasz} with $x_i = \frac{1}{d+1}$. Observe that
+    \begin{align*}
+    x_i (1-x_i)^{d} =\frac{1}{d+1}\pth{1- \frac{1}{d+1}}^d
+    > \frac{1}{d+1} \cdot \frac{1}{e} \geq p,
+    \end{align*}
+    by assumption and the since $\pth[]{1- \frac{1}{d+1}}^d >
+    1/e$, see 
+    \lemref{idiotic:e} below.
+\end{proof}
+
+% \bigskip
+
+The following is standard by now, and we include it only for the sake
+of completeness.
+\begin{lemma}
+    \lemlab{idiotic:e}%
+    %
+    For any $n \geq 1$, we have $\ds \pth[]{1- \frac{1}{n+1}}^n >
+    \frac{1}{e}$.
+\end{lemma}
+\begin{proof}
+    This is equivalent to $\pth{\frac{n}{n+1}}^n >
+    \frac{1}{e}$. Namely, we need to prove $e >
+    \pth{\frac{n+1}{n}}^n$. But this obvious, since
+    $\pth{\frac{n+1}{n}}^n = \pth{1 + \frac{1}{n}}^n < \exp
+    \pth{n(1/n)} = e$.
+\end{proof}
+
+\section{Application to $k$-SAT}
+
+We are given a instance $I$ of $k$-SAT, where every clause
+contains $k$ literals, there are $m$ clauses, and every one
+of the $n$ variables, appears in at most $2^{k/50}$
+clauses. 
+
+Consider a random assignment, and let $\Event_i$ be the event that the
+$i$th clause was not satisfied. We know that $p = \Prob{\Event_i} =
+2^{-k}$, and furthermore, $\Event_i$ depends on at most $d = k
+2^{k/50}$ other events. Since $e p(d+1) = e \pth{k\cdot 2^{k/50} +
+   1}2^{-k}<1$, for $k\geq 4$, we conclude that by \corref{Lovasz},
+that
+\begin{align*}
+\Prob{ \Bigl. I \text{ have a satisfying assignment}}%
+=%
+\Prob{ \Bigl. \cup_{i} \Event_i} > 0.
+\end{align*}
+
+\subsection{An efficient algorithm}
+
+The above just proves that a satisfying assignment exists. We next
+show a polynomial algorithm (in $m$) for the computation of such an
+assignment (the algorithm will not be polynomial in $k$).
+
+Let $\Graph$ be the dependency graph for $I$, where the vertices are
+the clauses of $I$, and two clauses are connected if they share a
+variable.  In the first stage of the algorithm, we assign values to
+the variables one by one, in an arbitrary order. In the beginning of
+this process all variables are unspecified, at each step, we randomly
+assign a variable either $0$ or $1$ with equal probability.
+
+\begin{defn}
+    A clause $\Event_i$ is \emphic{dangerous}{clause!dangerous} if  both the
+    following conditions hold:
+    \begin{compactenumi}
+        \item $k/2$ literals of $\Event_i$ have been fixed.
+        
+        \item $\Event_i$ is still unsatisfied. 
+    \end{compactenumi}
+\end{defn}
+
+After assigning each value, we discover all the dangerous clauses, and
+we defer (``freeze'') all the unassigned variables participating in
+such a clause.  We continue in this fashion till all the unspecified
+variables are frozen. This completes the first stage of the
+algorithm. 
+
+At the second stage of the algorithm, we will compute a satisfying
+assignment to the variables using brute force. This would be done by
+taking the surviving formula $I'$ and breaking it into fragments, so
+that each fragment does not share any variable with any other fragment
+(naively, it might be that all of $I'$ is one fragment). We can find a
+satisfying assignment to each fragment separately, and if each such
+fragment is ``small'' the resulting algorithm would be ``fast''.
+
+We need to show that $I'$ has a satisfying assignment and that the
+fragments are indeed small.
+
+
+\subsubsection{Analysis}
+
+A clause had \emphic{survived}{clause!survived} if it is not satisfied
+by the variables fixed in the first stage.  Note, that a clause that
+survived must have a dangerous clause as a neighbor in the dependency
+graph $\Graph$.  Not that $I'$, the instance remaining from $I$ after
+the first stage, has at least $k/2$ unspecified variables in each
+clause. Furthermore, every clause of $I'$ has at most $d=k2^{k/50}$
+neighbors in $\Graph'$, where $\Graph'$ is the dependency graph for $I'$. It
+follows, that again, we can apply \Lovasz{} local lemma to conclude
+that $I'$ has a satisfying assignment.
+
+\begin{defn}
+    Two connected graphs $\Graph_1=(V_1, E_1)$ and $\Graph_2=(V_2,
+    E_2)$, where $V_1, V_2 \subseteq \brc{1,\ldots, n}$ are
+    \emphic{unique}{subgraph!unique} if $V_1 \ne V_2$. 
+\end{defn}
+
+\begin{lemma}
+    \lemlab{small:unique}%
+    %
+    Let $\Graph$ be a graph with degree at most $d$ and with $n$
+    vertices. Then, the number of unique subgraphs of $\Graph$ having
+    $r$ vertices is at most $nd^{2r}$.
+\end{lemma}
+
+\begin{proof}
+    Consider a unique subgraph $\widehat{G}$ of $\Graph$, which by
+    definition is connected.  Let $H$ be a connected subtree of $\Graph$
+    spanning $\widehat{G}$. Duplicate every edge of $H$, and let $H'$
+    denote the resulting graph. Clearly, $H'$ is Eulerian, and as such
+    posses a Eulerian path $\pi$ of length at most $2(r-1)$, which can
+    be specified, by picking a starting vertex $v$, and writing down
+    for the $i$-th vertex of $\pi$ which of the $d$ possible
+    neighbors, is the next vertex in $\pi$.  Thus, there are st most
+    $nd^{2(r-1)}$ ways of specifying $\pi$, and thus, there are at
+    most $nd^{2(r-1)}$ unique subgraphs in $\Graph$ of size $r$.
+\end{proof}
+
+\begin{lemma}
+    With probability $1- o(1)$, all connected components of $\Graph'$ have
+    size at most $O( \log{m})$, where $\Graph'$ denote the dependency graph
+    for $I'$. 
+\end{lemma}
+
+\begin{proof}
+    Let $\Graph_4$ be a graph formed from $\Graph$ by connecting any
+    pair of vertices of $\Graph$ of distance {\em exactly} $4$
+    from each other. The degree of a vertex of $\Graph_4$ is at
+    most $O(d^4)$. 
+
+    Let $U$ be a set of $r$ vertices of $\Graph$, such that
+    every pair is in distance at least $4$ from each other
+    in $\Graph$. We are interested in bounding the probability
+    that all the clauses of $U$ survive the first stage. 
+    
+    The probability of a clause to be dangerous is at most $2^{-k/2}$,
+    as we assign (random) values to half of the variables of this
+    clause. Now, a clause survive only if it is dangerous or one of
+    its neighbors is dangerous.  Thus, the probability that a clause
+    survive is bounded by $2^{-k/2}(d+1)$. 
+
+    Furthermore, the survival of two clauses $\Event_i$ and $\Event_j$ in $U$ is
+    an independent event, as no \emph{neighbor} of $\Event_i$ shares a
+    variable with a neighbor of $\Event_j$ (because of the distance $4$
+    requirement). We conclude, that the probability that all the
+    vertices of $U$ to appear in $\Graph'$ is bounded by
+    \begin{align*}
+    \pth{2^{-k/2}(d+1)}^{r}.
+    \end{align*}
+    
+    In fact, we are interested in sets $U$ that induce a connected
+    subgraphs of $\Graph_4$. The number  of unique such sets of size $r$ is
+    bounded by the number of unique subgraphs of $\Graph_4$ of size $r$,
+    which is bounded by $m d^{8r}$, by \lemref{small:unique}. Thus,
+    the probability of any connected subgraph of $\Graph_4$ of size $r =
+    \log_2 {m}$ to survive in $\Graph'$ is smaller than
+    \begin{align*}
+        m d^{8r} \pth{2^{-k/2}(d+1)}^{r}%
+        =%
+        m \pth{k2^{k/50}}^{8r } \pth{2^{-k/2}(k2^{k/50}+1)}^{r}%
+        \leq%
+        m 2^{kr/5} \cdot 2^{-kr/4}%
+        =%
+        m 2^{-kr/20}%
+        =%
+        o(1),
+    \end{align*}
+    since $k \geq 50$.  (Here, a subgraph survive of $\Graph_4$
+    survive, if all its vertices appear in $\Graph'$.)  Note, however,
+    that if a connected component of $\Graph'$ has more than $L$
+    vertices, than there must be a connected component having $L/d^3$
+    vertices in $\Graph_4$ that had survived in $\Graph'$. We
+    conclude, that with probability $o(1)$, no connected component of
+    $\Graph'$ has more than $O(d^3 \log{m}) = O(\log{m})$ vertices
+    (note, that we consider $k$ to be a constant, and thus, also $d$).
+\end{proof}
+
+%\bigskip
+
+Thus, after the first stage, we are left with fragments of
+$(k/2)$-SAT, where every fragment has size at most
+$O(\log{m})$, and thus having at most $O(\log{m})$
+variables. Thus, we can by brute force find the satisfying
+assignment to each such fragment in time polynomial in
+$m$. We conclude:
+
+\begin{theorem}
+    The above algorithm finds a satisfying truth assignment
+    for any instance of $k$-SAT containing $m$ clauses,
+    which each variable is contained in at most $2^{k/50}$
+    clauses, in expected time polynomial in $m$.
+\end{theorem}
+
+
+
+
+
+
+%\bibliographystyle{alpha} 
+%\bibliography{shortcuts,geometry}
+
+
+\ChapterEnd{}
+
+%\end{document}%

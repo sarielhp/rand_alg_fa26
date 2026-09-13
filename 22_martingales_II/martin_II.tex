@@ -28,7 +28,7 @@
 % \section{Even more probability}
 
 \begin{defn}
-    A \emphi{$\sigma$-field} $(\Omega, \Family)$ consists of a
+    A \emphOnly{$\sigma$-field}\index{$\sigma$-field} $(\Omega, \Family)$ consists of a
     sample space $\Omega$ (i.e., the atomic events) and a
     collection of subsets $\Family$ satisfying the following
     conditions:
@@ -41,7 +41,8 @@
 \end{defn}
 
 \begin{defn}
-    Given a $\sigma$-field $(\Omega, \Family)$, a \emphi{probability
+    Given a $\sigma$-field $(\Omega, \Family)$, a \emphOnly{probability
+       measure}\index{probability
        measure} $\ProbLTR: \Family \rightarrow \Re^+$ is a function
     that satisfies the following conditions.
     \begin{compactenumA}
@@ -53,7 +54,7 @@
 \end{defn}
 
 \begin{defn}
-    A \emphi{probability space} $(\Omega, \Family, \ProbLTR)$ consists
+    A \emphOnly{probability space}\index{probability space} $(\Omega, \Family, \ProbLTR)$ consists
     of a $\sigma$-field $(\Omega,\Family)$ with a probability measure
     $\ProbLTR$ defined on it.
 \end{defn}
@@ -61,7 +62,7 @@
 
 \begin{defn}
     Given a $\sigma$-field $(\Omega, \Family)$ with $\Family=2^{\Omega}$, a
-    \emphi{filter} (also \emphi{filtration}) is a nested sequence $\Family_0
+    \emphOnly{filter}\index{filter} (also \emphOnly{filtration}\index{filtration}) is a nested sequence $\Family_0
     \subseteq \Family_1 \subseteq \cdots \subseteq \Family_n$ of subsets of
     $2^{\Omega}$, such that:
     \begin{compactenumA}
@@ -74,7 +75,7 @@
 
 
 \begin{defn}
-    An \emphi{elementary event} or \emphi{atomic event} is a subset of
+    An \emphOnly{elementary event}\index{elementary event} or \emphOnly{atomic event}\index{atomic event} is a subset of
     a sample space that contains only one element of $\Omega$.
 \end{defn}
 
@@ -117,7 +118,7 @@ progress down the filter.
 \end{example}
 
 \begin{defn}
-    A random variable $X$ is said to be \emphi{$\Family_i$-measurable}
+    A random variable $X$ is said to be \emphOnly{$\Family_i$-measurable}\index{$\Family_i$-measurable}
     if for each $x \in \Re$, the event $X \leq x$ is in $\Family_i$;
     that is, the set
     \begin{math}
@@ -161,7 +162,7 @@ event.
 
 \begin{defn}
     A sequence of random variables $Y_1, Y_2, \ldots,$ is a
-    \emphi{martingale difference} sequence if for all $i \geq 0$, we
+    \emphOnly{martingale difference}\index{martingale difference} sequence if for all $i \geq 0$, we
     have
     \begin{math}
         \biggl.\Ex{ Y_i \sepw{ \bigl. Y_1,\ldots, Y_{i-1}}} = 0.
@@ -175,10 +176,10 @@ X_{i-1}$.
 \begin{defn}
     A sequence of random variables $Y_1, Y_2, \ldots,$ is
     \begin{align*}
-        \text{ a \emphi{super martingale} sequence if} \qquad &
+        \text{ a \emphOnly{super martingale}\index{super martingale} sequence if} \qquad &
         \forall i \quad%
         \Ex{ Y_i \sep{ Y_1,\ldots, Y_{i-1}}} \leq Y_{i-1},\\
-        \text{and a \emphi{sub martingale} sequence if \qquad} &%
+        \text{and a \emphOnly{sub martingale}\index{sub martingale} sequence if \qquad} &%
         \forall i \quad%
         \Ex{ Y_i \sep{ Y_1,\ldots, Y_{i-1}}} \geq Y_{i-1}.
     \end{align*}
@@ -192,7 +193,7 @@ X_{i-1}$.
     filter $\Family_0, \Family_1$, \ldots. Suppose that $X_0, X_1,
     \ldots$, are random variables such that, for all $i \geq 0$, $X_i$
     is $\Family_i$-measurable. The sequence $X_0,\ldots, X_n$ is a
-    \emphi{martingale} provided that, for all $i \geq 0$, we have
+    \emphOnly{martingale}\index{martingale} provided that, for all $i \geq 0$, we have
     \begin{math}
         \Ex{ \bigl. X_{i+1} \sepw{\,\Family_i}} = X_i.
     \end{math}
@@ -270,7 +271,8 @@ X_{i-1}$.
 \begin{defn}
     Let $f:\Domain_1 \times \cdots \times \Domain_n \rightarrow \Re$
     be a real-valued function with a arguments from possibly distinct
-    domains. The function $f$ is said to satisfy the \emphi{Lipschitz
+    domains. The function $f$ is said to satisfy the \emphOnly{Lipschitz
+       condition}\index{Lipschitz
        condition} if for any
     $x_1 \in \Domain_1, \ldots, x_n \in \Domain_n$, and
     $i \in \brc{1,\ldots,n}$ and any $y_i \in \Domain_i$, we have
@@ -279,7 +281,7 @@ X_{i-1}$.
            x_n) - f (x_1, \ldots, x_{i-1}, y_i, x_{i+1},\ldots, x_n)%
            \, } \leq 1.
     \end{equation*}
-    Specifically, a function is \emphi{$c$-Lipschitz}, if the
+    Specifically, a function is \emphOnly{$c$-Lipschitz}\index{$c$-Lipschitz}, if the
     inequality holds with a constant $c$ (instead of $1$).
 \end{defn}
 
@@ -287,7 +289,7 @@ X_{i-1}$.
     Let $X_1, \ldots, X_n$ be a sequence of \emph{independent} random
     variables, and a function $f = f( X_1,\ldots, X_n )$ defined over
     them, such that $f$ satisfies the Lipschitz condition. The
-    \emphi{Doob martingale} sequence $Y_0, \ldots, Y_m$ is defined by
+    \emphOnly{Doob martingale}\index{Doob martingale} sequence $Y_0, \ldots, Y_m$ is defined by
     $Y_0 = \Ex{\bigl. f(X_1, \ldots, X_n)}\,$ and
     \begin{equation*}
         \Bigl.  Y_i = \ExCond{f(X_1,\ldots, X_n) }{\bigl. X_1, \ldots,

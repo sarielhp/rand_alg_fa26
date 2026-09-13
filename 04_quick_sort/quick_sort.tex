@@ -86,7 +86,7 @@ Thus,
     &\le 2\sum_{i=1}^n \sum_{k=1}^{n} \frac{1}{k}
     \le 2 n H_n \le n + 2n \ln n ,
 \end{align*}
-where $H_n$ is the \emphi{harmonic number}\footnote{Using integration
+where $H_n$ is the \emphOnly{harmonic number}\index{harmonic number}\footnote{Using integration
    to bound summation, we have $H_n \leq 1 + \int_{x=1}^{n}
    \frac{1}{x} dx \leq 1 + \ln n$.  Similarly, $H_n \geq
    \int_{x=1}^{n} \frac{1}{x} dx = \ln n$.}
@@ -240,7 +240,7 @@ expectation) to $1.5n + o(n)$. More on that later in the course.
 
 Consider the problem of given a set $X$ of $n$ numbers, and a
 parameter $k$, to output the $k$\th smallest number (which is the
-number with \emphi{rank} $k$ in $X$). This can be easily be done by
+number with \emphOnly{rank}\index{rank} $k$ in $X$). This can be easily be done by
 modifying \QuickSort{} only to perform one recursive call.  See
 \figref{quick:select} for a pseud-code of the resulting algorithm.
 

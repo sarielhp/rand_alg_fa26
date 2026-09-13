@@ -31,24 +31,25 @@ moment variant of Chebychev inequality.
     \lemlab{cheby:higher}%
     %
     For a random variable $X$, we have that
-    \begin{math}
+    \begin{equation*}
         \ds%
         \Prob{\cardin{X - \Ex{X}}
-      \geq%
-      t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}
-      \leq
-      \frac{1}{t^k}
-  \end{math}
+           \geq%
+           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}
+        \leq
+        \frac{1}{t^k}
+    \end{equation*}
 \end{lemma}
 \begin{proof}
     Setting $Z = \cardin{X - \Ex{X}}^k$, and
     raising the inequality by a power of $k$, we have
     \begin{align*}
-      \Prob{\cardin{X - \Ex{X}} \geq%
-      t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
-      = %
-      \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
-      =%
+        \Prob{\cardin{X - \Ex{X}} \geq%
+           t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
+        &\EQ %
+        \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
+        \\&
+        \EQ%
       \Prob{Z \geq t^k \Ex{Z}}%
       \leq%
       \frac{1}{t^k},
@@ -81,21 +82,25 @@ interesting example.
 \begin{proof}
     Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
     computing
-    \begin{equation}
+    \begin{align}
         M_k(X)%
-        =%
+        &\EQ%
         \Ex{  X^{k}}%
         =%
         \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
-        =%
+        \nonumber{}
+        \\&
+        \EQ%
         \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
-        =%
+        \nonumber{}
+        \\&
+        \EQ%
         \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
         \Ex{X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
         \eqlab{m:k}
-    \end{equation}
+    \end{align}
     Consider a term in the above summation, where one of the indices
     (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
     independence, we have
@@ -152,18 +157,18 @@ interesting example.
         n.
     \end{equation*}
     And
-    \begin{equation*}
+    \begin{align*}
         M_4(X)%
-        =%
+        &\EQ%
         \Ex{  X^{4}}%
-        =%
+        \EQ%
         \sum_{i=1}^n \Ex{X_i^4} + \binom{4}{2}\sum_{i \neq j} \Ex{X_i^2 X_j^2}
-        =%
+        \\&
+        \EQ%
         n + 6 n(n-1)
-        =%
+        \EQ%
         6n^2 - 5n.
-    \end{equation*}
-
+    \end{align*}
 \end{proof}
 
 
@@ -185,21 +190,23 @@ interesting example.
 
     Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
     computing
-    \begin{equation}
+    \begin{align}
         M_k(X)%
-        =%
+        &\EQ%
         \Ex{  X^{k}}%
         =%
         \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
-        =%
+        \nonumber\\&        
+        \EQ%
         \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
-        =%
+        \nonumber\\&        
+        \EQ%
         \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
         \Ex{X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
         \eqlab{m:k:II}
-    \end{equation}
+    \end{align}
     Consider a term in the above summation, where one of the indices
     (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
     independence, we have
@@ -248,11 +255,14 @@ interesting example.
     \lemref{cheby:higher}, we have
     \begin{align*}
       \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-      =%
+      &\EQ%
       \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
-      \leq
+      \\&
+      \LEQ
       \Prob{ \cardin{X} \geq%
-      t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
+         t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}}
+      \leq%
+      {1}/{t^k}.
     \end{align*}
 \end{proof}
 
@@ -271,7 +281,7 @@ independent. We readily get the following.
 
 \begin{defn}
     Given $n$ random variables $X_1, \ldots, X_n$ they are
-    \emphi{$k$-wise independent}, if for any $k$ of them (i.e.,
+    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ of them (i.e.,
     $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
     we have\
     \begin{equation*}
@@ -295,7 +305,7 @@ $k$ of them (on their own) looks totally random.
     \end{align*}
 \end{lemma}
 
-\section{More inequalities involving expectations}
+\section{More inequalities about expectations}
 
 \subsection{Cauchy–Schwarz inequality for expectations}
 
@@ -310,21 +320,25 @@ $k$ of them (on their own) looks totally random.
 \begin{proof}
     By Cauchy–Schwarz inequality, what else, we have
     \begin{align*}
-      \cardin{\Ex{ XY \bigr.}\Bigr.}
-      &=
+        \mu
+        &\EQ
+        \cardin{\Ex{ XY \bigr.}\Bigr.}
+        \EQ
         \cardin{\sum_{(x,y) \in \Sigma} \Prob{ X=x \cap Y=y} xy}
-        =
+        \\&
+        \EQ
         \cardin{\sum_{(x,y) \in \Sigma} \sqrt{\Prob{ X=x \cap Y=y}} x
         \sqrt{\Prob{ X=x \cap Y=y}}y}
       \\&
-      \leq
+      \LEQ
       \sum_{(x,y) \in \Sigma} \pth{\sqrt{\Prob{ X=x \cap Y=y}} x}^2
+      \\&\qquad\qquad%
       \sum_{(x,y) \in \Sigma}  \pth{\sqrt{\Prob{ X=x \cap Y=y}}y}^2
       \\&
       =
       \sum_{x} \Prob{ X=x } x^2
       \sum_{y}  \Prob{Y=y}y^2
-      =
+      \EQ%
       \Ex{\smash{X^2}} \Ex{\smash{Y^2}}.
     \end{align*}
 \end{proof}
@@ -355,22 +369,29 @@ Chebychev's inequality.
     $\Ex{Z B \bigr.} \leq \max |Z B| \leq \theta \Ex{Z}$.  We thus
     have
     \begin{align*}
-      \Ex{Z} = \Ex{Z (B + \overline{B}) }
-      =%
-      \Ex{Z B \bigr.} + \Ex{ \smash{Z \overline{B} } \bigr.}
-      \leq
-      \theta \Ex{Z} +
-      \sqrt{\Ex{Z^2}} \sqrt{ \Ex{\ts\smash{\smash{\overline{B}}^2}\ts } \bigr. }
-      =
-      \theta \Ex{Z} +
-      \sqrt{\Ex{Z^2}}  \sqrt{\gamma}.
+        \Ex{Z}%
+        &\EQ%
+        \Ex{Z (B + \overline{B}) }
+        \EQ%
+        \Ex{Z B \bigr.} + \Ex{ \smash{Z \overline{B} } \bigr.}
+        \\&%
+        \LEQ
+        \theta \Ex{Z} +
+        \sqrt{\Ex{Z^2}} \sqrt{ \Ex{\ts\smash{\smash{\overline{B}}^2}\ts } \bigr. }
+        \\&%
+        \EQ%
+        \theta \Ex{Z} +
+        \sqrt{\Ex{Z^2}}  \sqrt{\gamma}.
     \end{align*}
     Rearranging, we have
+    \begin{equation*}
+        (1-\theta)\Ex{Z}
+        \leq
+        \sqrt{\Ex{Z^2}}  \sqrt{\gamma}.
+    \end{equation*}
+    This implies
     \begin{align*}
-      (1-\theta)\Ex{Z}
-      \leq
-      \sqrt{\Ex{Z^2}}  \sqrt{\gamma}
-      \qquad\implies\qquad
+        % \qquad\implies\qquad
       (1-\theta)^2\frac{\Ex{Z}^2}{\Ex{Z^2}}
       \leq
       \gamma
@@ -401,17 +422,18 @@ Chebychev's inequality.
     \lemref{moments:r:w}, we have $\Ex{Z} = n$, and
     $\Ex{Z^2} = 6n^2 - 5n$. For any $\theta \in [0,1]$, by
     \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}}, we have
-    \begin{equation*}
+    \begin{align*}
         \Prob{ Z > \theta n}
-        =%
+        &\EQ%
         \Prob{Z > \theta \Ex{Z}\bigr.}
         \geq%
         (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}
         =
         (1-\theta)^2 \frac{n^2}{6n^2 - 5n}
-        \geq% 
+        \\&
+        \GEQ% 
         \frac{(1-\theta)^2}{6}.
-    \end{equation*}
+    \end{align*}
     Thus, for $\theta = 1/4$, we have
     \begin{equation*}
         \Prob{\cardin{X} > \frac{\sqrt{n}}{2}}
@@ -431,11 +453,13 @@ Chebychev's inequality.
 Let us try to derive the above using Chebychev.  By
 \lemref{moments:r:w}, we have $\Ex{Z} = n$, and
 $\Ex{Z^2} = 6n^2 - 5n$. Thus, we have
-\begin{equation*}
-    \Var{Z} = \Ex{\smash{Z^2}} - \Ex{Z}^2 = 6n^2 - 5n - n
+\begin{align*}
+    \Var{Z}
+    &\EQ%
+    \Ex{\smash{Z^2}} - \Ex{Z}^2 = 6n^2 - 5n - n
     =%
     6(n^2 - n).
-\end{equation*}
+\end{align*}
 By Chebychev inequality, we have
 \begin{equation*}
     \Prob{ |Z - \Ex{Z}| > t \sqrt{\Var{Z}}} \leq \frac{1}{t^2}.

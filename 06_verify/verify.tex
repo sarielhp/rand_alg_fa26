@@ -159,7 +159,7 @@ We thus get the following result.
 
 \begin{lemma}
     Given two binary vectors $\vecA, \vecB \in \brc{\bigl. 0,1}^n$ and
-    a \emphi{confidence} parameter $\delta > 0$, a randomized
+    a \emphOnly{confidence}\index{confidence} parameter $\delta > 0$, a randomized
     algorithm can decide if $\vecA$ is equal to $\vecB$ or not. More
     precisely, the algorithm may return one of the two following
     results:
@@ -239,22 +239,22 @@ $O(n^{2})$ time (and this algorithm is simple).
 Let $\Field$ be a field (i.e., real numbers). Let
 $\Field[x_1, \ldots, x_n]$ denote the set of polynomials over the $n$
 variables $x_1, \ldots, x_n$ over $\Field$. Such a polynomial is a sum of
-monomial, where a \emphi{monomial} has the form
+monomial, where a \emphOnly{monomial}\index{monomial} has the form
 $c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}$, where
-$c \in \Field$. The \emphi{degree} of this monomial is
+$c \in \Field$. The \emphOnly{degree}\index{degree} of this monomial is
 $\degreeX{c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}} = i_1 + i_2 +\cdots +
 i_n$. Thus, a polynomial of degree $d$ over $n$ variables has potentially
 up to $d n^d$ monomials (the exact bound is messier, but an easy lower
 bound on this quantity is $\binom{n}{d}$).
 
-For a polynomial $f \in \Field[x_1, \ldots, x_n]$, the \emphi{zero set}
+For a polynomial $f \in \Field[x_1, \ldots, x_n]$, the \emphOnly{zero set}\index{zero set}
 of $f$, is the set
 \begin{equation*}
     Z_f = \Set{ (x_1, \ldots, x_n) }{f(x_1, \ldots, x_n) = 0}.
 \end{equation*}
  Intuitively, the zero
 set $Z_f = \Field^n$ only if $f(x_1,\ldots, x_n ) =0$ (and then it is the
-\emphi{zero} polynomial), but otherwise (i.e., $f \neq 0$) $Z_f$ should be
+\emphOnly{zero}\index{zero} polynomial), but otherwise (i.e., $f \neq 0$) $Z_f$ should be
 much ``smaller''.
 
 
@@ -382,7 +382,7 @@ Let $M$ be an $n \times n$ matrix, where $M[i,j]=0$ if
 $u_iv_j \notin \Edges$, and $M[i,j] = x_{i,j}$ otherwise.  Let $\Pi$
 be the set of all permutations of $\IRX{n}$.
 
-A \emphi{perfect matching} is a permutation
+A \emphOnly{perfect matching}\index{perfect matching} is a permutation
 $\pi:\IRX{n}\rightarrow \IRX{n}$, such that for all $i$, we have
 $u_i v_{\pi(i)} \in \Edges$. For such a permutation $\pi$, consider
 the monomial
@@ -406,7 +406,7 @@ $\mathcal{V}$:
     \sum_{\pi \in \Pi}
     \mathrm{sign}(\pi) f_\pi,
 \end{equation*}
-where $\mathrm{sign}(\pi)$ is the \emphi{sign} of the permutation (it is
+where $\mathrm{sign}(\pi)$ is the \emphOnly{sign}\index{sign} of the permutation (it is
 either $-1$ or $+1$---for our purpose here we do not care about the exact
 definition of this quantity).
 

@@ -1,0 +1,1608 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{54}{444}
+
+\Chapter{Primality testing}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+%\noindent\centerline{
+{
+\begin{minipage}{0.9\linewidth}
+    \textsl{``The world is what it is; men who are nothing, who allow
+       themselves to become nothing, have no place in it.''
+    }\\
+    $~$\qquad\qquad--- Bend in the river, V.S. Naipaul
+\end{minipage}}
+
+
+\subsection*{Introduction -- how to read this write-up}
+
+
+In this note, we present a simple randomized algorithms for primality
+testing.  The challenge is that it requires a non-trivial amount of
+number theory, which is not the purpose of this course. Nevertheless,
+this note is more or less self contained, and all necessary background
+is provided (assuming some basic mathematical familiarity with groups,
+fields and modulo arithmetic). It is however not really necessary to
+understand all the number theory material needed, and the reader can
+take it as given. In particular, I recommend to read the number theory
+background part without reading all of the proofs (at least on first
+reading). Naturally, a complete and total understanding of this
+material one needs to read everything carefully.
+
+The description of the primality testing algorithm in this write-up is
+not minimal -- there are shorter descriptions out there. However, it
+is modular -- assuming the number theory machinery used is correct,
+the algorithm description is relatively straightforward.
+
+
+
+\section{Number theory background}
+
+% \subsection{Introduction}
+
+\subsection{Modulo arithmetic}
+
+\subsubsection{Prime and coprime}
+For integer numbers $x$ and $y$, let $x \divides y$ denotes that $x$
+divides $y$. The \emph{greatest common divisor} (\emphi{g{c}d}) of two
+numbers $x$ and $y$, denoted by $\gcd(x,y)$, is the largest integer
+that divides both $x$ and $y$. The \emph{least common multiple}
+(\emphi{l{c}m}) of $x$ and $y$, denoted by $\lcm(x,y) = xy /
+\gcd(x,y)$, is the smallest integer $\alpha$, such that $x \divides
+\alpha$ and $y \divides \alpha$. An integer number $p > 0$ is
+\emphi{prime} if it is divisible only by $1$ and itself (we will
+consider $1$ not to be prime).
+
+Some standard definitions:
+\begin{align*}
+    x,y \text{ are \emphOnly{coprime}}
+    \qquad &\iff \qquad \gcd(x,y)=1,\\
+    %
+    \text{\emphOnly{quotient} of } x/y \qquad
+    &\iff \qquad
+    x \bdiv y = \floor{x/y},\\
+    \text{\emphOnly{remainder} of }x /y \qquad
+    &\iff \qquad x \bmod y =
+    x - y \floor{x/y}.
+\end{align*}
+\index{quotient,remainder,coprime}%
+The remainder $x \bmod y$ is sometimes referred to as \emphi{residue}.
+
+% \pagebreak
+
+\subsubsection{Computing $\gcd$}
+
+\begin{figure}[t]
+   \centering
+   \fbox{\begin{program}
+          \Algorithm{EuclidGCD}($a,b$): \+\+ \\
+          \If $(b = 0)$ \+ \\
+          \Return $a$ \- \\
+          \Else  \+ \\
+          \Return \Algorithm{EuclidGCD}$(b, a \mod b)$
+      \end{program}}
+   \caption{Computing the greatest common divisor using Euclid's algorithm.}
+   \figlab{euclid:gcd}
+\end{figure}
+
+
+Computing the $\gcd$ of two numbers is a classical algorithm (see
+\figref{euclid:gcd}) -- proving that it indeed returns the right result
+follows by an easy induction. It is easy to verify that if the input
+is made out of $\log n$ bits, then this algorithm takes $O\pth{ \poly(
+   \log n )}$ time (i.e., it is polynomial in the input size). Indeed,
+doing basic operations on numbers (i.e., multiplication, division,
+addition, subtraction, etc) with total of $\ell$ bits takes $O\pth{
+   \ell^2 }$ time (naively -- faster algorithms are known).
+
+\begin{exercise}
+    Show that $\gcd(F_n, F_{n-1}) =1$, where $F_i$ is the $i$\th
+    Fibonacci number. Argue that for two consecutive Fibonacci
+    numbers, \Algorithm{Euclid{}G{C}D}\allowbreak($F_n,F_{n-1}$) takes
+    $O(n)$ time, if every operation takes $O(1)$ time.
+\end{exercise}
+
+\begin{lemma}
+    \lemlab{combination:gcd}%
+    %
+    For all $\alpha, \beta > 0$ integers, there are integer numbers
+    $x$ and $y$, such that $\gcd(\alpha,\beta) = \alpha x + \beta y$,
+    which can be computed in polynomial time; that is, $O\pth{
+       \biggl. \poly \pth{ \Bigl. \log \alpha + \log \beta }}$.
+\end{lemma}
+
+\begin{proof}
+    If $\alpha = \beta$ then the claim trivially holds. Otherwise,
+    assume that $\alpha > \beta$ (otherwise, swap them), and observe
+    that $\gcd(\alpha, \beta) = \gcd(\alpha \bmod \beta, \beta)$. In
+    particular, by induction, there are integers $x', y'$, such that
+    $\gcd(\alpha \bmod \beta, \beta) = x'(\alpha \bmod \beta) + y'
+    \beta$. However, $\tau = \alpha \bmod \beta = \alpha - \beta
+    \floor{ \alpha / \beta}$. As such, we have
+    \begin{align*}
+        \gcd(\alpha, \beta)%
+        &=%
+        \gcd(\alpha \bmod \beta, \beta)%
+        =%
+        x'\pth[]{ \Bigl. \alpha - \beta \floor{ \alpha / \beta} } +
+        y'\beta\\
+        &=%
+        x'\alpha + \pth[]{y' - \beta \floor{ \alpha / \beta} } \beta,%
+    \end{align*}
+    as claimed. The running time follows immediately by modifying
+    \algGCD to compute these numbers.
+\end{proof}
+
+We use $\alpha \equiv \beta \pmod{n}$ or $\alpha \equiv_n \beta$ to
+denote that $\alpha$ and $\beta$ are \emphi{congruent modulo $n$};
+that is $\alpha \bmod n = \beta \bmod n$. Or put differently, we have
+$n \divides \pth[]{\alpha - \beta}$. The set $\ZZ_n = \brc{0, \ldots,
+   n-1 \Bigl. }$ form a \emph{group} under addition modulo $n$ (see
+\defrefpage{group} for a formal definition of a group).  The more
+interesting creature is $\ZZ_n^* = \brc{x \sep{ x \in \brc{1,\ldots,
+         n}, x > 0, \text{ and } \gcd(x, n) =1}}$, which is a
+\emphi{group} modulo $n$ under multiplication.
+
+\begin{remark}
+    \remlab{totient}%
+    %
+    Observe that $\ZZ_1^* = \brc{1}$, while for $n >1$, $\ZZ_n^*$ does
+    not contain $n$.
+\end{remark}
+
+\begin{lemma}
+    For any element $\alpha \in \ZZ_n^*$, there exists a unique
+    inverse element $\beta = \alpha^{-1} \in \ZZ_n^*$ such that
+    $\alpha * \beta \equiv_n 1$. Furthermore, the inverse can be
+    computed in polynomial time\footnote{Again, as is everywhere in
+       this chapter, the polynomial time is in the number of bits
+       needed to specify the input.}.
+\end{lemma}
+
+\begin{proof}
+    Since $\alpha \in \ZZ_n^*$, we have that $\gcd(\alpha, n) =1$. As
+    such,\newline
+    by \lemref{combination:gcd}, there exists $x$ and $y$
+    integers, such that $x \alpha + y n =1$. That is
+    $x \alpha \equiv 1 \pmod{n}$, and clearly $\beta := x \bmod n$ is
+    the desired inverse, and it can be computed in polynomial time by
+    \lemref{combination:gcd}.
+
+    As for uniqueness, assume that there are two inverses
+    $\beta,\beta'$ to $\alpha < n$, such that $\beta < \beta' <
+    n$. But then $\beta \alpha \equiv_n \beta' \alpha \equiv_n 1$,
+    which implies that $n \divides (\beta' -\beta) \alpha$, which
+    implies that $n \divides \beta' - \beta$, which is impossible as
+    $0 < \beta' - \beta < n$.
+\end{proof}
+
+It is now straightforward, but somewhat tedious, to verify the
+following (the interested reader that had not encountered this stuff
+before can spend some time proving this).
+\begin{lemma}
+    The set $\ZZ_n$ under the $+$ operation modulo $n$ is a group, as
+    is $\ZZ_n^*$ under multiplication modulo $n$. More importantly,
+    for a prime number $p$, $\ZZ_p$ forms a field with the $+,*$
+    operations modulo $p$ (see \defrefpage{field}).
+\end{lemma}
+
+\subsubsection{The Chinese remainder theorem}
+
+\begin{theorem}[Chinese remainder theorem]%
+    \thmlab{chinese:remainder}% 
+    %
+    Let $n_1, \ldots, n_k$ be coprime numbers, and let $n = n_1 n_2
+    \cdots n_k$. For any residues $r_1 \in \ZZ_{n_1}, \ldots, r_k \in
+    \ZZ_{n_k}$, there is a unique $r \in \ZZ_n$, which can be computed
+    in polynomial time, such that $r \equiv r_i \pmod{n_i}$, for $i=1,
+    \ldots, k$.
+\end{theorem}
+\begin{proof}
+    By the coprime property of the $n_i${}s it follows that $\gcd(n_i,
+    n/n_i) = 1$. As such, $n/n_i \in \ZZ_{n_i}^*$, and it has a unique
+    inverse $m_i$ modulo $n_i$; that is $(n/n_i) m_i \equiv 1
+    \pmod{n_i}$. So set $r = \sum_i r_i m_i n/n_i$. Observe that for
+    $i \neq j$, we have that $n_j \divides \pth[]{n/n_i}$, and as such
+    $r_i m_i n/n_i \pmod{n_j} \equiv 0 \pmod{n_j}$. As such, we have
+    \begin{align*}
+        r \bmod{n_j}%
+        &=%
+        \pth[]{\sum_i \pth{ r_i m_i \frac{n}{n_i} \bmod{n_j}}}
+        \bmod{n_j}\\
+        &=%
+        \pth[]{r_j m_j \frac{n}{n_j} \bmod{n_j}} \bmod{n_j}%
+        =%
+        r_j * 1 \bmod{n_j}%
+        =%
+        r_j.
+    \end{align*}
+    As for uniqueness, if there is another such number $r'$, such that
+    $r < r' < n$, then $r' - r \pmod{n_i} = 0$ implying that $n_i
+    \divides r' -r$, for all $i$. Since all the $n_i$s are coprime,
+    this implies that $n \divides r' -r$, which is of course
+    impossible.
+\end{proof}
+
+\begin{lemma}[Fast exponentiation]
+    \lemlab{exponent:fast}%
+    %
+    Given numbers $b,c, n$, one can compute $b^c \bmod n$ in
+    polynomial time.
+\end{lemma}
+
+\begin{proof}
+    The key property we need is that
+    \begin{align*}
+        x y \bmod n = \pth[]{\Bigl. (x\bmod n) \, (y \bmod n)} \bmod
+        n.
+    \end{align*}
+    Now, if $c$ is even, then we can compute
+    \begin{align*}
+        b^c \bmod n%
+        =%
+        \pth[]{b^{c/2}}^2 \bmod n%
+        =%
+        \pth[]{b^{c/2} \bmod n }^2 \bmod n.%
+    \end{align*}
+    Similarly, if $c$ is odd, we have
+    \begin{align*}
+        b^c \bmod n%
+        &=%
+        \pth[]{b \bmod n} \pth[]{b^{(c-1)/2}}^2 \bmod n\\
+        &=%
+        \pth[]{b \bmod n} \pth[]{b^{(c-1)/2} \bmod n }^2 \bmod n.%
+    \end{align*}
+    Namely, computing $b^c \bmod n$ can be reduced to recursively
+    computing $b^{\floor{c/2}} \bmod n$, and a constant number of
+    operations (on numbers that are smaller than $n$). Clearly, the
+    depth of the recursion is $O( \log c)$.
+\end{proof}
+
+\subsubsection{Euler totient function}
+\seclab{totient}%
+\mbox{}\\
+The \emphi{Euler totient function} $\phi(n) = \cardin{\ZZ_n^*}$ is the
+number of positive integer numbers that at most $n$ and are
+coprime with $n$. If $n$ is prime then $\phi(n)=n-1$.
+
+\begin{lemma}
+    \lemlab{totient:factorization}%
+    %
+    Let $n=p_1^{k_1} \cdots p_t^{k_t}$, where the $p_i$s are prime
+    numbers and the $k_i$s are positive integers (this is the
+    \emphi{prime factorization} of $n$). Then 
+    \begin{math}
+        \ds \phi(n) = \prod_{i=1}^t p_{i}^{k_i -1} (p_{i} -1).
+    \end{math}
+    and this quantity can be computed in polynomial time if the
+    factorization is given.
+\end{lemma}
+\begin{proof}
+    Observe that $\phi(1) = 1$ (see \remref{totient}), and for a prime
+    number $p$, we have that $\phi(p) = p-1$. Now, for $k > 1$, and
+    $p$ prime we have that $\phi(p^k) = p^{k-1} (p-1)$, as a number $x
+    \leq p^k$ is coprime with $p^k$, if and only if $x \bmod p \neq
+    0$, and $(p-1)/p$ fraction of the numbers in this range have this
+    property.
+    %
+    
+    Now, if $n$ and $m$ are relative primes, then $\gcd(x,nm) =1$
+    $\iff$ $\gcd(x,n) =1$ and $\gcd(x,m)=1$. In particular, there are
+    $\phi(n)\phi(m)$ pairs $(\alpha, \beta)\in \ZZ_n^* \times
+    \ZZ_m^*$, such that $\gcd(\alpha, n )=1$ and $\gcd(\beta, m
+    )=1$. By the Chinese remainder theorem
+    (\thmref{chinese:remainder}), each such pair represents a unique
+    number in the range $1,\ldots, nm$, as desired.
+
+    Now, the claim follows by easy induction on the prime
+    factorization of the given number.
+\end{proof}
+
+
+\subsection{Structure of the modulo group $\ZZ_n$}
+\subsubsection{Some basic group theory}
+
+
+\begin{defn}
+    \deflab{group}%
+    %
+    A \emphi{group} is a set, $\Group$, together with an operation
+    $\gOp$ that combines any two elements $a$ and $b$ to form another
+    element, denoted $a \gOp b$ or $ab$. To qualify as a group, the
+    set and operation, $(\Graph, \gOp)$, must satisfy the following:
+    \smallskip%
+    \begin{compactenumA}
+        \item (\textsc{Closure}) For all $a, b \in \Group$, the result
+        of the operation, $a \gOp b \in \Group$.
+
+        \item (\textsc{Associativity}) For all $a, b, c \in \Group$,
+        we have $(a \gOp b) \gOp c = a \gOp (b \gOp c)$.
+
+        \item (\textsc{Identity element}) There exists an
+        element $\gIdent \in \Group$, called the \emphi{identity element},
+        such that for every element $a \in \Group$, the equation $\gIdent
+        \gOp a = a \gOp \gIdent = a$ holds.
+
+        \item (\textsc{Inverse element}) For each $a \in \Group$,
+        there exists an element $b \in \Group$ such that $a \gOp b = b
+        \gOp a = \gIdent$.
+    \end{compactenumA}
+    \smallskip%
+    A group is \emphi{abelian} (aka, \emphi{commutative group}) if for
+    all $a,b \in \Group$, we have that $a \gOp b = b \gOp a$.
+\end{defn}
+
+In the following we restrict our attention to abelian groups since it
+makes the discussion somewhat simpler. In particular, some of the
+claims below holds even without the restriction to abelian groups.
+
+The identity element is unique. Indeed, if both $f, g \in \Group$ are
+identity elements, then $f = f \gOp g = g$. Similarly, for every
+element $x \in \Group$ there exists a unique inverse $y =
+x^{-1}$. Indeed, if there was another inverse $z$, then $y = y \gOp
+\gIdent = y \gOp (x\gOp z) = (y\gOp x)\gOp z = \gIdent \gOp z = z$.
+
+\subsubsection{Subgroups}
+
+For a group $\Group$, a subset $\GroupA \subseteq \Group$ that is also
+a group (under the same operation) is a \emphi{subgroup}.
+
+For $x, y \in \Group$, let us define $x \sim y$ if $x/y \in
+\GroupA$. Here $x/y = x y^{-1}$ and $y^{-1}$ is the inverse of $y$ in
+$\Group$. Observe that 
+\begin{math}
+    \pth{y/x}\pth[]{x/y} = \pth[]{yx^{-1}} \pth[]{xy^{-1}} = \gIdent.
+\end{math}
+That is $y/x$ is the inverse of $x/y$, and it is in $\GroupA$. But
+that implies that $x \sim y \implies y \sim x$. Now, if $x \sim y$ and
+$y \sim z$, then $x/y, y/z \in \GroupA$. But then $x/y \gOp y/z \in
+\GroupA$, and furthermore $x/y \gOp y/z = x y^{-1} y z^{-1} = x z^{-1}
+= x/z$. that is $x \sim z$. Together, this implies that $\sim$ is an
+equivalence relationship.
+
+Furthermore, observe that if $x/y = x/z$ then 
+\begin{math}
+    y^{-1} = x^{-1} (x/y) = 
+    x^{-1} (x/z) = z^{-1},
+\end{math}
+that is $y=z$. In particular, the equivalence class of $x \in \Group$,
+is $[x] = \brc{z \in \Group \sep{x \sim z}}$. Observe that if $x \in
+\GroupA$ then $\gIdent / x = \gIdent x^{-1} = x^{-1} \in \GroupA$, and
+thus $\gIdent \sim x$. That is $\GroupA = [x]$. The following is now
+easy.
+
+\begin{lemma}
+    \lemlab{quotient}%
+    %
+    Let $\Group$ be an abelian group, and let $\GroupA \subseteq
+    \Group$ be a subgroup.  Consider the set $\Group / \GroupA = \brc{
+       [x] \sep{ x \in \Group}}$. We claim that $\cardin{\bigl. [x]} =
+    \cardin{\bigl. [y]}$ for any $x,y \in \Group$.  Furthermore
+    $\Group/ \GroupA$ is a group (that is, the \emphi{quotient
+       group}), with $[x] \gOp [y] = [x \gOp y]$.
+\end{lemma}
+\begin{proof}
+    Pick an element $\alpha \in [x]$, and $\beta \in [y]$, and
+    consider the mapping $f(x) = x \alpha^{-1} \beta$. We claim that
+    $f$ is one to one and onto from $[x]$ to $[y]$.  For any $\gamma
+    \in [x]$, we have that $\gamma\alpha^{-1} =\gamma/\alpha \in
+    \GroupA$ As such, $f(\gamma ) = \gamma \alpha^{-1} \beta \in
+    [\beta] = [y]$. Now, for any $\gamma, \gamma' \in [x]$ such that
+    $\gamma \neq \gamma'$, we have that if $f(\gamma)
+    =\gamma\alpha^{-1} \beta = \gamma'\alpha^{-1} \beta = f(\gamma')$,
+    then by multiplying by $\beta^{-1} \alpha$, we have that $\gamma =
+    \gamma'$. That is, $f$ is one to one, implying that
+    $\cardin{\bigl. [x]} = \cardin{\bigl. [y]}$.
+
+    The second claim follows by careful but tediously checking that
+    the conditions in the definition of a group holds.
+\end{proof}
+
+%\lemref{quotient} readily implies the following.
+
+\begin{lemma}
+    \lemlab{divides}%
+    %
+    For a finite abelian group $\Group$ and a subgroup $\GroupA
+    \subseteq \Group$, we have that $\cardin{\GroupA}$ divides
+    $\cardin{\Group}$.
+\end{lemma}
+
+\begin{proof}
+    By \lemref{quotient}, we have that $\cardin{\Group} =
+    \cardin{\GroupA} \cdot \cardin{\Group / \GroupA}$, as $\GroupA =
+    [\gIdent]$.
+\end{proof}
+
+\subsubsection{Cyclic groups}
+
+\begin{lemma}
+    \lemlab{generated:subgroup}%
+    %
+    For a finite group $\Group$, and any element $g\in\Group$, 
+    the set $\permut{g} = \brc{ g^i \sep{ i\geq 0}}$ is a group.
+\end{lemma}
+
+\begin{proof}
+    Since $\Group$ is finite, there are integers $i > j\geq 1$, such
+    that $i \neq j$ and $g^i = g^j$, but then $g^j\gOp g^{i-j} =g^i =
+    g^j$. That is $g^{i-j} = \gIdent$ and, by definition, we have
+    $g^{i-j} \in \permut{g}$. It is now straightforward to verify that
+    the other properties of a group hold for $\permut{g}$.
+\end{proof}
+
+
+In particular, for an element $g \in \Group$, we define its
+\emphi{order} as $\ordX{g} = \cardin{\bigl. \permut{g}}$, which
+clearly is the minimum positive integer $m$, such that $g^m =
+\gIdent$. Indeed, for $j > m$, observe that $g^j = g^{j \bmod m} \in X
+= \brc{ \gIdent, g, g^2, \ldots, g^{m-1}}$, which implies that
+$\permut{g} = X$.
+
+A group $\Group$ is \emphi{cyclic}, if there is an element $g \in
+\Group$, such that $\permut{g} = \Group$. In such a case $g$ is a
+\emphi{generator} of $\Group$.
+
+\begin{lemma}
+    \lemlab{power:of:size}%
+    %
+    For any finite abelian group $\Group$, and any $g \in \Group$, we
+    have that $\ordX{g}$ divides $\cardin{\Group}$, and
+    $g^{\cardin{\Group}} = \gIdent$.
+\end{lemma}
+\begin{proof}
+    By \lemref{generated:subgroup}, the set $\permut{g}$ is a subgroup
+    of $\Group$. By \lemref{divides}, we have that $\ordX{g} =
+    \cardin{\bigl. \permut{g}} \divides \cardin{\Group}$.
+    As such, 
+    \begin{math}
+        g^{\cardin{\Group}}%
+        =%
+        \pth[]{g^{\ordX[]{g}}}^{\cardin{\Group} / \ordX[]{ g}}%
+        =%
+        \pth[]{\Bigl.\, \gIdent \,}^{\cardin{\Group} / \ordX[]{ g}}%
+        =%
+        \gIdent.
+    \end{math}
+\end{proof}
+
+\subsubsection{Modulo group}
+
+\begin{lemma}
+    \lemlab{cyclic:Z:n:additive}%
+    %
+    For any integer $n$, consider the additive group $\ZZ_n$. Then,
+    for any $x \in \ZZ_n$, we have that $x \cdot \ordX{x} =
+    \lcm(x,n)$.  In particular, $\ds \ordX{x} = \frac{\lcm(n,x)}{x} =
+    \frac{n}{\gcd(n,x)}$.  If $n$ is prime, and $x \neq 0$ then
+    $\ordX{x} = \cardin{\ZZ_n} = n$, and $\ZZ_n$ is a cyclic group.
+\end{lemma}
+
+\begin{proof}
+    We are working modulo $n$ here under additions, and the identity
+    element is $0$. As such, $x \cdot \ordX{x} \equiv_n 0$, which
+    implies that $n \divides x \ordX{x}$. By definition, $\ordX{x}$ is
+    the minimal number that has this property, implying that $\ds
+    \ordX{x} = \frac{\lcm(n,x)}{x}$. Now, $\lcm(n,x) = nx /
+    \gcd(n,x)$. The second claim is now easy.
+\end{proof}
+
+
+
+
+\begin{theorem}
+    \thmlab{e:f:theorem}%
+    %
+    (\textbf{Euler's theorem}) For all $n$ and $x \in \ZZ_n^*$, we
+    have
+    \begin{math}
+        x^{\phi(n)} \equiv 1 \pmod{n}.
+    \end{math}
+
+    (\textbf{Fermat's theorem}) If $p$ is a prime then
+    \begin{math}
+        \forall x \in \ZZ_p^* \quad x^{p-1} \equiv 1 \pmod{p}.
+    \end{math}
+\end{theorem}
+
+\begin{proof}
+    The group $\ZZ_n^*$ is abelian and has $\phi(n)$ elements, with
+    $1$ being the identity element (duh!). As such, by
+    \lemref{power:of:size}, we have that $x^{\phi(n)} =
+    x^{\cardin{\ZZ_n^*}} \equiv 1 \pmod{n}$, as claimed.
+
+    The second claim follows by setting $n=p$, and recalling that
+    $\phi(p) = p-1$, if $p$ is a prime.
+\end{proof}
+
+
+One might be tempted to think that \lemref{cyclic:Z:n:additive}
+implies that if $p$ is a prime then $\ZZ_p^*$ is a cyclic group, but
+this does not follow, as the cardinality of $\ZZ_p^*$ is $\phi(p) =
+p-1$, which is not a prime number (for $p >2$).  To prove that
+$\ZZ_p^*$ is cyclic, let us go back shortly to the totient function.
+
+\begin{lemma}
+    \lemlab{totient:sum}%
+    %
+    For any $n > 0$, we have $\sum_{d \divides n} \phi(d) =n$.
+\end{lemma}
+\begin{proof}
+    For any $g > 0$, let $V_g = \brc{ x \sep{ x \in \brc{1, \ldots, n}
+          \text{ and } \gcd(x, n) = g}}$. Now, $x \in V_g$ $\iff$
+    $\gcd(x,n) = g$ $\iff$ $\gcd(x/g, n/g) = 1$ $\iff$ $x/g \in
+    \ZZ_{n/g}^*$. Since $V_1, V_2, \ldots, V_n$ form a partition of
+    $\brc{1,\ldots, n}$, it follows that
+    \begin{math}
+        \ds \Biggl. n%
+        =%
+        \sum_g \cardin{V_g}%
+        =%
+        \sum_{g \divides n} \cardin{\ZZ_{n/g}^*}%
+        =%
+        \sum_{g \divides n} \phi(n/g)%
+        =%
+        \sum_{d \divides n} \phi(d).
+    \end{math}
+\end{proof}
+
+
+
+
+\subsubsection{Fields}
+
+\begin{defn}
+    \deflab{field}%
+    %
+    A \emphi{field} is an algebraic structure $\permut{\Field, +, *,
+       0, 1}$ consisting of two abelian groups:
+    \begin{compactenumA}
+        \item $\Field$ under $+$, with $0$ being the identity element.
+        
+        \item $\Field \setminus \brc{0}$ under $*$, with $1$ as the
+        identity element (here $0 \neq 1$).
+    \end{compactenumA}
+    Also, the following property (\emphi{distributivity of
+       multiplication over addition}) holds:
+    \begin{align*}
+        \forall a,b,c \in \Field \qquad a * (b + c) = (a*b) + (a*c).
+    \end{align*}
+\end{defn}
+
+We need the following: A polynomial $p$ of degree $k$ over a field
+$\Field$ has at most $k$ roots. indeed, if $p$ has the root $\alpha$
+then it can be written as $p(x) = (x-\alpha) q(x)$, where $q(x)$ is a
+polynomial of one degree lower. To see this, we divide $p(x)$ by the
+polynomial $(x-\alpha)$, and observe that $p(x) = (x-\alpha) q(x) +
+\beta$, but clearly $\beta = 0$ since $p(\alpha) = 0$. As such, if $p$
+had $t$ roots $\alpha_1,\ldots, \alpha_t$, then $p(x) = q(x)
+\prod_{i=1}^t \pth[]{x-\alpha_i}$, which implies that $p$ would have
+degree at least $t$.
+
+
+
+\subsubsection{$\ZZ_p^*$ is cyclic for prime numbers}
+
+For a prime number $p$, the group $\ZZ_p^*$ has size $\phi(p) = p-1$,
+which is not a prime number for $p>2$.  As such,
+\lemref{power:of:size} does not imply that there must be an element in
+$\ZZ_p^*$ that has order $p-1$ (and thus $\ZZ_p^*$ is
+cyclic). Instead, our argument is going to be more involved and less
+direct.
+
+
+\begin{lemma}
+    \lemlab{R:k}%
+    %
+    For $k < n$, let
+    \begin{math}
+        R_k = \brc{ x \in \ZZ_p^* \sep{ \ordX{x} = k}}
+    \end{math}
+    be the set of all numbers in $\ZZ_p^*$ that are of order $k$. We
+    have that $\cardin{R_k} \leq \phi\pth{k}$.
+\end{lemma}
+
+\begin{proof}
+    Clearly, all the elements of $R_k$ are roots of the polynomial
+    $x^k - 1 = 0 \pmod{n}$. By the above, this polynomial has at most
+    $k$ roots.  Now, if $R_k$ is not empty, then it contains an
+    element $x \in R_k$ of order $k$, which implies that for all $i <
+    j \leq k$, we have that $x^i \nequiv x^j \pmod{n}$, as the order
+    of $x$ is the size of $\permut{x}$, and the minimum $k$ such that
+    $x^k \equiv 1 \pmod{n}$. In particular, we have that $R_k
+    \subseteq \permut{x}$, as for $y = x^j$, we have that $y^k
+    \equiv_n x^{jk} \equiv_n 1^j \equiv_n 1$.
+
+    Observe that for $y = x^i$, if $g= \gcd(k,i)> 1$, then $y^{k/g}
+    \equiv_n x^{i(k/g)} \equiv_n x^{\lcm(i,k)} \equiv_n 1$; that is,
+    $\ordX{y} \leq k/g < k$, and $y \notin R_k$. As such, $R_k$
+    contains only elements of $x^i$ such that $\gcd(i,k)=1$. That is
+    $R_k \subseteq \ZZ_k^*$. The claim now readily follows as
+    $\cardin{\ZZ_k^*} = \phi(k)$.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{z:z:p:cyclic}%
+    %
+    For any prime $p$, the group $\ZZ_p^*$ is cyclic.
+\end{lemma}
+\begin{proof}
+    For $p=2$ the claim trivially holds, so assume $p >2$.  If the set
+    $R_{p-1}$, from \lemref{R:k}, is not empty, then there is $g \in
+    R_{p-1}$, it has order $p-1$, and it is a generator of $\ZZ_p^*$,
+    as $\cardin{\ZZ_p^*} = p-1$, implying that $\ZZ_p^* = \permut{g}$
+    and this group is cyclic.
+
+    Now, by \lemref{power:of:size}, we have that for any $y \in
+    \ZZ_p^*$, we have that $\ordX{y} \divides p-1
+    =\cardin{\ZZ_p^*}$. This implies that $R_k$ is empty if $k$ does
+    not divides $p-1$. On the other hand, $R_1, \ldots, R_{p-1}$ form
+    a partition of $\ZZ_p^*$. As such, we have that 
+    \begin{align*}
+        p-1 = \cardin{\ZZ_p^*}%
+        =%
+        \sum_{k \divides p-1} \cardin{R_k}%
+        \leq%
+        \sum_{k \divides p-1} \phi(k)%
+        =%
+        p-1,
+    \end{align*}
+    by \lemref{R:k} and \lemrefpage{totient:sum}, implying that the
+    inequality in the above display is equality, and for all $k
+    \divides p-1$, we have that $\cardin{R_k} = \phi(k)$. In
+    particular, $\cardin{R_{p-1}} = \phi(p-1) > 0$, and by the above
+    the claim follows.
+\end{proof}
+
+
+\subsubsection{$\ZZ_n^*$ is cyclic for powers of a prime}
+
+\begin{lemma}
+    \lemlab{z:z:p:powers:cyclic}%
+    %
+    Consider any odd prime $p$, and any integer $c \geq 1$, then the
+    group $\ZZ_n^*$ is cyclic, where $n=p^c$.
+\end{lemma}
+\begin{proof}
+    Let $g$ be a generator of $\ZZ_p^*$. Observe that $g^{p-1} \equiv
+    1 \mod p$. The number $g <p$, and as such $p$ does not divide $g$,
+    and also $p$ does not divide $g^{p-2}$, and also $p$ does not
+    divide $p-1$. As such, $p^2$ does not divide $\Delta =
+    (p-1)g^{p-2}p$; that is, $\Delta \nequiv 0 \pmod{p^2}$. As such,
+    we have that 
+    \begin{align*}
+        (g+p)^{p-1} \equiv g^{p-1} + \binom{p-1}{1} g^{p-2} p \equiv
+        g^{p-1} + \Delta \nequiv g^{p-1} \pmod{p^2}\\
+        %
+        \implies\quad%        
+        (g+p)^{p-1} \nequiv 1 \pmod{p^2}%
+        \quad \text{or}\quad%
+        g^{p-1} \nequiv 1 \pmod{p^2}.
+    \end{align*}
+    Renaming $g+p$ to be $g$, if necessary, we have that %either
+    $g^{p-1} \nequiv 1 \pmod{p^2}$, but by \thmrefpage{e:f:theorem},
+    $g^{p-1} \equiv 1 \pmod{p}$. As such, $g^{p-1} = 1 +\beta p$,
+    where $p$ does not divide $\beta$. Now, we have 
+    \begin{align*}
+        g^{p(p-1)} = (1+\beta p)^p = 1 + \binom{p}{1} \beta p + \beta
+        p^3 \text{<whatever>}%
+        =%
+        1 + \gamma_1 p^2,
+    \end{align*}
+    where $\gamma_1$ is an integer (the $p^3$ is not a typo -- the
+    binomial coefficient contributes at least one factor of $p$ --
+    here we are using that $p >2$). In particular, as $p$ does not
+    divides $\beta$, it follows that $p$ does not divides $\gamma_1$
+    either. Let us apply this argumentation again to 
+    \begin{align*}
+        g^{p^2(p-1)}%
+        =%
+        \pth[]{1+\gamma_1 p^2}^p = 1 +\gamma_1 p^3 + p^4
+        \text{<whatever>}%
+        =%
+        1 + \gamma_2 p^3,
+    \end{align*}
+    where again $p$ does not divides $\gamma_2$. Repeating this
+    argument, for $i=1,\ldots, c-2$, we have
+    \begin{align*}
+        \alpha_i%
+        &=%
+        g^{p^i(p-1)}%
+        =%
+        \pth[]{g^{p^{i-1}(p-1)}}^p%
+        =%
+        \pth[]{1+\gamma_{i-1} p^{i}}^p\\
+        &=%
+        1 + \gamma_{i-1} p^{i+1} + p^{i+2} \text{<whatever>}%
+        =%
+        1 + \gamma_i p^{i+1},
+    \end{align*}
+    where $p$ does not divides $\gamma_i$. In particular, this implies
+    that 
+    \begin{math}
+        \ds%
+        \alpha_{c-2} =%
+        1 + \gamma_{c-2} p^{c-1}
+    \end{math}
+    and $p$ does not divides $\gamma_{c-2}$. This in turn implies that
+    $\alpha_{c-2} \nequiv 1 \pmod{p^{c}}$. 
+
+    Now, the order of $g$ in $\ZZ_n$, denoted by $k$, must divide
+    $\cardin{\ZZ_n^*}$\newline
+    by \lemrefpage{power:of:size}. Now
+    $\cardin{\ZZ_n^*} = \phi(n) = p^{c-1}(p-1)$, see
+    \lemrefpage{totient:factorization}.  So, $k \divides
+    p^{c-1}(p-1)$. Also,
+    $\alpha_{c-2} \nequiv 1 \pmod{p^{c}}$.
+    implies that $k$ does not divides $p^{c-2}(p-1)$.  It follows that
+    $p^{c-1} \divides k$. So, let us write $k = p^{c-1} k'$, where $k'
+    \leq (p-1)$. This, by definition, implies that $g^{k} \equiv 1
+    \pmod{p^c}$. Now, $g^p \equiv g \pmod{p}$, because $g$ is a
+    generator of $\ZZ_p^*$. As such, we have that
+    \begin{align*}
+        g^{k}%
+        &\equiv_p%
+        g^{p^\delta k'} %
+        \equiv_p%
+        \pth[]{g^p}^{p^{\delta-1} k'} \equiv_p%
+        \pth[]{g}^{p^{\delta-1} k'} \\
+        &\equiv_p \ldots \equiv_p%
+        \pth[]{g}^{k'} \equiv_p \pth[]{g^k \bmod{p^c}} \bmod{p}
+        \equiv_p %
+        1.
+    \end{align*}
+    Namely, $g^{k'} \equiv 1 \pmod{p}$, which implies, as $g$ as a
+    generator of $\ZZ_p^*$, that either $k'=1$ or $k'=p-1$. The case
+    $k'=1$ is impossible, as this implies that $g =1$, and it can not
+    be the generator of $\ZZ_p^*$. We conclude that $k =
+    p^{c-1}(p-1)$; that is, $\ZZ_n^*$ is cyclic.
+\end{proof}
+
+\subsection{Quadratic residues}
+\subsubsection{Quadratic residue}
+
+\begin{defn}
+    An integer $\alpha$ is a \emphi{quadratic residue} modulo a
+    positive integer $n$, if $\gcd(\alpha, n)=1$ and for some integer
+    $\beta$, we have $\alpha \equiv \beta^2 \pmod {n}$.
+\end{defn}
+
+\begin{theorem}[Euler's criterion]
+    \thmlab{euler:criterion}%
+    %
+    Let $p$ be an odd prime, and $\alpha \in \ZZ_p^*$. We have that 
+    \begin{compactenumA}
+        \item $\alpha^{(p-1)/2} \equiv_p \pm 1$.
+        \item If $\alpha$ is a quadratic residue, then
+        $\alpha^{(p-1)/2} \equiv_p 1$.
+        \item If $\alpha$ is not a quadratic residue, then
+        $\alpha^{(p-1)/2} \equiv_p -1$.
+    \end{compactenumA}
+\end{theorem}
+\begin{proof}
+    (A) Let $\gamma = \alpha^{(p-1)/2}$, and observe that $\gamma^2
+    \equiv_p \alpha^{p-1} \equiv 1$, by Fermat's theorem
+    (\thmrefpage{e:f:theorem}), which implies that $\gamma$ is either
+    $+1$ or $-1$, as the polynomial $x^2 -1$ has at most two roots
+    over a field.
+
+    \smallskip
+
+    (B) Let $\alpha \equiv_p \beta^2$, and again by Fermat's theorem,
+    we have $\alpha^{(p-1)/2} \equiv_p \beta^{p-1} \equiv_p 1$.
+
+    \smallskip
+
+    (C) Let $X$ be the set of elements in $\ZZ_p^*$ that are not
+    quadratic residues, and consider $\alpha \in X$.  Since
+    $\ZZ_p^*$ is a group, for any $x \in \ZZ_p^*$ there is a unique $y
+    \in \ZZ_p^*$ such that $xy \equiv_p \alpha$.  As such, we
+    partition $\ZZ_p^*$ into pairs $C = \brc{ \brc{x, y} \sep{ x, y
+          \in \ZZ_p^* \text{ and } xy \equiv_p \alpha}}$. We have that
+    \begin{align*}
+        \ds \tau%
+        \;\equiv_p\;%
+        \prod_{\beta \in \ZZ_p^*} \beta%
+        \;\equiv_p\;%
+        \prod_{\brc{x,y} \in C} x y%
+        \;\equiv_p\;%
+        \prod_{\brc{x,y} \in C} \alpha%
+        \;\equiv_p\;%
+        \alpha^{(p-1)/2}.
+    \end{align*}
+    Let consider a similar set of pair, but this time for $1$: 
+    \[
+        D = \brc{ \brc{x, y} \sep{ x, y \in \ZZ_p^*, x \neq y \text{
+                 and } xy \equiv_p 1}}.
+    \]
+    Clearly, $D$ does not contain $-1$ and $1$, but all other elements
+    in $\ZZ_p^*$ are in $D$. As such,
+    \begin{align*}
+        \ds \tau%
+        \;\equiv_p\;%
+        \prod_{\beta \in \ZZ_p^*} \beta%
+        \;\equiv_p\;%
+        (-1) 1 \prod_{\brc{x,y} \in D} x y%
+        \;\equiv_p\;%
+        \prod_{\brc{x,y} \in D} 1%
+        \;\equiv_p\;%
+        -1.
+    \end{align*}
+\end{proof}
+
+
+\subsubsection{Legendre symbol}
+
+% $\left\lgroup a \right\rgroup$ $\left( \Bigl. a \right)$
+% $\jSym{a}{b}$
+
+For an odd prime $p$, and an integer $a$ with $\gcd(a,n)=1$, the
+\emphi{Legendre symbol} $\lSym{a}{p}$ is one if $a$ is a quadratic
+residue modulo $p$, and $-1$ otherwise (if $p \divides a$, we define
+$\lSym{a}{p} = 0$). Euler's criterion (\thmref{euler:criterion})
+implies the following equivalent definition.
+
+
+\begin{defn}
+    \deflab{l:symbol}%
+    %
+    The \emphi{Legendre symbol}, for a prime number $p$, and $a\in
+    \ZZ_p^*$, is
+    \begin{align*}
+        \lSym{a}{p} = a^{(p-1)/2} \pmod p.
+    \end{align*}
+\end{defn}
+
+The following is easy to verify.
+\begin{lemma}
+    \lemlab{easy:l:symbol}%
+    %
+    Let $p$ be an odd prime, and let $a,b$ be integer numbers. We have:
+    \begin{compactenumi}
+        \item $\lSym{-1}{p} = (-1)^{(p-1)/2}$.
+        \item $\lSym{a}{p} \lSym{b}{p} = \lSym{ab}{p}$.
+        \item If $a \equiv_p b$ then $\lSym{a}{p} = \lSym{b}{p}$.
+    \end{compactenumi}
+\end{lemma}
+
+
+\begin{lemma}[Gauss' lemma]
+    \lemlab{gauss:lemma}%
+    %
+    Let $p$ be an odd prime and let $a$ be an integer that is not
+    divisible by $p$. Let
+    \begin{align*}
+        X &= \brc{ \alpha_ j = ja
+           \pmod{p}\sep{j=1,\ldots, (p-1)/2}},\\
+        \text{and}\quad
+        L &= { \brc{ x \in X \sep{ x > p/2}} } \subseteq X.
+    \end{align*}
+    Then $\lSym{a}{p} = (-1)^n$, where $n = \cardin{L}$.
+\end{lemma}
+\begin{proof}
+    Observe that for any distinct $i,j$, such that $1\leq i\leq j\leq
+    (p-1)/2$, we have that $ja \equiv ia \pmod{p}$ implies that $(j-i)
+    a \equiv 0 \pmod{p}$, which is impossible as $j-i < p$ and
+    $\gcd(a,p) = 1$. As such, all the elements of $X$ are distinct,
+    and $\cardin{X} = (p-1)/2$. We have a somewhat stronger property:
+    If $ja \equiv p - ia \pmod{p}$ implies $(j+i)a \equiv 0 \pmod{p}$,
+    which is impossible. That is, $S =X \setminus L$, and
+    $\overline{L} = \brc{ p -\ell \sep{\ell \in L}}$ are disjoint, and
+    $S \cup \overline{L} = \brc{1,\ldots, (p-1)/2\biggl.}$. As such,
+    \begin{align*} 
+        \pth{\frac{p-1}{2}}!%
+        &\equiv%
+        \prod_{x \in S} x \cdot \prod_{y \in L} (p-y)%
+        \;\equiv\;%
+        (-1)^n \prod_{x \in S} x \cdot \prod_{y \in L} y\\
+        &\equiv\;%
+        (-1)^n \prod_{j=1}^{(p-1)/2} j a%
+        \;\equiv\;%
+        (-1)^n a^{(p-1)/2} \pth[]{\frac{p-1}{2}}! %
+        \pmod{p}.
+    \end{align*}
+    Dividing both sides by $(-1)^n((p-1)/2)!$, we have that
+    $\lSym{a}{p} \equiv a^{(p-1)/2} \equiv (-1)^n \pmod{p}$, as
+    claimed.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{strange:sums}%
+    %
+    If $p$ is an odd prime, and $a>2$ and $\gcd(a, p)=1$ then
+    $\lSym{a}{p} = \ds (-1)^\Delta$, where $\ds \Delta =
+    \sum_{j=1}^{(p-1)/2} \floor{j a / p}$.  Furthermore, we have
+    $\lSym{2}{p} = (-1)^{(p^2 - 1)/8}$.
+\end{lemma}
+\begin{proof}
+    Using the notation of \lemref{gauss:lemma}, we have
+    \begin{align*}
+        \sum_{j=1}^{(p-1)/2} j a %
+        &=%
+        \sum_{j=1}^{(p-1)/2} \pth{\biggl.\floor{\ts j a / p}p + (ja
+           \bmod p)}%
+        =%
+        \Delta p + \sum_{x \in S} x + \sum_{y \in L} y\\
+        &=%
+        (\Delta+n) p + \sum_{x \in S} x - \sum_{y \in \overline{L}} y\\
+        &=%
+        (\Delta+n) p + \sum_{j=1}^{(p-1)/2} j - 2\sum_{y \in
+           \overline{L}} y.%
+    \end{align*}
+    Rearranging, and observing that 
+    \begin{math}
+        \sum_{j=1}^{(p-1)/2} j%
+        = \frac{p-1}{2}\cdot \frac{1}{2}\pth[]{\bigl. \frac{p-1}{2}
+           +1} = \frac{p^2-1}{8}.
+    \end{math}
+     We have that 
+     \begin{align}
+         &(a-1) \frac{p^2-1}{8} = (\Delta+n) p - 2\sum_{y \in
+            \overline{L}} y\nonumber\\
+         &\implies \qquad %
+         (a-1) \frac{p^2-1}{8} \equiv (\Delta+n) p \pmod{2}.%
+         \eqlab{a:m:one}
+     \end{align}
+     Observe that $p \equiv 1 \pmod{2}$, and for any $x$ we have that
+     $x \equiv -x \pmod{2}$.  As such, and if $a$ is odd, then the
+     above implies that $n \equiv \Delta \pmod{2}$. Now the claim
+     readily follows from \lemref{gauss:lemma}.
+
+     As for $\lSym{2}{p}$, setting $a=2$, observe that $\floor{j a /
+        p} = 0$, for $j=0,\ldots (p-1)/2$, and as such $\Delta=0$.
+     Now, \Eqref{a:m:one} implies that
+     \begin{math}
+         \frac{p^2-1}{8} \equiv n \pmod{2},
+     \end{math}
+     and the claim follows from \lemref{gauss:lemma}.
+\end{proof}
+
+
+
+
+\begin{theorem}[\emphi{Law of quadratic reciprocity}]
+    \thmlab{reciprocity:l}%
+    %
+    If $p$ and $q$ are distinct odd primes, then 
+    \begin{align*}
+        \ds \lSym{p}{q} = (-1)^{\frac{p-1}{2} \frac{q-1}{2}}
+        \lSym{q}{p}.
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    Let 
+    \begin{math}
+        S = \brc{ (x,y) \sep{ 1\leq x \leq (p-1)/2 \text{ and }
+              1 \leq y \leq (q-1)/2}}.
+    \end{math}
+    As $\lcm(p,q) = pq$, it follows that there are no $(x,y) \in S$,
+    such that $qx = py$, as all such numbers are strict smaller than
+    $pq$. Now, let
+    \begin{align*}
+        S_1= \brc{(x,y) \in S \sep{ qx >py}}%
+        \quad\text{and}\quad %
+        S_2= \brc{(x,y) \in S \sep{ qx <py}}.
+    \end{align*}
+    Now, $(x,y) \in S_1$ $\iff$ $1 \leq x \leq (p-1)$, and $1 \leq y
+    \leq \floor{qx /p}$. As such, we have $\cardin{S_1} =
+    \sum_{x=1}^{(p-1)/2} \floor{qx / p}$, and similarly $\cardin{S_2}
+    = \sum_{y=1}^{(q-1)/2} \floor{py / q}$. We have
+    \begin{align*}
+        \tau%
+        &= %
+        \frac{p-1}{2} \cdot \frac{q-1}{2} = \cardin{S} = \cardin{S_1}
+        + \cardin{S_2}\\
+        &=%
+        \underbrace{\sum_{x=1}^{(p-1)/2} \floor{qx / p}}_{\tau_1} +
+        \underbrace{\sum_{y=1}^{(q-1)/2} \floor{py / q}}_{\tau_2}.
+    \end{align*}
+    The claim now readily follows by \lemref{strange:sums}, as
+    $(-1)^\tau = (-1)^{\tau_1} (-1)^{\tau_2}$ $= \lSym{p}{q}
+    \lSym{q}{p}$.
+\end{proof}
+
+\subsubsection{Jacobi symbol}
+%Since $a^{p-1} \equiv_p 1$, it follows that $\lSym{a}{p}$ is either
+%$-1$ or $1$.
+
+
+\begin{defn}
+    For any integer $a$, and an odd number $n$ with prime
+    factorization $n=p_1^{k_1} \cdots p_t^{k_t}$, its \emphi{Jacobi
+       symbol} is
+    \begin{align*}
+        \jSym{a}{n} = \prod_{i=1}^t \lSym{a}{p_i}^{k_i}.
+    \end{align*}
+\end{defn}
+
+%\noindent Some useful properties:
+
+\begin{claim}
+    \clmlab{obs:odd:prod}%
+    %
+    For odd integers $n_1, \ldots, n_k$, we have that 
+    $\sum_{i=1}^k (n_i -1)/2 \equiv \pth[]{\prod_{i=1}^k n_i -1} /2
+    \pmod{2}$. 
+\end{claim}
+\begin{proof}
+    We prove for two odd integers $x$ and $y$, and apply this
+    repeatedly to get the claim. Indeed, we have
+    \begin{math}
+        \ds \frac{x-1}{2} + \frac{y-1}{2} \equiv \frac{xy - 1}{2}
+        \pmod{2} \iff%
+        0 \equiv \frac{xy -x + 1 -y + 1 - 1}{2} \pmod{2} \iff%
+        0 \equiv \frac{xy -x -y + 1}{2} \pmod{2} \iff 0 \equiv
+        \frac{(x-1)(y-1)}{2} \pmod{2},
+    \end{math}
+    which is obviously true.
+\end{proof}
+
+\begin{lemma}[\emphi{Law of quadratic reciprocity}]
+    \lemlab{reciprocity:j}%
+    %
+    For $n$ and $m$ positive odd integers, we have that 
+    \begin{math}
+        \ds \jSym{n}{m} = (-1)^{\frac{n-1}{2} \frac{m-1}{2}}
+        \jSym{m}{n}.
+    \end{math}    
+\end{lemma}
+
+\begin{proof}
+    Let $n = \prod_{i=1}^\nu p_i$ and Let $m = \prod_{j=1}^\mu q_j$ be
+    the prime factorization of the two numbers (allowing repeated
+    factors).  If they share a common factor $p$, then both
+    $\jSym{n}{m}$ and $\jSym{m}{n}$ contain a zero term when expanded,
+    as $\lSym{n}{p} = \lSym{m}{p} = 0$.  Otherwise, we have 
+    \begin{align*}
+        \jSym{n}{m}%
+        &=%
+        \prod_{i=1}^\nu \prod_{j=1}^\mu \jSym{p_i}{ q_j}%
+        =%
+        \prod_{i=1}^\nu \prod_{j=1}^\mu \lSym{p_i}{ q_j}\\
+        &=%
+        \prod_{i=1}^\nu \prod_{j=1}^\mu { (-1)^{(q_j-1)/2 \cdot (p_i
+              -1 )/2}} \lSym{q_j}{p_i}%
+        \\&%
+        =%
+        \underbrace{{\prod_{i=1}^\nu \prod_{j=1}^\mu { (-1)^{(q_j-1)/2
+                    \cdot (p_i -1 )/2}}}}_{s} \cdot \pth[]{
+           \prod_{i=1}^\nu \prod_{j=1}^\mu \lSym{q_j}{p_i}}\\
+        &=%
+        s  
+        \jSym{m}{n}.
+    \end{align*}
+    by \thmref{reciprocity:l}. As for the value of $s$, observe that 
+    \begin{align*}
+        s%
+        &=%
+        \prod_{i=1}^\nu \pth[]{ \prod_{j=1}^\mu { (-1)^{(q_j-1)/2}}}^{
+           (p_i -1 )/2}%
+        =%
+        \prod_{i=1}^\nu \pth{ (-1)^{(m-1)/2}}^{ (p_i -1 )/2}\\
+        &=%
+        \pth{\prod_{i=1}^\nu (-1)^{ (p_i -1 )/2}}^ {(m-1)/2}
+        =%
+        (-1)^{(n-1)/2 \cdot (m-1)/2},
+    \end{align*}
+    by repeated usage of \clmref{obs:odd:prod}.
+\end{proof}
+
+% \end{lemma}
+% \begin{proof}
+% \end{proof}
+
+\begin{lemma}    
+    \lemlab{strange:p:8}%
+    %
+    For odd integers $n$ and $m$, we have that
+    \[
+        \frac{n^2 -1 }{8} + \frac{m^2 -1 }{8} %
+        \equiv \frac{n^2m^2 -1 }{8} \pmod{2}.
+    \]
+\end{lemma}
+\begin{proof}
+    For an odd integer $n$, we have that either (i) $2\divides n-1$
+    and $4 \divides n+1$, or (ii) $4\divides n-1$ and $2 \divides
+    n+1$. As such, $8 \divides n^2 - 1 = (n-1)(n+1)$. In particular,
+    $64 \divides \pth[]{n^2 - 1 } \pth[]{m^2 -1}$. We thus have that 
+    \begin{align*}
+        &\frac{\pth[]{n^2 -1}\pth[]{m^2 - 1}}{8} \equiv 0 \pmod{2} \\
+        &\iff%
+        \frac{n^2 m^2 - n^2 - m^2 +1}{8} \equiv 0 \pmod{2}%
+        \\&\iff%
+        \frac{n^2 m^2 -1}{8} \equiv \frac{n^2 -m^2 -2}{8} \pmod{2}%
+        \\&%
+        \iff%
+        \frac{n^2 -1 }{8} + \frac{m^2 -1 }{8} %
+        \equiv \frac{n^2m^2 -1 }{8} \pmod{2}.
+    \end{align*}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{Jacobi:helper}%
+    %
+    Let $m, n$ be odd integers, and $a,b$ be any integers. We have the
+    following:
+    \begin{compactenumA}
+        \item \itemlab{split:Jacobi}%
+        $\jSym{a b}{n} = \jSym{a}{n} \jSym{b}{n}$.
+
+        \item $\jSym{a}{nm} = \jSym{a}{n} \jSym{a}{m}$.
+
+        \item \itemlab{mod:Jacobi} If $a \equiv b \pmod{n}$ then
+        $\jSym{a }{n} = \jSym{b}{n}$.
+    
+        \item \itemlab{g:c:d:Jacobi}  If $\gcd(a,n) > 1$ then $\jSym{a}{n} = 0$.
+
+        \item $\jSym{1}{n}  =1$.
+        
+        \item \itemlab{2:Jacobi}%
+        $\jSym{2}{n} =(-1)^{(n^2 - 1)/8}$.
+    
+        \item
+        \itemlab{reciprocity:Jacobi}%
+        $\jSym{n}{m} = (-1)^{\frac{n-1}{2} \frac{m-1}{2}} \jSym{m}{n}$.
+    \end{compactenumA}
+\end{lemma}
+
+\begin{proof}
+    (A) Follows immediately, as
+    $\lSym{a b}{p_i} = \lSym{a}{p_i} \lSym{b}{p_i}$,\newline
+    see \lemrefpage{easy:l:symbol}.
+
+    (B) Immediate from definition.
+
+    (C) Follows readily from \lemrefpage{easy:l:symbol} (iii).
+
+    (D) Indeed, if $p \divides \gcd( a, n)$ and $p >1$, then
+    $\lSym{a}{p}^k = \lSym{0}{p}^k = 0$ appears as a term in
+    $\jSym{a}{n}$.
+
+    (E) Obvious by definition.
+
+    (F) By \lemrefpage{strange:sums}, for a prime $p$, we have
+    $\lSym{2}{p} = (-1)^{(p^2 - 1)/8}$. As such, writing $n =
+    \prod_{i=1}^t p_i$ as a product of primes (allowing repeated
+    primes), we have
+    \begin{align*}
+        \jSym{2}{n}%
+        =%
+        \prod_{i=1}^t \lSym{2}{p_i}%
+        =%
+        \prod_{i=1}^t {(-1)^{(p_i^2 - 1)/8}}%
+        =%
+        (-1)^\Delta,
+    \end{align*}
+    where $\Delta = \sum_{i =1}^t (p_i^2 - 1)/8$.  As such, we need to
+    compute the $\Delta \pmod{2}$, which by \lemref{strange:p:8}, is
+    \begin{align*}
+        \Delta%
+        \equiv%
+        \sum_{i =1}^t \frac{p_i^2 - 1}{8}%
+        \equiv%
+        \frac{\prod_{i =1}^t p_i^2 - 1}{8}%
+        \equiv%
+        \frac{n^2 - 1}{8}%
+        \pmod{2}, 
+    \end{align*}
+    and as such $\jSym{2}{n} = (-1)^\Delta = (-1)^{(n^2 -1 ) /8}$.
+
+    (G) This is \lemref{reciprocity:j}.
+\end{proof}
+
+
+
+\newcommand{\algJacobi}{\Algorithm{Jacobi}\xspace}
+
+\subsubsection{Jacobi{}($a,n$): Computing the Jacobi symbol}
+\seclab{Jacobi:fast}
+
+Given $a$ and $n$ ($n$ is an odd number), we are interested in
+computing (in polynomial time) the Jacobi symbol $\jSym{a}{n}$.  The
+algorithm \algJacobi{}($a,n$) works as follows:
+\begin{compactenumA}
+    \item If $a=0$ then \Return 0 \CodeComment{\qquad //
+       Since $\jSym{0}{n} = 0$.}
+
+    \item If $a > n$ then \Return \algJacobi{}($a \pmod n ,n$)
+    \CodeComment{\qquad // \lemref{Jacobi:helper}
+       \itemref{mod:Jacobi}}
+
+    \item If $\gcd(a,n) > 1$ then \Return $0$ \CodeComment{\qquad //
+       \lemref{Jacobi:helper} \itemref{g:c:d:Jacobi}}
+
+    \item If $a =2$ then
+    \begin{compactenumI}
+        \item Compute $\Delta = n^2 -1 \pmod{16}$,
+        
+        \item Return $(-1)^{\Delta/8 \pmod{2}}$ %
+        \CodeComment{\qquad // As $(n^2 -1)/8 \equiv \Delta/8
+           \pmod{2}$, and by \lemref{Jacobi:helper}
+           \itemref{2:Jacobi}}%
+    \end{compactenumI}
+
+
+    \item If $2 \divides a$ then \Return \algJacobi{}($2,n$) *
+    \algJacobi{}($a/2,n$) \CodeComment{\quad //
+       \lemref{Jacobi:helper} \itemref{split:Jacobi}}
+
+    
+    \CodeComment{// Must be that $a$ and $b$ are both odd, $a < n$,
+       and they are coprime}
+    \item $a' := a \pmod{4}$, \qquad $n' := n \pmod{4}$, \qquad
+    $\beta = (a' -1)(n'-1)/4$.
+
+    \Return $(-1)^\beta$ \algJacobi{}($n,a$) %
+    \CodeComment{\qquad // By \lemref{Jacobi:helper}
+       \itemref{reciprocity:Jacobi}}
+\end{compactenumA}
+
+\bigskip
+
+Ignoring the recursive calls, all the operations takes polynomial
+time. Clearly, computing \algJacobi{}($2,n$) takes polynomial time.
+Otherwise, observe that \algJacobi reduces its input size by say, one
+bit, at least every two recursive calls, and except the $a=2$ case, it
+always perform only a single call. Thus, it follows that its running
+time is polynomial. We thus get the following.
+
+\begin{lemma}
+    Given integers $a$ and $n$, where $n$ is odd, then $\jSym{a}{n}$
+    can be computed in polynomial time.
+\end{lemma}
+
+\subsubsection{Subgroups induced by the Jacobi symbol}
+
+For an $n$, consider the set 
+\begin{align}
+    J_n =\brc{a \in \ZZ_n^* \sep{ \jSym{a}{n} \equiv a^{(n-1)/2}
+          \bmod{n}}}.%
+    \eqlab{J:n}%    
+\end{align}
+
+\begin{claim}
+    The set $J_n$ is a subgroup of $\ZZ_n^*$.
+\end{claim}
+\begin{proof}
+    For $a, b \in J_n$, we have that 
+    \[
+        \jSym{a b}{n}%
+        \equiv%
+        \jSym{a}{n} \jSym{b}{n}%
+        \equiv%
+        a^{(n-1)/2} b^{(n-1)/2}%
+        \equiv%
+        (ab)^{(n-1)/2} \bmod{n},
+    \]
+    implying that $ab \in J_n$. Now, $\jSym{1}{n} = 1$, so $1 \in
+    J_n$.  Now, for $a \in J_n$, let $a^{-1}$ the inverse of $a$
+    (which is a number in $\ZZ_n^*$). Observe that $a (a^{-1}) = k n + 1$, for
+    some $k$, and as such, 
+    we have
+    \begin{align*}
+        1%
+        &=%
+        \jSym{1}{n}%
+        =%
+        \jSym{kn + 1}{n}%
+        =%
+        \jSym{a {} a^{-1}}{n}\\
+        &=%
+        \jSym{kn + 1}{n}%
+        =%
+        \jSym{a }{n} %
+        \jSym{ a^{-1}}{n}. %
+    \end{align*}
+    And modulo $n$, we have 
+    \begin{align*}
+        1%
+        \equiv%
+        \jSym{a }{n} %
+        \jSym{ a^{-1}}{n} %
+        \equiv%
+        a^{(n-1)/2} \jSym{ a^{-1}}{n} \bmod{n}. %
+    \end{align*}
+    Which implies that $\pth[]{a^{-1}}^{(n-1)/2} \equiv \jSym{
+       a^{-1}}{n} \bmod{n}$. That is $a^{-1} \in J_n$.
+
+    Namely, $J_n$ contains the identity, it is closed under inverse
+    and multiplication, and it is now easy to verify that fulfill the
+    other requirements to be a group.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{J:n:small:a}%
+    %
+    Let $n$ be an odd integer that is composite, then
+    $\cardin{J_n} \leq \cardin{\ZZ_n^*}/2$.
+\end{lemma}
+
+\begin{proof}
+    Let has the prime factorization $n = \prod_{i=1}^t p_i^{k_i}$.
+    Let $q = p_1^{k_1}$, and $m = n/q$.  By
+    \lemrefpage{z:z:p:powers:cyclic}, the group $\ZZ_q^*$ is cyclic,
+    and let $g$ be its generator. Consider the element $a \in \ZZ_n^*$
+    such that
+    \begin{align*}
+        a \equiv g \bmod{q}%
+        \qquad%
+        \text{and}%
+        \qquad%
+        a \equiv 1 \bmod{m}.
+    \end{align*}
+    Such a number $a$ exists and its unique, by the Chinese remainder
+    theorem (\thmrefpage{chinese:remainder}). In particular, let $m =
+    \prod_{i=2}^t p_i^{k_i}$, and observe that, for all $i$, we have
+    $a \equiv 1 \pmod{p_i}$, as $p_i \divides m$. As such, writing the
+    Jacobi symbol explicitly, we have 
+    \begin{align*}
+        \jSym{a}{n}%
+        &=%
+        \jSym{a}{q}\prod_{i=2}^t \lSym{a}{p_i}^{k_i}%
+        =%
+        \jSym{a}{q}\prod_{i=2}^t \lSym{1}{p_i}^{k_i}\\
+        &=%
+        \jSym{a}{q}\prod_{i=2}^t 1%
+        =%
+        \jSym{a}{q}%
+        =%
+        \jSym{g}{q}.
+    \end{align*}
+    since $a \equiv g \pmod{q}$, and \lemrefpage{Jacobi:helper}
+    \itemref{mod:Jacobi}. At this point there are two possibilities:
+    \begin{compactenumA}
+        \item If $k_1=1$, then $q= p_1$, and $\jSym{g}{q} =
+        \lSym{g}{q} = g^{(q-1)/2} \pmod q$.  But $g$ is a generator of
+        $\ZZ_{q}^*$, and its order is $q-1$. As such $g^{(q-1)/2}
+        \equiv -1 \pmod{q}$, see \defrefpage{l:symbol}.  We conclude
+        that $\jSym{a}{n} =-1$. If we assume that $J_n = \ZZ_n^*$,
+        then $\jSym{a}{n} \equiv a^{(n-1)/2} \equiv -1 \pmod{n}$. Now,
+        as $m \divides n$, we have
+        \begin{align*}
+            a^{(n-1)/2}%
+            \equiv_m%
+            \pth[]{ a^{(n-1)/2} \bmod{n}}%
+            \bmod{m}%
+            \equiv_m%
+            -1.
+        \end{align*}
+        But this contradicts the choice of $a$ as $a \equiv 1
+        \pmod{m}$.
+
+        \item If $k_1 > 1$ then $q =p_1^{k_1}$.  Arguing as above, we
+        have that $\jSym{a}{n} = (-1)^{k_1}$. Thus, if we assume that
+        $J_n = \ZZ_n^*$, then $a^{(n-1)/2} \equiv - 1 \pmod{n}$ or
+        $a^{(n-1)/2} \equiv 1 \pmod{n}$. This implies that $a^{n-1}
+        \equiv 1 \pmod{n}$. Thus, $a^{n-1} \equiv
+        1 \pmod{q}$.
+
+        Now $a \equiv g \mod q$, and thus $g^{n-1} \equiv 1
+        \pmod{q}$. This implies that the order of $g$ in $\ZZ_q^*$
+        must divide $n-1$. That is $\ordX{g} = \phi(q) \divides
+        n-1$. Now, since $k_1 \geq 2$, we have that $p_1 \divides
+        \phi(q) = \pth[]{p_1^{k_1}} \pth[]{p_1 -1}$, see
+        \lemrefpage{totient:factorization}. We conclude that $p_1
+        \divides n-1$ and $p_1 \divides n$, which is of course
+        impossible, as $p_1 >1$.
+    \end{compactenumA}
+    \medskip%
+    We conclude that $J_n$ must be a proper subgroup of $\ZZ_n^*$,\newline
+    but, by \lemrefpage{divides}, it must be that
+    $\cardin{J_n} \divides \cardin{\ZZ_n^*}$.  But this implies that
+    $\cardin{J_n} \leq \cardin{\ZZ_n^*}/2$.
+\end{proof}
+
+
+
+\section{Primality testing}
+
+The primality test is now easy\footnote{One could even say ``trivial''
+   with heavy Russian accent.}. Indeed, given a number $n$, first
+check if it is even (duh!). Otherwise, randomly pick a number $r \in
+\brc{2, \ldots, n -1}$. If $\gcd( r, n) > 1$ then the number is
+composite. Otherwise, check if $r \in J_n$ (see \Eqrefpage{J:n}), by
+computing $x = \jSym{r}{n}$ in polynomial time, see
+\secrefpage{Jacobi:fast}, and $x' =a^{(n-1)/2} \bmod{n}$.  (see
+\lemrefpage{exponent:fast}). If $x=x'$ then the algorithm returns is
+prime, otherwise it returns it is composite. 
+
+\begin{theorem}
+    Given a number $n$, and a parameter $\delta >0$, there is a
+    randomized algorithm that, decides if the given number is prime or
+    composite.  The running time of the algorithm is $O\bigl(\pth{\log
+       n}^{c} \log (1/\delta) \bigr)$, where $c$ is some constant.  If
+    the algorithm returns that $n$ is composite then it is. If the
+    algorithm returns that $n$ is prime, then is wrong with
+    probability at most $\delta$.
+\end{theorem}
+\begin{proof}
+    Run the above algorithm $m = O( \log (1/\delta))$ times. If any of the
+    runs returns that it is composite then the algorithm return that
+    $n$ is composite, otherwise the algorithms returns that it is a
+    prime.
+
+    If the algorithm fails, then $n$ is a composite, and let $r_1,
+    \ldots, r_m$ be the random numbers the algorithm picked. The
+    algorithm fails only if $r_1, \ldots, r_m \in J_n$, but since
+    $\cardin{J_n} \leq \cardin{\ZZ_n^2}/2$, by
+    \lemrefpage{J:n:small:a}, it follows that this happens with
+    probability at most $\,\pth[]{\cardin{J_n} / \cardin{\ZZ_n^2}}^m
+    \!  \leq 1/2^m \leq \delta$, as claimed.
+\end{proof}
+
+\subsection{Distribution of primes}
+
+In the following, let $\pi(n)$ denote the number of primes between $1$
+and $n$. Here, we prove that $\pi(n) = \Theta( n / \log n)$.
+
+
+\begin{lemma}
+    \lemlab{prime:product}%
+    %
+    Let $\Delta$ be the product of all the prime numbers $p$, where $m
+    <p \leq 2m$. We have that $\Delta \leq \binom{2m}{m}$.
+\end{lemma}
+
+\begin{proof}
+    Let $X$ be the product of the all composite numbers between $m$
+    and $2m$, we have
+    \begin{align*}
+        \binom{2m}{m}%
+        =%
+        \frac{2m\cdot(2m - 1)\cdots(m + 2) \cdot(m + 1)}{m\cdot(m -
+           1)\cdots{2}\cdot{1} }%
+        =%
+        \frac{X \cdot \Delta }{m\cdot(m - 1)\cdots{2} \cdot{1}}.
+    \end{align*}
+    Since none of the numbers between $2$ and $m$ divides any of the
+    factors of $\Delta$, it must be that the number $\frac{X}{m\cdot(m
+       - 1)\cdots{2}\cdot{1}}$ is an integer number, as
+    $\binom{2m}{m}$ is an integer. Therefore, $\binom{2m}{m} =
+    c\cdot \Delta$, for some integer $c > 0$, implying the claim.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{primes:in:between}%
+    %
+    The number of prime numbers between $m$ and $2m$ is $O(m/\ln m)$.
+\end{lemma}
+\begin{proof}
+    Let us denote all primes between $m$ and $2m$ as $p_1 < p_2 <
+    \cdots< p_k$.  Since $p_1 \geq m$, it follows from
+    \lemref{prime:product} that $m^k \le \prod_{i=1}^{k} {p_i} \le
+    \binom{2m}{m}\leq 2^{2m}$.  Now, taking log of both sides, we
+    have $k \lg{m} \leq 2m$. Namely, $k \leq 2m/\lg m$.
+\end{proof}
+
+
+\begin{lemma}
+    $\pi(n) = O(n/\ln n)$.
+\end{lemma}
+\begin{proof}
+    Let the number of primes less than $n$ be $\Pi(n)$, then by
+    \lemref{primes:in:between}, there exist some positive constant
+    $C$, such that for all $\forall n \ge N$, we have $\Pi(2n) -
+    \Pi(n) \leq C\cdot n/\ln{n}$. Namely, $\Pi(2n) \leq C\cdot
+    n/\ln{n}+ \Pi(n)$. Thus,
+    \begin{math}\ds
+        \Pi(2n)%
+        \leq%
+        \sum_{i=0}^{\ceil{\lg n} } \pth{ \Biggl. \Pi\pth{2n/2^i} -
+           \Pi\pth{2n/2^{i+1}}}%
+        \leq%
+        \sum_{i=0}^{\ceil{\lg n} } C\cdot \frac{n/2^i}{\ln
+           \pth{n/2^i}}%
+        =%
+        O\pth{\frac{n}{\ln{n}}},
+    \end{math}
+    by observing that the summation behaves like a decreasing
+    geometric series.
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{binomial:factors:2}%
+    %
+    For integers $m, k$ and a prime $p$, if $p^k \divides
+    \binom{2m}{m}$, then $p^k \leq 2m$.
+\end{lemma}
+\begin{proof}
+    Let $T(p,m)$ be the number of times $p$ appear in the prime
+    factorization of $m!$. Formally, $T(p,m)$ is the highest number
+    $k$ such that $p^k$ divides $m!$. We claim that $T(p,m) =
+    \sum_{i=1}^{\infty} \floor{m / p^i}$. Indeed, consider an integer
+    $\beta \leq m$, such that $\beta = p^t \gamma $, where $\gamma$ is
+    an integer that is not divisible by $p$. Observe that $\beta$
+    contributes exactly to the first $t$ terms of the summation of
+    $T(p,m)$ -- namely, its contribution to $m!$ as far as powers of
+    $p$ is counted correctly.
+
+    Let $\alpha$ be the maximum number such that $p^\alpha$ divides
+    $\binom{2m}{m} = \frac{2m!}{m! m!}$. Clearly, 
+    \begin{align*}
+        \alpha%
+        =%
+        T(p,2m) - 2T(p,m)%
+        =%
+        \sum_{i=1}^\infty \pth{ \floor{\frac{2m}{ p^i}} -2
+           \floor{\frac{m}{p^i}}}.
+    \end{align*}
+    It is easy to verify that for any integers $x, y$, we have that $0
+    \leq \floor{\frac{2x}{y}} - 2 \floor{\frac{x}{y}} \leq 1$. In
+    particular, let $k$ be the largest number such that\newline
+    $\pth[]{ \floor{\frac{2m}{ p^k}} -2 \floor{\frac{m}{p^k}}} =1$, and
+    observe that $T(p, 2m) \leq k$ as only the proceedings $k-1$ terms
+    might be non-zero in the summation of $T(p,2m)$. But this implies
+    that $\floor{2m/p^k}\geq 1$, which implies in turn that $p^k \leq
+    2m$, as desired.
+\end{proof}
+
+\begin{lemma}
+    $\pi(n) = \Omega(n /\ln n)$.
+\end{lemma}
+\begin{proof}
+    Assume $\binom{2m}{m}$ have $k$ prime factors, and thus can be
+    written as
+    \begin{math}
+        \binom{2m}{m} = \prod_{i=1}^k{p_i^{n_i}}.
+    \end{math}
+    By \lemref{binomial:factors:2}, we have $p_i^{n_i} \le 2m$. Of
+    course, the above product might not include some prime numbers
+    between $1$ and $2m$, and as such $k$ is a lower bound on the
+    number of primes in this range; that is, $k \leq \pi(2m)$.  This
+    implies
+    \begin{equation*}
+        \frac{2^{2m}}{2m} \le \binom{2m}{m} \le 
+        \prod_{i=1}^k{2m} = (2m)^k.
+    \end{equation*}
+    By taking $\lg$ of both sides, we have
+    \begin{math}
+        \ds \frac{2m - \lg(2m)}{\lg(2m)} \leq k \leq \pi(2m).
+    \end{math}
+\end{proof}
+
+We summarize the result.
+
+\begin{theorem}
+    \thmlab{prime:distribution}%
+    %
+    Let $\pi(n)$ be the number of distinct prime numbers between $1$
+    and $n$. We have that $\pi(n) = \Theta( n / \ln n )$.
+\end{theorem}
+
+
+\section{Bibliographical notes}
+
+Miller \cite{m-rhtp-76} presented the primality testing algorithm
+which runs in deterministic polynomial time but relies on\newline
+Riemann's Hypothesis (which is still open).  Later on, Rabin
+\cite{r-patp-80} showed how to convert this algorithm to a
+randomized algorithm, without relying on the Riemann's hypothesis.
+
+
+This write-up is based on various sources -- starting with the
+description in \cite{mr-ra-95}, and then filling in some details from
+various sources on the web.
+
+
+What is currently missing from the write-up is a description of the
+R{S}A encryption system. This would hopefully be added in the
+future. There are of course typos in these notes -- let me know if you
+find any.
+
+
+
+% \section{Azuma's Inequality}
+
+\ChapterEnd{}
+

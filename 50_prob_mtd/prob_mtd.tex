@@ -58,7 +58,7 @@ Probabilistic Method''.
 
 \subsubsection{Max cut}
 
-Computing the \emphi{maximum cut} (i.e., \emphi{max cut}) in a graph
+Computing the \emphOnly{maximum cut}\index{maximum cut} (i.e., \emphOnly{max cut}\index{max cut}) in a graph
 is a \NPComplete problem, which is \APXHard (i.e., no better than a
 constant approximation is possible if $\POLYT \neq \NP$). We present
 later on a better approximation algorithm, but the following simple
@@ -106,7 +106,7 @@ algorithm already gives a pretty good approximation.
 \section{Maximum Satisfiability}
 
 In the \ProblemC{MAX-SAT} problem, we are given a binary formula $F$
-in \emphi{C{}N{}F} (Conjunctive normal form), and we would like to
+in \emphOnly{C{}N{}F}\index{C{}N{}F} (Conjunctive normal form), and we would like to
 find an assignment that satisfies as many clauses as possible of $F$,
 for example $F = (x\vee y) \wedge (\overline{x} \vee z)$. Of course,
 an assignment satisfying all the clauses of the formula, and thus $F$
@@ -136,7 +136,7 @@ problem to maximizing the number of clauses to be satisfied..
 For an instant $I$, let $\mopt(I)$, denote the maximum number of
 clauses that can be satisfied by the ``best'' assignment. For an
 algorithm \Alg, let $m_\Alg(I)$ denote the number of clauses satisfied
-computed by the algorithm \Alg.  The \emphi{approximation factor} of
+computed by the algorithm \Alg.  The \emphOnly{approximation factor}\index{approximation factor} of
 \Alg, is $m_\Alg(I)/\mopt(I)$.  Clearly, the algorithm of
 \thmref{a:max:sat} provides us with $1/2$-approximation algorithm.
 
@@ -179,7 +179,7 @@ $\sum_{j=1}^{m} \widehat{z_j}$ is an upper bound on the
 number of clauses of $I$ that can be satisfied.
 
 We set the variable $y_i$ to $1$ with probability
-$\widehat{y_i}$. This is an instance \emphi{randomized rounding}.
+$\widehat{y_i}$. This is an instance \emphOnly{randomized rounding}\index{randomized rounding}.
 
 \begin{lemma}
     \lemlab{r:r}%

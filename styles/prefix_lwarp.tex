@@ -773,8 +773,8 @@ backend=biber]{biblatex}
 \newcommand{\parent}{\overline{\mathrm{p}}}
 \newcommand{\parentX}[2][\!]{\parent\pth[#1]{#2}}
 
-\newcommand{\FMS}{\Mh{\EuScript{X}}}  
-\newcommand{\FMSB}{\Mh{\EuScript{Y}}}  
+\newcommand{\FMS}{\EuScript{X}}  
+\newcommand{\FMSB}{\EuScript{Y}}  
 \newcommand{\FastCut}{\Algorithm{FastCut}\xspace}
 \newcommand{\MinCut}{\Algorithm{MinCut}\xspace}
 \newcommand{\MinCutRep}{\Algorithm{MinCutRep}\xspace}
@@ -785,8 +785,8 @@ backend=biber]{biblatex}
 \newcommand{\SphereChar}{\ensuremath{\mathbb{S}}}
 \newcommand{\Sphere}[1]{{\SphereChar^{(#1)}}}
 
-\newcommand{\PntSet}{{\Mh{\mathsf{P}}}}%
-\providecommand{\PntSetA}{{\Mh{\mathsf{Q}}}}%
+\newcommand{\PntSet}{{\mathsf{P}}}%
+\providecommand{\PntSetA}{{\mathsf{Q}}}%
 
 \newcommand{\query}{\mathcalb{q}}
 
@@ -797,21 +797,21 @@ backend=biber]{biblatex}
 \newcommand{\pntD}{{\mathsf{y}}}
 \newcommand{\pntE}{{\mathsf{z}}}
 
-\newcommand{\pntCoord}{\Mh{p}}
-\newcommand{\pntCoordA}{\Mh{q}}
+\newcommand{\pntCoord}{p}
+\newcommand{\pntCoordA}{q}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Markov chain notations.
 
-\newcommand{\MCSpc}{\Mh{\mathtt{S}}}
-\newcommand{\MCPrb}{\Mh{\mathtt{P}}}
+\newcommand{\MCSpc}{\mathtt{S}}
+\newcommand{\MCPrb}{\mathtt{P}}
 \newcommand{\MCPrbY}[2]{\MCPrb_{#1#2}}
-\newcommand{\MCPrbM}{\Mh{\mathbf{P}}}%
+\newcommand{\MCPrbM}{\mathbf{P}}%
 \newcommand{\MCPrbT}[3]{\MCPrb_{#1#2}^{(#3)}}
-\newcommand{\MCFPrbT}[3]{\Mh{\mathtt{r}}_{#1#2}^{(#3)}}
-\newcommand{\MCVstProb}[2]{\Mh{\mathtt{f}}_{#1#2}}
-\newcommand{\MCExSteps}[2]{\Mh{\mathtt{h}}_{#1#2}}
+\newcommand{\MCFPrbT}[3]{\mathtt{r}_{#1#2}^{(#3)}}
+\newcommand{\MCVstProb}[2]{\mathtt{f}_{#1#2}}
+\newcommand{\MCExSteps}[2]{\mathtt{h}_{#1#2}}
 \newcommand{\MCPVec}[1]{\mathbf{q}^{(#1)}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -823,7 +823,7 @@ backend=biber]{biblatex}
 \newcommand{\QuickSort}{\Algorithm{QuickSort}\xspace}
 \newcommand{\Alg}{\Algorithm{Alg}\xspace}
 
-\newcommand{\Graph}{\Mh{\mathsf{G}}}%
+\newcommand{\Graph}{\mathsf{G}}%
 \newcommand{\GraphB}{\mathsf{H}}
 \newcommand{\GraphC}{\mathsf{K}}
 \newcommand{\GraphD}{\mathsf{F}}
@@ -867,8 +867,8 @@ backend=biber]{biblatex}
 
 \newcommand{\DEdges}{\widetilde{\Edges}}
 
-\newcommand{\VV}{\Mh{\mathsf{V}}}%
-\newcommand{\EE}{\Mh{\mathsf{E}}}%
+\newcommand{\VV}{\mathsf{V}}%
+\newcommand{\EE}{\mathsf{E}}%
 
 \newcommand{\Vertices}{\VV}%
 \newcommand{\Edges}{\EE}%
@@ -884,9 +884,9 @@ backend=biber]{biblatex}
 \newcommand{\Sequence}{\EuScript{S}}
 
 \newcommand{\med}{\mathrm{med}}
-\newcommand{\medX}[1]{\Mh{\mathrm{med}}\pth{#1}}
+\newcommand{\medX}[1]{\mathrm{med}\pth{#1}}
 
-\newcommand{\medianC}{\Mh{\nu}}%
+\newcommand{\medianC}{\nu}%
 
 \newlength{\savedparindent}
 \newcommand{\SaveIndent}{\setlength{\savedparindent}{\parindent}}
@@ -943,10 +943,10 @@ backend=biber]{biblatex}
 \newcommand{\hdim}{d}
 \newcommand{\Domain}{\mathcal{D}}
 \newcommand{\points}[1]{[\bfseries{#1 points}]}
-\newcommand{\Event}{\Mh{\EuScript{E}}}%
-\newcommand{\EventB}{\Mh{\EuScript{B}}}%
-\newcommand{\EventF}{\Mh{\EuScript{F}}}%
-\newcommand{\EventG}{\Mh{\EuScript{G}}}%
+\newcommand{\Event}{\EuScript{E}}%
+\newcommand{\EventB}{\EuScript{B}}%
+\newcommand{\EventF}{\EuScript{F}}%
+\newcommand{\EventG}{\EuScript{G}}%
 
 \newcommand{\distCmd}[1]{\left\| {#1}  \right\|}
 \newcommand{\distY}[2]{\distCmd{#1 - #2}}
@@ -956,7 +956,7 @@ backend=biber]{biblatex}
 \newcommand{\NormalDistOneDim}{\NormalC}
 \newcommand{\NormalDistX}[1]{\NormalC^{#1}}
 \DeclareMathOperator{\lca}{lca}
-\newcommand{\RangeSpace}{\Mh{\mathsf{S}}}%
+\newcommand{\RangeSpace}{\mathsf{S}}%
 \newcommand{\RangeSpaceA}{\mathsf{T}}
 
 \newcommand{\range}{\mathbf{r}}
@@ -1113,9 +1113,9 @@ backend=biber]{biblatex}
 \newcommand{\Measure}[1]{\MeasureChar\pth{#1}}
 \newcommand{\sMeasure}[1]{\overline{s}\pth{#1}}
 
-\newcommand{\SetA}{\Mh{S}}%
-\newcommand{\SetB}{\Mh{T}}%
-\newcommand{\SetC}{\Mh{N}}%
+\newcommand{\SetA}{S}%
+\newcommand{\SetB}{T}%
+\newcommand{\SetC}{N}%
 
 \newcommand{\VCProj}[2]{#1_{|#2}}
 \newcommand{\VCDim}{\mathrm{dim}_{\VC}}
@@ -1229,7 +1229,7 @@ backend=biber]{biblatex}
 
 \newcommand{\alglab}[1]{\label{algorithm:#1}}
 
-\newcommand{\net}{\Mh{\mathcal{N}}}%
+\newcommand{\net}{\mathcal{N}}%
       
 \newcommand{\lemlab}[1]{\label{lemma:#1}}
 \newcommand{\lemref}[1]{\HLink{Lemma}{lemma:#1}}%
@@ -1280,7 +1280,7 @@ backend=biber]{biblatex}
 \newcommand{\MakeSBig}{}
 \newcommand{\MakeVBig}{}
 
-\newcommand{\DistChar}{\Mh{\mathsf{d}}}%
+\newcommand{\DistChar}{\mathsf{d}}%
 \newcommand{\DistSetY}[2]{\DistChar\pth{#1,#2}}
 \newcommand{\distG}[2]{\DistChar_\Graph\pth{#1, #2}}
 \newcommand{\DistMtrCharX}[1]{\DistChar_{#1}}
@@ -1453,8 +1453,8 @@ backend=biber]{biblatex}
 % Color in math - end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\HSetY}[2]{\Mh{H}\pth{#1, #2}}%
-\newcommand{\CHSetY}[2]{\Mh{C}\pth{#1, #2}}%
+\newcommand{\HSetY}[2]{H\pth{#1, #2}}%
+\newcommand{\CHSetY}[2]{C\pth{#1, #2}}%
 \DeclareRobustCommand{\Holder}{Hölder\xspace}
 \newcommand{\OldOm}{{\mathcal{O}}}
 \newcommand{\NewOm}{{\mathcal{N}}}
@@ -1468,12 +1468,12 @@ backend=biber]{biblatex}
 %---------------------------------------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\obj}{\Mh{f}}%
-\newcommand{\Wg}{\Mh{\omega}}%
-\newcommand{\TotalW}{\Mh{W}}%
+\newcommand{\obj}{f}%
+\newcommand{\Wg}{\omega}%
+\newcommand{\TotalW}{W}%
 
 \newcommand{\rankY}[2]{{#1}_{ \permut{#2}}}%%
-\newcommand{\areaX}[1]{\Mh{\mathrm{area}}\pth{#1}}%%
+\newcommand{\areaX}[1]{\mathrm{area}\pth{#1}}%%
 
 \newcommand{\mybinom}[2]%
 {\Bigl(\begin{array}{@{}c@{}}#1\\#2\end{array}\Bigr)}
@@ -1481,7 +1481,7 @@ backend=biber]{biblatex}
 \providecommand{\Set}[2]{\left\{ #1 \;\middle\vert\; #2 \right\}}
 \newcommand*{\biga}[1]{\vcenter{\hbox{\scalebox{1.5}{\ensuremath#1}}}}
 \newcommand{\CNF}{\TermI{CNF}\xspace}%
-\newcommand{\Tree}{\Mh{T}}%
+\newcommand{\Tree}{T}%
 
 \DeclareSymbolFont{sfletters}{OML}{cmbrm}{m}{it}
 
@@ -1529,13 +1529,13 @@ backend=biber]{biblatex}
 }
 \newcommand{\DataStructure}[1]{\ensuremath{\DS_{#1}}}
 \newcommand{\DistNN}[2]{\DistChar\pth{#1,#2}}
-\newcommand{\pntc}{\Mh{{p}}}%
+\newcommand{\pntc}{{p}}%
 
-\newcommand{\seq}{{\Mh{M}}}%
-\newcommand{\cTimes}{\Mh{\beta}}%
+\newcommand{\seq}{{M}}%
+\newcommand{\cTimes}{\beta}%
 
-\newcommand{\DSTimes}{\Mh{L}}%
-\newcommand{\rad}{\Mh{r}}%
+\newcommand{\DSTimes}{L}%
+\newcommand{\rad}{r}%
 
 \newcommand{\HypercubeX}[1]{\Hypercube^{#1}}
 \newcommand{\kFunctions}[2]{\mathrm{combine}\pth{#1,#2}}
@@ -1544,20 +1544,20 @@ backend=biber]{biblatex}
 \newcommand{\FamilyAmp}{\FamilyC_{\WEqualChar}}
 \newcommand{\PSPACE}{\ComplexityClass{PSPACE}\xspace}%
 
-\newcommand{\PS}{\Mh{P}}%
+\newcommand{\PS}{P}%
 
 \newcommand{\PSetFar}{\ensuremath{\PntSet^{}_{\geq}\xspace}}%
-\newcommand{\DA}{\Mh{D}}%
-\newcommand{\uniqX}[1]{\Mh{\mathrm{uniq}}\pth{#1}}%
+\newcommand{\DA}{D}%
+\newcommand{\uniqX}[1]{\mathrm{uniq}\pth{#1}}%
 \newcommand{\diffX}[1]{\mathop{}\!\mathrm{d}#1}
 
-\newcommand{\Frq}{\Mh{F}}%
-\newcommand{\frq}{\Mh{f}}%
-\newcommand{\STRM}{\Mh{\mathcal{S}}}%
-\newcommand{\strm}{\Mh{{s}}}%
+\newcommand{\Frq}{F}%
+\newcommand{\frq}{f}%
+\newcommand{\STRM}{\mathcal{S}}%
+\newcommand{\strm}{{s}}%
 
 \DeclareRobustCommand{\Turan}{Turán\xspace}
-\newcommand{\fGrowX}[1]{\Mh{G}^{}_{\Dim}\pth{#1}}
+\newcommand{\fGrowX}[1]{G^{}_{\Dim}\pth{#1}}
 \newcommand{\CompressFunc}{\mathtt{Compress}}
 \newcommand{\RSA}{\Term{RSA}\xspace}
 \newcommand{\MST}{\Term{MST}\xspace}

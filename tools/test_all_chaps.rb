@@ -105,9 +105,15 @@ def filter_chapters(chapters, filters)
 end
 
 def build_l_command(chap, options)
-  cmd = ["l", "-no-env", "-s"]
+  cmd = ["l", "--no-env", "-s"]
   cmd << "-u" if options[:quick]
   cmd += ["-e", options[:engine]] if options[:engine]
+  chap_dir = File.join(ROOT_DIR, chap[:dir])
+  tex_path = File.join(chap_dir, chap[:file])
+  if File.exist?(tex_path)
+    content = File.read(tex_path)
+    cmd << "--no-bib" unless content =~ /\\(?:cite|nocite|addbibresource)/
+  end
   cmd << chap[:file]
   cmd
 end
@@ -175,7 +181,7 @@ def run_suite(chapters, options)
   end
   puts "  - Verified child spawn environment: TEXINPUTS, BIBINPUTS, BSTINPUTS, TEXMFHOME are empty/unset."
   puts "Execution:"
-  puts "  - Compiler command: #{options[:quick] ? 'l -no-env -s -u' : 'l -no-env -s'}"
+  puts "  - Compiler command: #{options[:quick] ? 'l --no-env -s -u' : 'l --no-env -s'}"
   puts "  - Concurrency: #{options[:jobs]} parallel workers"
   puts "  - Target Chapters: #{chapters.size}"
   puts "=" * 60

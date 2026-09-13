@@ -39,7 +39,7 @@
 Let $\Graph=(V,E)$ Be an undirected graph, where $V=\brc{1,\ldots,
    n}$.  A \emphic{$d$-regular graph}{graph!$d$-regular} is a graph
 where all vertices have degree $d$. A $d$-regular graph $\Graph=(V,E)$
-is a $\delta$-edge expander (or just, \emphi{$\delta$-expander}) if
+is a $\delta$-edge expander (or just, \emphOnly{$\delta$-expander}\index{$\delta$-expander}) if
 for every set $S \subseteq V$ of size at most $\cardin{V}/2$, there
 are at least $\delta d \cardin{S}$ edges connecting $S$ and
 $\overline{S} = V \setminus S$; that is 
@@ -57,19 +57,20 @@ A graph is
 it is a $n$ vertex, $d$-regular, $\delta$-expander.
 
 
-A \emphi{$(n,d)$-graph} $\Graph$ is a connected $d$-regular undirected
+A \emphOnly{$(n,d)$-graph}\index{$(n,d)$-graph} $\Graph$ is a connected $d$-regular undirected
 (multi) graph. We will consider the set of vertices of such a graph to
 be the set $\RangeI{n} = \brc{1,\ldots, n}$.
 
-For a (multi) graph $\Graph$ with $n$ nodes, its \emphi{adjacency
+For a (multi) graph $\Graph$ with $n$ nodes, its \emphOnly{adjacency
+   matrix}\index{adjacency
    matrix} is a $n\times n$ matrix $\Mtrx$, where $\Mtrx_{ij}$ is the
 number of edges between $i$ and $j$.  It would be convenient to work
-the \emphi{transition matrix} $\TMtrx$ associated with the random walk
+the \emphOnly{transition matrix}\index{transition matrix} $\TMtrx$ associated with the random walk
 on $\Graph$. If $\Graph$ is $d$-regular then $\TMtrx =
 \Mtrx(\Graph)/d$ and it is doubly stochastic.
 
-A vector $x$ is \emphi{eigenvector} of a matrix $\Mtrx$ with
-\emphi{eigenvalue} $\mu$, if $x \Mtrx = \mu x$. In particular,
+A vector $x$ is \emphOnly{eigenvector}\index{eigenvector} of a matrix $\Mtrx$ with
+\emphOnly{eigenvalue}\index{eigenvalue} $\mu$, if $x \Mtrx = \mu x$. In particular,
 by taking the dot product of both size by $x$, we get $\DotProd{x
    \Mtrx}{x} = \DotProd{\mu x}{x} $, which implies $\mu =
 \DotProd{x \Mtrx}{x}/ \DotProd{ x}{x}$. Since the adjacency matrix
@@ -141,7 +142,7 @@ $d$ regular graph.
 
 \begin{defn}
     For a graph $\Graph$, let $\DialX{\Graph}$ denote the
-    \emphi{tension} of $\Graph$; that is, the smallest constant, such
+    \emphOnly{tension}\index{tension} of $\Graph$; that is, the smallest constant, such
     that for any function $f:V(\Graph) \rightarrow \Re$, we have that
     \begin{align}
         \ExExt{x,y \in V}{\cardin{f(x)- f(y)}^2} \leq
@@ -207,7 +208,7 @@ expander it is.
 \begin{defn}
     Given a random walk matrix $\TMtrx$ associated with a $d$-regular
     graph, let $\Basis(\TMtrx)= \permut{v_1,\ldots, v_n}$ denote the
-    \emphi{orthonormal eigenvector basis} defined by $\TMtrx$. That
+    \emphOnly{orthonormal eigenvector basis}\index{orthonormal eigenvector basis} defined by $\TMtrx$. That
     is, $v_1,\ldots, v_n$ is an orthonormal basis for $\Re^n$, where
     all these vectors are eigenvectors of $\TMtrx$ and $v_1=
     1^n/\sqrt{n}$. Furthermore, let $\TEV{i}$ denote the $i$th

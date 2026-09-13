@@ -1,0 +1,302 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{18}{158}
+
+\Chapter{Discrepancy and Derandomization}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+\QuotePExt{%
+``Shortly after the celebration of the
+   four thousandth anniversary of the opening of space,
+   Angary J. Gustible discovered Gustible's planet. The
+   discovery turned out to be a tragic mistake.
+ 
+   Gustible's planet was inhabited by highly intelligent life
+   forms. They had moderate telepathic powers. They immediately
+   mind-read Angary J. Gustible's entire mind and life history, and
+   embarrassed him very deeply by making up an opera concerning his
+   recent divorce.''}%
+{Gustible's Planet}%
+{Cordwainer Smith}
+
+
+
+\section{Discrepancy}
+
+Consider a set system $(\GroundSet,\Ranges)$, where
+$n =\cardin{\GroundSet}$, and $\Ranges \subseteq 2^\GroundSet$. A
+natural task is to partition $\GroundSet$ into two sets
+$\SetA, \SetB$, such that for any range $\range \in \Ranges$, we have
+that
+\begin{math}
+    \chi(\range) = \cardin{\bigl. \cardin{\SetA \cap \range} -
+       \cardin{\SetB \cap \range}}
+\end{math}
+is minimized. In a perfect partition, we would have that
+$\chi(\range) = 0$ -- the two sets $\SetA,\SetB$ partition every range
+perfectly in half. A natural way to do so, is to consider this as a
+coloring problem -- an element of $\GroundSet$ is colored by $+1$ if
+it is  in $\SetA$, and $-1$ if it is in $\SetB$.
+
+
+\begin{defn} 
+    Consider a set system $\RangeSpace = (\GroundSet,\Ranges)$, and let
+    $\chi: \GroundSet \rightarrow \brc{-1,+1}$ be a function (i.e., a
+    coloring).  The \emphi{discrepancy} of $\range \in \Ranges$ is
+    $\chi(\range) = \cardin{\sum_{x \in \range} \chi(x)}$.  The
+    \emphi{discrepancy of $\chi$} is the maximum discrepancy over all
+    the ranges -- that is
+    \begin{equation*}
+        \discX{\chi} = \max_{\range \in \Ranges} \chi(\range).
+    \end{equation*}
+    The \emphi{discrepancy} of $\RangeSpace$ is
+    \begin{equation*}
+        \discX{\RangeSpace}%
+        =%
+        \min_{\chi:\GroundSet \rightarrow \brc{-1,+1}} \discX{\chi}.
+    \end{equation*}    
+\end{defn}
+
+Bounding the discrepancy of a set system is quite important, as it
+provides a way to shrink the size of the set system, while introducing
+small error. Computing the discrepancy of a set system is generally
+quite challenging. A rather decent bound follows by using random
+coloring. 
+
+    
+\begin{defn}
+    For a vector $\vecV = (v_1,\ldots, v_n) \in \Re^n$,
+    $\norm{\vecV}_\infty = \max_{i} \cardin{v_i}$.
+\end{defn}
+
+For technical reasons, it is easy to think about the set
+system as an incidence matrix.
+
+\begin{defn}       
+    For a $m \times n$ a binary matrix $\Matrix$ (i.e., each entry is
+    either $0$ or $1$), consider a vector $\vecb \in \brc{-1,
+       +1}^n$. The \emphi{discrepancy} of $\vecb$ is
+    $\dist{\Matrix \vecb}_\infty$.
+\end{defn}
+
+
+\begin{theorem}
+    Let $\Matrix$ be an $n \times n$ binary matrix (i.e., each entry
+    is either $0$ or $1$), then there always exists a vector
+    $\vecb \in \brc{-1, +1}^n$, such that
+    $\dist{\Matrix \vecb}_\infty \leq 4 \sqrt{n \log
+       n}$. Specifically, a random coloring provides such a coloring
+    with high probability.
+\end{theorem}
+
+\begin{proof}
+    Let $v = (v_1, \ldots, v_n)$ be a row of $\Matrix$. Chose a random
+    $\vecb = (b_1, \ldots, b_n) \in \brc{-1,+1}^n$.  Let
+    $i_1,\ldots, i_\tau$ be the indices such that $v_{i_j} =1$, and
+    let
+    \begin{equation*}
+        Y%
+        =%
+        \DotProd{v}{\vecb} = \sum_{i=1}^n v_i b_i = \sum_{j=1}^\tau v_{i_j}
+        b_{i_j}%
+        =%
+        \sum_{j=1}^\tau b_{i_j}.
+    \end{equation*}
+    As such $Y$ is the sum of $m$ independent random variables that
+    accept values in $\brc{-1,+1}$.  Clearly,
+    \begin{equation*}
+        \Ex{Y}%
+        =%
+        \Ex{\bigl. \DotProd{v}{\vecb}\!\ts  }%
+        =%
+        \Ex{\Bigl.\smash{\sum_{i}} v_i b_i} =%
+        \sum_{i} \Ex{v_i b_i} = \sum_{i} v_i \Ex{b_{i}} = 0.
+    \end{equation*}
+
+    By \thmrefY{Chernoff inequality}{Chernoff:special} and the
+    symmetry of $Y$, we have that, for $\Delta = 4 \sqrt{n \ln{m}}$,
+    it holds
+    \begin{equation*}
+        \Prob{\bigl.\cardin{Y}\MakeSBig \geq \Delta} 
+        = %
+        2 \Prob{\bigl. \DotProd{v}{\vecb}  \geq \Delta }
+        =%
+        2 \Prob{\Bigl. \smash{\sum_{j=1}^\tau b_{i_j}} \geq \Delta}%
+        \leq%
+        2 \exp \pth{ - \frac{\Delta^2}{2\tau}}
+        =%
+        2 \exp \pth{-8 {\frac{n\ln m}{\tau}}}%
+        \leq%
+        \frac{2}{m^{8}},
+    \end{equation*}
+    since $\tau \leq n$.  In words, the probability that any entry in
+    $\Matrix b$ exceeds (in absolute values) $4 \sqrt{ n\ln ,}$ is
+    smaller than $2/m^7$. Thus, with probability at least $1 - 2/m^7$,
+    all the entries of $\Matrix b$ have absolute value smaller than
+    $4 \sqrt{n \ln m}$.
+    
+   In particular, there exists a vector $\vecb \in \brc{-1,+1}^n$ such
+   that $\dist{\,\Matrix \vecb \, }_{\infty} \leq 4 \sqrt{n \ln m}$.
+\end{proof}
+
+We might spend more time on discrepancy later on -- it is a
+fascinating topic, well worth its own course.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Method of Conditional Probabilities}
+
+In previous lectures, we encountered the following problem.
+
+\begin{problem}[Set Balancing/Discrepancy]
+    Given a binary matrix $\Matrix$ of size $n \times n$, find a
+    vector $\vecA \in \brc{-1,+1}^n$, such that
+    $\dist{\Matrix \vecA}_\infty$ is minimized.
+\end{problem}
+
+Using random assignment and the Chernoff inequality, we showed that
+there exists $\vecA$, such that
+$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$. Can we
+derandomize this algorithm?  Namely, can we come up with an efficient
+\emph{deterministic} algorithm that has low discrepancy?
+
+To derandomize our algorithm, construct a computation tree of depth
+$n$, where in the $i$\th level we expose the $i$\th coordinate of
+$\vecA$.  This tree $T$ has depth $n$. The root represents all
+possible random choices, while a node at depth $i$, represents all
+computations when the first $i$ bits are fixed. For a node $v \in T$,
+let $P(v)$ be the probability that a random computation starting from
+$v$ succeeds -- here randomly assigning the remaining bits can be
+interpreted as a random walk down the tree to a leaf.
+
+Formally, the algorithm is \emphi{successful} if ends up with a vector
+$\vecA$, such that
+$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$.
+
+Let $v_l$ and $v_r$ be the two children of $v$.
+Clearly, $P(v) = (P(v_l) + P(v_r))/2$. In particular, $\max( P(v_l),
+P(v_r)) \geq P(v)$. Thus, if we could compute $P(\cdot)$ quickly (and
+deterministically), then we could derandomize the algorithm.
+
+
+Let $C_\ind^+$ be the bad event that
+$\row_\ind \cdot \vecA > 4 \sqrt{n \log n}$, where $\row_\ind$ is the
+$\ind$\th row of $\Matrix$.  Similarly, $C_\ind^-$ is the bad event
+that $\row_\ind \cdot \vecA < -4 \sqrt{n \log{n}}$, and let
+$C_\ind = C_\ind^+ \cup C_\ind^-$.  Consider the probability,
+$\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first
+$k$ coordinates of $\vecA$ are specified).  Let
+$\row_\ind = (\rowc_1,\ldots, \rowc_n)$.  We have that
+\begin{equation*}
+    \ProbCond{C_\ind^+ }{\vecA_1, \ldots, \vecA_k}%
+    =
+    \Prob{\smash{\sum_{i=k+1}^{n}} \vecA_i \rowc_i > 4 \sqrt{n \log{n}} -
+       \smash{\sum_{i=1}^{k}} \vecA_i \rowc_i }%
+    =%
+    \Prob{\Bigl.\smash{\sum_{i \geq k+1, \rowc_i \ne 0 }} \vecA_i \rowc_i >
+       L}%
+    =%
+    \Prob{\Bigl. \smash{\sum_{i \geq k+1, \rowc_i = 1}} \vecA_i > L},
+\end{equation*}
+where
+\begin{math}
+    L = 4 \sqrt{n \log{n}} - \sum_{i=1}^{k} \vecA_i \rowc_i
+\end{math}
+is a known quantity (since $\vecA_1, \ldots, \vecA_k$ are known). Let
+$V = \sum_{i \geq k+1, \rowc_i =1 } 1$. We have,
+\begin{align*}
+  \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} 
+  &=%
+    \Prob{\Bigl. \smash{\sum_{\substack{i \geq k+1\\ \alpha_i = 1}} }\pth{ \vecA_i +
+  1} > L + V}%
+  =%
+  \Prob{\Bigl. \smash{\sum_{\substack{i \geq k+1\\ \alpha_i = 1} }}\frac{{ \vecA_i +
+  1}}{2} > \frac{L + V}{2}},
+\end{align*}
+\medskip%
+The last quantity is the probability that in $V$ flips of a fair $0/1$
+coin one gets more than $(L+V)/2$ heads. Thus,
+\begin{equation*}
+    P_\ind^+ = \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}
+    =%
+    \sum_{i = \ceil{(L+V)/2}}^{\Vertices} \binom{\Vertices}{i}
+    \frac{1}{2^n}%
+    =%
+    \frac{1}{2^n} { \sum_{i = \ceil{(L+V)/2}}^{\Vertices}
+       \binom{\Vertices}{i}}.    
+\end{equation*}
+This implies, that we can compute $P_\ind^+$ in polynomial
+time!  Indeed, we are adding $V \leq n$ numbers, each one of
+them is a binomial coefficient that has polynomial size
+representation in $n$, and can be computed in polynomial
+time (why?).  One can define in similar fashion $P_\ind^-$, and
+let $P_\ind = P_\ind^+ + P_\ind^-$. Clearly, $P_\ind$ can be computed in
+polynomial time, by applying a similar argument to the
+computation of $P_\ind^- = \Prob{C_\ind^- \sep{\vecA_1, \ldots,
+      \vecA_k}}$.
+
+
+For a node $v \in T$, let $\vecA_v$ denote the portion of $\vecA\,$
+that was fixed when traversing from the root of $T$ to $v$.  Let
+$P(v) = \sum_{\ind=1}^{n} \Prob{C_\ind \sep{\vecA_v}}$.  By the above
+discussion $P(v)$ can be computed in polynomial time.  Furthermore, we
+know, by the previous result on discrepancy that $P(r) < 1$ (that was
+the bound used to show that there exist a good assignment).
+
+As before, for any $v \in T$, we have $P(v) \geq \min(P(v_l),
+P(v_r))$. Thus, we have a polynomial \emph{deterministic} algorithm
+for computing a set balancing with discrepancy smaller than $4\sqrt{n
+   \log{n}}$. Indeed, set $v = root(T)$. And start traversing down the
+tree. At each stage, compute $P(v_l)$ and $P(v_r)$ (in polynomial
+time), and set $v$ to the child with lower value of
+$P(\cdot)$. Clearly, after $n$ steps, we reach a leaf, that
+corresponds to a vector $\vecA'$ such that $\dist{A \vecA'}_{\infty}
+\leq 4 \sqrt{n \log{n}}$.
+
+\begin{theorem}
+    Using the method of conditional probabilities, one can compute in
+    polynomial time in $n$, a vector $\vecA \in \brc{-1,1}^n$, such
+    that $\dist{A \vecA}_\infty \leq 4 \sqrt{n \log{n}}$.
+\end{theorem}
+
+Note, that this method might fail to find the best
+assignment. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliographical Notes}
+
+There is a lot of nice work on discrepancy in geometric settings. See
+the books \cite{c-dmr-01, m-gd-99}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\StandAloneMode{%
+   \section{From previous lectures}
+   
+   \IncFragment{c_special}
+   
+}
+
+
+\ChapterEnd{}
+
+%\end{document}%
+ 

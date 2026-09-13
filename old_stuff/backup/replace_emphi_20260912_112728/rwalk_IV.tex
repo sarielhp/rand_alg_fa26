@@ -1,0 +1,307 @@
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+
+%\newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
+\ChapterNumPage{34}{276}
+
+\Chapter{Random Walks IV}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{``Do not imagine, comrades, that leadership is a pleasure!
+   On the contrary, it is a deep and heavy responsibility. No one
+   believes more firmly than Comrade Napoleon that all animals are
+   equal. He would be only too happy to let you make your decisions
+   for yourselves. But sometimes you might make the wrong decisions,
+   comrades, and then where should we be?  Suppose you had decided to
+   follow Snowball, with his moonshine of windmills-Snowball, who, as
+   we now know, was no better than a criminal?''}{Animal Farm}{George
+   Orwell}
+
+\section{Cover times} 
+
+We remind the reader that the cover time of a graph is the expected
+time to visit all the vertices in the graph, starting from an
+arbitrary vertex (i.e., worst vertex). The cover time is denoted by
+$\CoverTime(\Graph)$.
+
+\begin{theorem}
+    \thmlab{cover:time}%
+    %
+    Let $\Graph$ be an undirected connected graph, then
+    $\CoverTime(\Graph) \leq 2m(n-1)$, where $n = |V(\Graph)|$ and $m
+    = |E(\Graph)|$.
+\end{theorem}
+
+\begin{proof} 
+    (Sketch.)  Construct a spanning tree $T$ of $\Graph$, and consider the
+    time to walk around $T$. The expected time to travel on this edge
+    on both directions is $\CommuteTime{u}{v} = \MCExSteps{u}{v} +
+    \MCExSteps{v}{u}$, which is smaller than $2m$, by
+    \lemref{r:walk:previous}.  Now, just connect up those bounds, to
+    get the expected time to travel around the spanning tree. Note,
+    that the bound is independent of the starting vertex.
+\end{proof}
+
+\begin{defn}
+    The \emphi{resistance} of $\Graph$ is $\Resistance(\Graph) =
+    \max_{u,v \in V(\Graph)} \EffectResist{u}{v}$; namely, it is the
+    maximum effective resistance in $\Graph$.
+\end{defn}
+
+\begin{theorem}
+    \thmlab{go:once}%
+    %
+    $m \Resistance(\Graph) \leq \CoverTime(\Graph) \leq 2 e^3 m
+    \Resistance(\Graph) \ln n + 2n$.
+\end{theorem}
+
+\begin{proof}
+    Consider the vertices $u$ and $v$ realizing $\Resistance(\Graph)$,
+    and observe that $\max(\MCExSteps{u}{v}, \MCExSteps{v}{u}) \geq
+    \CommuteTime{u}{v}/2$, and $\CommuteTime{u}{v} =
+    2m\EffectResist{u}{v}$ by \thmref{amazing}. Thus,
+    $\CoverTime(\Graph) \geq \CommuteTime{u}{v}/2 \geq m
+    \Resistance(\Graph)$.
+
+    As for the upper bound. Consider a random walk, and divide it into
+    \emphi{epochs}, where a epoch is a random walk of length
+    $2e^3 m \Resistance(\Graph)$. For any vertex $v$, the expected
+    time to hit $u$ is
+    $\MCExSteps{v}{u} \leq 2 m \Resistance(\Graph)$, by
+    \thmref{amazing}. Thus, the probability that $u$ is not visited in
+    a epoch is $1/e^3$ by the Markov inequality. Consider a random
+    walk with $t=\ln n$ epochs. We have that the probability of not
+    visiting $u$ is $\leq (1/e^3)^{\ln n} \leq 1/n^3$. Thus, all
+    vertices are visited after $\ln n$ epochs, with probability
+    $\geq 1 - \binom{n}{2}/n^3 \geq 1- 1/n$.  Otherwise, after this
+    walk, we perform a random walk till we visit all vertices.  The
+    length of this (fix-up) random walk is $\leq 2n^3$, by
+    \thmref{cover:time}. Thus, expected length of the walk is
+    $\leq 2 e^3 m \Resistance(\Graph) \ln n + 2n^3(1/n^2)$.
+\end{proof}
+
+
+\subsection{Rayleigh's Short-cut Principle.}
+
+Observe that effective resistance is never raised by lowering the
+resistance on an edge, and it is never lowered by raising the
+resistance on an edge. Similarly, resistance is never lowered by
+removing a vertex.
+
+Interestingly, effective resistance comply with the triangle
+inequality.
+
+\begin{observation}
+    For a graph with minimum degree $d$, we have $\Resistance(\Graph) \geq
+    1/d$ (collapse all vertices except the minimum-degree vertex into
+    a single vertex).
+\end{observation}
+
+\begin{lemma}
+    Suppose that $\Graph$ contains $p$ edge-disjoint paths of length
+    at most $\ell$ from $s$ to $t$. Then $\EffectResist{s}{t} \leq
+    \ell/p$.
+\end{lemma}
+
+
+
+
+\section{Graph Connectivity}
+
+\begin{defn}
+    A \emphic{probabilistic log-space Turing machine}{Turing
+       machine!log space} for a language $L$ is a Turing machine using
+    space $O( \log n)$ and running in time $O(\mathrm{poly}(n))$,
+    where $n$ is the input size. A problem $A$ is in $\RLP$, if there
+    exists a probabilistic log-space Turing machine $M$ such that $M$
+    accepts $x \in L(A)$ with probability larger than $1/2$, and if $x
+    \notin L(A)$ then $M(x)$ always reject.
+\end{defn}
+
+\begin{theorem}
+    Let $\USTCON$ denote the problem of deciding if a vertex $s$ is
+    connected to a vertex $t$ in an undirected graph. Then $\USTCON
+    \in \RLP$.
+\end{theorem}
+
+\begin{proof}
+    Perform a random walk of length $2n^3$ in the input graph $\Graph$,
+    starting from $s$. Stop as soon as the random walk hit $t$.  If
+    $u$ and $v$ are in the same connected component, then
+    $\MCExSteps{s}{t} \leq n^3$. Thus, by the Markov inequality, the
+    algorithm works. It is easy to verify that it can be implemented
+    in $O( \log n)$ space.
+\end{proof}
+
+\begin{defn}
+    A graph is \emphic{$d$-regular}{$d$-regular@regular, $d$}, if all
+    its vertices are of degree $d$.
+
+    A $d$-regular graph is \emphic{labeled}{graph!labeled} if at each
+    vertex of the graph, each of the $d$ edges incident on that vertex
+    has a unique label in $\brc{1,\ldots,d}$.
+
+    Any sequence of symbols $\sigma= (\sigma_1, \sigma_2, \ldots)$
+    from $\brc{1,\ldots, d}$ together with a starting vertex $s$ in a
+    labeled graph describes a \emphi{walk} in the graph. For our
+    purposes, such a walk would almost always be finite.
+
+    A sequence $\sigma$ is said to \emphi{traverse} a labeled graph if
+    the walk visits every vertex of $\Graph$ regardless of the
+    starting vertex. A sequence $\sigma$ is said to be a
+    \emphi{universal traversal sequence} of a labeled graph if it
+    traverses all the graphs in this class.
+\end{defn}
+
+Given such a universal traversal sequence, we can construct (a
+non-uniform) Turing machine that can solve $\USTCON$ for such
+$d$-regular graphs, by encoding the sequence in the machine.
+
+Let $\Family$ denote a family of graphs, and let $U(\Family)$ denote
+the length of the shortest universal traversal sequence for all the
+labeled graphs in $\Family$. Let $\Resistance(\Family)$ denote the
+maximum resistance of graphs in this family.
+
+\begin{theorem}
+    \thmlab{universal}%
+    %
+    Let $\Family$ be a family of $d$-regular graphs with $n$ vertices,
+    then
+    $U(\Family) \leq 5 m \Resistance(\Family) \lg \pth{ n
+       \cardin{\Family}}$.
+\end{theorem}
+\begin{proof} 
+    Same old, same old.  Break the string into \emph{epochs}, each of
+    length $L = 2 m \Resistance(\Graph)$. Now, start random walks from
+    all the possible vertices, for all graphs in $\Family$. Continue
+    the walks till all vertices are being visited. Initially, there
+    are $n^2 \cardin{\Family}$ vertices that need to visited. In
+    expectation, in each epoch half the vertices get visited.  There
+    are $n \cardin{\Family}$ walks, each of them needs to visit $n$
+    vertices. As such, the number of vertices waiting to be visited is
+    bounded by $\cardin{\Family} n^2$.  As such, after
+    $1 + \lg_2 \pth[]{ n^2\cardin{\Family} }$ epochs, the expected
+    number of vertices still need visiting is $\leq 1/2$. Namely, with
+    constant probability we are done.
+\end{proof}
+
+
+Let $U(d,n)$ denote the length of the shortest universal traversal
+sequence of connected, labeled $n$-vertex, $d$-regular graphs.
+
+\begin{lemma}
+    \lemlab{count}%
+    %
+    The number of labeled $n$-vertex graphs that are $d$-regular is
+    $\pth[]{nd}^{O(nd)}$.
+\end{lemma}
+\begin{proof}
+    Such a graph has $dn/2$ edges overall. Specifically, we encode
+    this by listing for every vertex its $d$ neighbors -- there are
+    $N = \binom{n-1}{d} \leq n^d$ possibilities. As such, there are at
+    most $ N^n \leq n^{nd}$ choices for edges in the
+    graph\footnote{This is a callous upper bound -- better analysis is
+       possible. But never analyze things better than you have to - it
+       usually a waste of time.}.  Every vertex has $d!$ possible
+    labeling of the edges adjacent to it, thus there are
+    $(d!)^n \leq d^{nd }$ possible labelings.
+\end{proof}
+
+\begin{lemma}
+    $U(d,n) = O\pth[\!\ts]{n^3 d \log n}$.
+\end{lemma}
+
+\begin{proof}
+    The diameter of every connected $n$-vertex, $d$-regular graph is
+    $O(n/d)$. Indeed, consider the path realizing the diameter of the
+    graph, and assume it has $t$ vertices. Number the vertices along
+    the path consecutively, and consider all the vertices that their
+    number is a multiple of three. There are $\alpha \geq \floor{t/3}$
+    such vertices. No pair of these vertices can share a neighbor, and
+    as such, the graph has at least $(d+1) \alpha$ vertices. We
+    conclude that $n \geq (d+1) \alpha = (d+1) (t/3 -1)$. We conclude
+    that $t \leq \frac{3}{d+1} (n+1) \leq 3n/d$.
+
+ And so, this also bounds the resistance of such a
+    graph. The number of edges is $m=nd/2$. Now, combine
+    \lemref{count} and \thmref{universal}.
+\end{proof}
+
+This is, as mentioned before, not a uniform algorithm. There is by now
+a known log-space deterministic algorithm for this problem, which is
+uniform.
+
+
+\subsection{Directed graphs}
+
+\begin{theorem}
+    One can solve the $\STCON$ problem, for a given directed graph
+    with $n$ vertices, using a log-space randomized algorithm, that
+    always output NO if there is no path from $s$ to $t$, and output
+    YES with probability at least $1/2$ if there is a path from $s$ to
+    $t$.
+\end{theorem}
+\begin{proof}
+    (Sketch.) The basic idea is simple -- start a random walk from $s$, if it
+    fails to arrive to $t$ after a certain number of steps, then
+    restart. The only challenging thing is that the number of times we
+    need to repeat this is exponentially large. Indeed, the
+    probability of a random walk from $s$  to arrive to $t$ in $n$
+    steps, is at least $p = 1/n^{n-1} \geq n^n$ if $s$ is connected to $t$.
+
+    As such, we need to repeat this walk
+    $N = O((1/p) \log \delta) = O( n^{n+1})$ times, for
+    $\delta \geq 1/2^n$.  If have all of these walks fail, then with
+    probability $\geq 1-\delta$, there is no path from $s$ to $t$.
+
+    We can do the walk using logarithmic space. However, how do we
+    count to $N$ (reliably) using only logarithmic space? We leave
+    this as an exercise to the reader, see \exeref{count:much},
+\end{proof}
+
+\begin{exercise}
+    \exelab{count:much}%
+    %
+    Let $N$ be a large integer number. Show a randomized algorithm,
+    that with, high probability, counts from $1$ to $M$, where
+    $M \geq N$, and always stops. The algorithm should use only
+    $O( \log \log N)$ bits.
+\end{exercise}
+   
+
+%\section{Bibliographical Notes}
+%A nice survey of algebraic graph theory appears in \cite{w-igt-01} and
+%in \cite{b-mgt-98}.
+
+\StandAloneMode{
+\section{Tools from previous lecture}
+
+\begin{lemma}
+    \lemlab{r:walk:previous}%
+    %
+    For any edge $\dirEdge{u}{v} \in E$, $\MCExSteps{u}{v} +
+    \MCExSteps{v}{u} \leq 2m$.
+\end{lemma}
+
+\begin{theorem}
+    \thmlab{amazing}%
+    %
+    For any two vertices $u$ and $v$ in $\Graph$, the commute time
+    $\CommuteTime{u}{v} = 2 m \EffectResist{u}{v}$.
+\end{theorem}
+}
+
+%\end{document}%
+\ChapterEnd{}
+ 
+
+%---------------------------------------------------------- 

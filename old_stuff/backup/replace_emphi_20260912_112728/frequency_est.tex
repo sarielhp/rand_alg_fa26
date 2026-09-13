@@ -1,0 +1,853 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+
+
+
+\BookMode{\newpage}%
+
+\noindent%
+\ChapterNumPage{28}{219}
+\Chapter{Frequency Estimation over a Stream}
+
+\QuotePExt{%
+   ``See? Genuine-sounding indignation. I programmed that myself. It's
+   the first thing you need in a university environment: the ability
+   to take offense at any slight, real or imagined.''%
+}{Robert Sawyer}{Factoring Humanity}
+
+
+\noindent%
+\ChapterPrefix{}%
+\ChapterGen{}
+
+~
+
+% \bigskip%
+
+\bigskip%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The art of estimation}
+
+\subsection{The problem}
+Assume we would like to estimate well some quantity $\rho > 0$ -
+specifically, for a fixed parameter $\eps \in (0,1)$, we would like to
+compute a quantity $\rho'$ such that
+$\rho' \in [(1-\eps)\rho, (1+\eps)\rho]$ with good probability.  To
+this end, assume we have access to a distribution $\Distribution$,
+such that if we sample $X$ according to this distribution (i.e.,
+$X \sim \Distribution$), we have that $\Ex{X} = \rho$. We can use $X$
+to estimate our desired quantity, but this might not provide the
+desired estimation.
+
+\paragraph*{Example: Estimating $p$ for a coin.}
+Assume we have a coin that is head with probability $p$. A natural way
+to estimate $p$ is to flip the coin once and return $1$ if it is head,
+and zero otherwise.  Let $X$ be the result of the coin flip, and
+observe that $\Ex{X} = p$. But this is not very useful estimator.
+
+
+
+\subsection{Averaging estimator: Success with constant probability}
+
+\subsubsection{The challenge}
+
+The basic problem is that $X \sim \Distribution$ might be much bigger
+than $\rho$. Or more specifically, its variance might be huge, where
+$\Distribution$ is a distribution we have access to. Let
+\begin{equation*}
+    \rho = \Ex{\Distribution}\qquad\text{and}\qquad
+    \nu = \Var{\Distribution}.
+\end{equation*}
+ We would to generate a variable $Z$, such that
+\begin{equation}
+    \Ex{Z} = \rho%
+    \qquad\text{and}\qquad
+    \Var{Z} \leq (\eps^2/4) \rho^2.
+    \eqlab{small:variance}
+\end{equation}
+This would imply by \thmrefY{Chebychev's
+   inequality}{Chebychev:inequality} that
+\begin{equation*}
+    \Prob{ |Z - \rho| \geq \eps \rho}%
+    =%
+    \Prob{ |Z - \Ex{Z}| \geq 2\sqrt{(\eps^2/4) \rho^2}}
+    \leq%
+    \Prob{ |Z - \Ex{Z}| \geq 2 \sqrt{\Var{Z}}}%
+    \leq \frac{1}{4}.
+\end{equation*}
+
+\subsubsection{Taming of the variance}
+
+The basic idea is to take $\alpha = \ceil{\frac{\nu}{\rho}} $
+independent variables $X_1, \ldots, X_\alpha \sim \Distribution$, and
+let $Y = \sum_i X_i / \alpha$. We have by linearity of expectation that
+\begin{equation*}
+    \Ex{Y} = \sum_i \Ex{X_i}/\alpha = \Ex{X} = \rho.
+\end{equation*}
+Using the independence of $X_1, \ldots, X_\alpha$, we have
+\begin{equation*}
+    \Var{Y}%
+    =%
+    \Var{\sum_i X_i /\alpha}
+    =%
+    \frac{1}{\alpha^2}\Var{\sum_i X_i}
+    =%
+    \frac{1}{\alpha^2}\sum_i \Var{X_i}
+    =%
+    \frac{1}{\alpha^2} \alpha \nu
+    =%
+    \frac{\nu}{\alpha}.
+\end{equation*}
+Guided by \Eqref{small:variance}, we want this quantity to be smaller
+than $\leq (\eps^2/4) \rho^2$. Thus,
+\begin{equation*}
+    \frac{\nu}{\alpha}
+    \leq (\eps^2/4) \rho^2
+    \qquad\impliedby\qquad%
+    \alpha \geq \ceil{\frac{4}{\eps^2} \cdot \frac{\nu}{\rho^2}
+    }
+    = \ceil{ \frac{4 \Var{X}}{\eps^2\Ex{X}^2}
+    }.
+\end{equation*}
+
+We thus summarize the result.
+\begin{lemma}
+    \lemlab{averaging:estimator}%
+    %
+    Let $\Distribution$ be a non-negative distribution with
+    $\rho = \Ex{\Distribution}$ and $\nu = \Var{\Distribution}$, and
+    let $\eps \in (0,1)$ be a parameter.  For
+    \begin{math}
+        \displaystyle%
+        \alpha\geq \Bigl\lceil{ \frac{4 \VarSymb[\Distribution]\bigr.}
+           {\eps^2(\ExSym[\Distribution])^2\bigr.}  } \Bigr\rceil,
+    \end{math}
+    consider sampling variables
+    $X_1, \ldots, X_\alpha \sim \Distribution$, and let
+    $Z = \sum_{i=1}^\alpha X_i /\alpha$. Then $Z$ is a ``good''
+    estimator for $\rho$. Formally, we have
+    \begin{equation*}
+        \Prob{ (1-\eps)\rho \leq Z \leq (1+\eps)\rho \Bigr.} \geq \frac{3}{4}.
+    \end{equation*}
+\end{lemma}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Median estimator: Success with high probability}
+
+We would like to get a better estimator, where the probability of
+success is high probability. Formally, we would have parameter
+$\BadProb$, and we would like the estimator to succeed with
+probability $\geq 1 - \BadProb$.  A natural approach is to try and use
+Chernoff to bound the probability of failure for the averaging
+estimator. This would work in some cases, but is limited to the case
+when $Z$ lies in a small bounded range. This would not work in general
+if sampling from $\Distribution$ might return a huge value with tiny
+probability. Instead, we are going to boost the averaging
+estimator. Assume, we generating
+\begin{equation*}
+    \beta = O\Bigl( \log \frac{1}{\BadProb } \Bigr)
+\end{equation*}
+instances of the averaging estimators: $Z_1, \ldots, Z_\beta$ of
+\lemref{averaging:estimator}. The \emphi{median estimator} returns the
+median value of the $Z$s as the desired estimate.
+
+\paragraph*{Analysis.}
+
+Let $\Event_i$ be the event that
+$Z_i \in [(1-\eps)\rho, (1+\eps)\rho]$.  Let $G_i$ be an indicator
+variable for $\Event_i$. By \lemref{averaging:estimator},
+$\Prob{\Event_i} = \Prob{G_i=1} \geq 3/4$.  The median estimator fails
+if $\sum_{i=1}^\beta G_i < \beta/2$. Using Chernoff inequality, we get
+that this happens with probability $\leq \BadProb$. We thus get the
+following.
+
+\bigskip
+
+\begin{fragment}{median:estimator}
+\begin{theorem}
+    \thmlab{median:estimator}%
+    %
+    Let $\Distribution$ be a non-negative distribution with
+    $\mu = \Ex{\Distribution}$ and $\nu = \Var{\Distribution}$, and
+    let $\eps, \BadProb \in (0,1)$ be parameters.  For some absolute
+    constant $c >0$, let
+    $M \geq 24 \Bigl\lceil{ \frac{4 \nu\bigr.}{\eps^2\mu^2\bigr.}  }
+    \Bigr\rceil \ln \frac{1}{\BadProb}$, and consider sampling
+    variables $X_1, \ldots, X_M \sim \Distribution$. One can compute,
+    in, $O(M)$ time, a quantity $Z$ from the sampled variables, such
+    that
+    \begin{equation*}
+        \Prob{ (1-\eps)\mu \leq Z \leq (1+\eps)\mu \Bigr.} \geq 1 -
+        \BadProb.
+    \end{equation*}
+\end{theorem}
+\end{fragment}
+\begin{proof}
+    Let $m = \bigl\lceil{ {4 \nu}/(\eps^2\mu^2) } \bigr\rceil$ and
+    $M = \ceil{24 \ln \frac{1}{\BadProb}}$. Build $M$ averaging
+    estimators, each one using $m$ samples.  That is let $Z_i$ be the
+    average of $m$ samples $s_{i,1}, \ldots, s_{i, m}$ from
+    $\Distribution$, for $i=1, \ldots, M$. Formally,
+    \begin{equation*}
+        Z_i = \frac{1}{m} \sum_{j=1}^m s_{i,j}
+        \qquad
+        \text{for}\qquad i=1,\ldots, M.
+    \end{equation*}
+    The estimate returned is the value
+    $\mathrm{median}( Z_1, \ldots, Z_{M} )$.
+
+    By \lemref{averaging:estimator} each one of the averaging
+    estimator is in the ``good'' range with probability $\geq 3/4$. As
+    such, let $X_i$, for $i=1,\ldots, M$, be an indicator variable,
+    that is $1$ if the $i$\th averaging estimator is in the range
+    $[(1-\eps)\mu,(1+\eps)\mu]$. Let $Y = \sum_{i=1}^{M}X_i$. We have
+    that
+    \begin{math}
+        \Ex{Y} \geq (3/4)M.
+    \end{math}
+    As such, by \lemref{Chernoff's inequality}, we have
+    \begin{equation*}
+        \Prob{\bigl. \text{bad output}}
+        =%
+        \Prob{\bigl.Y < (1/2)M}
+        \leq
+        \Prob{\bigl.Y < (1-1/3) \Ex{Y}}
+        \leq
+        \exp\pth{ - \frac{(1/3)^2}{2}\Ex{Y}}.
+    \end{equation*}
+    The later quantity is bounded by
+    \begin{math}
+        \exp\pth{ - \frac{1}{18} \frac{3}{4} M} = \exp( -M/24)=
+        \exp\pth{ - \ceil{24 \ln \BadProb^{-1}} /24 } \leq%
+        \BadProb.
+    \end{math}
+\end{proof}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Frequency estimation over a stream for the %
+   $k$\th moment}
+
+
+
+Let $\STRM = (\strm_1, \ldots, \strm_m)$ be a stream (i.e., sequence)
+of $m$ elements from $N = \{1,\ldots, n\}$. Let $\frq_i$ be the number
+of times the number $i$ appears in $\STRM$. For $k \geq 0$, let
+\begin{equation*}
+    \Frq_k=\sum_{i=1}^n \frq_i^k
+\end{equation*}
+be the \emphi{$k$\th frequency moment} of $\STRM$. The quantity,
+$\Frq_1=m$ is the length of the stream $\STRM$. Similarly, $\Frq_0$ is
+the number of distinct elements (where we use the convention that
+$0^0=0$ and any other quantity to the power $0$ is $1$). It is natural
+to define $\Frq_\infty = \max_i \frq_i$.
+
+Here, we are interested in approximating up to a factor of $1\pm \eps$
+the quantity $\Frq_k$, for $k\geq 1$ using small space, and reading
+the stream $\STRM$ only once.
+
+\subsection{An estimator for the $k$\th moment}
+
+\subsubsection{Basic estimator}
+\seclab{basic:estimator}
+
+One can pick a representative element from a stream uniformly at
+random by using reservoir sampling. That is, sample the $i$\th element
+$\strm_i$ to be the representative with probability $1/i$. Once
+sampled, the algorithm counts how many times it see the representative
+value later on in the stream (the counter is initialized to $1$, to
+account for the chosen representative itself). In particular, if
+$\strm_p$ is the chosen representative in the end of the stream (i.e.,
+the algorithm might change the representative several times), then the
+counter value is
+\begin{equation*}
+    r = \cardin{ \Set{j}{j \geq p \text{ and } \strm_j = \strm_p}\Bigr.}.
+\end{equation*}
+The output of the algorithm is the quantity
+\begin{equation*}
+    X = m\, \bigl( r^k - (r-1)^k \bigr),
+\end{equation*}
+where $m$ is the number of elements seen in the stream.  Let $V$ be
+the random variable that is the value of the representative in the end
+of the sequence.
+
+\subsubsection{Analysis}
+
+%\begin{equation*}
+%    2x^k (x-1)^k
+%\end{equation*}
+
+%\begin{equation*}
+%\end{equation*}
+
+
+\begin{lemma}
+    \lemlab{basic}%
+    %
+    We have $\Ex{X}=\Frq_k$.
+\end{lemma}
+\begin{proof}
+    Observe that since we choose the representative uniformly at
+    random, we have
+    \begin{equation*}
+        \ExCond{X}{V=i}
+        =%
+        \sum_{j=1}^{\frq_i}\frac{1}{\frq_i} m \bigl( j^k - (j-1)^k \bigr)
+        =%
+        \frac{m}{\frq_i}\sum_{j=1}^{\frq_i}
+        \bigl( j^k - (j-1)^k \bigr)
+        =%
+        \frac{m}{\frq_i} \frq_i^{k}.
+    \end{equation*}
+    As such, we have
+    \begin{math}
+        \Ex{X}%
+        =%
+        \Ex{\bigl.\ExCond{X}{V}} %
+        =%
+        \sum_{i: \frq_i\neq 0} \frac{\frq_i}{m} \frac{m}{\frq_i}
+        \frq_i^{k} %
+        =%
+        \sum_{i} \frq_i^{k} %
+        =%
+        \Frq_k.
+    \end{math}
+\end{proof}
+
+
+\begin{remark}
+    In the above, we estimated the function $g(x)=x^k$, over the
+    frequency numbers $\frq_1, \ldots, \frq_k$, but the above
+    argumentation, on the expectation of $X$, would work for any
+    function $g(x)$ such that $g(0)=0$, and $g(x) \geq 0$, for all
+    $x \geq 0$.
+\end{remark}
+
+\begin{lemma}
+    \lemlab{f:e:some:calcs}%
+    %
+    For $k > 1$, we have
+    $\sum_{i=1}^n \pth{ i^k - (i-1)^k}^2 \leq kn^{2k-1}$.
+\end{lemma}
+\begin{proof}
+    Observe that for $x\geq 1$, we have that
+    $x^k - (x-1)^k \leq kx^{k-1}$. As such, we have
+    \begin{equation*}
+        \sum_{i=1}^n \pth{ i^k - (i-1)^k}^2%
+        \leq %
+        \sum_{i=1}^n  ki^{k-1}\pth{ i^k - (i-1)^k}%
+        \leq %
+        kn^{k-1} \sum_{i=1}^n \pth{ i^k - (i-1)^k}%
+        =%
+        kn^{k-1} n^{k}
+        =%
+        kn^{2k-1}.
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{f:e:exp:X}%
+    %
+    We have $\Ex{X^2} \leq k m \Frq_{2k-1}$.
+\end{lemma}
+\begin{proof}
+    By \lemref{f:e:some:calcs}, we have
+    \begin{equation*}
+        \ExCond{X^2}{V=i} =%
+        \sum_{j=1}^{\frq_i}\frac{1}{\frq_i} m^2 \bigl( j^k - (j-1)^k
+        \bigr)^2 \leq \frac{m^2}{\frq_i} k \frq_i^{2k-1}%
+        =%
+        m^2 k \frq_i^{2k-2},
+    \end{equation*}
+    and thus
+    \begin{math}
+        \ds%
+        \Ex{\smash{X^2}}%
+        =%
+        \Ex{\bigl.\ExCond{\smash{X^2}}{V}\bigr.} %
+        =%
+        \sum_{i: \frq_i\neq 0} \frac{\frq_i}{m}\cdot m^2 k
+        \frq_i^{2k-2} = mk \Frq_{2k-1}.
+    \end{math}
+\end{proof}
+
+\begin{lemma}
+    \lemlab{f:e:silly:4}%
+    %
+    For any non-negative numbers $\frq_1, \ldots, \frq_n$, and
+    $k \geq 1 $, we have
+    \begin{equation*}
+        \sum_{i=1}^n \frq_i \leq n^{(k-1)/k} \Bigl( \sum_{i=1}^n
+        \frq_i^k\Bigr)^{1/k}.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    This is immediate from \Holder inequality, but here is a self
+    contained proof.  The above is equivalent to proving that
+    $\sum_i \frq_i/n \leq \Bigl( \sum_{i=1}^n \frq_i^k/n \Bigr)^{1/k}
+    $.  Raising both sides to the power $k$, we need to show that
+    $\pth{\sum_i \frq_i/n}^k \leq \sum_{i=1}^n \frq_i^k/n$. Setting
+    $g(x)=x^k$, we have
+    $g \pth{\sum_i \frq_i/n} \leq \sum_{i=1}^n g(\frq_i)/n$.  The last
+    inequality holds by the convexity of the function $g(x)$ (indeed,
+    $g'(x) = kx^{k-1}$ and $g''(x) = k(k-1)x^{k-2} \geq 0$, for
+    $x \geq 0$).
+\end{proof}
+
+\begin{lemma}
+    \lemlab{f:e:simplify}%
+    %
+    For any $n$ numbers $\frq_1, \ldots,\frq_n \geq 0$, we have
+    \begin{math}
+        \Bigl({\sum_i \frq_i} \Bigr) \Bigl( \sum_i \frq_i^{2k-1}
+        \Bigr) %
+        \leq%
+        n^{1-1/k} \Bigl(\sum_i \frq_i^{k}\Bigr)^2.
+    \end{math}
+\end{lemma}
+\begin{proof}
+    Let $M =\max_i \frq_i$ and $m = \sum_i f_i$. We have
+    \begin{align*}
+      \sum_i \frq_i^{2k-1}
+      &\leq
+        M^{k-1}
+        \sum_i \frq_i^{k}
+        \leq%
+        M^{k(k-1)/k}
+        \sum_i \frq_i^{k}
+        \leq%
+        \Bigl(\sum_i \frq_i^k\Bigr)^{(k-1)/{k}}
+        \sum_i \frq_i^{k}
+        \leq%
+        \Bigl(\sum_i \frq_i^k\Bigr)^{(2k-1)/{k}}.
+    \end{align*}
+    By \lemref{f:e:silly:4}, we have
+    \begin{math}
+        \sum_{i=1}^{n} \frq_i %
+        \leq
+        n^{(k-1)/k} \Bigl( \sum_i \frq_i^k\Bigr)^{1/k}.%
+    \end{math}
+    Multiplying the above two inequality implies the claim.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{f:e:v:X}%
+    %
+    We have $\Var{X} \leq k n^{1-1/k} \Frq_k^2$.
+\end{lemma}
+\begin{proof}
+    Since $m = \sum_i \frq_i$, \lemref{f:e:exp:X} and
+    \lemref{f:e:simplify} together implies that
+    \begin{equation*}
+        \Var{X}%
+        =%
+        \Ex{X^2} - (\Ex{X})^2 \leq \Ex{X^2}%
+        %
+        \overbrace{\leq}^{\text{\lemrefshort{f:e:exp:X}}}
+        k m \Frq_{2k-2}%
+        =%
+        k \Bigl({\sum_i \frq_i} \Bigr) \Bigl( \sum_i \frq_i^{2k-1}
+        \Bigr) %
+        \overbrace{\leq}^{\text{\lemrefshort{f:e:simplify}}}
+        % \leq%
+        k n^{1-1/k} \Frq_k^2.
+    \end{equation*}
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{An improved estimator: Plugin}
+
+We have an estimator for $F_k$ using constant space
+$O(1)$. Specifically, $\mu = \Ex{X} = F_k$ see \lemref{basic}, and
+$\nu = \Var{X} \leq k n^{1-1/k} \Frq_k^2$. Let
+\begin{equation*}
+    M = 24 \Bigl\lceil{ \frac{4 \nu\bigr.}{\eps^2\mu^2\bigr.}  }
+    \Bigr\rceil \ln \frac{1}{\BadProb}    
+\end{equation*}
+We compute $M$ estimators as the above (in parallel on the stream),
+and combine them as specified by \thmref{median:estimator}, to get a
+new estimate $Z$. We have that
+\begin{equation*}
+    \Prob{ (1-\eps)\mu \leq Z \leq (1+\eps)\mu \Bigr.} \geq 1 -
+    \BadProb.
+\end{equation*}
+
+Thus, the amount of space this streaming algorithm is using is
+proportional to $M$, and we have
+\begin{equation*}
+    M
+    =
+    O\pth{\frac{ \nu\bigr.}{\eps^2\mu^2\bigr.}  
+       \ln \frac{1}{\BadProb}  }    
+    =%
+    O\pth{\frac{ k n^{1-1/k} \Frq_k^2 }{\eps^2\Frq_k^2\bigr.}  
+       \ln \frac{1}{\BadProb}  }    
+    =%
+    O\pth{\frac{ k n^{1-1/k} }{\eps^2}  
+       \ln \frac{1}{\BadProb}  }.    
+\end{equation*}
+
+
+% \begin{theorem}
+%     The $k$\th moment of a stream can be $(1\pm\eps)$-estimated
+%     correctly, with probability $\geq 1 - \BadProb$, using
+%     $O\pth{\frac{ k n^{1-1/k} }{\eps^2} \ln \frac{1}{\BadProb} }$
+%     space.
+% \end{theroem}
+We thus proved the following.
+
+
+In the following, we consider a computer \emphi{word} to be
+sufficiently large to contain $\lg n$ or $\lg m$ bits. This readily
+implies the following.
+\begin{theorem}
+    Let $\STRM=(\strm_1, \ldots, \strm_n)$ be a stream of numbers from
+    the set $\{1,\ldots, n\}$. Let $k \geq 1$ be a parameter. Given
+    $\eps, \BadProb \in (0,1)$, one can build a data-structure using
+    $O( kn^{1-1/k}\eps^{-2} \log \BadProb^{-1})$ words, such that one
+    can $(1\pm \eps)$-approximate the $k$\th moment of the elements in
+    the stream; that is, the algorithm outs a number $Z$, such that
+    $(1-\eps)\Frq_k \leq Z \leq (1+\eps)\Frq_k$, where
+    $\Frq_k = \sum_{i=1}^n \frq_i^k$, and $\frq_i$ is the number of
+    times $i$ appears in the stream $\STRM$. The algorithm succeeds
+    with probability $\geq 1- \BadProb$.
+\end{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Better estimation for $\Frq_2$}
+
+\subsection{Pseudo-random $k$-wide independent %
+   sequence of signed bits}
+
+In the following, assume that we sample $O( \log n)$ bits, such that
+given an index $i$, one can compute (quickly!) a random signed bit
+$b(i) \in \brc{-1,+1}$. We require that the resulting bits
+$b(1), b(2), \ldots, b(n)$ are $4$-wise independent.  To this end,
+pick a prime $p$, that is, say bigger than $n^{10}$. This can easily
+be done by sampling a number in the range $[n^{10}, n^{11}]$, and
+checking if it is prime (which can done in polynomial time).
+
+Once we have such a prime, we generate a random polynomial
+$g(i) = \sum_{i=0}^5 c_i x^i \bmod p$, by choosing $c_0, \ldots, c_5$
+from $\ZZ_p = \brc{0, \ldots, p-1 \bigl. }$.  We had seen that
+$g(0), g(1), \ldots, g(n)$ are uniformly distributed in $\ZZ_p$, and
+they are, say, $6$-wise independent (see \thmref{k:wise:independent}).
+
+We define
+\begin{equation*}
+    b(i)%
+    =%
+    \begin{cases}
+        0 & g(i) = p-1 \\
+        +1 & g(i) \text{ is odd}\\
+        -1 & g(i) \text{ is even}.
+    \end{cases}
+\end{equation*}
+
+Clearly, the sequence $b(1), \ldots, b(n)$ are $6$-wise
+independent. There is a chance that one of these bits might be zero,
+but the probability for that is at most $n/p$, which is so small, that
+we just assume it does not happen. There are known constructions that
+do not have this issue at all (one of the bits is zero), but they are
+more complicated.
+
+\begin{lemma}
+    \lemlab{sequence:signed:bits:6:wise}%
+    %
+    Given a parameter $\BadProb \in (0,1)$, in polynomial time in
+    $O(\log (n/\BadProb))$, one can construct a function $b(\cdot)$,
+    requiring $O( \log (n/\BadProb))$ bits of storage (or $O(1)$
+    words), such that $b(1), \ldots, b(n) \in \{-1,+1\}$ with equal
+    probability, an they are $6$-wise independent. Furthermore, given
+    $i$, one can compute $b(i)$ in $O(1)$ time.
+
+    The probability of this sequence to fail having the desired
+    properties is smaller than $\BadProb$.
+\end{lemma}
+\begin{proof}
+    We repeat the above construction, but picking a prime $p$ in the
+    range, say, $n^{10}/ \BadProb \ldots n^{11} /\BadProb$.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Estimator construction for $\Frq_2$}
+\subsubsection{The basic estimator}
+\seclab{f:e:e:2}
+
+As before we have the stream $\STRM = \strm_1.\ldots, \strm_m$ of
+numbers from the set $1, \ldots, n$. We compute the $6$-wise
+independent sequence of random bits of
+\lemref{sequence:signed:bits:6:wise}, and in the following we assume
+this sequence is good (i.e., has only $-1$ and $+1$ in it). We compute
+the quantity
+\begin{equation*}
+    T = \sum_{i=1}^m b(i) \frq_i%
+    =%
+    \sum_{j=1}^m b( \strm_j),
+\end{equation*}
+which can be computed on the fly using $O(1)$ words of memory, and
+$O(1)$ time per time in the stream.
+% Indeed, if the $j$\th item in the stream is
+% $\strm_j \in \{1,\lodts, n\}$, then we add $b(\strm_j)$ to the
+% counter of $T$.
+
+The algorithm returns $X = T^2$ as the desired estimate.
+
+\paragraph*{Analysis.}
+\begin{lemma}
+    \lemlab{f:e:f:2:var}%
+    %
+    We have $\Ex{X} = \sum_i \frq_i^2 = \Frq_2$ and
+    $\Var{X} \leq 2 \Frq_2^2$.
+\end{lemma}
+\begin{proof}
+    We have that
+    \begin{math}
+        \Ex{X}
+        =
+        \Ex{\smash{ \Bigl(  \sum_{i=1}^n b(i) \frq_i \Bigr)^2}
+           \Bigr.},%
+    \end{math}
+    and as such
+    \begin{equation*}
+        \Ex{X}%
+        =%
+        \Ex{\Bigr. \smash{  \sum_{i=1}^n (b(i))^2 \frq_i^2 %
+              + 2\sum_{i < j} b(i) b(j) \frq_i \frq_j}}%
+        =%
+        \sum_{i=1}^m  \frq_i^2 +  2\sum_{i < j}  \frq_i \frq_j \Ex{   %
+           b(i) b(j)}%
+        =%
+        \sum_{i=1}^m  \frq_i^2
+        =%
+        \Frq_2,
+    \end{equation*}
+    since $\Ex{b(i)} = 0$, $\Ex{b(i)^2} =1$, and
+    $\Ex{b(i)b(j) } = \Ex{b(i) } \Ex{b(j)} = 0$ (assuming the sequence
+    $b(1), \ldots, b(n)$ has not failed), by the $6$-wise Independence
+    of the sequence of signed bits.
+
+    \medskip%
+    We next compute $\Ex{X^2}$. To this end, let
+    $N = \{1,\ldots, n\}$, and $\Gamma = N\times N \times N \times
+    N$. We split this set into several sets, as follows:
+    \begin{compactenumi}
+        \smallskip%
+        \item $\Gamma_0 = \brc{(i,i,i,i) \in N^4}$: All quadruples
+        that are all the same value.
+
+        \smallskip%
+        \item $\Gamma_{1}$: Set of all quadruples $(i,j,k,l)$ where
+        there is at least one value that appears exactly once.
+
+
+        \smallskip%
+        \item $\Gamma_{2}$: Set of all $(i,j,k,\ell)$ with only two
+        distinct values, each appearing exactly twice.
+    \end{compactenumi}
+    \smallskip%
+    Clearly, we have $N^4 = \Gamma_0 \cup \Gamma_1 \cup \Gamma_2$.
+
+    \smallskip
+
+    For a tuple $(i,i,i,i) \in \Gamma_0$, we have
+    \begin{math}
+        \Ex{b(i) b(i) b(i) b(i)}%
+        =%
+        \Ex{b(i)^4}%
+        =%
+        1.
+    \end{math}
+
+    \smallskip
+
+    For a tuple $(i,j,k,\ell) \in \Gamma_1$ with $i$ being the unique
+    value, we have that
+    \begin{equation*}
+        \Ex{b(i) b(j) b(k) b(\ell)}
+        =%
+        \Ex{b(i)} \Ex{ b(j) b(k) b(\ell)}
+        =%
+        0 \Ex{ b(j) b(k) b(\ell)}
+        =%
+        0,
+    \end{equation*}
+    using that the signed bits are $4$-wise independent.
+    % The same argumentation implies that
+    % $\Ex{b(i) b(j) b(k) b(\ell)}=0$ for any tuple
+    % $(i,j,k, \ell) \in \Gamma_1$.
+
+    For a tuple $(i,i,j,j) \in \Gamma_2$, we have
+    \begin{math}
+        \Ex{b(i) b(i) b(j) b(j)}%
+        =%
+        \Ex{b(i)^2 b(j)^2}%
+        =%
+        \Ex{b(i)^2} \Ex{ b(j)^2} =%
+        1,
+    \end{math}
+    and the same argumentation applies to any tuple of $\Gamma_2$.
+    Observe that for any $i <j$, there are $\binom{4}{2} = 6$
+    different tuples in $\Gamma_2$ that are made out of $i$ and $j$.
+    As such, we have
+    \begin{align*}
+      \Ex{X^2}
+      &=
+        \Ex{\smash{ \Bigl(  \sum_{i=1}^n b(i) \frq_i \Bigr)^4}
+        \Bigr.}%
+        =%
+        \Ex{\Bigr. \smash{  \sum_{(i,j,k,\ell) \in \Gamma} b(i)b(j)
+        b(k) b(\ell)
+        \frq_i\frq_j \frq_k \frq_\ell} %
+        }
+      \\[0.3cm]
+      &%
+        =%
+        \sum_{(i,i,i,i) \in \Gamma_0} \Ex{b(i)^4} \frq_i^4
+        + \sum_{(i,j,k,\ell) \in \Gamma_1} \frq_i\frq_j \frq_k
+        \frq_\ell \Ex{b(i) b(j) b(k) b(\ell)}
+        + 6 \sum_{i < j }  \Ex{b(i)^2 b(j)^2} \frq_i^2 \frq_j^2
+      \\[0.3cm]
+      &%
+        =%
+        \sum_{i=1}^n  \frq_i^4
+        + 6 \sum_{i < j }  \frq_i^2 \frq_j^2.
+    \end{align*}
+    As such, we have
+    \begin{equation*}
+        \Var{X}%
+        =%
+        \Ex{X^2} - \pth{\Ex{X}}^2%
+        = %
+        \sum_{i=1}^n  \frq_i^4
+        + 6 \sum_{i < j }  \frq_i^2 \frq_j^2
+        - \Bigl( \sum_{i=1}^m  \frq_i^2 \Bigr)^2
+        =%
+        4 \sum_{i < j }  \frq_i^2 \frq_j^2 %
+        \leq%
+        2 \Frq_2^2.
+    \end{equation*}
+\end{proof}
+
+\subsection{Improving the estimator}
+
+We repeat the same scheme as above.  Let $\BadProb, \eps \in (0,1)$ be
+parameters.  In the following, let
+\begin{equation*}
+    \alpha = 16 / \eps^2%
+    \qquad\text{ and }\qquad%
+    \beta = 4 \ln \frac{1}{\BadProb}.%
+\end{equation*}
+
+Let $X_{i,j}$ be a basic estimator for $\Frq_2$, using the estimator
+of \secref{f:e:e:2}, for $i=1,\ldots, \beta$ and
+$j=1, \ldots, \alpha$.  Let
+$Y_i = \sum_{j=1}^{\alpha} X_{i,j} / \alpha$, for
+$i=1, \ldots, \beta$. Let $Z$ be the median of $Y_1, \ldots, Y_\beta$,
+and the algorithm returns $Z$ as the estimator.
+
+
+\begin{theorem}
+    Given a stream $\STRM = \strm_1, \ldots, \strm_m$ of numbers from
+    $\{1,\ldots, n\}$, and parameters $\eps, \BadProb \in (0,1)$, one
+    can compute an estimate $Z$ for $\Frq_2(\STRM)$, such that
+    $\Prob{ |Z - \Frq_2| > \eps \Frq_2} \leq \BadProb$. This algorithm
+    requires $O( \eps^{-2} \log \BadProb^{-1})$ space (in words), and
+    this is also the time to handle a new element in the stream.
+\end{theorem}
+\begin{proof}
+    The scheme is described above. As before, using Chebychev's
+    inequality, we have that
+    \begin{equation*}
+        \Prob{ \cardin{Y_i - \Frq_2} > \eps \Frq_2 }%
+        =%
+        \Prob{ \cardin{Y_i - \Frq_2} >
+           \frac{\eps \Frq_2}{ \sqrt{\Var{Y_i}}} \sqrt{\Var{Y_i}}}%
+        \leq%
+        \frac{\Var{Y_i}}{\eps^2 \Frq_2^2}%
+        =%
+        \frac{\Var{X} / \alpha}{\eps^2 \Frq_2^2}%
+        \leq %
+        \frac{2 \Frq_2^2}{\alpha \eps^2 \Frq_2^2}%
+        =%
+        \frac{1}{8},
+    \end{equation*}
+    by \lemref{f:e:f:2:var}. Let $U$ be the number of estimators in
+    $Y_1, \ldots, Y_\beta$ that are outside the acceptable range.
+    Arguing as in \lemref{f:e:using:ch}, we have
+    \begin{equation*}
+        \Prob{Z \text{ is bad}}%
+        \leq%
+        \Prob{U \geq \beta/2} %
+        = %
+        \Prob{U \geq (1+ 3)\beta/8}%
+        \leq%
+        \exp( - (\beta/8) 3^2/4 )%
+        \leq%
+        \exp\pth{ - \ln \frac{1}{\BadProb}}
+        =%
+        \BadProb,
+    \end{equation*}
+    by Chernoff inequality (\lemref{chernoff:small:delta}), and
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+The beautiful results of this chapter are from a paper from Alon \etal
+\cite{ams-scafm-99}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{Chebychev}
+   \IncFragment{chernoff_small_delta}
+   \IncFragment{Chernoff_2_s}
+   \IncFragment{k_wise_independent_mod_p}
+
+
+   % \IncFragment{chernoff:small:delta:1}
+   % \IncFragment{normal:distribution}
+   % \IncFragment{A:N:N:PLEB:Euclidean}
+   % \IncFragment{A:N:N:PLEB:slow}
+   % \IncFragment{H:S:T:Euclidean}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{mr-ra-95}
+
+\ChapterEnd{}
+
+% -----------

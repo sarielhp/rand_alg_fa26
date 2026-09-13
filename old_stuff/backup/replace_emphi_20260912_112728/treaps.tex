@@ -1,0 +1,500 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{14}{104}
+
+
+\Chapter{Quick Sort with High Probability}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{QuickSort{} runs in $O(n \log n)$ time with high
+   probability}
+
+Consider a set $T$ of the $n$ items to be sorted, and consider a
+specific element $t \in T$. Let $X_i$ be the size of the input in the
+$i$\th level of recursion that contains $t$. We know that $X_0 = n$,
+and
+\begin{align*}
+    \Ex{X_i \sep{ X_{i-1}}}%
+    \leq%
+    \frac{1}{2} \frac{3}{4} X_{i-1} + \frac{1}{2} X_{i-1}%
+    \leq%
+    \frac{7}{8} X_{i-1}.
+\end{align*}
+Indeed, with probability $1/2$ the pivot is the middle of the
+subproblem; that is, its rank is between $X_{i-1}/4$ and
+$(3/4)X_{i-1}$ (and then the subproblem has size $\leq X_{i-1}(3/4)$),
+and with probability $1/2$ the subproblem might has not shrank
+significantly (i.e., we pretend it did not shrink at all).
+
+Now, observe that for any two random variables we have that
+$\Ex{X \MakeSBig } = \ExExt{y}{\Ex{X\left| \MakeSBig {Y=y}
+      \right.}\MakeBig }$, see
+\lemrefpage{conditional:expectation}.. As such, we have that
+\begin{align*}
+    \Ex{X_i \MakeBig }%
+    =%
+    \ExExt{y}{\Ex{X_i\sep{X_{i-1}=y}}\Bigl. }%
+    \leq%
+    \ExExt{X_{i-1}=y}{ \frac{7}{8} y }%
+    =%
+    \frac{7}{8} \Ex{X_{i-1}\MakeBig }%
+    \leq%
+    \pth{\frac{7}{8}}^i \Ex{X_0}%
+    =%
+    \pth{\frac{7}{8}}^i n.
+\end{align*}
+
+In particular, consider $M = 8 \log_{8/7} n$. We have that
+\begin{align*}
+    \mu%
+    =%
+    \Ex{\MakeBig X_M}%
+    \leq%
+    \pth{\frac{7}{8}}^M n%
+    \leq%
+    \frac{1}{n^8} n%
+    =%
+    \frac{1}{n^7}.
+\end{align*}
+
+Of course, $t$ participates in more than $M$ recursive calls, if and
+only if $X_M \geq 1$. However, by Markov's inequality
+(\thmref{Markov}), we have that
+\begin{align*}
+    \Prob{ \begin{array}{c}
+           \text{element } t \text{ participates }\\
+           \text{ in more than } M \text{ recursive calls}
+       \end{array}
+    }%
+    \leq %
+    \Prob{ \MakeBig X_M \geq 1 }%
+    \leq%
+    \frac{\Ex{X_M}}{1} \leq \frac{1}{n^7},
+\end{align*}
+as desired. That is, we proved that the probability that any element
+of the input $T$ participates in more than $M$ recursive calls is at
+most $n(1/n^7) \leq 1/n^6$.
+
+\begin{theorem}
+    \thmlab{quick:sort:w:h:p}%
+    %
+    For $n$ elements, \QuickSort runs in $O(n \log n)$ time, with high
+    probability.
+\end{theorem}
+
+
+\section{Treaps}
+\seclab{treaps}
+
+Anybody that ever implemented a balanced binary tree, knows that it
+can be very painful. A natural question, is whether we can use
+randomization to get a simpler data-structure with good performance.
+
+\subsection{Construction}
+
+The key observation is that many of data-structures that offer good
+performance for balanced binary search trees, do so by storing
+additional information to help in how to balance the tree.  As such,
+the key Idea is that for every element $x$ inserted into the
+data-structure, randomly choose a priority $p(x)$; that is, $p(x)$ is
+chosen uniformly and randomly in the range $[0,1]$.
+
+So, for the set of elements $X=\brc{x_{1},\ldots,x_{n}}$, with
+(random) priorities $p(x_{1}),\ldots,p(x_{n})$, our purpose is to
+build a binary tree which is ``balanced''.  So, let us pick the
+element $x_{k}$ with the lowest priority in $X$, and make it the root
+of the tree. Now, we partition $X$ in the natural way:
+
+
+\smallskip
+
+\begin{compactenumA}
+    \item $L$: set of all the numbers smaller than $x_{k}$ in $X$, and
+    \item $R$: set of all the numbers larger than $x_{k}$ in $X$.
+\end{compactenumA}
+
+%\vspace{-1cm}%
+%\parpic[r]{
+
+\begin{figure}
+    \centerline{\includegraphics{\File{figs/treap_base}}}%
+\end{figure}
+%\vspace{1cm}%
+
+\smallskip
+
+
+We can now build recursively the trees for $L$ and $R$, and let denote
+them by $\Tree_L$ and $\Tree_R$. We build the natural tree, by
+creating a node for $x_k$, having $\Tree_L$ its left child, and
+$\Tree_R$ as its right child.
+
+We call the resulting tree a \emphi{treap}. As it is a tree over the
+elements, and a heap over the priorities; that is, \textsc{treap} =
+\textsc{tree} + \textsc{heap}.
+
+
+
+\begin{lemma}
+    \lemlab{treap:depth}%
+    %
+    Given $n$ elements, the expected depth of a treap $\Tree$ defined
+    over those elements is $O(\log(n))$.  Furthermore, this holds with
+    high probability; namely, the probability that the depth of the
+    treap would exceed $c\log n$ is smaller than $\delta= n^{-d}$,
+    where $d$ is an arbitrary constant, and $c$ is a constant that
+    depends on $d$.\footnote{That is, if we want to decrease the
+       probability of failure, that is $\delta$, we need to increase
+       $c$.}
+
+    Furthermore, the probability that $\Tree$ has depth larger than $c
+    t \log(n)$, for any $t \geq 1$, is smaller than $n^{-d t}$.
+\end{lemma}
+\begin{proof}
+    Observe, that every element has equal probability to be in the
+    root of the treap. Thus, the structure of a treap, is identical to
+    the recursive tree of \QuickSort{}. Indeed, imagine that instead
+    of picking the pivot uniformly at random, we instead pick the
+    pivot to be the element with the lowest (random)
+    priority. Clearly, these two ways of choosing pivots are
+    equivalent.  As such, the claim follows immediately from our
+    analysis of the depth of the recursion tree of \QuickSort{}, see
+    \thmref{quick:sort:w:h:p}.
+\end{proof}
+
+
+\subsection{Operations}
+
+The following innocent observation is going to be the key insight in
+implementing operations on treaps:
+
+\begin{observation}%
+    \obslab{canonical:treap}%
+    %
+    Given $n$ distinct elements, and their (distinct) priorities, the
+    treap storing them is uniquely defined.
+\end{observation}
+
+\subsubsection{Insertion}
+
+Given an element $x$ to be inserted into an existing treap $\Tree$,
+insert it in the usual way into $\Tree$ (i.e., treat it a regular
+search binary tree). This takes $O\pth{\text{height}\pth{\Tree}}$.
+Now, $x$ is a leaf in the treap. Set $x$ priority $p(x)$ to some
+random number $[0,1]$. Now, while the new tree is a valid search tree,
+it is not necessarily still a valid treap, as $x$'s priority might be
+smaller than its parent. So, we need to fix the tree around $x$, so
+that the priority property holds.
+
+\newcommand{\algRotateUp}{\AlgorithmI{RotateUp}\xspace}%
+\newcommand{\algRotateRight}{\AlgorithmI{Rotate{}Right}\xspace}%
+\newcommand{\algRotateLeft}{\AlgorithmI{Rotate{}Left}\xspace}%
+\centerline{%
+   \begin{algorithmEnv}%
+       \algRotateUp{}($x$)\+\\
+       $y \leftarrow \mathrm{parent}\pth{x}$\\
+       \While $p\pth{y} > p\pth{x}$ \Do\+\\
+       \If $y.\mathrm{left\_child} = x$ \Then\+\\
+       \algRotateRight{}($y$)\-\\
+       \Else\+\\
+       \algRotateLeft{}($y$)\-\\
+       $y \leftarrow \mathrm{parent}\pth{x}$
+   \end{algorithmEnv}%
+}
+
+\smallskip%
+\noindent%
+We call \algRotateUp{}($x$) to do so. Specifically, if $x$ parent is
+$y$, and $p(x) < p(y)$, we will rotate $x$ up so that it becomes the
+parent of $y$. We repeatedly do it till $x$ has a larger priority than
+its parent. The rotation operation takes constant time and plays
+around with priorities, and importantly, it preserves the binary
+search tree order. A rotate right operation \algRotateRight{}($D$) is
+depicted in \figref{rotate:right}.
+\algRotateLeft{} is the same tree rewriting operation done in the other
+direction. 
+
+
+% \medskip
+
+\begin{figure}    
+    \hfill%
+    \includegraphics{\File{figs/rotation}}
+    \hfill%
+    \begin{minipage}{1cm}
+        $\Longrightarrow$
+        % \\[0cm]
+    \end{minipage}
+    \hfill%
+    \includegraphics[page=2]{\File{figs/rotation}} \hfill%
+    \phantom{}
+
+    \caption{\algRotateRight: Rotate right in action. Importantly,
+       after the rotation the priorities are ordered correctly (at
+       least locally for this subtree.}
+    \figlab{rotate:right}
+\end{figure}
+
+Observe that as $x$ is being rotated upwards, the priority properties
+are being fixed -- in particular, as demonstrated in
+\figref{rotate:right}, nodes are being hanged on nodes that were
+previously their ancestors, so priorities are still monotonically
+decreasing along a path.
+
+In the end of this process, both the ordering property and the
+priority property holds. That is, we have a valid treap that includes
+all the old elements, and the new element. By
+\obsref{canonical:treap}, since the treap is uniquely defined, we have
+updated the treap correctly. Since every time we do a rotation the
+distance of $x$ from the root decrease by one, it follows that
+insertions takes $O(\mathrm{height}\pth{\Tree})$.
+
+\subsubsection{Deletion}
+
+Deletion is just an insertion done in reverse. Specifically, to delete
+an element $x$ from a treap $\Tree$, set its priority to $+\infty$,
+and rotate it down it becomes a leaf. The only tricky observation is
+that you should rotate always so that the child with the lower
+priority becomes the new parent. Once $x$ becomes a leaf deleting it
+is trivial - just set the pointer pointing to it in the tree to null.
+
+\subsubsection{Split}
+
+Given an element $x$ stored in a treap $\Tree$, we would like to split
+$\Tree$ into two treaps -- one treap $\Tree_{\leq}$ for all the
+elements smaller or equal to $x$, and the other treap $\Tree_{>}$ for
+all the elements larger than $x$. To this end, we set $x$ priority to
+$-\infty$, fix the priorities by rotating $x$ up so it becomes the
+root of the treap. The right child of $x$ is the treap $\Tree_{>}$,
+and we disconnect it from $\Tree$ by setting $x$ right child pointer
+to null. Next, we restore $x$ to its real priority, and rotate it down
+to its natural location. The resulting treap is $\Tree_{\leq}$. This
+again takes time that is proportional to the depth of the treap.
+
+\subsubsection{Meld}
+
+Given two treaps $\Tree_{L}$ and $\Tree_R$ such that all the elements
+in $\Tree_L$ are smaller than all the elements in $\Tree_R$, we would
+like to merge them into a single treap. Find the largest element $x$
+stored in $\Tree_L$ (this is just the element stored in the path going
+only right from the root of the tree). Set $x$ priority to $-\infty$,
+and rotate it up the treap so that it becomes the root. Now, $x$ being
+the largest element in $\Tree_L$ has no right child. Attach $\Tree_R$
+as the right child of $x$. Now, restore $x$ priority to its original
+priority, and rotate it back so the priorities properties hold.
+
+\subsection{Summery}
+
+\begin{theorem}
+    Let $\Tree$ be a treap, initialized to an empty treap, and
+    undergoing a sequence of $m=n^{c}$ insertions, where $c$ is some
+    constant.  The probability that the depth of the treap in any
+    point in time would exceed $d\log n$ is $\leq1/n^{f}$, where $d$
+    is an arbitrary constant, and $f$ is a constant that depends only
+    $c$ and $d$.
+    
+    In particular, a treap can handle insertion/deletion in
+    $O(\log n)$ time with high probability.
+\end{theorem}
+\begin{proof}
+    Since the first part of the theorem implies that with high
+    probability all these treaps have logarithmic depth, then this
+    implies that all operations takes logarithmic time, as an
+    operation on a treap takes at most the depth of the treap.
+
+    As for the first part, let $\Tree_{1},\ldots,\Tree_{m}$ be the
+    sequence of treaps, where $\Tree_i$ is the treap after the $i$\th
+    operation. Similarly, let $X_i$ be the set of elements stored in
+    $\Tree_i$.  By \lemref{treap:depth}, the probability that
+    $\Tree_i$ has large depth is tiny. Specifically, we have that
+    \begin{align*}
+        \alpha_i = \Prob{\MakeBig \mathrm{depth}\pth{\Tree_i} > t c'
+           \log n^c }%
+        =%
+        \Prob{\mathrm{depth}\pth{\Tree_i} > c' t \pth{\frac{\log n^c}{
+                 \log \cardin{\Tree_i}}} \cdot \log \cardin{\Tree_i} }
+        \leq%
+        \frac{1}{n^{t \cdot c}},
+    \end{align*}
+    as a tedious and boring but straightforward calculation
+    shows. Picking $t$ to be sufficiently large, we have that the
+    probability that the $i$\th treap is too deep is smaller than
+    $1/n^{f + c}$. By the union bound, since there are $n^c$ treaps in
+    this sequence of operations, it follows that the probability of
+    any of these treaps to be too deep is at most $1/n^f$, as desired.
+\end{proof}
+
+
+\section{Extra: Sorting Nuts and Bolts}
+
+\begin{problem}[\ProblemC{Sorting Nuts and Bolts}]
+    You are given a set of $n$ nuts and $n$ bolts. Every nut have a
+    matching bolt, and all the $n$ pairs of nuts and bolts have
+    different sizes.  Unfortunately, you get the nuts and bolts
+    separated from each other and you have to match the nuts to the
+    bolts.  Furthermore, given a nut and a bolt, all you can do is to
+    try and match one bolt against a nut (i.e., you can not compare
+    two nuts to each other, or two bolts to each other).
+    
+    When comparing a nut to a bolt, either they match, or one is
+    smaller than other (and you known the relationship after the
+    comparison).
+    
+    How to match the $n$ nuts to the $n$ bolts quickly? Namely, while
+    performing a small number of comparisons.
+\end{problem}
+
+\newcommand{\MatchNutsAndBolts}{\AlgorithmI{Match{}Nuts\&Bolts}\xspace}%
+
+
+\begin{figure}[t]
+   \centering
+   \begin{minipage}{0.4\linewidth}
+       \begin{algorithmEnv}
+           \MatchNutsAndBolts($N$: nuts, $B$: bolts) \+ \\
+        Pick a random nut $n_{pivot}$ from $N$\\
+        Find its matching bolt $b_{pivot}$ in $B$\\
+        $B_{L}\leftarrow$ All bolts in $B$ smaller than
+        $n_{pivot}$\\
+        $N_{L}\leftarrow$ All nuts in $N$ smaller than
+        $b_{pivot}$\\
+        $B_{R}\leftarrow$ All bolts in $B$ larger than
+        $n_{pivot}$\\
+        $N_{R}\leftarrow$ All nuts in $N$ larger than
+        $b_{pivot}$\\
+        \MatchNutsAndBolts{}($N_{R}$,$B_{R}$)\\
+        \MatchNutsAndBolts{}($N_{L}$,$B_{L}$)
+   \end{algorithmEnv}
+   \end{minipage}
+   \caption{Sorting nuts and bolts.}
+   \figlab{sort:nuts:and:bolts}
+\end{figure}
+
+The naive algorithm is of course to compare each nut to each bolt, and
+match them together. This would require a quadratic number of
+comparisons. Another option is to sort the nuts by size, and the bolts
+by size and then ``merge'' the two ordered sets, matching them by
+size. The only problem is that we can not sorts only the nuts, or only
+the bolts, since we can not compare them to each other. Indeed, we
+sort the two sets simultaneously, by simulating \QuickSort{}. The
+resulting algorithm is depicted in \figref{sort:nuts:and:bolts}.
+
+\subsection{Running time analysis}
+\newcommand{\RunningTime}{\EuScript{RT}}
+
+\begin{defn}
+    Let $\RunningTime$ denote the random variable which is the running
+    time of the algorithm. Note, that the running time is a random
+    variable as it might be different between different executions on
+    the \emph{same input}.
+\end{defn}
+
+
+
+
+\begin{defn}
+    For a randomized algorithm, we can speak about the expected
+    running time. Namely, we are interested in bounding the quantity
+    $\Ex{\RunningTime}$  for the worst input.
+\end{defn}
+
+\begin{defn}
+    The \emphic{expected running-time}{running-time!expected} of a
+    randomized algorithm for input of size $n$ is 
+    \begin{align*}
+        T(n)=\max_{U \text{ is an input of size }n} \Ex{\MakeSBig
+           \RunningTime(U)},
+    \end{align*}
+    where $\RunningTime(U)$ is the  running time of the
+    algorithm for the input $U$.
+\end{defn}
+
+\newcommand{\Rank}{\mathrm{rank}}
+
+\begin{defn}
+    The \emphiC{rank} of an element $x$ in a set $S$, denoted by
+    $\Rank(x)$, is the number of elements in $S$ of size smaller or
+    equal to $x$. Namely, it is the location of $x$ in the sorted list
+    of the elements of $S$.
+\end{defn}
+
+\begin{theorem}
+    The expected running time of \MatchNutsAndBolts{} (and thus also
+    of \QuickSort{}) is $T(n)=O(n\log n)$, where $n$ is the number of
+    nuts and bolts. The worst case running time of this algorithm is
+    $O(n^{2})$.
+\end{theorem}
+
+\begin{proof}
+    Clearly, we have that $\Prob{\Rank(n_{pivot}) = k} = \frac{1}{n}$.
+    Furthermore, if the rank of the pivot is $k$ then
+    \begin{align*}
+      T(n)%
+      &=%
+        \ExExt{k=\Rank(n_{pivot})}{ O(n)+T(k-1)+T(n-k) }
+        =%
+        O(n) + \ExExt{k}{ T(k-1) + T(n-k)}%
+      \\&%
+      =%
+      O(n)+\sum_{k=1}^{n}\Prob{Rank(Pivot)=k}
+      *\pth{T(k-1)+T(n-k)}%
+      \\&%
+      =%
+      O(n)+\sum_{k=1}^{n}\frac{1}{n}\cdot\pth{T(k-1)+T(n-k)},
+    \end{align*}
+    by the definition of expectation. It is not easy to verify that
+    the solution to the recurrence
+    $T(n)=O(n)+\sum_{k=1}^{n}\frac{1}{n}\cdot\pth{T(k-1)+T(n-k)}$
+    is $O(n \log n )$.
+\end{proof}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliographical Notes}
+
+Treaps were invented by Siedel and Aragon
+\cite{sa-rst-96}. Experimental evidence suggests that Treaps performs
+reasonably well in practice, despite their simplicity, see for example
+the comparison carried out by Cho and Sahni
+\cite{cs-nwbbs-00}. Implementations of treaps are readily
+available. An old implementation I wrote in \texttt{C} is available
+here: \url{http://valis.cs.uiuc.edu/blog/?p=6060}.
+
+%Chernoff inequality was a rediscovery of Bernstein inequality, which
+%was published in 1924 by Sergei Bernstein. 
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{Markov}%
+
+}
+
+
+\ChapterEnd{}
+
+% -------------------------------------------------------------------------
+
+
+% Local Variables: 
+% mode: latex
+% TeX-master: t
+% End: 
+

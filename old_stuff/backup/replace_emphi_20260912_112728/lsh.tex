@@ -1,0 +1,1414 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Locality sensitive hashing
+%
+% 12/10/2010   16:53:08 
+% 12/29/2010   14:12:52  
+%
+% Status: Done.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{30}{236}
+
+
+
+\Chapter{Approximate Nearest Neighbor (ANN{}b{}r) Search in High
+   Dimensions}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuoteOptExt{%
+   Possession of anything new or expensive only reflected a person's
+   lack of theology and geometry; it could even cast doubts upon one's
+   soul.
+}%
+{A confederacy of Dunces}%
+{John Kennedy Toole}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{ANN{}br on the hypercube}
+\seclab{A:N:N:on:hypercube}
+
+\subsection{ANN{}br for the hypercube and the Hamming distance}
+
+\begin{defn}
+    The set of points $\Hypercube^\hdim = \brc{ \MakeSBig 0,1}^\hdim$
+    is the \emphic{$\hdim$-dimensional
+       hypercube}{hypercube!$\hdim$-dimensional hypercube}. A point
+    $\pnt = (\pnt_1, \ldots, \pnt_\hdim) \in \Hypercube^\hdim$ can be
+    interpreted, naturally, as a binary string
+    $\pnt_1\pnt_2 \ldots \pnt_\hdim$. The \emphi{Hamming distance}
+    $\distHY{\pnt}{\pntA}$ between $\pnt, \pntA \in \Hypercube^\hdim$
+    is the number of coordinates where $\pnt$ and $\pntA$ disagree.
+    %
+    \index{distance!Hamming}
+
+    It is easy to verify that the Hamming distance, being the
+    $L_1$-norm, complies with the triangle inequality and is thus a
+    metric.
+\end{defn}
+
+As we saw previously, to solve the $(1+\eps)$-\ANNbr problem
+efficiently, it is sufficient to solve the \emphi{approximate near
+   neighbor} problem. Namely, given a set $\PntSet$ of $n$ points in
+$\Hypercube^\hdim$, a radius $r>0$, and parameter $\eps >0$, we want
+to decide for a query point $\query$ whether
+$\distH{\query}{\PntSet} \leq r\;$ or
+$\;\distH{\query}{\PntSet} \geq (1+\eps)r$, where
+$\distH{\query}{\PntSet} = \min_{\pnt \in \PntSet}
+\distH{\query}{\pnt}$.
+
+\begin{defn}
+    \deflab{approximate:near:n}%
+    %
+    For a set $\PntSet$ of points, a data-structure
+    $\DSC = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$ solves the
+    \emphi{approximate near neighbor} problem if, given a query point
+    $\query$, the data-structure works as follows.
+    \begin{compactitem}
+        \item \textsc{Near}: If $\distH{\query}{\PntSet} \leq r$, then
+        $\DS$ outputs a point $\pnt \in \PntSet$ such that
+        $\distH{\pnt}{\query} \leq (1+\eps)r$.
+        
+        \item \textsc{Far}: If $\distH{\query}{\PntSet} \geq
+        (1+\eps) r$, then $\DS$ outputs ``$\distH{\query}{\PntSet}
+        \geq r$''.
+
+        \item \textsc{Don't care}: If
+        $r \leq \DistNN{\query}{\PntSet} \leq (1+\eps) r$, then $\DS$
+        can return either of the above answers.
+    \end{compactitem}
+\end{defn}
+
+Given such a data-structure, one can construct a data-structure that
+answers the approximate nearest neighbor query using $O\pth{ \log\pth{
+      \eps^{-1} \log \hdim } }$ queries using an approximate near
+neighbor data-structure.  Indeed, the desired distance
+$\distH{\query}{\PntSet}$ is an integer number in the range $0,1,
+\ldots, \hdim$. We can build a $\DSAprxNearNbr$ data-structure for
+distances $(1+\eps)^i$, for $i=1,\ldots, M$, where $M= O\pth{
+   \eps^{-1}\log \hdim}$. Performing a binary search over these
+distances would resolve the approximate nearest neighbor query and
+requires $O( \log M)$ queries.
+
+As such, in the following, we concentrate on constructing the
+approximate near neighbor data-structure (i.e., $\DSAprxNearNbr$).
+
+
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+
+
+%\subsection{A direct simple construction}
+
+%\subsection{Locality sensitive hashing revisited}
+
+\subsection{Preliminaries}
+
+\newcommand{\subseq}{{{m}}}%
+\newcommand{\subseqA}{{{u}}}%
+\newcommand{\pr}{\varphi}%
+
+
+\begin{defn}
+    Consider a sequence $\subseq$ of $k$, not necessarily distinct,
+    integers $i_1, i_2, \ldots, i_k \in \IntRange{d}$, where
+    $\IntRange{d} = \brc{1, \ldots, d}$.  For a point
+    $\pnt = (\pntc_1, \ldots, \pntc_d) \in \Re^d$, its
+    \emphi{projection} by $\subseq$, denoted by $\subseq \pnt$ is the
+    point $\pth{ \pntc_{i_1}, \ldots, \pntc_{i_k}} \in \Re^k$.
+    Similarly, the \emph{projection} of a point set
+    $\PntSet \subseteq \Re^d$ by $\subseq$ is the point set
+    $\subseq \PntSet = \Set{\subseq \pnt}{\pnt \in \PntSet}$.
+\end{defn}
+
+\newcommand{\DistD}[1]{\mathcal{D}_{#1}}
+
+Given two sequences $\subseq = i^{}_1, \ldots, i^{}_k$ and
+$\subseqA = j^{}_1, \ldots, j^{}_{k'}$, let $\subseq | \subseqA$
+denote the \emph{concatenated} sequence
+\begin{math}
+    \subseq | \subseqA = i^{}_1, \ldots, i^{}_k, j^{}_1, \ldots,
+    j^{}_{k'}.
+\end{math}
+Given a probability $\pr$, a natural way to create such a projection,
+is to include the $i$\th coordinate, for $i=1,\ldots, d$, with
+probability $\pr$. Let $\DistD{\pr}$ denote the distribution of such
+sequences of indices.
+
+
+\newcommand{\tTimes}{T}%
+
+\begin{defn}
+    \deflab{t:splay}%
+    %
+    Let $\DistD{\pr}^\tTimes$ denote the distribution resulting from
+    concatenating $T$ independent sequences sampled from
+    $\DistD{\pr}$. The length of a sampled sequence is $d \tTimes$.
+\end{defn}
+
+Observe that for a point $\pnt \in \brc{0,1}^d$, and
+$\seq \in \DistD{\pr}^\tTimes$, the projection $\seq \pnt$ might be
+higher dimensional than the original point $\pnt$, as it might contain
+repeated coordinates of the original point.
+
+
+
+\subsubsection{Algorithm}
+
+\paragraph{Input.}
+The input is a set $\PntSet$ of $n$ points in the hypercube
+$\brc{0,1}^d$, and parameters $\rad$ and $\eps$.
+
+\paragraph{Preprocessing.}
+We set parameters as follows:
+\begin{align*}
+  \cTimes = \frac{1}{1+\eps} \in (0,1),%
+  \quad  %
+  \pr = 1 - \exp \pth{ - \frac{1}{\rad}} \approx \frac{1}{\rad},
+  \quad %
+  \tTimes = \cTimes \ln n,
+  \quad
+  \text{and}%
+  \quad
+  \DSTimes = O( n^{\cTimes} \log n).
+\end{align*}
+We randomly and independently pick $\DSTimes$ sequences
+\begin{math}
+    \seq_1, \ldots, \seq_\DSTimes \in \DistD{\pr}^\tTimes.
+\end{math}
+Next, the algorithm computes the point sets
+$\PntSetA_i = \seq_i \PntSet_i$, for $i=1,\ldots, \DSTimes$, and
+stores them each in a hash table, denoted by $\DA_i$, for
+$i=1,\ldots, \DSTimes$.
+
+\paragraph{Answering a query.}
+
+Given a query point $\query \in \brc{0,1}^d$, the algorithm computes
+$\query_i = \seq_i \query$, for $i=1,\ldots, \DSTimes$.  From each
+$\DA_i$, the algorithm retrieves a list $\ell_i$ of all the points
+that collide with $\query_i$. The algorithm scans the points in the
+lists $\ell_1, \ldots, \ell_\DSTimes$. If any of these points is in
+Hamming distance smaller than $(1+\eps)\rad$, the algorithm returns it
+as the desired near-neighbor (and stops). Otherwise, the algorithm
+returns that all the points in $\PntSet$ are in distance at least
+$\rad$ from $\query$.
+
+\subsubsection{Analysis}
+
+% \paragraph{Correctness}
+
+\begin{lemma}
+    \lemlab{success:simple}%
+    % 
+    Let $K$ be a set of $\rad$ marked/forbidden coordinates. The
+    probability that a sequence
+    $\seq = (\subseq_1,\ldots, \subseq_\tTimes)$ sampled from
+    $\DistD{\pr}^\tTimes$ does not sample any of the coordinates of
+    $K$ is
+    \begin{math}
+        1/n^{\cTimes}.
+    \end{math}
+    This probability increases if $K$ contains fewer coordinates.
+\end{lemma}
+
+\begin{proof}
+    For any $i$, the probability that $\subseq_i$ does not contain any
+    of these coordinates is
+    \begin{math}
+        (1-\pr)^\rad%
+        =%
+        \bigl(e^{-1/\rad }\bigr)^{\rad}%
+        =%
+        1/e.
+    \end{math}
+    Since this experiment is repeated $\tTimes$ times, the probability
+    is
+    \begin{math}
+        e^{-\tTimes}%
+        =%
+        e^{ - \cTimes \ln n}%
+        =%
+        n^{- \cTimes}.
+    \end{math}
+    \qquad
+\end{proof}
+
+
+\begin{lemma}
+    \lemlab{lists:a}%
+    %
+    Let $\pnt$ be the nearest-neighbor to $\query$ in $\PntSet$.  If
+    $\distH{\query}{\pnt} \leq \rad$ then, with high probability, the
+    data-structure returns a point that is in distance
+    $\leq (1+\eps)\rad$ from $\query$.
+\end{lemma}
+\begin{proof}
+    The good event here is that $\pnt$ and $\query$ collide under
+    one of the sequences of $\seq_1,\ldots, \seq_\DSTimes$.  However,
+    the probability that $\seq_i \pnt = \seq_i \query$ is at least
+    $1/n^{\cTimes}$, by \lemref{success:simple}, as this is the
+    probability that $\seq_i$ does not sample any of the (at most
+    $\rad$) coordinates where $\pnt$ and $\query$ disagree. As such,
+    the probability that all $\DSTimes$ data-structures fail (i.e.,
+    none of the lists $\ell_1,\ldots, \ell_\DSTimes$ contains $\pnt$),
+    is at most $(1- 1/n^{\cTimes})^{\DSTimes} < 1/n^{O(1)}$, as
+    $\DSTimes = O\pth{ n^{\cTimes} \log n}$.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{lists:b}%
+    %
+     In expectation, the total number of points in
+        $\ell_1,\ldots, \ell_\DSTimes$ that are in distance
+        $\geq (1+\eps)\rad$ from $\query$ is $\leq \DSTimes$.
+\end{lemma}
+
+\begin{proof}
+    Let $\PSetFar$ be the set of points in $\PntSet$ that are in
+    distance $\geq (1+\eps)\rad$ from $\query$.  For a point
+    $\pntA \in \PSetFar$, with $\Delta = \distH{\pntA}{ \query}$, we
+    have that the probability for $\seq \in \DistD{\pr}^\tTimes$
+    misses all the $\Delta$ coordinates, where $\pntA$ and $\query$
+    differ, is
+    \begin{equation*}
+        (1-\pr)^{\Delta \tTimes}%
+        \leq 
+        (1-\pr)^{(1+\eps)\rad \tTimes}%
+        =%
+        \pth{e^{-1/r}}^{(1+\eps)\rad \tTimes}%
+      % \leq%
+      % \exp\pth{ -(1+\eps) \pr \rad \tTimes }%
+      =%
+      \exp\pth{ -(1+\eps) \cTimes \ln n }%
+      =%
+      \frac{1}{n},
+    \end{equation*}
+    as $\pr = 1-e^{-1/\rad}$, $\tTimes = \cTimes \ln n$, and
+    $\cTimes = 1/(1+\eps)$. But then, for any $i$, we have
+    \begin{equation*}
+        \Ex{\bigl.\cardin{\ell_i}}%
+        =%
+        \sum_{\pnt \in \PSetFar}
+        \ProbY{\bigl.\seq_i}{\seq_i \pnt = \seq_i \query }
+        \leq%
+        \cardin{\PSetFar} \frac{1}{n}
+        \leq%
+        1.
+  \end{equation*}
+    As such, the total number of far points in the lists is at most
+    $\DSTimes \cdot 1 = \DSTimes$, implying the claim.
+\end{proof}
+
+\subsubsection{Running time}
+
+For each $i$, the query computes $\seq_i \query$ and that takes
+$O(d \tTimes) = O(d\log n)$ time. Repeated $\DSTimes$ times, this takes
+$O( \DSTimes d \log n)$ time overall.  Let $X$ be the random variable
+that is the number of points in the extracted lists that are in
+distance $\geq (1+\eps)\rad$ from the query point.  The time to scan
+the lists is
+\begin{math}
+    O\pth{\bigl. d( X +1) },
+\end{math}
+since the algorithm stops as soon as it finds a near point. As such,
+by \lemref{lists:b}, the expected query time is
+\begin{math}
+    O( \DSTimes d \log n + \DSTimes d) = O\pth{d n^{1/(1+\eps)} \log^2
+       n}.
+\end{math}
+
+
+
+\paragraph{Improving the performance (a bit).}
+
+Observe that for $\seq \in \DistD{\pr}^\tTimes$, and any two points
+$\pnt, \pntA \in \brc{0,1}^d$, all the algorithm cares about is
+whether $\seq \pnt = \seq \pntA$. As such, if a coordinate is probed
+many times by $\seq$, we might as well probe this coordinate only
+once. In particular, for a sequence $\seq \in \DistD{\pr}^\tTimes$,
+let $\seq' = \uniqX{\seq}$ be the projection sequence resulting from
+removing replications in $\seq$. Significantly, $\seq'$ is only of
+length $\leq d$, and as such, computing $\seq' \pnt$, for a point
+$\pnt$, takes only $O(d)$ time. It is not hard to verify that one can
+also sample directly $\uniqX{\seq}$, for
+$\seq \in \DistD{\pr}^\tTimes$, in $O(d)$ time. This improves the
+query and processing by a logarithmic factor.
+
+
+
+% \paragraph{Result}
+
+\bigskip
+
+We thus get the following result.
+
+\begin{theorem}
+    Given a set $P$ of $n$ points in $\brc{0,1}^d$, and parameters
+    $\rad, \eps$, one can preprocess $P$ in
+    \begin{equation*}
+        O( d n^{1+1/(1+\eps)} \log n)
+    \end{equation*}
+    time and space, such that given a query point $\query$, the
+    algorithm returns, in expected $O( d n^{1/(1+\eps)} \log n)$ time,
+    one of the following: \smallskip%
+    \begin{compactenumA}
+        \item a point $\pnt \in P$ such that
+        $\distH{\query}{\pnt} \leq (1+\eps)\rad$, or
+
+        \smallskip%
+        \item the distance of $\query$ from $P$ is larger than $\rad$.
+    \end{compactenumA}
+    \smallskip%
+    The algorithm may return either result if the distance of $\query$
+    from $P$ is in the range $[r,(1+\eps)r]$. The algorithm succeeds
+    with high probability (per query).
+\end{theorem}
+
+One can also get a high-probability guarantee on the query time. For a
+parameter $\delta > 0$, create $O( \log \delta^{-1})$ \LSH
+data-structures as above. Perform the query as above, except that when
+the query time exceeds (say) twice the expected time, move on to redo
+the query in the next \LSH data-structure. The probability that the
+query had failed on one of these \LSH data-structures is
+$\leq 1/2$, by Markov's inequality. As such, overall, the query time
+becomes $O( d n^{1/(1+\eps)} \log n \log \delta^{-1})$, with
+probability $\geq 1-\delta$.
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Testing for good items}
+
+Imagine that we have $n$ items. One of the items is \emph{good} the
+rest are \emph{bad}. We have two tests to check if an item is good --
+we have a cheap test, a really expensive test. We would like to use
+the expensive test as few times as possible, and classify correctly
+all the items. Let $T(x) \in \{ \text{good}, \text{bad} \}$ denote the
+result of the cheap test on item $x$. We have that
+\begin{equation*}
+    \ProbCond{T(x) = \text{good}}{x \text{ is good}}
+    \geq \alpha >
+    \beta \geq 
+    \ProbCond{T(x) = \text{good}}{x \text{ is bad}}.    
+\end{equation*}
+Repeating, the experiment $k$ times, we create a \emphi{$k$-test}
+where we turn an item is good if all $k$ tests return ``good''. We
+then have
+\begin{equation*}
+    \ProbCond{T^k(x) = \text{good}}{x \text{ is good}}
+    \geq \alpha^k >
+    \beta^k \geq 
+    \ProbCond{T^k(x) = \text{good}}{x \text{ is bad}}.    
+\end{equation*}
+We need to make sure we discover the good item, so let us repeat the
+$k$-test enough times, till we discover it with good probability. A
+natural value would be to repeat the $k$-test for each item
+$M = (1/\alpha^k ) \ln \BadProb^{-1}$ times, so that the probability
+we fail to discover the good item is
+\begin{equation*}
+    (1-\alpha^k)^{M} \leq
+    \exp\pth{ -\alpha^k M }
+    <
+    \BadProb.
+\end{equation*}
+
+As for the bad items, how many ``false positive'' would we have? Every
+$k$-test is going to return in expectation at most
+\begin{equation*}
+    (n-1)\beta^k \leq n \beta^k
+\end{equation*}
+items. As such, the total number of false positives over the $M$
+repeated $k$-tests is going to be
+\begin{equation*}
+    n \beta^k M = O(n (\beta/\alpha)^k \log \BadProb^{-1}).
+\end{equation*}
+
+If everything is for free, that we will set $k$ to be quite large, so
+that the number of false positives is practically zero. For our
+purposes it would be enough if every $k$-test returns (in expectation)
+one false positive. That is, we will require that
+\begin{equation*}
+    \beta^k n \leq 1.
+\end{equation*}
+This would set up the values we need for $k$ and $M$. 
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{LSH for the hypercube: An elaborate construction}
+% Construction of the near neighbor %
+% data-structure}
+
+We next present a similar scheme in a more systematic fashion -- this
+would provide some intuition how we came up with the above
+construction.
+
+\subsubsection{On sense and sensitivity}
+
+Let $\PntSet = \brc{\pnt_1,\ldots, \pnt_n}$ be a subset of vertices of
+the hypercube in $\hdim$ dimensions. In the following we assume that
+$\hdim = n^{O(1)}$. Let $r,\eps>0$ be two prespecified parameters. We
+are interested in building an approximate near neighbor data-structure
+(i.e., $\DSAprxNearNbr$) for balls of radius $r$ in the Hamming
+distance.
+
+
+\begin{defn}
+    A family $\Family$ of functions (defined over
+    $\HypercubeX{\hdim}$) is
+    \,\emphic{$\bigl( r, R, \widehat{\alpha},
+       \widehat{\beta}\,\bigr)$-sensitive}{sensitive function}
+    \index{function!sensitive} if for any
+    $\query, \pntB \in \Hypercube^\hdim$, we have the following
+    \begin{compactenumA}
+        \smallskip
+        \item If $\pntB \in \Ball( \query, r)$, then
+        \begin{math}
+            \Prob{ f(\query) = f(\pntB)\bigr. } \geq \widehat{\alpha}.
+        \end{math}
+
+        \smallskip
+
+        \item If $\pntB \notin \Ball( \query, R)$, then
+        $\Prob{ \bigl. f(\query) = f(\pntB) } \leq \widehat{\beta}$.
+    \end{compactenumA}
+    \smallskip%
+    Here, $f$ is a randomly picked function from $\Family$, $r < R$,
+    and $\widehat{\alpha} > \widehat{\beta}$.
+\end{defn}
+
+Intuitively, if we can construct an $(r, R, \alpha, \beta)$-sensitive
+family, then we can distinguish between two points which are close
+together and two points which are far away from each other. Of course,
+the probabilities $\alpha$ and $\beta$ might be very close to each
+other, and we need a way to do amplification.
+
+\subsection{A simple sensitive family} %
+%
+A priori it is not even clear such a sensitive family exists, but it
+turns out that the family randomly exposing one coordinate is
+sensitive.
+
+\begin{lemma}
+    \lemlab{gap}%
+    %
+    Let $f_i(\pnt)$ denote the function that returns the $i$\th
+    coordinate of $\pnt$, for $i=1,\ldots, \hdim$.  Consider the
+    family of functions $\Family = \brc{f_1, \ldots, f_\hdim}$.  Then,
+    for any $r>0$ and $\eps$, the family $\Family$ is $\ds \pth[]{
+       \MakeSBig r, (1+\eps)r, \alpha, \beta }$-sensitive, where
+    $\alpha = 1-\nfrac{r}{\hdim}\,$ and $\,\beta = 1 -
+    \nfrac{r \,(1+\eps)}{\hdim}$.    
+\end{lemma}
+
+\begin{proof}
+    If $\pntA,\pntB \in \brc{0,1}^\hdim$ are within distance smaller
+    than $r$ from each other (under the Hamming distance), then they
+    differ in at most $r$ coordinates. The probability that a random
+    $h \in \Family$ would project into a coordinate that $\pntA$ and
+    $\pntB$ agree on is $\geq 1-r/\hdim$.
+
+    Similarly, if $\distH{\pntA}{\pntB} \geq (1+\eps)r$, then the
+    probability that a random $h\in \Family$ would map into a
+    coordinate that $\pntA$ and $\pntB$ agree on is $\leq 1 -
+    (1+\eps)r/\hdim$.
+\end{proof}
+
+\subsection{A family with a large sensitivity gap}
+
+Let $k$ be a parameter to be specified shortly, and consider the
+family of functions $\FamilyB$ that concatenates $k$ of the given
+functions. Formally, let
+\begin{align*}
+  \FamilyB%
+  =%
+  \kFunctions{\Family}{k}%
+  =%
+  \Set{ g }{ g(\pnt) = \bigl(f^1(\pnt),
+  \ldots, f^k(\pnt)\bigr), \text{ for } f^1, \ldots, f^k \in
+  \Family}
+\end{align*}
+be the set of all such functions.
+% We will use and analyze this family
+%below.
+
+\begin{lemma}
+    \lemlab{big:gap}%
+    %
+    For a $(r, R, \alpha, \beta)$-sensitive family $\Family$, the
+    family $\FamilyB = \kFunctions{\Family}{k}$ is
+    $(r, R, \alpha^k, \beta^k)$-sensitive.
+\end{lemma}
+
+\begin{proof}
+    For two fixed points $\pntA, \pntB \in \Hypercube^\hdim$ such that
+    $\distH{\pntA}{\pntB} \leq r$, we have that for a random $h \in
+    \Family$, we have $\Prob{h(\pntA) = h(\pntB) } \geq \alpha$. As
+    such, for a random $g \in \FamilyB$, we have that
+    \begin{align*}
+        \Prob{ \MakesBig g(\pntA) = g(\pntB) }%
+        &=%
+        \Prob{ f^1(\pntA) = f^1(\pntB) \text{ and } f^2(\pntA)%
+           = f^2(\pntB) \text{ and } \ldots \text{ and } f^k(\pntA) =
+           f^k(\pntB)}%
+        \\
+        &=%
+        \prod_{i=1}^k \Prob{f^i(\pntA) = f^i(\pntB)} \geq \alpha^k.
+    \end{align*}
+    %
+    Similarly, if $\distH{\pntA}{\pntB} > R$, then $\Prob{\MakesBig
+       g(\pntA) = g(\pntB) } = \prod_{i=1}^k \Prob{f^i(\pntA) =
+       f^i(\pntB)} \leq \beta^k$.
+\end{proof}
+
+The above lemma implies that we can build a family that has a gap
+between the lower and upper sensitivities; namely, $\alpha^k /\beta^k
+= (\alpha/\beta)^k$ is arbitrarily large. The problem is that if
+$\alpha^k$ is too small, then we will have to use too many functions
+to detect whether or not there is a point close to the query point.
+
+Nevertheless, consider the task of building a data-structure that
+finds all the points of $\PntSet = \brc{\pnt_1, \ldots, \pnt_n}$ that
+are equal, under a given function $g \in \FamilyB =
+\kFunctions{\Family}{k}$, to a query point. To this end, we compute
+the strings $g(\pnt_1), \ldots, g(\pnt_n)$ and store them (together
+with their associated point) in a hash table (or a prefix tree). Now,
+given a query point $\query$, we compute $g(\query)$ and fetch from
+this data-structure all the strings equal to it that are stored in it.
+Clearly, this is a simple and efficient data-structure. All the points
+colliding with $\query$ would be the natural candidates to be the
+nearest neighbor to $\query$.
+
+By not storing the points explicitly, but using a pointer to the
+original input set, we get the following easy result.
+
+\begin{lemma}    
+    \lemlab{family:B}%
+    %
+    Given a function $g \in \FamilyB= \kFunctions{\Family}{k}$ (see
+    \lemref{big:gap}) and a set $\PntSet \subseteq \Hypercube^\hdim$
+    of $n$ points, one can construct a data-structure, in $O(nk)$ time
+    and using $O(nk)$ additional space, such that given a query point
+    $\query$, one can report all the points in $X = \brc{ \pnt \in
+       \PntSet \sep{ g(\pnt) = g(\query)}}$ in $O( k + \cardin{X} )$
+    time.
+\end{lemma}
+
+
+\subsection{Amplifying sensitivity}
+
+Our task is now to amplify the sensitive family we currently have. To
+this end, for two $\tau$-dimensional points $x$ and $y$, let
+$\WEqual{x}{y}$ be the Boolean function that returns \emph{true} if
+there exists an index $i$ such that $x_i = y_i$ and \emph{false}
+otherwise. Now, the regular ``$=$'' operator requires vectors to be
+equal in all coordinates (i.e., it is equal to
+$\bigcap_{i} \pth{x_i = y_i}$) while $\WEqual{x}{y}$ is
+$\bigcup_i \pth{x_i = y_i}$. The previous construction of
+\lemref{big:gap} using this alternative equal operator provides us
+with the required amplification.
+
+\begin{lemma}
+    \lemlab{big:amplify}%
+    %
+    Given an $\pth[]{r, R, \alpha^k, \beta^k}$-sensitive family
+    $\FamilyB$, the family $\FamilyAmp = \kFunctions{\FamilyB}{\tau}$
+    if one uses the $\WEqual{}{}$ operator to check for equality is
+    \begin{math}
+        \bigl(r, R, 1 - (1-\alpha^k)^\tau, 1 - (1-\beta^k)^\tau\bigr)
+    \end{math}%
+    -sensitive.
+\end{lemma}
+\begin{proof}
+    For two fixed points $\pntA, \pntB \in \Hypercube^\hdim$ such that
+    $\distH{\pntA}{\pntB} \leq r$, we have, for a random
+    $g \in \FamilyB$, that
+    \begin{math}
+        \Prob{g(\pntA) = g(\pntB) } \allowbreak \geq \alpha^k.
+    \end{math}
+     As such,
+    for a random $h \in \FamilyAmp$, we have that
+    \begin{align*}
+      \Prob{\MakeSBig \WEqual{h(\pntA)}{ h(\pntB) }}%
+      &= \Prob{ g^1(\pntA) = g^1(\pntB) \text{~ or ~} g^2(\pntA) =
+        g^2(\pntB) \text{~ or ~} \ldots \text{~ or ~} g^\tau(\pntA)
+        = g^\tau(\pntB)}%
+      \\
+      &=%
+        1 - \prod_{i=1}^\tau \Prob{g^i(\pntA) \neq g^i(\pntB)}
+        \geq%
+        1 - \bigl(1-\alpha^k\bigr)^\tau.
+    \end{align*}
+    % 
+    Similarly, if $\distH{\pntA}{\pntB} > R$, then
+    \begin{align*}
+      \Prob{\bigl. \WEqual{h(\pntA)}{ h(\pntB)} }%
+      =%
+      1 - \prod_{i=1}^\tau \Prob{g^i(\pntA) \neq g^i(\pntB)} \leq 1
+      - \bigl(1 - \beta^k \bigr)^\tau.
+    \end{align*}
+\end{proof}
+
+To see the effect of \lemref{big:amplify}, it is useful to play with a
+concrete example. Consider an $(r,R,\alpha^k,\beta^k)$-sensitive
+family where $\beta^k = \alpha^k/2$ and yet $\alpha^k$ is very
+small. Setting $\tau = 1/\alpha^k$, the resulting family is (roughly)
+$(r, R, 1-1/e, 1-1/\sqrt{e})$-sensitive. Namely, the gap shrank, but
+the threshold sensitivity is considerably higher. In particular, it is
+now a constant, and the gap is also a constant.
+
+Using \lemref{big:amplify} as a data-structure to store $\PntSet$ is
+more involved than before. Indeed, for a random function $h =
+\pth{g^1, \ldots, g^\tau} \in \FamilyAmp =
+\kFunctions{\FamilyB}{\tau}$ building the associated data-structure
+requires us to build $\tau$ data-structures for each one of the
+functions $g^1,\ldots, g^\tau$, using \lemref{family:B}. Now, given a
+query point, we retrieve all the points of $\PntSet$ that collide with
+each one of these functions, by querying each of these
+data-structures.
+
+\begin{lemma}    
+    \lemlab{family:amplify}%
+    %
+    Given a function $h \in \FamilyAmp= \kFunctions{\FamilyB}{\tau}$
+    (see \lemref{big:amplify}) and a set $\PntSet \subseteq
+    \Hypercube^\hdim$ of $n$ points, one can construct a
+    data-structure, in $O(nk\tau)$ time and using $O(nk\tau)$
+    additional space, such that given a query point $\query$, one can
+    report all the points in $X = \brc{ \pnt \in \PntSet \sep{
+          \WEqual{h(\pnt)}{h(\query)}}}$ in $O( k\tau + \cardin{X} )$
+    time.
+\end{lemma}
+
+
+\subsection{The near neighbor data-structure and handling a query}
+
+
+We construct the data-structure $\DS$ of \lemref{family:amplify} with
+parameters $k$ and $\tau$ to be determined shortly, for a random
+function $h \in \FamilyAmp$. Given a query point $\query$, we retrieve
+all the points that collide with $h$ and compute their distance to the
+query point. Next, scan these points one by one and compute their
+distance to $\query$. As soon as encountering a point $\pntB \in
+\PntSet$ such that $\distH{\query}{\pntB} \leq R$, the data-structures
+returns \emphi{true} together with $\pntB$. 
+
+Let's assume that we know that the expected number of points of
+$\PntSet \setminus \Ball(\query,R)$ (i.e., $R = (1+\eps)r$) that will
+collide with $\query$ in $\DS$ is in expectation $L$ (we will figure
+out the value of $L$ below). To ensure the worst case query time, the
+query would abort after checking $4L + 1$ points and would return
+\emph{false}. Naturally, the data-structure would also return false if
+all points encountered have distance larger than $R$ from $\query$.
+
+Clearly, the query time of this data-structure is $O(k \tau + \hdim
+L)$.
+
+We are left with the task of fine-tuning the parameters $\tau$ and $k$
+to get the fastest possible query time, while the data-structure has
+reasonable probability to succeed. Figuring the right values is
+technically tedious, and we do it next.
+
+
+\subsubsection{Setting the parameters}
+
+
+If there exists $\pnt \in \PntSet$ such that $\distH{\query}{\pnt}
+\leq r$, then the probability of this point to collide with $\query$
+under the function $h$ is $\phi \geq 1-\pth{1-\alpha^k}^\tau$. Let us
+demand that this data-structure succeeds with probability $\geq
+3/4$. To this end, we set
+\begin{equation}
+    \tau%
+    =%
+    4 \ceil{1/\alpha^k} \implies \phi %
+    \geq %
+    1-\bigl({1-\alpha^k}\bigr)^\tau%
+    \geq
+    1-\exp\bigl(-\alpha^k\tau \bigr) %
+    \geq%
+    1 - \exp\pth{-4} \geq 3/4,
+    %
+    \eqlab{tau:value:3:4}
+\end{equation}
+since $1-x \leq \exp\pth{-x}$, for $x \geq 0$.
+
+%The problem is that the data-structure might return too many
+%candidates since many points collide with the query point in
+%$\DS$.
+
+%\newpage
+
+\begin{lemma}
+    \lemlab{collide}%
+    %
+    The expected number of points of
+    $\PntSet \setminus \Ball(\query, R)$ colliding with the query
+    point is $L = O\bigl( n (\beta/\alpha)^k \bigr)$, where
+    $R = (1+\eps)r$.
+\end{lemma}
+
+\begin{proof} 
+    Consider the points in $\PntSet \setminus \Ball(\query, R)$. We
+    would like to bound the number of points of this set that collide
+    with the query point.  Observe that in this case, the probability
+    of a point $\pnt \in \PntSet \setminus \Ball(\query, R)$ to
+    collide with the query point is
+%     \begin{align*}
+%         \leq%
+%         \psi%
+%         &=%
+%         1-\pth[]{1-\beta^k}^\tau%
+%         =%
+%         1-\pth[]{1-\beta^k}^{4/\alpha^k}%
+%         \leq%
+%         1-\exp \pth{-2 \beta^k}^{4/\alpha^k}%
+%         =%
+%         1 - \exp \pth{ - 8 \frac{\beta^k}{\alpha^k} } %
+%         % 
+%         \\
+%         &%
+%         \leq%
+%         1- \pth{1- 8 \frac{\beta^k}{\alpha^k}}%
+%          =%
+%         8\pth{\frac{\beta}{\alpha}}^k,
+%         % = 1 - \pth{1 -y +
+%         % \frac{y^2}{2!} - \ldots } \leq y,
+%     \end{align*}
+    \begin{equation*}
+        \leq%
+        \psi%
+        =%
+        1-\bigl(1-\beta^k\bigr)^\tau%
+        =%
+        \beta^k
+        \Bigl( 1 + (1-\beta^k) +
+        (1-\beta^k)^2 + \ldots + (1-\beta^k)^{\tau - 1}
+        \Bigr)
+     %\\&%
+      \leq%
+      \beta^k \tau%
+      \leq%
+      8 \Bigl(\frac{\beta}{\alpha}\Bigr)^k,        
+    \end{equation*}
+    as $\tau = 4\ceil{1/\alpha^k}$ and $\alpha,\beta\in (0,1)$.
+%0 < \alpha \leq
+%    1$.
+%    since $1-x \geq \exp(-2x)$, for $x \in [0,1/2]$, and $-\expX{-z}
+%    \leq - (1-z)$, for $z\geq 0$.  
+    Namely, the expected number of points of $\PntSet \setminus
+    \Ball(\query, R)$ colliding with the query point is $\leq \psi n$.
+\end{proof}
+
+
+By \lemref{family:amplify}, extracting the $O(L)$ points takes 
+$O( k \tau + L)$ time. Computing the distance of the query time for
+each one of these points takes $O(  k \tau + L \hdim)$ time. 
+As such, by \lemref{collide}, the query time is 
+\begin{align*}
+    O\pth{ k \tau + L \hdim}%
+    =%
+    O\pth{ k \tau + n \hdim \pth{\beta/\alpha}^k }.
+\end{align*}
+To minimize this query time, we ``approximately'' solve the equation
+requiring the two terms, in the above bound, to be equal (we ignore
+$\hdim$ since, intuitively, it should be small compared to $n$).  We
+get that
+\begin{align*}
+    k \tau = n\pth{\beta/\alpha}^k%
+    \;\leadsto\;%
+    \frac{k}{\alpha^k} \approx n{\frac{\beta^k}{\alpha^k}} \implies k
+    \approx n\beta^k
+    % 
+    \;\leadsto\;%
+    1/\beta^k \approx n
+    % 
+    \implies k \approx \ln_{1/\beta} n.
+\end{align*}
+Thus, setting $k = \ln_{1/\beta} n$, we have that $\beta^k = 1/n$ and,
+by \Eqref{tau:value:3:4}, that
+\begin{equation}
+    \tau = 4 \ceil{1/\alpha^k} = \exp\pth{ \frac{\ln n}{\ln 1/\beta}
+       \ln 1/\alpha } = O \pth{ n^{ \rho }},%
+    \;\;\; \text{ for }%
+    \rho = \frac{\ln 1/\alpha}{ \ln 1/\beta}.
+    %
+    \eqlab{rho:ratio}
+\end{equation}
+As such, to minimize the query time, we need to minimize $\rho$.
+
+
+\begin{lemma}
+    \lemlab{d:s:2}%
+    %
+    \begin{compactenumA}
+        \item For $x\in[0,1)$ and $t\geq 1$ such that $1 - tx > 0$ we
+        have $\displaystyle
+        \frac{\ln(1-x)}{\ln(1-tx)}\leq\frac{1}{t}$.
+
+
+        \item For $\alpha = 1-\nfrac{r}{\hdim}$ and $\beta = 1 -
+        \nfrac{r\,(1+\eps)}{\hdim}$, we have that $\ds \rho = \frac{\ln
+           1/\alpha}{ \ln 1/\beta} \leq \frac{1}{1+\eps}$.
+    \end{compactenumA}
+\end{lemma}
+
+\begin{proof}
+    (A) Since $\ln (1-tx) < 0$, it follows that the claim is
+    equivalent to $t\ln(1-x)\geq\ln(1-tx)$.  This in turn is
+    equivalent to
+    \begin{align*}
+        g(x)\equiv(1-tx)-(1-x)^t\leq0.
+    \end{align*}
+    This is trivially true for $x=0$.  Furthermore, taking the
+    derivative, we see $g'(x) = -t + t\,(1-x)^{t-1}$, which is
+    non-positive for $x\in[0,1)$ and $t > 0$.  Therefore, $g$ is
+    non-increasing in the interval of interest, and so $g(x) \leq 0$
+    for all values in this interval.
+
+    (B)
+    Indeed
+    \begin{math}
+        \ds \rho%
+        =%
+        \frac{\ln{1/\alpha}}{\ln{1/\beta}}%
+        =%
+        \frac{\ln{\alpha}}{\ln{\beta}}%
+        =%
+        \frac{\ln \frac{\hdim-r}{\hdim}}{\ln
+           \frac{\hdim-(1+\eps)r}{\hdim}}%
+        =%
+        \frac{\ln \pth{ 1 - \frac{r}{\hdim}}}{\ln \pth{1 -
+              (1+\eps)\frac{r}{\hdim}}}%
+        \leq%
+        \frac{1}{1+\eps},
+    \end{math}
+    by part (A).
+\end{proof}
+
+\remove{
+\begin{align*}
+    L = O( k \tau + n \psi)%
+    = O \pth{ k \alpha^k + n \frac{\beta^k }{\alpha^k} }%
+    = O\pth{ k + \frac{1}{\alpha^k}}%
+    = O\pth{ k + n^{ \rho }} \;\;\; \text{ for }%
+    \rho = \frac{\ln 1/\alpha}{ \ln 1/\beta},
+\end{align*}
+since $\alpha < 1$.  The first term is smaller than the second term,
+as a tedious but straightforward computation shows, and as such we
+concentrate on bounding the second term.
+}
+
+In the following, it would be convenient to consider $\hdim$ to be
+considerably larger than $r$. This can be ensured by (conceptually)
+padding the points with fake coordinates that are all zero.  It is
+easy to verify that this ``hack'' would not affect the algorithm's
+performance in any way and it is just a trick to make our analysis
+simpler.  In particular, we assume that $\hdim > 2 (1+\eps)r$.
+
+\begin{lemma}
+    \lemlab{parameters:value}%
+    %
+    For $\alpha = 1-\nfrac{r}{\hdim}$, $\beta = 1 -
+    \nfrac{r(1+\eps)}{\hdim}$, $n$ and $\hdim$ as above, we have that
+    \begin{enumerate*}[label=\Roman*.]
+        \item
+        $\tau =O\pth{n^{1/(1+\eps)}}$,
+        \item $k = O( \ln n)$, and 
+        \item $L = O(n^{1/(1+\eps)})$.
+    \end{enumerate*}
+
+\end{lemma}
+\begin{proof}
+    By \Eqref{tau:value:3:4},
+    $\tau = 4 \ceil{1/\alpha^k} = O\pth{ n^{\rho} } =
+    O(n^{1/(1+\eps)})$, by \lemref{d:s:2}(B).
+
+    Now, $\beta = 1 - \nfrac{r(1+\eps)}{\hdim} \leq 1/2$, since we
+    assumed that $\hdim > 2 (1+\eps)r$. As such, we have $\ds k =
+    \ln_{1/\beta} n = \frac{\ln n}{\ln 1/\beta} = O \pth{ \ln n}$.
+
+    By \lemref{collide}, $L = O\bigl( n \pth{\beta/\alpha}^k
+    \bigr)$. Now $\beta^k = 1/n$ and as such
+    \begin{math}
+        L = O( 1/\alpha^k ) = O(\tau) = O\bigl(n^{1/(1+\eps)}\bigr).
+    \end{math}~
+\end{proof}
+
+
+
+\remove{Let us recap. The expected number of points of the set $\PntSet
+\setminus \Ball(\query,(1+\eps)r)$ returned by the data-structure of
+\lemref{family:amplify} is $L = O\pth[]{n^{\rho}} =
+O\pth[]{n^{1/(1+\eps)}}$.
+
+
+}
+
+\subsection{The result}
+
+\begin{theorem}
+    \thmlab{near:neighbor:hypercube}%
+    %
+    Given a set $\PntSet$ of $n$ points on the hypercube
+    $\Hypercube^\hdim$ and parameters $\eps>0$ and $r > 0$, one can
+    build a data-structure $\DS = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$
+    that solves the approximate near neighbor problem (see
+    \defref{approximate:near:n}).  The data-structure answers a query
+    successfully with high probability. In addition we have the
+    following:
+    \begin{compactenumA}
+        \smallskip%
+        \item The query time is
+        $O\bigl(\hdim n^{1/(1+\eps)} \log n \bigr)$.
+
+        \smallskip%
+        \item The preprocessing time to build this data-structure is
+        $O\bigl(n^{1+1/(1+\eps)} \log^2 n \bigr)$.
+
+        \smallskip%
+        \item The space required to store this data-structure is
+        $O\bigl(n\hdim + n^{1+1/(1+\eps)} \log^2 n \bigr)$.
+    \end{compactenumA}
+\end{theorem}
+\begin{proof}
+    Our building block is the data-structure described above.  By
+    Markov's inequality, the probability that the algorithm has to
+    abort because of too many collisions with points of $\PntSet
+    \setminus \Ball(\query,(1+\eps)r)$ is bounded by $1/4$ (since the
+    algorithm tries $4L + 1$ points). Also, if there is a point inside
+    $\Ball(\query,r)$, the algorithm would find it with probability
+    $\geq 3/4$, by \Eqref{tau:value:3:4}. As such, with probability at
+    least $1/2$ this data-structure returns the correct answer in this
+    case.  By \lemref{family:amplify}, the query time is $O( k \tau +
+    L \hdim )$.
+
+    This data-structure succeeds only with constant probability. To
+    achieve high probability, we construct $O( \log n)$ such
+    data-structures and perform the near neighbor query in each one of
+    them.  As such, the query time is
+    \begin{align*}
+        O\pth{ \MakesBig \pth{ k \tau + L \hdim} \log n }%
+        =%
+        O\pth{n^{1/(1+\eps)} \log^2 n + \hdim n^{1/(1+\eps)} \log n}%
+        =%
+        O \pth{ \hdim n^{1/(1+\eps)} \log n},
+    \end{align*}
+    by \lemref{parameters:value} and since $\hdim = \Omega\pth{\lg n
+    }$ if $\PntSet$ contains $n$ distinct points of
+    $\HypercubeX{\hdim}$.
+
+    As for the preprocessing time, by \lemref{family:amplify} and
+    \lemref{parameters:value}, we have
+    \begin{align*}
+        O\pth{ nk\tau \log n } = O\bigl(n^{1+1/(1+\eps)} \log^2 n
+        \bigr).
+    \end{align*}
+
+    Finally, this data-structure requires $O(\hdim n)$ space to store
+    the input points.  Specifically, by \lemref{family:amplify}, we
+    need an additional
+    \begin{math}
+        O\bigl( nk\tau \log n\bigr)%
+        =%
+        O\bigl( n^{1+1/(1+\eps)} \log^2 n\bigr)
+    \end{math}
+    space.
+\end{proof}
+
+In the hypercube case, when $\hdim = n^{O(1)}$, we can build $M =
+O\pth{\log_{1+\eps} \hdim} = O(\eps^{-1} \log \hdim)$ such
+data-structures such that $(1+\eps)$-\ANNbr can be answered using
+binary search on those data-structures which correspond to radii
+$r_1,\ldots, r_M$, where $r_i =(1+\eps)^i$, for $i=1,\ldots, M$.
+
+\begin{theorem}
+    \thmlab{A:N:N:hypercube}%
+    %
+    Given a set $\PntSet$ of $n$ points on the hypercube
+    $\HypercubeX{\hdim}$ (where $\hdim = n^{O(1)}$) and a parameter
+    $\eps>0$, one can build a data-structure to answer approximate
+    nearest neighbor queries (under the Hamming distance) using
+    \begin{math}
+        O\bigl( \hdim n + { n^{1/(1+\eps)}}\eps^{-1} \log^2 n \log
+        \hdim \bigr)
+    \end{math}
+    space, such that given a query point $\query$, one can return
+    a $(1+\eps)$-\ANNbr in $\PntSet$ (under the Hamming distance) in
+    $O( \hdim n^{1/(1+\eps)} \log n \log (\eps^{-1} \log \hdim ) )$
+    time. The result returned is correct with high probability.
+\end{theorem}
+
+
+\begin{remark}
+    The result of \thmref{A:N:N:hypercube} needs to be oblivious to
+    the queries used. Indeed, for any instantiation of the
+    data-structure of \thmref{A:N:N:hypercube} there exist query
+    points for which it would fail.
+
+    In particular, formally, if we perform a sequence of \ANNbr
+    queries using such a data-structure, where the queries depend on
+    earlier returned answers, then the guarantee of a high probability
+    of success is no longer implied by the above analysis (it might
+    hold because of some other reasons, naturally).
+\end{remark}
+
+
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
+
+
+\section{LSH and ANN{}br in Euclidean space}
+\seclab{LSH:direct}
+
+\subsection{Preliminaries}
+
+\begin{lemma}
+    \lemlab{stable}%
+    \index{distribution!normal}%
+    \index{normal distribution}%
+    %
+    Let $X= ( X_1,\ldots, X_\hdim)$ be a vector of $\hdim$ independent
+    variables which have normal distribution $\NormalDistOneDim$, and
+    let $v = (v_1,\ldots, v_\hdim) \in \Re^\hdim$. We have that
+    $\DotProd{v}{X} = \sum_{i} v_i X_i$ is distributed as $\dist{v}
+    Z$, where $Z \sim \NormalDistOneDim$.
+\end{lemma}
+
+\begin{proof}
+    By \lemrefpage{normal:distribution} the point $X$ has
+    multi-dimensional normal distribution $\NormalDistX{\hdim}$.  As
+    such, if $\dist{v}=1$, then this holds by the symmetry of the
+    normal distribution. Indeed, let $e_1 = (1,0, \ldots, 0)$. By the
+    symmetry of the $\hdim$-dimensional normal distribution, we have
+    that $\DotProd{v}{ X} \sim \DotProd{e_1}{ X} = X_1 \sim
+    \NormalDistOneDim$.
+
+    Otherwise, $\DotProd{v}{ X} /\norm{v} \sim \NormalDistOneDim$, and
+    as such $\DotProd{v}{X} \sim N\bigl( 0, \dist{v}^2 \bigr)$, which
+    is indeed the distribution of $\dist{v} Z$.
+\end{proof}
+
+
+\begin{defn}
+    A distribution $\Distribution$ over $\Re$ is called
+    \emphic{$p$-stable}{distribution!stable!$p$} if there exists $p
+    \ge 0$ such that for any $n$ real numbers $v_1, \ldots, v_n$ and
+    $n$ independent variables $X_1, \ldots, X_n$ with distribution
+    $\Distribution$, the random variable $\sum_i v_i X_i$ has the same
+    distribution as the variable $(\sum_i |v_i|^p)^{1/p} X$, where $X$
+    is a random variable with distribution $\Distribution$.
+\end{defn}
+
+
+\index{normal distribution}
+\index{distribution!normal}
+By \lemref{stable}, the normal distribution is a \emphic{$2$-stable
+   distribution}{distribution!stable!$2$}.
+
+
+
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+\subsection{Locality sensitive hashing (\LSH)}
+\seclab{LSH:direct:R:d}
+
+
+%\subsubsection{The experiment}
+
+Let $\pnt$ and $\pntA$ be two points in $\Re^\hdim$. We want to
+perform an experiment to decide if $\dist{\pnt -\pntA } \leq 1$ or
+$\dist{\pnt -\pntA } \geq \eta$, where $\eta = 1+\eps$. We will
+randomly choose a vector $\vecA$ from the $\hdim$-dimensional normal
+distribution $\NormalDistX{\hdim}$ (which is $2$-stable). Next, let
+$r$ be a parameter, and let $t$ be a random number chosen uniformly
+from the interval $[0,r]$. For $\pnt \in \Re^\hdim$, consider the
+random hash function
+\begin{equation}
+    h(\pnt) = \floor{ \frac{\DotProd{\pnt}{\vecA} + t}{r}}. 
+    %
+    \eqlab{L:S:H}
+\end{equation}
+
+Assume that the distance between $\pnt$ and $\pntA$ is $\eta$ and the
+distance between the projection of the two points to the direction
+$\vecA$ is $\beta$. Then, the probability that $\pnt$ and $\pntA$ get
+the same hash value is $\max( 1-\beta/r, 0 )$, since this is the
+probability that the random sliding will not separate them.  Indeed,
+consider the line through $\vecA$ to be the $x$-axis, and assume
+$\pntA$ is projected to $r$ and $\pntB$ is projected to $r- \beta$
+(assuming $r \geq \beta$).  Clearly, $\pntA$ and $\pntB$ get mapped to
+the same value by $h(\cdot)$ if and only if $t \in [0,r-\beta]$, as
+claimed.
+
+As such, we have that the probability of collusion is
+\begin{align*}
+  \alpha(\eta, r)%
+  =%
+  \Prob{ \bigl. h(\pnt) = h(\query) } %
+  =%
+  \int_{\beta=0}^{r}%
+  \Prob{\bigl. \cardin{ \DotProd{\pnt}{\vecA} -
+  \DotProd{\pntA}{\vecA}} = \beta} \pth[]{ 1-
+  \frac{\beta}{r}} \, d\beta.
+\end{align*}
+However, since $\vecA$ is chosen from a $2$-stable distribution, we
+have that
+\begin{equation*}
+    Z%
+    =%
+    \DotProd{\pnt}{\vecA} - \DotProd{\pntA}{\vecA}%
+    =%
+    \DotProd{\pnt - \pntA}{\vecA}%
+    \sim%
+    \NormalDistOneDim\bigl( 0, \distY{\pnt}{\pntA}^2 \bigr).
+\end{equation*}
+ Since we are considering the absolute
+value of the variable, we need to multiply this by two.  Thus, we have
+\begin{align*}
+    \alpha(\eta, r)%
+    =%
+    \int_{\beta=0}^{r} \frac{2}{\sqrt{2 \pi} \eta} \exp\pth{ -
+       \frac{\beta^2}{2\eta^2}}\pth[]{ 1 - \frac{\beta}{r}} \, d\beta,
+\end{align*}
+by plugging in the density of the normal distribution for $Z$.
+Intuitively, we care about the difference $\alpha( 1+\eps,r )
+-\alpha(1,r)$, and we would like to maximize it as much as possible
+(by choosing the right value of $r$). Unfortunately, this integral is
+unfriendly, and we have to resort to numerical computation.
+%
+\index{distribution!normal}
+\index{normal distribution}
+
+
+Now, we are going to use this hashing scheme for constructing locality
+sensitive hashing, as in the hypercube case, and as such we care about
+the ratio
+\begin{align*}
+    \rho(1+\eps)%
+    =%
+    \min_{r} \frac{\log (1/\alpha(1, r))}{\log (1/\alpha(1+\eps,r))};
+\end{align*}
+see \Eqref{rho:ratio}.  The following is verified using numerical
+calculations.
+
+\begin{lemma}[\cite{diim-lshsb-04}]
+    \lemlab{L:S:H:Euclidean}%
+    %
+    One can choose $r$, such that $\rho(1+\eps) \leq
+    \frac{1}{1+\eps}$. 
+\end{lemma}
+
+\lemref{L:S:H:Euclidean} implies that the hash functions defined by
+\Eqref{L:S:H} are $(1,1+\eps,\alpha', \beta')$-sensitive and,
+furthermore, $\rho = \frac{\log (1/\alpha')}{\log (1/\beta')} \leq
+\frac{1}{1+\eps}$, for some values of $\alpha'$ and $\beta'$. As such,
+we can use this hashing family to construct an approximate near
+neighbor data-structure $\DSAprxNearNbr(\PntSet,r,(1+\eps)r)$ for the
+set $\PntSet$ of points in $\Re^\hdim$. Following the same
+argumentation of \thmref{near:neighbor:hypercube}, we have the
+following.
+
+\begin{theorem}
+    \thmlab{A:N:N:R:d}%
+    %
+    Given a set $\PntSet$ of $n$ points in $\Re^\hdim$ and parameters
+    $\eps>0$ and $r > 0$, one can build a $\DSAprxNearNbr =
+    \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$, such that given a query
+    point $\query$, one can decide:
+    \begin{compactenumA}
+        \item If $\Ball(q, r) \cap \PntSet \ne \emptyset$, then
+        $\DSAprxNearNbr$ returns a point $u \in \PntSet$, such that
+        $\distH{u}{q} \leq (1+\eps)r$.
+
+        \item If $\Ball(q, (1+\eps)r) \cap \PntSet = \emptyset$, then
+        $\DSAprxNearNbr$ returns the result that no point is within
+        distance $\leq r$ from $\query$.
+    \end{compactenumA}
+    In any other case, any of the answers is correct. The query time
+    is $O( \hdim n^{1/(1+\eps)} \log n)$ and the space used is
+    $O\pth{\hdim n + n^{1 + 1/(1+\eps)} \log n }$. The result returned
+    is correct with high probability.
+\end{theorem}
+
+\subsection{\ANNbr in high-dimensional euclidean space}
+
+Unlike the binary hypercube case, where we could just do direct binary
+search on the distances, here we need to use the reduction from \ANNbr
+to near neighbor queries.
+
+\subsubsection{The result}
+
+Plugging the above into known reduction from approximate  nearest-neighbor to
+near-neighbor queries, yields the following:
+
+\begin{corollary}
+    \corlab{A:N:N:via:near:neighbor}%
+    %
+    Given a set $\PntSet$ of $n$ points in $\Re^\hdim$, one can
+    construct a data-structure $\DS$ that answers $(1+\eps)$-\ANNbr
+    queries, by performing $O( \log(n/\eps) )$ $(1+\eps)$-approximate
+    near neighbor queries. The total number of points stored at these
+    approximate near neighbor data-structure of $\DS$ is $O( n
+    \eps^{-1} \log(n/\eps))$.
+\end{corollary}
+
+This in turn leads to the following:
+
+\begin{theorem}%
+    \thmlab{A:N:N:R:d:high}%
+    %
+    Given a set $\PntSet$ of $n$ points in $\Re^\hdim$ and parameters
+    $\eps>0$ and $r > 0$, one can build an \ANNbr data-structure using
+    \begin{align*}
+        O\pth{\hdim n + n^{1+1/(1+\eps)} \eps^{-2} \log^3 (n/\eps) }
+    \end{align*}
+    space, such that given a query point $\query$, one can returns a
+    $(1+\eps)$-\ANNbr in $\PntSet$ in
+    \begin{align*}
+        O\pth{ \hdim n^{1/(1+\eps)} \pth{\log n} \log \frac{n}{\eps}}
+    \end{align*}
+    time. The result returned is correct with high probability.
+
+    The construction time is $O\pth{\hdim n^{1+1/(1+\eps)} \eps^{-2}
+       \log^3 (n/\eps) }$.
+\end{theorem}
+
+
+
+
+
+
+%------------------------------------------------------------------
+%------------------------------------------------------------------
+
+
+\section{Bibliographical notes} 
+
+\secref{A:N:N:on:hypercube} follows the exposition of Indyk and
+Motwani \cite{im-anntr-98}.  Kushilevitz \etal \cite{kor-esann-00}
+offered an alternative data-structure with somewhat inferior
+performance. It is quite surprising that one can perform approximate
+nearest neighbor queries in high dimensions in time and space
+polynomial in the dimension (which is sublinear in the number of
+points). One can reduce the approximate near neighbor in Euclidean
+space to the same question on the hypercube ``directly'' (we show the
+details below). However, doing the \LSH directly on the Euclidean
+space is more efficient.
+
+The value of the results shown in this chapter depends to a large
+extent on the reader's perspective. Indeed, for a small value of $\eps
+> 0$, the query time $O( \hdim n^{1/(1+\eps)})$ is very close to
+linear dependency on $n$ and is almost equivalent to just scanning the
+points. Thus, from the low-dimensional perspective, where $\eps$ is
+assumed to be small, this result is slightly sublinear. On the other
+hand, if one is willing to pick $\eps$ to be large (say $10$), then
+the result is clearly better than the naive algorithm, suggesting
+running time for an \ANNbr query which takes (roughly) $O\pth{
+   n^{1/11} }$ time.
+
+The idea of doing locality sensitive hashing directly on the Euclidean
+space, as done in \secref{LSH:direct}, is not shocking after seeing
+the Johnson-Lindenstrauss lemma. Our description follows the paper of
+Datar \etal{} \cite{diim-lshsb-04}. In particular, the current
+analysis which relies on computerized estimates is far from being
+satisfactory. It would be nice to have a simpler and more elegant
+scheme for this case. This is an open problem for further research.
+% Another open problem is to improve the performance of the
+%\LSH scheme.
+
+Currently, the best \LSH construction in $\Re^\hdim$ is due to Andoni
+and Indyk \cite{ai-nohaa-06}. Its space usage is bounded by $O
+\pth{\hdim n + n^{1 + 1/(1+\eps)^2 + o(1)}}$ and its query time is
+bounded by $O\pth{ \hdim n^{1/(1+\eps)^2 +o(1)}}$. This (almost)
+matches the lower bound of Motwani \etal \cite{mnp-lblsh-06}. For a
+nice survey on \LSH see \cite{ai-nohaa-08}.
+
+
+
+\myParagraph{From approximate near neighbor in $\Re^\hdim$ to approximate
+   near neighbor on the hypercube.}
+
+The reduction is quite involved, and we only sketch the details. Let
+$\PntSet$ be a set of $n$ points in $\Re^\hdim$. We first reduce the
+dimension to $k = O(\eps^{-2} \log n)$ using the Johnson-Lindenstrauss
+lemma. Next, we embed this space into $\ell^{k'}_1$ (this is the space
+$\Re^k$, where distances are the $L_1$ metric instead of the regular
+$L_2$ metric), where $k'=O(k/\eps^2)$. This can be done with
+distortion $(1+\eps)$.
+
+Let $Q'$ be the resulting set of points in $\Re^{k'}$. We want to
+solve approximate near neighbor queries on this set of points, for
+radius $r$. As a first step, we partition the space into cells by
+taking a grid with sidelength (say) $k'r$ and randomly translating it,
+clipping the points inside each grid cell. It is now sufficient to
+solve the approximate near neighbor problem inside this grid cell
+(which has bounded diameter as a function of $r$), since with small
+probability the result would be correct. We amplify the probability by
+repeating this a polylogarithmic number of times.
+   
+Thus, we can assume that $\PntSet$ is contained inside a cube of
+sidelength $\leq k'nr$, it is in $\Re^{k'}$, and the distance metric
+is the $L_1$ metric. We next snap the points of $\PntSet$ to a grid of
+sidelength (say) $\eps r/k'$. Thus, every point of $\PntSet$ now has
+an integer coordinate, which is bounded by a polynomial in $\log n$
+and $1/\eps$. Next, we write the coordinates of the points of
+$\PntSet$ using unary notation. (Thus, a point $(2,5)$ would be
+written as $(00011,11111)$ assuming the number of bits for each
+coordinates is $5$.) It is now easy to verify that the Hamming
+distance on the resulting strings is equivalent to the $L_1$ distance
+between the points.
+
+Thus, we can solve the near neighbor problem for points in $\Re^\hdim$
+by solving it on the hypercube under the Hamming distance.
+
+See Indyk and Motwani \cite{im-anntr-98} for more details.
+
+\bigskip
+
+We have only scratched the surface of proximity problems in high
+dimensions. The interested reader is referred to the survey by Indyk
+\cite{a-rs-04} for more information.
+
+
+
+\StandAloneMode{
+   \section{From previous lectures}
+
+   \IncFragment{normal_distribution}
+   % \IncFragment{A_N_N_PLEB_Euclidean}
+   % \IncFragment{A_N_N_PLEB_slow}
+   % \IncFragment{H_S_T_Euclidean}
+}
+
+\ChapterEnd{}
+
+%--------------------------------------------------------
+%
+% end of file
+%--------------------------------------------------------

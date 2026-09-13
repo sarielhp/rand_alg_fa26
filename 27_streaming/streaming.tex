@@ -403,7 +403,7 @@ again.
     elements into a new sequence. Clearly, the element of rank $i$ in
     the output sequence, has rank $2i$ in the union of the two
     original sequences. A sequence that is the result of $i$ such
-    rounds of thinning is of \emphi{level} $i$. We maintain
+    rounds of thinning is of \emphOnly{level}\index{level} $i$. We maintain
     $O( \log n)$ such sequences as we read the stream. At any time, we
     have two buffers of size $s$, that we fill up from the
     stream. Whenever the two buffers fill up completely, we perform
@@ -450,7 +450,7 @@ reading the data once is expensive. Running times of $O(n \log n)$
 might not be acceptable. Furthermore, in many cases, we can \emph{not}
 load all the data into memory.
 
-In the \emphi{streaming} model, one reads the data as it comes in, but
+In the \emphOnly{streaming}\index{streaming} model, one reads the data as it comes in, but
 one can not afford to keep all the data. A natural example would be a
 internet router, which has gazillion of packets going through it every
 minute. We might still be interested in natural questions about these
