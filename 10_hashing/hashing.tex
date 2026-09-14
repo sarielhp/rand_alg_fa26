@@ -122,16 +122,20 @@ otherwise, kick out the stored value to its other location. Repeat
 till stable. if no stability then rebuild table.
     
 The relevant questions when designing a hashing scheme, include:
-\begin{enumerate*}[label=(\Roman*)]
+\begin{compactenumI}%[label=(\Roman*)]
+    \smallskip%
     \item Does hashing give $O(1)$ time per operation for
     dictionaries?
+
+    \smallskip%
     \item Complexity of evaluating $h$ on a given element?
 
+    \smallskip%
     \item Relative sizes of the universe $\cU$ and the set to be
     stored $S$.  \item Size of table relative to size of $S$.  \item
     Worst-case vs average-case vs randomized (expected) time?  \item
     How do we choose $h$?
-\end{enumerate*}
+\end{compactenumI}
 
 The \emphOnly{load factor}\index{load factor} of the array $T$ is the ratio $n/t$ where
 $n = |S|$ is the number of elements being stored and $m = \cardin{T}$
@@ -569,24 +573,28 @@ We now need a second moment bound on the sizes of the buckets.
     \end{equation*}
     Now, by linearity of expectations, we have
     \begin{align*}
-      \Ex{\smash{\sum_{\alpha=0}^{m-1} X_\alpha^2}\Bigr.}%
-      &=%
+        \Ex{\smash{\sum_{\alpha=0}^{m-1} X_\alpha^2}\Bigr.}%
+        &\EQ%
         \Ex{n +  \smash{2 \sum_{i=1}^{n-1} 
-        \sum_{j=i+1}^n Z_{ij} } \Bigr.}%
-        =%
+              \sum_{j=i+1}^n Z_{ij} } \Bigr.}%
+        \\&
+        \EQ%
         n +  2 \sum_{i=1}^{n-1} 
         \sum_{j=i+1}^n\Ex{ Z_{ij} } %
-        \leq %
+        \\&
+        \LEQ %
         n +  2 \sum_{i=1}^{n-1} \sum_{j=i+1}^n\frac{1}{m} %
-      \\&%
-      = %
-      n +  \frac{2}{m} \binom{n}{2}%
-      = %
-      n  +  \frac{2n(n-1)}{2m}
-      \leq% 
-      n \pth{1 +  \frac{n-1}{m}}
-      \leq 
-      n\pth{1  + \frac{1}{c}}
+        \\&%
+        \EQ %
+        n +  \frac{2}{m} \binom{n}{2}%
+        \EQ %
+        n  +  \frac{2n(n-1)}{2m}
+        \\&
+        \LEQ% 
+        n \pth{1 +  \frac{n-1}{m}}
+        \\&
+        \LEQ
+        n\pth{1  + \frac{1}{c}}
     \end{align*}
     since $m \geq c n$.
 \end{proof}

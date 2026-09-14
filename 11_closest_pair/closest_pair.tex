@@ -13,13 +13,15 @@
 \ChapterPrefix{}
 \ChapterGen{}
 
-\QuoteExt{The events of September 8 prompted Foch to draft the later
+\QuotePExt{The events of September 8 prompted Foch to draft the later
    legendary signal: ``My \si{centre} is giving way, my right is in
    retreat, situation excellent. I attack.'' It was probably never
-   sent.  }{John Keegan}{The first world war}
+   sent.  }%
+{John Keegan}%
+{The first world war}
 
 
-\section{How many times can a minimum change?}
+\section{How many times the \TPDF{$\min$}{min} change?}
 
 Let $a_1, \ldots, a_n$ be a set of $n$ numbers, and let us randomly
 permute them into the sequence $b_1,\ldots, b_n$. Next, let $c_i =
@@ -104,37 +106,32 @@ We are interested in solving the following problem.
 We need the following easy packing lemma.
 
 
-\bigskip%
-\minipageWFigure{%
-   \begin{lemma}%
-       \lemlab{packing:2:d}%    
-       %
-       Let $\PntSet$ be a set of points contained inside a square
-       $\square$, such that the sidelength of $\square$ is
-       $\num = \ClosestPair ({\PntSet} )$. Then
-       $\cardin{\PntSet} \leq 4$.
-   \end{lemma}
+\begin{lemma}%
+    \lemlab{packing:2:d}%    
+    % 
+    Let $\PntSet$ be a set of points contained inside a square $\square$,
+    such that the sidelength of $\square$ is
+    $\num = \ClosestPair ({\PntSet} )$. Then $\cardin{\PntSet} \leq 4$.
+\begin{figure}[h]
+    \centering
+    {\IncludeGraphics{\File{figs/\si{min_dist_square}}}}%
+    \caption{}
+    \figlab{c_p_m_d_s}
+\end{figure}
+\end{lemma}
    
-   
-   \begin{proof}
-       Partition $\square$ into four equal squares
-       $\square_1,\ldots, \square_4$, and observe that each of these
-       squares has diameter $\sqrt{2} \num/2$ $ < \num$, and as such
-       each can contain at most one point of $\PntSet$; that is, the
-       disk of radius $\num$ centered at a point $\pnt \in \PntSet$
-       completely covers the subsquare containing it; see the figure
-       on the right.
-       
-       Note that the set $\PntSet$ can have four points if it is the
-       four corners of $\square$.
-   \end{proof}%
-}%
-{%
-   {\IncludeGraphics{\File{figs/\si{min_dist_square}}}}%
-}%
-{}%
-\medskip%
 
+\begin{proof}
+    Partition $\square$ into four equal squares
+    $\square_1,\ldots, \square_4$, and observe that each of these squares has diameter
+    $\sqrt{2} \num/2$ $ < \num$, and as such each can contain at most one
+    point of $\PntSet$; that is, the disk of radius $\num$ centered at a
+    point $\pnt \in \PntSet$ completely covers the subsquare containing it;
+    see the figure on the right.
+       
+    Note that the set $\PntSet$ can have four points if it is the four
+    corners of $\square$.
+\end{proof}%
 
 
 \begin{lemma}
@@ -244,12 +241,15 @@ be $O(nk)$. But we can do even better!
     \]
     Thus, the expected running time is
     \begin{align*}
-      \Ex{ \bigl. R} %
-      &=%
+        \Ex{ \bigl. R} %
+        &\EQ%
         1 +
         \Ex{1 + \sum\nolimits_{i=2}^n \pth{1 + X_i \cdot i}}
-        = n + \sum_{i=2}^n \bigl( \Ex{X_i} \cdot i \bigr)
-        = n + \sum_{i=2}^n i \cdot \Prob{X_1 = 1},
+        \\&
+        \EQ%
+        n + \sum_{i=2}^n \bigl( \Ex{X_i} \cdot i \bigr)
+        \EQ%
+        n + \sum_{i=2}^n i \cdot \Prob{X_1 = 1},
     \end{align*}
     by linearity of expectation and since for an indicator variable
     $X_i$, we have that $\Ex{X_i} = \Prob{X_i = 1}$.
