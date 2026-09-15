@@ -183,7 +183,7 @@ where $\mu_X = \Ex{X}$.
     independent) if knowing the value of all variables except one, does
     not provide any information about the value of this singleton
     variable. Pairwise independence on the other hand requires this
-    property only hold only for subsets of two two variables.
+    property hold only for pairs of variables.
 \end{remark}
 
 
@@ -194,7 +194,7 @@ where $\mu_X = \Ex{X}$.
 \end{exercise}
 
 \begin{example}[Variance of a binomial distribution]
-    Let $Y_1, \ldots, Y_m$ are independent random $0/1$ variables that are
+    Let $Y_1, \ldots, Y_m$ be independent random $0/1$ variables that are
     each one with probability $p$ (i.e., a single $Y_i$ is a
     \emphOnly{Bernoulli random variable}\index{Bernoulli random variable} taking value $1$ with probability
     $p$ and $0$ with probability $1-p$).  Let $Y = \sum_{i=1}^m Y_i$, and
@@ -589,18 +589,17 @@ the algorithm gets two numbers $r_{-}$ and $r_+$.
            \begin{align*}
                &\ell_{-}
                \EQ
-               \floor{\frac{k}{n^{1/4}} - \frac{t }{2} \sqrt{n} }-1
+               \floor{\frac{k}{n^{1/4}} - \frac{t }{2} n^{3/8} }-1
                %\\
                \qquad\text{and} \qquad%
-                \ell_{+} \EQ \floor{\frac{k}{n^{1/4}} + \frac{t }{2} \sqrt{n} }+1.
+                \ell_{+} \EQ \floor{\frac{k}{n^{1/4}} + \frac{t }{2} n^{3/8} }+1.
            \end{align*}
-
-\end{remark}
-\end{minipage}
+       \end{remark}
+   \end{minipage}
 }
 \bigskip%
 
-We have that property that that
+We have the property that
 $\EBRY{S}{k} \in [r_{-}, r_{+}]$, and
 \begin{equation*}
     \cardin{ \smash{\underbrace{S \cap (r_{-}, r_{+})}_{S_m}} }%
@@ -842,6 +841,25 @@ the material covered here (i.e., no need to read it).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+Chebyshev's inequality was first formulated and proved by Bienaym{\'e}
+\cite{b-cadld-1853}, and later independently discovered by Chebyshev
+\cite{c-dvm-1867}, who used it to establish the weak law of large
+numbers.
+
+The randomized selection algorithm presented in this chapter is due to
+Floyd and Rivest \cite{fr-etbs-75}. The implementation of the selection
+algorithm was published as Algorithm~489 by Floyd and Rivest
+\cite{fr-a4s-75}. It improves upon the expected comparison bound of
+Hoare's \QuickSelect \cite{h-a6f-61}, as well as the worst-case
+linear-time deterministic selection algorithm of Blum \etal
+\cite{bfprt-tbs-73}.
+
+Standard textbook presentations of the sampling-based selection algorithm
+and Chebyshev's inequality include Motwani and Raghavan \cite{mr-ra-95}
+and Mitzenmacher and Upfal \cite{mu-pcrpt-17}.
 
 
 \StandAloneMode{
