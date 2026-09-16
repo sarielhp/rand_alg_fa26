@@ -33,24 +33,24 @@ You are given two binary vectors
 $\vecA = (v_1, \ldots, v_n), \vecB = (u_1, \ldots, u_n) \in
 \brc{\bigl. 0,1}^n$ and you would like to decide if they are equal or
 not. Unfortunately, the only access you have to the two vectors is via
-a black-box that enables you to compute the dot-product of two binary
+a black box that enables you to compute the dot product of two binary
 vectors over $\ZZ_2$. Formally, given two binary vectors as above,
-their dot-product is $\DotProd{\vecA}{\vecB} = \sum_{i=1}^n v_i u_i$
-(which is a non-negative integer number). Their dot product modulo
+their dot product is $\DotProd{\vecA}{\vecB} = \sum_{i=1}^n v_i u_i$
+(which is a non-negative integer). Their dot product modulo
 $2$, is \;$\DotProd{\vecA}{\vecB} \bmod 2$\; (i.e., it is $1$ if
 $\DotProd{\vecA}{\vecB}$ is odd and $0$ otherwise).
 
-Naturally, we could use the black-box to read the vectors (using
+Naturally, we could use the black box to read the vectors (using
 $2n$ calls), but since we are interested only in deciding if they are
-equal or not, this should require fewer calls to the black-box (which
+equal or not, this should require fewer calls to the black box (which
 is expensive).
 
 \begin{lemma}
     \lemlab{verify:vectors:1:2}%
     %
     Given two binary vectors $\vecA, \vecB \in \brc{\bigl. 0,1}^n$, a
-    randomized algorithm can, using two computations of dot-product
-    modulo 2, decide if $\vecA$ is equal to $\vecB$ or not.  The
+    randomized algorithm can, using two dot-product computations
+    modulo $2$, decide if $\vecA$ is equal to $\vecB$ or not.  The
     algorithm may return one of the following two values:
     \begin{compactenumA}
         \item[$\boldsymbol \ne$:] Then $\vecA \neq \vecB$.
@@ -82,13 +82,14 @@ is expensive).
         algorithm returns `$\boldsymbol \ne$'.
     \end{compactenumA}
     \smallskip%
-    Clearly, if the `$\boldsymbol \ne$' is returned then
+    Clearly, if `$\boldsymbol \ne$' is returned, then
     $\vecA \neq \vecB$.
 
     So, assume that the algorithm returned `$\boldsymbol =$' but
     $\vecA \neq \vecB$. For the sake of simplicity of exposition,
-    assume that they differ on the $n$\th bit: $u_n \neq v_n$. We then
-    have that
+    assume that they differ on the $n$\th bit: $u_n \neq v_n$.
+    Since both are binary bits, we have $v_n - u_n \equiv 1 \pmod 2$.
+    We then have that
     \begin{align*}
         &\alpha = \DotProd{\vecA}{\vecRand} =
         \overbrace{\sum_{i=1}^{n-1} v_i r_i}^{=\alpha'} \quad+\quad
@@ -99,15 +100,16 @@ is expensive).
         \overbrace{\sum_{i=1}^{n-1} u_i r_i}^{=\beta'} \quad+\quad u_n
         r_n.
     \end{align*}
+    Thus, $\alpha - \beta \equiv (\alpha' - \beta') + r_n \pmod 2$.
     Now, there are two possibilities:
     \begin{compactenumA}
         \smallskip%
         \item If $\alpha' \nequiv \beta' \bmod 2$, then, with
-        probability half, we have \chgY{$r_i$}{$r_n$} = 0, and as such $\alpha
+        probability half, we have $r_n = 0$, and as such $\alpha
         \nequiv \beta \bmod 2$.
         \smallskip%
         \item If $\alpha' \equiv \beta' \bmod 2$, then, with
-        probability half, we have \chgY{$r_i$}{$r_n$} = 1, and as such $\alpha
+        probability half, we have $r_n = 1$, and as such $\alpha
         \nequiv \beta \bmod 2$.
     \end{compactenumA}
     \smallskip%
@@ -121,7 +123,7 @@ is expensive).
 \subsubsection{Amplification.}
 
 Of course, this is not a satisfying algorithm -- it returns the
-correct answer only with probability half if the vectors are
+correct answer only with probability at least half if the vectors are
 different. So, let us run the algorithm $t$ times.  Let $T_1, \ldots,
 T_t$ be the returned values from all these executions.  If any of the
 $t$ executions returns that the vectors are different, then we know
@@ -236,10 +238,10 @@ $O(n^{2})$ time (and this algorithm is simple).
 
 \subsubsection{The Schwartz–Zippel lemma}
 
-Let $\Field$ be a field (i.e., real numbers). Let
+Let $\Field$ be a field (e.g., the real numbers or a finite field $\ZZ_p$). Let
 $\Field[x_1, \ldots, x_n]$ denote the set of polynomials over the $n$
 variables $x_1, \ldots, x_n$ over $\Field$. Such a polynomial is a sum of
-monomial, where a \emphOnly{monomial}\index{monomial} has the form
+monomials, where a \emphOnly{monomial}\index{monomial} has the form
 $c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}$, where
 $c \in \Field$. The \emphOnly{degree}\index{degree} of this monomial is
 $\degreeX{c \cdot x_1^{i_1} \cdot x_2^{i_2} \cdots x_n^{i_n}} = i_1 + i_2 +\cdots +
@@ -279,7 +281,7 @@ the values from the right set of values.
         f \in \Field[x_1, \ldots, x_n]
     \end{math}
     be a non-zero polynomial of total degree $d \geq 0$, over a field
-    $\Field$.  Let $S \subseteq \Field$ be finite. Let
+    $\Field$.  Let $S \subseteq \Field$ be a finite, non-empty set. Let
     $\mathsf{r} = (r_1, \ldots, r_n)$ be randomly and uniformly chosen
     from $S^n$. Then
     \begin{equation*}
@@ -288,31 +290,32 @@ the values from the right set of values.
     Equivalently, we have $|Z_f \cap S^n| \leq d |S|^{n-1}$.
 \end{lemma}
 \begin{proof}
-    The proof is by induction on $n$. For $n = 1$, by the theorem,
-    formally known as the fundamental theorem of algebra,
-    $|Z_f \cap S| \leq |Z_f| \leq d$. So assume the theorem holds for
-    $n-1$. Since $f$ is non-zero, it can be written as a sum of $d$
-    polynomials in $n-1$ variables. That is, $f$ can be written as
+    The proof is by induction on $n$. For $n = 1$, by the theorem
+    formerly known as the fundamental theorem of algebra,
+    $|Z_f \cap S| \leq |Z_f| \leq d$. So assume the lemma holds for
+    $n-1$ variables. Since $f$ is non-zero, it can be written as a
+    polynomial in $x_1$ of degree at most $d$ whose coefficients are
+    polynomials in $x_2, \ldots, x_n$. That is, $f$ can be written as
     \begin{equation*}
         f(x_1, \ldots, x_n)
         =%
         \sum_{i=0}^d x_1^i f_i(x_2, \ldots, x_n),
     \end{equation*}
     where $\degreeX{f_i} \leq d-i$.  Since $f$ is not zero, one of the
-    $f_i$s must be non-zero, and let $\xi$ be the maximum index such that
+    $f_i$s must be non-zero. Let $\xi$ be the maximum index such that
     $f_\xi \neq 0$.
 
     Now, we randomly choose the values $r_2, \ldots, r_n \in S$
-    (independently and uniformly). And consider the polynomial in the
-    single variable $x$, which is
+    (independently and uniformly), and consider the polynomial in the
+    single variable $x$:
     \begin{equation*}
         g(x) = \sum_{i=0}^d f_i(r_2, \ldots,r_n) x^i.%
     \end{equation*}
     Let $\EventF$ be the event that $f_\xi(r_2, \ldots, r_n) = 0$.  Let
     $\EventG$ be the event that $g(r_1) = 0$.  By induction, we have
-    $\Prob{\EventF} \leq (d-\xi)/|S|$. More interestingly if $\EventF$ does
-    not happen, then $\degreeX{g} = \xi$. As such, by the base case, we have
-    that
+    $\Prob{\EventF} \leq (d-\xi)/|S|$. If $\EventF$ does
+    not happen, then $f_\xi(r_2, \ldots, r_n) \neq 0$ and $f_i = 0$ for all $i > \xi$, so $\degreeX{g} = \xi$.
+    As such, by \chgY{induction}{the base case}, we have that
     \begin{equation*}
         \ProbCond{ \EventG}{\smash{\overline{\EventF}}} = \ProbCond{ g(r_1)
            = 0}{\smash{\overline{\EventF}}}%
@@ -338,20 +341,20 @@ the values from the right set of values.
 
 \begin{remark}
     Consider the polynomial $f(x,y) = (x-1)^2 + (y-1)^2 - 1$. The zero
-    set of this polynomial is the unit circle. So the zero set $Z_f$
-    is infinite in this case. However, note that for any choice of
-    $S$, the set $S^2$ is a grid. The Schwartz-Zippel lemma, tells us
-    that there relatively few grid points that are in the zero set.
+    set of this polynomial is the unit circle \newX{centered at $(1,1)$}.
+    So the zero set $Z_f$ is infinite in this case. However, note that for
+    any choice of $S$, the set $S^2$ is a grid. The Schwartz--Zippel
+    lemma tells us that there are relatively few grid points in the zero set.
 \end{remark}
 
 \subsubsection{Applications.}
 \paragraph{Checking if a polynomial is the zero polynomial.}
 
 Let $f$ be a polynomial of degree $d$, with $n$ variables, over the
-reals that can be evaluated in $O(T)$ time. One can check if $f$ zero,
-by picking randomly a $n$ numbers from $S= \IRX{d^3}$. By
-\lemref{Schwartz:Zippel}, we have that the probability of $f$ to be
-zero over the chosen values is $\leq d/d^3$, which is a small
+reals that can be evaluated in $O(T)$ time. One can check if $f$ is zero,
+by picking randomly $n$ numbers from $S= \IRX{d^3}$. By
+\lemref{Schwartz:Zippel}, we have that the probability that $f$ evaluates to zero on
+the chosen values is $\leq d/d^3 = 1/d^2$, which is a small
 number. As above, we can do amplification to get a high confidence
 answer.
 
@@ -362,14 +365,14 @@ by checking if $f(\mathsf{r})=g(\mathsf{r})$, for some random input $\mathsf{r}$
 correctness follows from the above, as one interprets the algorithm as
 checking if $f-g$ is the zero polynomial.
 
-\paragraph{Verifying  polynomials product.}
+\paragraph{Verifying polynomial product.}
 
 Given three polynomials $f,g$, and $h$, one can now check if
 $f g = h$. Again, one randomly picks a value $\mathsf{r}$, and checks if
 $f(\mathsf{r})g(\mathsf{r})=h(\mathsf{r})$. The proof of correctness follows from the above, as
 one interprets the algorithm as checking if $fg - h$ is the zero
 polynomial.
-
+\remX{Note that $\degreeX{fg - h} \leq 2d$ when $f$ and $g$ have degree $d$, so the sample set $S$ should be chosen of size $|S| \geq (2d)^3$ to retain the same error bound.}
 
 \subsection{Checking if a bipartite graph has a perfect matching}
 
@@ -390,7 +393,7 @@ the monomial
     f_\pi = \prod_{i=1}^n M[i,\pi(i)].
 \end{equation*}
 It is either a polynomial of degree exactly $n$, or it is
-zero. Furthermore, observe that for any two different permutation
+zero. Furthermore, observe that for any two different permutations
 $\pi,\sigma \in \Pi$, we have that if $f_\pi$ and $f_\sigma$ are both non-zero, then
 $f_\pi \neq f_\sigma$ and $f_\pi \neq -f_\sigma$.
 
@@ -416,15 +419,15 @@ $\pi$ such that $f_\pi \neq 0$. But this implies that $\psi \neq 0$
 each other).
 
 In the other direction, if there is no perfect matching in $\G$, then
-$f_\pi = 0$ for all permutation $\pi$. This implies that
+$f_\pi = 0$ for all permutations $\pi$. This implies that
 $\psi=0$. Thus, deciding if $\G$ has a perfect matching is equivalent
 to deciding if $\psi \neq 0$. The polynomial $\psi$ is defined via a
 determinant of a matrix that has variables as some of the entries (and
 zeros otherwise). By the above, all we need to do is to evaluate
 $\psi$ over some random values. If we use exact arithmetic, we would
 just pick a random number in $[0,1]$ for each variable, and evaluate
-$\psi$ for these values of the variable. Namely, we filled the matrix
-$M$ with values (so it is all numbers now), and we need to computes
+$\psi$ for these values of the variable.  Namely, we filled the matrix
+$M$ with values (so it is all numbers now), and we need to compute
 its determinant. Via Gaussian elimination, the determinant can be
 computed in cubic time. Thus, we can evaluate $\psi$ in cubic time,
 which implies that with high probability we can check if $\G$ has a
@@ -434,8 +437,7 @@ If we do not want to be prisoners of the impreciseness of floating
 point arithmetic, then one can perform the above calculations over
 some finite field (usually, the field is simply working modulo a prime
 number).
-
-
+\remX{Over a finite field $\ZZ_p$ with prime $p > 2n$, the Schwartz--Zippel lemma guarantees that if a perfect matching exists, $\Prob{\det(M) = 0} \leq n/p < 1/2$, yielding an efficient randomized algorithm without floating-point precision issues.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -466,10 +468,10 @@ algorithm.
 
 \subsection{Complexity Classes}
 
-I assume people know what are Turing machines, \CClass{NP},
-\CClass{NPC}, RAM machines, uniform model, logarithmic model.
-\CClass{PSPACE}, and \CClass{EXP}. If you do now know what are those
-things, you should read about them. Some of that is covered in the
+I assume people know what Turing machines, \CClass{NP},
+\CClass{NPC}, RAM machines, uniform model, logarithmic model,
+\CClass{PSPACE}, and \CClass{EXP} are. If you do not know what those
+things are, you should read about them. Some of that is covered in the
 randomized algorithms book, and some other stuff is covered in any
 basic text on complexity theory\footnote{There is also the internet.}.
 
@@ -477,7 +479,7 @@ basic text on complexity theory\footnote{There is also the internet.}.
 \begin{defn}\index{Complexity!\CClass{P}}
     The class \CClass{P} consists of all languages $L$ that have a
     polynomial time algorithm $\Algorithm{Alg}$, such that for any
-    input \chgY{$\Sigma^{*}$}{$x \in \Sigma^*$}, we have
+    input $x \in \Sigma^*$, we have
     \begin{compactenumA}
         \smallskip%
         \item $x \in L \Rightarrow \Algorithm{Alg}(x)$ accepts,
@@ -489,14 +491,14 @@ basic text on complexity theory\footnote{There is also the internet.}.
 \begin{defn}\index{Complexity!\CClass{NP}}
     The class \CClass{NP} consists of all languages $L$ that have a
     polynomial time algorithm \Alg, such that for any input
-    \chgY{$\Sigma^{*}$}{$x \in \Sigma^*$}, we have:
+    $x \in \Sigma^*$, we have:
     \begin{compactenumi}
         \item If $x \in L$, then $\exists y \in \Sigma^*$,
         $\Alg(x,y)$ accepts, where $|y|$ (i.e. the length of $y$) is
         bounded by a polynomial in $|x|$.
      
         \item If $x \notin L$, then $ \forall y \in
-        \Sigma^* \Alg(x,y)$ rejects.
+        \Sigma^*, \Alg(x,y)$ rejects.
     \end{compactenumi}
 \end{defn}
 
@@ -518,8 +520,8 @@ false.)
 
 \begin{defn}\index{Complexity!\CClass{RP}}
     The class \CClass{R{}P} (for Randomized Polynomial time) consists of
-    all languages $L$ that have a randomized algorithm \Alg with worst
-    case polynomial running time such that for any input $x \in
+    all languages $L$ that have a randomized algorithm \Alg with worst-case
+    polynomial running time such that for any input $x \in
     \Sigma^*$, we have
     \begin{compactenumi}
         \item If $x \in L$ then $\Prob{\Alg(x) \text{
@@ -532,10 +534,10 @@ false.)
 
 An \CClass{RP} algorithm is a Monte Carlo algorithm, but this
 algorithm can make a mistake only if $x \in L$. As such, \coCClass{RP}
-is all the languages that have a Monte Carlo algorithm that make a
+is all the languages that have a Monte Carlo algorithm that makes a
 mistake only if $x \notin L$. A problem which is in $\CClass{RP} \cap
 \coCClass{RP}$ has an algorithm that does not make a mistake, namely a
-Las Vegas algorithm.
+Las Vegas algorithm. \newX{Indeed, $\CClass{ZPP} = \CClass{RP} \cap \coCClass{RP}$.}
 
 \begin{defn}\index{Complexity!\CClass{ZPP}}
     The class \CClass{ZPP} (for Zero-error Probabilistic Polynomial
@@ -547,7 +549,7 @@ Las Vegas algorithm.
 \begin{defn}\index{Complexity!\CClass{P{}P}}
     The class \CClassPP (for Probabilistic Polynomial time) is the
     class of languages that have a randomized algorithm \Alg, with
-    worst case polynomial running time, such that for any input
+    worst-case polynomial running time, such that for any input
     $x \in \Sigma^*$, we have
     \begin{compactenumi}
         \item If $x \in L$ then $\Prob{\MakeBig \Alg(x) \text{
@@ -567,9 +569,9 @@ The class \CClassPP is not very useful. Why?
 Consider the mind-bogglingly stupid randomized algorithm that returns
 either yes or no with probability half. This algorithm is almost in
 \CClassPP, as it returns the correct answer with probability half. An
-algorithm is in \CClassPP needs to be \emph{slightly} better, and be
-correct with probability better than half. However, how much better
-can be made to be arbitrarily close to $0$ (i.e., probability arbitrarily close to $1/2$). In particular, there is
+algorithm in \CClassPP needs to be \emph{slightly} better, and be
+correct with probability better than half. \chgY{However, how much better
+can be made to be arbitrarily close to $0$ (i.e., probability arbitrarily close to $1/2$)}{However, the margin of advantage can be exponentially small (e.g., $1/2 + 2^{-n}$)}. In particular, there is
 no way to do effective amplification with such an algorithm.
 
 \begin{fragment}{b_p_p}
@@ -578,7 +580,7 @@ no way to do effective amplification with such an algorithm.
         %
         The class \CClass{BPP} (for Bounded-error Probabilistic Polynomial
         time) is the class of languages that have a randomized algorithm
-        \Alg with worst case polynomial running time such that for any
+        \Alg with worst-case polynomial running time such that for any
         input $x \in \Sigma^*$, we have
         \begin{compactenumi}
             \item If $x \in L$ then $\Prob{\Alg(x) \text{ accepts}}
