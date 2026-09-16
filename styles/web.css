@@ -6,7 +6,12 @@
   --link-color: #0969da;
   --header-bg: #f6f8fa;
   --theorem-bg: #f8fafc;
-  --theorem-border: #3b82f6;
+  --theorem-border: #7c3aed;
+  --lemma-border: #2563eb;
+  --proof-border: #16a34a;
+  --definition-border: #d97706;
+  --example-border: #0891b2;
+  --remark-border: #64748b;
   --code-bg: #f6f8fa;
   --quote-color: #57606a;
 }
@@ -19,7 +24,12 @@
     --link-color: #58a6ff;
     --header-bg: #161b22;
     --theorem-bg: #161b22;
-    --theorem-border: #388bfd;
+    --theorem-border: #a78bfa;
+    --lemma-border: #388bfd;
+    --proof-border: #3fb950;
+    --definition-border: #d29922;
+    --example-border: #39c5cf;
+    --remark-border: #8b949e;
     --code-bg: #161b22;
     --quote-color: #8b949e;
   }
@@ -27,6 +37,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
   line-height: 1.68;
   color: var(--text-color);
   background-color: var(--bg-color);
@@ -35,9 +46,26 @@ body {
 }
 
 .content-container {
-  max-width: 880px;
+  box-sizing: border-box;
+  width: min(1456px, calc(100% - 1.5rem));
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem 1.5rem;
+}
+
+@media (max-width: 700px) {
+  body {
+    font-size: 16px;
+  }
+
+  .content-container {
+    width: 100%;
+    padding: 1rem 0.8rem 2.5rem;
+  }
+
+  .book-nav {
+    gap: 0.65rem;
+    padding: 0.7rem 0.8rem;
+  }
 }
 
 /* Nav Bar */
@@ -106,13 +134,110 @@ div.minipage {
   display: block;
 }
 
+/* Chapter epigraph */
+figure.chapter-quote {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 980px);
+  margin: 1.5rem auto 2.6rem;
+  padding: 1.45rem 1.8rem 1.2rem 3.2rem;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--header-bg), var(--theorem-bg));
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+figure.chapter-quote::before {
+  position: absolute;
+  top: -0.25rem;
+  left: 0.65rem;
+  color: var(--theorem-border);
+  content: "“";
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 4.6rem;
+  line-height: 1;
+  opacity: 0.42;
+}
+
+.chapter-quote blockquote {
+  margin: 0;
+  color: var(--text-color);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.chapter-quote hr {
+  width: 100%;
+  margin: 1rem 0 0.65rem;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.chapter-quote figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--quote-color);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.chapter-quote .quote-author {
+  font-weight: 700;
+}
+
+.chapter-quote .quote-author::before {
+  content: "— ";
+  font-weight: 400;
+}
+
+.chapter-quote .quote-work {
+  margin-top: 0.1rem;
+  font-size: 0.92em;
+  font-style: italic;
+}
+
 /* Theorems & Proofs */
-div.theorem, div.newtheorem {
+div.newtheorem {
   background: var(--theorem-bg);
-  border-left: 4px solid var(--theorem-border);
+  border-left: 5px solid var(--lemma-border);
   padding: 0.9rem 1.2rem;
   margin: 1.5rem 0;
   border-radius: 0 6px 6px 0;
+}
+
+/* The outer TeX4ht class identifies the kind of statement. */
+div.theorem > div.newtheorem {
+  border-left-color: var(--theorem-border);
+  border-left-width: 8px;
+}
+
+div.proof > div.newtheorem {
+  border-left-color: var(--proof-border);
+  border-left-width: 4px;
+}
+
+div.definition > div.newtheorem {
+  border-left-color: var(--definition-border);
+}
+
+div.example > div.newtheorem {
+  border-left-color: var(--example-border);
+}
+
+div.remark > div.newtheorem {
+  border-left-color: var(--remark-border);
+  border-left-width: 3px;
+}
+
+div.proof > div.newtheorem::after {
+  display: block;
+  clear: both;
+  content: "";
 }
 
 span.rm-lmbx-12 {
@@ -141,6 +266,95 @@ figcaption.caption {
 /* Math */
 .mathjax-inline, .mathjax-block {
   font-size: 1.05em;
+}
+
+/* Compact binary trees used in the Huffman-code chapter. */
+.web-binary-tree {
+  display: inline-flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  min-width: 6.5rem;
+  margin: 0.25rem 0.75rem;
+  padding-top: 0.45rem;
+  vertical-align: middle;
+}
+
+.web-binary-tree > .tree-node {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.web-binary-tree > .tree-children {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-top: 1.15rem;
+}
+
+.web-binary-tree > .tree-children::before,
+.web-binary-tree > .tree-children::after {
+  position: absolute;
+  top: 0.8rem;
+  width: 43%;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.web-binary-tree > .tree-children::before {
+  left: 10%;
+  transform: rotate(19deg);
+}
+
+.web-binary-tree > .tree-children::after {
+  right: 10%;
+  transform: rotate(-19deg);
+}
+
+.tree-child {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-color);
+}
+
+.web-subtree-triangle {
+  display: inline-flex;
+  box-sizing: border-box;
+  width: 3rem;
+  height: 2.5rem;
+  align-items: end;
+  justify-content: center;
+  margin: 0 0.35rem;
+  padding-bottom: 0.2rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  vertical-align: middle;
+}
+
+.subtree-label {
+  font-weight: 600;
+}
+
+/* Proof-ending duck, emitted directly by the TeX4ht preamble. */
+.qed-duck {
+  display: inline-block;
+  float: right;
+  position: relative;
+  top: -0.3em;
+  width: auto;
+  height: 1.4em;
+  margin-left: 0.35em;
+  vertical-align: -0.3em;
+  transform: scaleX(-1);
+}
+
+.qed-fallback {
+  margin-left: 0.35em;
 }
 
 /* Lists */
@@ -186,4 +400,3 @@ a.cross-ref.inter-chapter::after {
   font-size: 0.8em;
   opacity: 0.75;
 }
-

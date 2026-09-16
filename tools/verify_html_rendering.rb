@@ -23,13 +23,14 @@
 
 require 'fileutils'
 require 'optparse'
+require 'json'
 require 'set'
 
 class HtmlVerifier
   ROOT_DIR = File.expand_path('..', __dir__)
   SITE_DIR = File.join(ROOT_DIR, 'html_site')
   BOOK_TEX = File.join(ROOT_DIR, 'book.tex')
-  MACROS_TEX = File.join(ROOT_DIR, 'styles', 'mathjax_macros.tex')
+  MACROS_JSON = File.join(ROOT_DIR, 'styles', 'mathjax_macros.json')
   PREFIX_TEX = File.join(ROOT_DIR, 'styles', 'prefix.tex')
 
   # Terminal colors
@@ -187,10 +188,10 @@ class HtmlVerifier
     known = STANDARD_MATHJAX.dup
     known.merge(LATEX_META)
 
-    # Load defined macros from mathjax_macros.tex
-    if File.exist?(MACROS_TEX)
-      File.read(MACROS_TEX).scan(/\\(?:providecommand|newcommand|def)\*?\s*(?:\{\\([a-zA-Z@]+)\}|\\([a-zA-Z@]+))/).flatten.compact.each do |m|
-        known << m
+    # Load the same macro dictionary injected into window.MathJax.
+    if File.exist?(MACROS_JSON)
+      JSON.parse(File.read(MACROS_JSON, encoding: 'utf-8')).each_key do |name|
+        known << name
       end
     end
 
@@ -358,11 +359,33 @@ class HtmlVerifier
       end
     end
 
+    # Every source \cite key must have both a hyperlink and its exact
+    # BibLaTeX bibliography target in the generated chapter page.
+    source_path = File.join(ROOT_DIR, chap[:dir], chap[:file])
+    if File.exist?(source_path)
+      source = File.read(source_path, encoding: 'utf-8')
+      source.gsub!(/(?<!\\)%[^\n]*/, '')
+      cite_keys = source.scan(/\\cite\*?(?:\s*\[[^\]]*\]){0,2}\s*\{([^}]*)\}/m)
+                        .flatten
+                        .flat_map { |keys| keys.split(',') }
+                        .map(&:strip)
+                        .reject(&:empty?)
+                        .uniq
+      cite_keys.each do |key|
+        target = "X0-#{key}"
+        res[:errors] << "Citation #{key} has no bibliography entry anchor" unless existing_ids.include?(target)
+        unless content.match?(/href=["\x27]##{Regexp.escape(target)}["\x27]/)
+          res[:errors] << "Citation #{key} is not linked to its bibliography entry"
+        end
+      end
+    end
+
     # 5. MathJax Macro Declarations & Math Blocks
-    res[:warnings] << 'Missing MathJax macro configuration block' unless content.include?('display:none')
+    res[:warnings] << 'Missing MathJax macro configuration block' unless content.include?('"macros":')
 
     # Strip hidden macro preamble block before auditing body math and environments
     body_content = content.gsub(%r{<div style=['"]display:none['"].*?</div>}m, '')
+    body_content.gsub!(%r{<script>window\.MathJax\s*=.*?</script>}m, '')
 
     # Environment pairing check
     open_envs = body_content.scan(/\\begin\{([a-zA-Z*]+)\}/).flatten

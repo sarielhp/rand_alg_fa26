@@ -3,6 +3,7 @@
 %
 % Dispatches to:
 %   - prefix_lwarp.tex when warping/HTML mode is active (lwarpmk html or \warpMode)
+%   - prefix_4ht.tex when TeX4ht/make4ht defines \HCode
 %   - prefix_latex.tex for standard LaTeX / XeLaTeX / LuaLaTeX PDF builds
 %-----------------------------------------------------------------------------
 
@@ -15,6 +16,10 @@
   \def\warpMode{1}%
   \IfFileExists{styles/prefix_lwarp.tex}{\input{styles/prefix_lwarp}}{\input{prefix_lwarp}}%
 \else
-  \IfFileExists{styles/prefix_latex.tex}{\input{styles/prefix_latex}}{\input{prefix_latex}}%
+  \ifdefined\HCode
+    \IfFileExists{styles/prefix_4ht.tex}{\input{styles/prefix_4ht}}{\input{prefix_4ht}}%
+  \else
+    \IfFileExists{styles/prefix_latex.tex}{\input{styles/prefix_latex}}{\input{prefix_latex}}%
+  \fi
 \fi
 \makeatother

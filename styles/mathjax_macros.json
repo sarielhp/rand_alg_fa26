@@ -27,6 +27,11 @@
     "{#1}",
     1
   ],
+  "ensuremath": [
+    "#1",
+    1
+  ],
+  "relax": "",
   "mleft": "\\left",
   "mright": "\\right",
   "llbracket": "\\unicode{x27E6}",
@@ -215,7 +220,7 @@
     2
   ],
   "jSym": [
-    "\\left\\llbracket \\ds {#1}\\divides{#2} \\right\\rrbracket",
+    "\\mathopen{\\unicode{x27E6}} \\ds {#1}\\divides{#2} \\mathclose{\\unicode{x27E7}}",
     2
   ],
   "lSym": [
@@ -223,15 +228,15 @@
     2
   ],
   "IRX": [
-    "\\left\\llbracket #1 \\right\\rrbracket",
+    "\\mathopen{\\unicode{x27E6}} #1 \\mathclose{\\unicode{x27E7}}",
     1
   ],
   "IRY": [
-    "\\left\\llbracket #1:#2 \\right\\rrbracket",
+    "\\mathopen{\\unicode{x27E6}} #1:#2 \\mathclose{\\unicode{x27E7}}",
     2
   ],
   "IntRange": [
-    "\\left\\llbracket #1 \\right\\rrbracket",
+    "\\mathopen{\\unicode{x27E6}} #1 \\mathclose{\\unicode{x27E7}}",
     1
   ],
   "Tree": "T",
@@ -1493,5 +1498,9 @@
   "ELogX": [
     "\\ELogChar\\pth{#1}",
     1
+  ],
+  "mybinom": [
+    "\\binom{#1}{#2}",
+    2
   ]
 }

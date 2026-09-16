@@ -18,7 +18,7 @@ ROOT_DIR    = File.expand_path('..', __dir__)
 BOOK_TEX    = File.join(ROOT_DIR, 'book.tex')
 STYLES_DIR  = File.join(ROOT_DIR, 'styles')
 PREFIX_TEX  = File.join(STYLES_DIR, 'prefix.tex')
-MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.tex')
+MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.json')
 DEFAULT_SITE_DIR = File.join(ROOT_DIR, 'html_site')
 
 # Standard symbols and operators supported natively by MathJax
@@ -81,8 +81,7 @@ class MacroScanner
   def load_current_mathjax_macros
     return Set.new unless File.exist?(MATH_MACROS)
 
-    content = File.read(MATH_MACROS, encoding: 'utf-8')
-    content.scan(/\\(?:providecommand|newcommand|def)\s*\{\\([a-zA-Z]+)\}/).flatten.to_set
+    JSON.parse(File.read(MATH_MACROS, encoding: 'utf-8')).keys.to_set
   end
 
   def extract_balanced_braces(str, start_pos)
@@ -164,6 +163,7 @@ class MacroScanner
 
       # Strip hidden macro preamble block(s)
       content.gsub!(%r{<div style=['"]display:none['"].*?</div>}m, '')
+      content.gsub!(%r{<script>window\.MathJax\s*=.*?</script>}m, '')
 
       # Find all LaTeX control sequences
       content.scan(/\\([a-zA-Z]+)/) do

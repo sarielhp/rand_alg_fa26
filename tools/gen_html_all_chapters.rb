@@ -9,6 +9,7 @@
 
 require 'etc'
 require 'fileutils'
+require 'json'
 require 'open3'
 require 'optparse'
 require 'pathname'
@@ -20,7 +21,7 @@ BOOK_TEX    = File.join(ROOT_DIR, 'book.tex')
 STYLES_DIR  = File.join(ROOT_DIR, 'styles')
 WEB_CFG     = File.join(STYLES_DIR, 'web.cfg')
 WEB_CSS     = File.join(STYLES_DIR, 'web.css')
-MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.tex')
+MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.json')
 MASTER_AUX  = File.join(STYLES_DIR, 'master_labels.aux')
 BOOK_AUX    = File.join(ROOT_DIR, 'junk', 'book.aux')
 
@@ -32,6 +33,7 @@ class HtmlBookBuilder
     @output_dir = File.expand_path(options[:output_dir] || DEFAULT_OUTPUT_DIR, ROOT_DIR)
     @jobs = options[:jobs] || [Etc.nprocessors, 4].min
     @filters = options[:filters] || []
+    @mathjax_macros = JSON.parse(File.read(MATH_MACROS, encoding: 'utf-8'))
   end
 
   def run
@@ -259,6 +261,8 @@ class HtmlBookBuilder
     dest_styles = File.join(@output_dir, 'styles')
     FileUtils.mkdir_p(dest_styles)
     FileUtils.cp(WEB_CSS, File.join(dest_styles, 'web.css')) if File.exist?(WEB_CSS)
+    duck_svg = File.join(STYLES_DIR, 'qed_duck.svg')
+    FileUtils.cp(duck_svg, File.join(dest_styles, 'qed_duck.svg')) if File.exist?(duck_svg)
     duck_png = File.join(STYLES_DIR, 'qed_duck-.png')
     if File.exist?(duck_png)
       FileUtils.cp(duck_png, File.join(dest_styles, 'qed_duck-.png'))
@@ -318,12 +322,34 @@ class HtmlBookBuilder
     # Run make4ht inside chapter directory
     cmd = ['make4ht', '-x', '-c', 'styles/web.cfg', '-f', 'html5', chap[:file], 'mathjax']
     stdout, stderr, status = Open3.capture3(*cmd, chdir: chap_dir)
+    build_output = [stdout, stderr]
+
+    # make4ht does not run Biber automatically.  Without this pass BibLaTeX
+    # prints raw cite keys and omits the bibliography, leaving nothing for a
+    # citation link to target.  Only invoke Biber for chapters that actually
+    # contain citations, then rerun make4ht to resolve labels and links.
+    bcf_file = File.join(chap_dir, "#{stem}.bcf")
+    if File.exist?(bcf_file) && File.read(bcf_file, encoding: 'utf-8').include?('<bcf:citekey')
+      biber_stdout, biber_stderr, biber_status = Open3.capture3('biber', stem, chdir: chap_dir)
+      build_output.concat([biber_stdout, biber_stderr])
+      unless biber_status.success?
+        clean_intermediate_files(chap_dir, stem)
+        return [false, "Biber failed for #{chap[:file]}.\n#{build_output.join("\n")}"]
+      end
+
+      escape_bbl_text_underscores(File.join(chap_dir, "#{stem}.bbl"))
+
+      2.times do
+        stdout, stderr, status = Open3.capture3(*cmd, chdir: chap_dir)
+        build_output.concat([stdout, stderr])
+      end
+    end
 
     # Check output
     main_html = File.join(chap_dir, "#{stem}.html")
     unless File.exist?(main_html)
       clean_intermediate_files(chap_dir, stem)
-      return [false, "Output #{main_html} was not created.\n#{stdout}\n#{stderr}"]
+      return [false, "Output #{main_html} was not created.\n#{build_output.join("\n")}"]
     end
 
     # Move generated HTML, CSS and images to out_dir
@@ -344,6 +370,13 @@ class HtmlBookBuilder
       Dir.glob(File.join(chap_figs, '*.{png,svg,jpg,jpeg,gif}')).each do |img|
         FileUtils.cp(img, out_figs)
       end
+    end
+
+    # TeX4ht may render unsupported glyphs as job-local images, for example
+    # chebychev0x.svg.  Keep these beside the generated HTML that references
+    # them; they are not chapter source assets under figs/.
+    Dir.glob(File.join(chap_dir, "#{stem}[0-9]*x.{png,svg}")) do |img|
+      FileUtils.cp(img, out_dir)
     end
 
     # Extract aux labels before cleaning
@@ -368,14 +401,56 @@ class HtmlBookBuilder
     [false, e.full_message]
   end
 
+  # Some legacy BibTeX records contain literal identifiers such as
+  # `STOC_1998` in braced text fields.  Biber preserves the underscore, which
+  # starts TeX math mode and can truncate TeX4ht's bibliography.  Escape only
+  # text-mode underscores; preserve math expressions and verbatim URL blocks.
+  def escape_bbl_text_underscores(path)
+    return unless File.exist?(path)
+
+    in_verb = false
+    lines = File.readlines(path, encoding: 'utf-8').map do |line|
+      stripped = line.lstrip
+      if in_verb
+        in_verb = false if stripped.start_with?('\\endverb')
+        next line
+      end
+      if stripped.start_with?('\\verb')
+        in_verb = true
+        next line
+      end
+
+      math_mode = false
+      escaped = false
+      line.each_char.map do |char|
+        if escaped
+          escaped = false
+          char
+        elsif char == '\\'
+          escaped = true
+          char
+        elsif char == '$'
+          math_mode = !math_mode
+          char
+        elsif char == '_' && !math_mode
+          '\\_'
+        else
+          char
+        end
+      end.join
+    end
+    File.write(path, lines.join)
+  end
+
   def clean_intermediate_files(dir, stem)
-    exts = %w[4ct 4tc idv lg xref tmp xdv aux bcf run.xml log thm idx]
+    exts = %w[4ct 4tc idv lg xref tmp xdv aux bbl bcf blg run.xml log thm idx]
     exts.each do |ext|
       pattern = File.join(dir, "#{stem}.#{ext}")
       Dir.glob(pattern).each { |f| FileUtils.rm_f(f) }
     end
     FileUtils.rm_f(File.join(dir, 'frag_probe.tmp'))
     Dir.glob(File.join(dir, 'figs', '*-*.png')).each { |f| FileUtils.rm_f(f) }
+    Dir.glob(File.join(dir, "#{stem}[0-9]*x.{png,svg}")).each { |f| FileUtils.rm_f(f) }
   end
 
   def normalize_footnotes(content)
@@ -417,6 +492,35 @@ class HtmlBookBuilder
     return unless File.exist?(html_path)
 
     content = File.read(html_path, encoding: 'utf-8')
+
+    # Configure MathJax with a JSON dictionary.  Injecting flattened TeX
+    # definitions into a hidden math block is unsafe because TeX comment
+    # markers can consume closing braces and invalidate every later macro.
+    mathjax_options = {
+      'tex' => {
+        'tags' => 'ams',
+        'macros' => @mathjax_macros
+      }
+    }
+    mathjax_json = JSON.generate(mathjax_options).gsub('</', '<\/')
+    mathjax_script = "<script>window.MathJax = #{mathjax_json};</script>"
+    mathjax_pattern = %r{<script>window\.MathJax\s*=.*?</script>}m
+    if content.match?(mathjax_pattern)
+      content.sub!(mathjax_pattern) { mathjax_script }
+    else
+      content.sub!(%r{</head>}) { "  #{mathjax_script}\n</head>" }
+    end
+
+    # TeX4ht collapses the row break in `\\&` to `\&amp;` inside MathJax
+    # environments.  Restore the missing slash so aligned displays create a
+    # new row instead of printing a literal ampersand.
+    content.gsub!(%r{(<span\s+class=['"][^'"]*mathjax-env[^'"]*['"][^>]*>)(.*?)(</span>)}m) do
+      opening = Regexp.last_match(1)
+      math = Regexp.last_match(2)
+      closing = Regexp.last_match(3)
+      math.gsub!(/(?<!\\)\\\s*&amp;/) { ['\\', '\\', '&amp;'].join }
+      "#{opening}#{math}#{closing}"
+    end
 
     # Find previous and next chapters
     curr_idx = all_chapters.find_index { |c| c[:dir] == current_chap[:dir] } || 0
@@ -469,17 +573,10 @@ class HtmlBookBuilder
     # Fix double hash in href
     content.gsub!(/href=(['"])##+/, 'href=\\1#')
 
-    # Flatten any nested <a> tags inside <a class="cross-ref">
-    nested_a_regex = %r{<a\s+(class=['"][^'"]*cross-ref[^'"]*['"][^>]*)>(.*?)(?:<a\s+[^>]*>(.*?)</a>)(.*?)</a>}m
-    while content =~ nested_a_regex
-      content.gsub!(nested_a_regex) do
-        attr = Regexp.last_match(1)
-        pre = Regexp.last_match(2)
-        inner = Regexp.last_match(3)
-        post = Regexp.last_match(4)
-        "<a #{attr}>#{pre}#{inner}#{post}</a>"
-      end
-    end
+    # TeX4ht preserves display-environment bodies verbatim for MathJax, so
+    # redefining this pagination-only command in prefix_4ht.tex cannot remove
+    # an occurrence inside align.  It has no meaning on a webpage.
+    content.gsub!(/\\allowdisplaybreaks(?:\s*\[\s*\d+\s*\])?/, '')
 
     # Normalize bidirectional footnotes (body marks <-> aside entries)
     content = normalize_footnotes(content)
@@ -599,7 +696,9 @@ class HtmlBookBuilder
     if content =~ %r{<body>(.*?)</body>}m
       inner = Regexp.last_match(1)
       new_body = "<body>\n<div class=\"content-container\">\n#{nav_bar_top}\n#{inner}\n#{nav_bar_bottom}\n</div>\n</body>"
-      content.sub!(%r{<body>.*?</body>}m, new_body)
+      # Use the block form so Ruby treats TeX backslashes in the body as
+      # literal content rather than replacement-string escapes.
+      content.sub!(%r{<body>.*?</body>}m) { new_body }
     end
 
     File.write(html_path, content)
