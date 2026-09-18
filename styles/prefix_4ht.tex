@@ -1123,6 +1123,10 @@ backend=biber]{biblatex}
 
 \newcommand{\net}{\mathcal{N}}%
       
+\newcommand{\problab}[1]{\label{prob:#1}}%
+\newcommand{\probref}[1]{\HLink{Problem}{prob:#1}}%
+\newcommand{\probrefY}[2]{\hyperref[prob:#1]{#2}}
+
 \newcommand{\lemlab}[1]{\label{lemma:#1}}
 \newcommand{\lemref}[1]{\HLink{Lemma}{lemma:#1}}%
 \newcommand{\lemrefY}[2]{\hyperref[lemma:#2]{#1}}

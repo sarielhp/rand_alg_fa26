@@ -7,42 +7,50 @@
 \ChapterNumPage{8}{62}
 
 
-\Chapter{On $k$-wise independence}%Quick Sort with High Probability}
+\Chapter{On $k$-wise independence}
 
 \ChapterPrefix{}
 \ChapterGen{}
 
-
+%\QoutePExt{%
+\QuotePExt{%
+   ``Independence? That's middle-class blasphemy. We are all
+   dependent on one another, every soul of us on earth.''%
+}%
+{Pygmalion (Act V)}%
+{George Bernard Shaw}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Pairwise independence}
 
-\subsection{Pairwise independence}
+\subsection{Basic definitions}
 
 \begin{defn}
+    \deflab{pairwise:indep}%
     A set of random variables $X_1, \ldots, X_n$ is \emphOnly{pairwise
-       independent}\index{pairwise
-       independent}, if for any pair of values $\alpha, \beta$, and
-    any two indices $i,j$, we have that
+       independent}\index{pairwise independent}, if for any pair of
+    values $\alpha, \beta$, and any two distinct indices $i,j$ with
+    $i \neq j$, we have that
     \begin{equation*}
-        \Prob{X_i =\alpha \text{ and } Y_j = \beta}%
+        \Prob{X_i =\alpha \text{ and } X_j = \beta}%
         =%
-        \Prob{X_i =\alpha} \Prob{ Y_j = \beta}.
+        \Prob{X_i =\alpha} \Prob{ X_j = \beta}.
     \end{equation*}
 \end{defn}
 
 Namely, the variables are independent if you look at pairs of
 variables. Compare this to the much stronger property of independence.
 \begin{defn}
+    \deflab{independence}%
     A set of random variables $X_1, \ldots, X_n$ is
-    \emphOnly{independent}\index{independent}, if for any $t$, and any
-    $t$ values $\alpha_1, \ldots, \alpha_t$, and any $t$ indices
-    $i_1,\ldots, i_t$, we have that
+    \emphOnly{independent}\index{independent}, if for any
+    $2 \leq t \leq n$, and any $t$ values $\alpha_1, \ldots, \alpha_t$, and any
+    $t$ distinct indices $i_1,\ldots, i_t$, we have that
     \begin{equation*}
         \Prob{X_{i_1} =\alpha_1, X_{i_2} =\alpha_2,\ldots,
-           \text{ and } Y_{i_t} = \alpha_{i_t}}%
+           \text{ and } X_{i_t} = \alpha_{i_t}}%
         =%
         \prod_{j=1}^t
         \Prob{X_{i_j} =\alpha_j}.
@@ -55,13 +63,9 @@ variables. Compare this to the much stronger property of independence.
 
 Let $n$ be a number which is a power of two. As such,
 $t = \log_2 n = \lg n$ is an integer.  Let $X_0, \ldots, X_{t-1}$ be truly
-independent random bits, each one of them is $1$ with probability
-$1/2$.
+independent random bits, each equal to $1$ with probability $1/2$.
 
-%, let
-%$B(i) = b_{t-1} b_{t-2}, \ldots, b_1, b_0)$ the binary representation
-%of $i$. That is, we have $i = \sum_{j=0}^{t-1} b_j 2^j$.
-For a non-negative integer number $x$, let
+For a non-negative integer $x$, let
 $\mathrm{bit}(x,j) \in \brc{0,1}$ be the $j$\th bit in the binary
 representation of $x$. That is, we have
 $x = \sum_{j} \mathrm{bit}(x,j)2^j$.
@@ -78,11 +82,11 @@ $Y_i = \bigotimes_{j: \bitY{i}{j} = 1} X_j$, where $\otimes$ is the
 \end{lemma}
 \begin{proof}
     We claim that, for any $i$, we have
-    $\Prob{Y_i=1} = \Prob{Y_i=0} =1/2$.  So fix $i$, and let $\alpha$
-    be an index such that $\bitY{i}{\alpha} =1$, and observe that this
-    follows readily if pick all the true random variables
-    $X_0, \ldots, X_{t-1}$ in such an order such that $X_\alpha$ is
-    the last one to be set. 
+    $\Prob{Y_i=1} = \Prob{Y_i=0} =1/2$.  So fix $i$, and let $\alpha$ be an
+    index such that $\bitY{i}{\alpha} =1$, and observe that this follows
+    readily if we pick all the independent random variables
+    $X_0, \ldots, X_{t-1}$ in an order such that $X_\alpha$ is the last
+    one to be set.
     
     Next, consider two distinct indices $i,i'$, and two arbitrary
     values $v, v'$. We need to prove that
@@ -99,29 +103,34 @@ $Y_i = \bigotimes_{j: \bitY{i}{j} = 1} X_j$, where $\otimes$ is the
     \begin{align*}
       \ProbCond{Y_{i} = v}{ Y_{i'} = v' }%
       &\EQ%
-        \ProbCond{\Bigl.\smash \bigotimes_{j: \bitY{i}{j} = 1} X_j= v}{ Y_{i'} = v' }%        
+        \ProbCond{\Bigl.\smash \bigotimes_{j \in B} X_j= v}{ Y_{i'} = v' }%        
         \\&
         \EQ%
         \ProbCond{\Bigl. X_\beta \otimes
-        {\Bigl.\smash{\bigotimes_{j: \bitY{i}{j} = 1} X_j}}=
+        \Bigl(\smash{\bigotimes_{j \in B \setminus \brc{\beta}} X_j}\Bigr)=
         v}{ Y_{i'} = v' }%
-      \\[0,2cm]
+      \\[0.2cm]
       &%
-        =%
+        \EQ%
         \ProbCond{\Bigl. X_\beta =
-        \pth{\Bigl.v \otimes
-        \smash{\bigotimes_{j: \bitY{i}{j} = 1} X_j}}}{ Y_{i'} = v' }%
-        =%
+        \Bigl(v \otimes
+        \smash{\bigotimes_{j \in B \setminus \brc{\beta}} X_j}\Bigr)}{ Y_{i'} = v' }%
+     \\&%
+     \EQ%
         \frac{1}{2}.
         \phantom{\bigotimes_{j}}%
     \end{align*}
+    Since $\beta \notin B'$, the bit $X_\beta$ is independent of $Y_{i'}$
+    and all remaining bits $X_j$ ($j \neq \beta$), so the conditional
+    probability is $1/2$.
+
     This implies that
-    \begin{math}
+    \begin{align*}
         \Prob{Y_{i} = v \text{ and } Y_{i'} = v'}%
-        =%
-        \ProbCond{Y_{i} = v}{ Y_{i'} = v' } \Prob{Y_{i'} = v'}
-        =(1/2)(1/2) = 1/4,
-    \end{math}
+        &=%
+        \ProbCond{Y_{i} = v}{ Y_{i'} = v' } \Prob{Y_{i'} = v'} \\
+        &=(1/2)(1/2) = 1/4,
+    \end{align*}
     as claimed.
 
             
@@ -144,21 +153,25 @@ computing the set of vertices $S$, such that the cut
     (S, \overline{S})%
     =%
     (S, \Vertices\setminus S) =%
-    \Set{uv \in \Edges}{ u \in S, v \in \Vertices \setminus S}.    
+    \Set{uv \in \Edges}{ u \in S, v \in \Vertices \setminus S}
 \end{equation*}
 is of maximum cardinality.
 
 \subsubsection{Algorithm.}
-To this end, let $Y_1, \ldots, Y_n$ be the pairwise independent bits
-of \secref{indep}. Here, let $S$ be the set of all vertices
-$v_i \in \Vertices$, such that $Y_i= 1$. The algorithm outputs $(S,
-\overline{S})$ as the candidate cut.
+To this end, let $Y_1, \ldots, Y_n$ be the pairwise independent bits of
+\secref{indep}. Here, let $S$ be the set of all vertices
+$v_i \in \Vertices$, such that $Y_i= 1$. The algorithm outputs
+$(S, \overline{S})$ as the candidate cut.  Specifically, the construction
+in \secref{indep} produces $2^t - 1$ pairwise independent bits for any
+integer $t$. For a graph with $n$ vertices, choosing
+$t = \lceil \lg(n+1) \rceil \leq \lg n + 1$ yields $n$ pairwise independent bits using
+at most $\lg n + 1$ truly random bits.
 
 \subsection{Analysis}
 
 \begin{lemma}
     The expected size of the cut computed by the above algorithm is
-    $m/2$, where $m = |\EdgesX{\G}|$.
+    $m/2$, where $m = |\Edges|$.
 \end{lemma}
 \begin{proof}
     Let $Z_{uv}$ be an indicator variable for the event that the edge
@@ -181,14 +194,19 @@ $v_i \in \Vertices$, such that $Y_i= 1$. The algorithm outputs $(S,
 
 \begin{lemma}
     Given a graph $\Graph$ with $n$ vertices and $m$ edges, say stored
-    in a read only memory, one can compute a max-cut of $\Graph$, and
+    in a read only memory, one can compute \chgY{a max-cut}{a cut} of $\Graph$, and
     the edges in it, using $O( \log n)$ random bits, and $O(\log n)$
     RAM bits. Furthermore, the expected size of the cut is $\geq m/2$.
 \end{lemma}
+
+Computing a maximum cut is NP-hard. The algorithm computes a cut whose
+expected size is at least $m/2$, achieving a $1/2$-approximation in
+expectation.
+
 \begin{proof}
     The algorithm description is above. The pairwise independence is
     also described above, and requires only $O( \log n)$ random bits,
-    which needs to be stored. Otherwise, all we need is to scan the
+    which need to be stored. Otherwise, all we need is to scan the
     edges of the graph, and for each one to decide if it is, or not in
     the cut. Clearly, this can be done using $O( \log n)$ RAM bits.
 \end{proof}
@@ -209,9 +227,9 @@ edges in a streaming fashion.
 Another way of thinking about it, is that given a set
 $S=\{s_1, \ldots, s_n\}$ of $n$ elements, we can use the above to
 select a random sample where every element is selected with
-probability half, and the samples are pairwise independent. The kicker
+probability $1/2$, and the samples are pairwise independent. The kicker
 is that to specify the sample, or decide if an element is in the
-sample, we can do it using $O( \log n)$ bits. This is a huge save
+sample, we can do it using $O( \log n)$ bits. This is a huge saving
 compared to the regular $n$ bits required as storage to remember the
 sample.
 
@@ -229,9 +247,10 @@ are $k$-wise independent.
 \subsection{Definition}
 
 \begin{defn}
+    \deflab{k:wise}%
     A set of variables $X_1, \ldots, X_n$ are \emphOnly{$k$-wise
        independent}\index{$k$-wise
-       independent} if for any set $I = \{i_1, i_2, \ldots, i_t\}$ of
+       independent} if for any set $I = \{i_1, i_2, \ldots, i_t\} \subseteq \{1,\ldots,n\}$ of
     indices, for $t \leq k$, and any set of values $v_1, \ldots, v_t$,
     we have that
     \begin{equation*}
@@ -245,18 +264,18 @@ are $k$-wise independent.
     \end{equation*}
 \end{defn}
 
-Observe, that verifying the above property needs to be done only for
+Observe that verifying the above property needs to be done only for
 $t=k$.
 
 
 \subsection{On working modulo prime}
 
 \begin{defn}
-    For a number $p$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$.
+    For an integer $n \geq 1$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$.
     
-    For two integer numbers $x$ and $y$, the \emphOnly{quotient}\index{quotient} of $x/y$
+    For two integers $x$ and $y$, the \emphOnly{quotient}\index{quotient} of $x/y$
     is $x \bdiv y = \floor{x/y}$. The \emphOnly{remainder}\index{remainder} of $x/y$ is
-    $x \bmod y = x - y \floor{x/y}$. If the $x \bmod y = 0$, than $y$
+    $x \bmod y = x - y \floor{x/y}$. If $x \bmod y = 0$, then $y$
     \emphOnly{divides}\index{divides} $x$, denoted by $y \divides x$.  We use
     $\alpha \equiv \beta \pmod{p}$ or $\alpha \equiv_p \beta$ to
     denote that $\alpha$ and $\beta$ are \emphOnly{congruent modulo $p$}\index{congruent modulo $p$};
@@ -307,7 +326,7 @@ $t=k$.
     contain $p-1$ distinct values. It follows that
     $L_\alpha = \{1,2, \ldots, p-1\}$. As such, there exists exactly
     one number $y \in \brc{1,\ldots, p-1}$, such that
-    $\alpha y \equiv 1 \pmod{p}$. ~
+    $\alpha y \equiv 1 \pmod{p}$.
 \end{proof}
 
 
@@ -323,9 +342,10 @@ $t=k$.
 \begin{proof}
     Assume $y > x$ (the other case is handled similarly).  If
     $ax + b \equiv a y + b \pmod{p}$ then $a (x-y) \pmod p = 0$ and
-    $a \neq 0$ and $(x-y) \neq 0$. However, $a$ and $x-y$ cannot
-    divide $p$ since $p$ is prime and $a < p$ and $0 < x-y < p$.
+    $a \neq 0$ and $(x-y) \neq 0$. \chgY{However, $a$ and $x-y$ cannot
+    divide $p$}{However, $p$ cannot divide $a$ or $x-y$} since $p$ is prime and $a < p$ and $0 < x-y < p$.
 \end{proof}
+\remX{Corrected divisibility statement: since $p$ is prime, $a(x-y) \equiv 0 \pmod p$ requires $p \divides a$ or $p \divides (x-y)$, but $0 < a, x-y < p$, so $p$ cannot divide either term.}
 
 
 \begin{fragment}{unique_inverse}
@@ -334,11 +354,12 @@ $t=k$.
     %
     Consider a prime $p$, and any numbers $x, y \in \ZZ_p$.  If
     $x \neq y$ then, for each pair of numbers
-    $r,s \in \ZZ_{p} = \{0,1, \ldots, p-1\}$, such that $r \neq s$,
+    $r,s \in \ZZ_{p} = \{0,1, \ldots, p-1\}$,
     there is exactly one unique choice of numbers $a,b \in \ZZ_p$ such
-    that $ax + b \pmod p = r$ and $ay + b \pmod p = s$.
+    that $ax + b \equiv r \pmod p$ and $ay + b \equiv s \pmod p$.
 \end{lemma}
 \end{fragment}
+\remX{Removed the unnecessary restriction $r \neq s$. When $r = s$, the unique solution over $\ZZ_p$ is $a = 0$ and $b = r$. For pairwise independence, having $Y_x = r$ and $Y_y = r$ is a valid event that occurs with probability $1/p^2$.}
 
 \begin{proof}
     Solve the system of equations
@@ -355,9 +376,7 @@ $t=k$.
 
 
 
-\subsection{Construction of $k$-wise independence variables}
-
-\subsection{Construction}
+\subsection{Construction of $k$-wise independent variables}
 
 Consider the following matrix, aka the \emphOnly{Vandermonde matrix}\index{Vandermonde matrix},
 defined by $n$ variables:
@@ -392,30 +411,31 @@ defined by $n$ variables:
         =%
         \det(V)%
         =%
-        \sum_{\pi \in \Pi} \mathrm{sign}(\pi) x_i^{\pi(i)}.
+        \sum_{\pi \in \Pi} \mathrm{sign}(\pi) \prod_{i=1}^n x_i^{\pi(i)-1}.
     \end{equation*}
     Every monomial in this polynomial has total degree
-    $\sum_{i=1}^n \pi(i) = 1 + 2 +\cdots+ n = n(n-1)/2$.
+    $\sum_{i=1}^n (\pi(i)-1) = 0 + 1 + 2 +\cdots+ (n-1) = n(n-1)/2$.
+    \remX{Corrected the Leibniz formula for $\det(V)$ to include the row product $\prod_{i=1}^n x_i^{\pi(i)-1}$, and corrected the degree calculation to $\sum_{i=1}^n (\pi(i)-1) = 0 + 1 + \cdots + (n-1) = n(n-1)/2$.}
     Observe, that if we replace $x_j$ by $x_i$, then we have
     \begin{math}
         f(x_1, \ldots, x_i,\ldots, x_{j-1}, x_i, x_{j+1}, \ldots,
         x_n)%        
     \end{math}
     is the determinant of a matrix with two identical rows, and such a
-    matrix has a zero determinate. Namely, the polynomial $f$ is zero
+    matrix has a zero determinant. Namely, the polynomial $f$ is zero
     if $x_i=x_j$. This implies that $x_j-x_i$ divides $f$. We conclude
     that the polynomial $g \equiv \prod_{1\le i<j\le n} (x_j-x_i)$
     divides $f$. Namely, we can write $f = g * h$, where $h$ is some
     polynomial.
 
     Consider the monomial $x_2 x_3^2 \cdots x_n^{n-1}$. It appears in
-    $f$ with coefficient $1$. Similarly, it generated in $g$ by
+    $f$ with coefficient $1$. Similarly, it is generated in $g$ by
     selecting the first term in each sub-polynomial, that is
     \begin{math}
         \prod_{1\le i<j\le n} \Bigl( \highlight{x_j^{}\bigr.} -
         x_i\Bigr).
     \end{math}
-    It is to verify that this is the only time this monomial appears
+    It is easy to verify that this is the only time this monomial appears
     in $g$. This implies that $h =1$. We conclude that $f=g$, as
     claimed.
 \end{proof}
@@ -441,7 +461,7 @@ defined by $n$ variables:
     $f(x, \mathsf{b}) = \sum_{i=0}^{k-1} b_i x^{i} \bmod p$.  For any
     $k$ distinct values $\alpha_1, \ldots, \alpha_k \in \ZZ_p$, and
     $k$ values $v_1, \ldots, v_k \in \ZZ_p$, there is a unique
-    choice of $\mathsf{b}$, such that $f(\alpha_i) = v_i \bmod p$, for
+    choice of $\mathsf{b}$, such that $f(\alpha_i) \equiv v_i \pmod p$, for
     $i=1,\ldots, k$.
 \end{lemma}
 
@@ -474,16 +494,18 @@ defined by $n$ variables:
   &\qquad\text{ where }\quad%
      \mathsf{M} = %
      \begin{bmatrix}
-       1 & \alpha_1 & \alpha_1^2 & \cdots & \alpha_1^{n-1}\\
-       1 & \alpha_2 & \alpha_2^2 & \cdots & \alpha_2^{n-1}\\
-       1 & \alpha_3 & \alpha_3^2 & \cdots & \alpha_3^{n-1}\\
+       1 & \alpha_1 & \alpha_1^2 & \cdots & \alpha_1^{k-1}\\
+       1 & \alpha_2 & \alpha_2^2 & \cdots & \alpha_2^{k-1}\\
+       1 & \alpha_3 & \alpha_3^2 & \cdots & \alpha_3^{k-1}\\
        \vdots & \vdots & \vdots & \ddots &\vdots \\
-       1 & \alpha_n & \alpha_n^2 & \cdots & \alpha_n^{n-1}
+       1 & \alpha_k & \alpha_k^2 & \cdots & \alpha_k^{k-1}
      \end{bmatrix}.
     \end{align*}
+    \remX{Corrected the matrix $\mathsf{M}$ dimensions and labels from $n$ to $k$. The system consists of $k$ equations in $k$ unknowns $b_0, \ldots, b_{k-1}$, so $\mathsf{M}$ is a $k \times k$ Vandermonde matrix. Since $\alpha_1, \ldots, \alpha_k \in \ZZ_p$ are distinct and $p$ is prime, $\det(\mathsf{M}) \not\equiv 0 \pmod p$, guaranteeing a unique solution in $\ZZ_p^k$.}
     The matrix $\mathsf{M}$ is the Vandermonde matrix, and by
-    \clmref{v:m:invertiable} it is invertible. We thus get there
-    exists a unique solution to this system of linear equations
+    \clmref{det:v:m} its determinant is $\prod_{1 \leq i < j \leq k} (\alpha_j - \alpha_i) \not\equiv 0 \pmod p$.
+    By \clmref{v:m:invertiable}, it is invertible over the field $\ZZ_p$.
+    We thus get there exists a unique solution to this system of linear equations
     (modulo $p$).
 \end{proof}
 
@@ -494,8 +516,8 @@ defined by $n$ variables:
 \paragraph*{The construction.}
 
 So, let us pick independently and uniformly $k$ values
-$b_0. b_1, \ldots, b_{k-1} \in \ZZ_p$, let
-$\mathsf{b} = (b_0, b_1,\ldots, b_{k-1})$.
+$b_0, b_1, \ldots, b_{k-1} \in \ZZ_p$. Let
+$\mathsf{b} = (b_0, b_1,\ldots, b_{k-1})$,
 $g(x) = \sum_{i=0}^{k-1} b_i x^i \bmod p$, and consider the random
 variables
 \begin{equation*}
@@ -512,7 +534,7 @@ variables
     different value of $Y_i$.
     
     As for the $k$-independence, observe that for any set
-    $I = \{i_1, i_2, \ldots, i_k\}$ of indices, for $t \leq k$, and
+    $I = \{i_1, i_2, \ldots, i_k\}$ of $k$ distinct indices, and
     any set of values $v_1, \ldots, v_k \in \ZZ_p$, we have that the event
     \begin{equation*}
         Y_{i_1} = v_1 \text{ and }
@@ -531,19 +553,19 @@ We summarize the result for later use.
     \begin{theorem}
         \thmlab{k:wise:independent}%
         %
-        let $p$ be a prime number, and pick independently and
-        uniformly $k$ values $b_0. b_1, \ldots, b_{k-1} \in \ZZ_p$,
+        Let $p$ be a prime number, and pick independently and
+        uniformly $k$ values $b_0, b_1, \ldots, b_{k-1} \in \ZZ_p$,
         and let
-        $g(x) = \sum_{i=0}^{k-1} b_i x^i \bmod p$. Then  the
+        $g(x) = \sum_{i=0}^{k-1} b_i x^i \bmod p$. Then the
         random variables
         \begin{equation*}
-            Y_0 = g(0), \ldots, Y_{p-1} = g(p-1).
+            Y_0 = g(0), \ldots, Y_{p-1} = g(p-1)
         \end{equation*}
         are uniformly distributed in $\ZZ_p$ and are $k$-wise independent.
     \end{theorem}
 \end{fragment}
 
-\subsection{Applications of $k$-wide independent variables}
+\subsection{Applications of \chgY{$k$-wide}{$k$-wise} independent variables}
 \subsubsection{Product of expectations}
 
 \begin{lemma}
@@ -568,7 +590,7 @@ us redefine \CClass{R{}P}:
     (x,r)$ with worst case polynomial running time such that for any
     input $x \in \Sigma^*$, \smallskip
     \begin{compactitem}
-        \item $x \in L \implies \Alg(x,r) = 1$ for half the possible
+        \item $x \in L \implies \Alg(x,r) = 1$ for at least half the possible
         values of $r$.
         
         \item $x \notin L \implies \Alg(x,r) = 0$ for all values of
@@ -576,7 +598,7 @@ us redefine \CClass{R{}P}:
     \end{compactitem}
 \end{defn}
 
-Let assume that we now want to minimize the number of random bits we
+Let us assume that we now want to minimize the number of random bits we
 use in the execution of the algorithm (Why?). If we run the algorithm
 $t$ times, we have confidence $2^{-t}$ in our result, while using $t
 \log{n}$ random bits (assuming our random algorithm needs only
@@ -585,11 +607,11 @@ numbers from $\ZZ_n$, and run $\Alg(x,a)$ and $\Alg(x, b)$, gaining us
 only confidence $1/4$ in the correctness of our results, while
 requiring $2\log{n}$ bits.
 
-Can we do better? Let us define $r_i = a i + b \mod n$, where $a, b$
+Can we do better? Let us define $r_i = a i + b \bmod n$, where $a, b$
 are random values as above (note, that we assume that $n$ is prime),
 for $i=1,\ldots, t$. Thus $Y = \sum_{i=1}^{t} \Alg(x,r_i)$ is a sum of
 random variables which are pairwise independent, as the $r_i$ are
-pairwise independent. Assume, that $x \in L$, then we have $\Ex{ Y } =
+pairwise independent. Assume that $x \in L$. Then we have $\Ex{ Y } \geq
 t/2$, and $\sigma_Y^2 = \Var{Y} = \sum_{i=1}^{t} \Var{\Alg(x,r_i)}
 \leq t /4$, and $\sigma_Y \leq \sqrt{t}/2$. The probability that all
 those executions failed, corresponds to the event that $Y = 0$, and
@@ -606,6 +628,7 @@ those executions failed, corresponds to the event that $Y = 0$, and
 by the Chebyshev inequality. Thus we were able to ``extract'' from our
 random bits, much more than one would naturally suspect is possible.
 We thus get the following result.
+\remX{If the randomized algorithm requires $m = \lg n$ bits, its random strings are in $\{0,1\}^m$. Instead of assuming $n$ is prime, one can evaluate $a \cdot i + b$ in the finite field $\mathbb{F}_{2^m}$ using $2m = 2 \lg n$ random bits to produce pairwise independent strings in $\{0,1\}^m$.}
 
 \begin{fragment}{pairwise_a_l_g}
     \begin{lemma}
@@ -613,7 +636,7 @@ We thus get the following result.
         % 
         Given an algorithm \Alg in \CClass{RP} that uses $\lg n$
         random bits, one can run it $t$ times, such that the runs
-        results in a new algorithm that fails with probability at most
+        result in a new algorithm that fails with probability at most
         $1/t$, and uses only $2\lg n$ random bits.
     \end{lemma}
 \end{fragment}
@@ -624,11 +647,11 @@ We thus get the following result.
 \seclab{h:m:i}
 
 The following is the higher
-moment variant of Chebychev inequality.
+moment variant of Chebyshev's inequality.
 \begin{lemma}
     \lemlab{cheby:higher}%
     %
-    For a random variable $X$, we have that
+    For a random variable $X$, and any even positive integer $k$, we have that
     \begin{equation*}
         \ds%
         \Prob{\cardin{X - \Ex{X}}
@@ -637,10 +660,11 @@ moment variant of Chebychev inequality.
         \leq
         \frac{1}{t^k}
     \end{equation*}
+    for any $t > 0$.
 \end{lemma}
 \begin{proof}
     Setting $Z = \cardin{X - \Ex{X}}^k$, and 
-    raising the inequality by a power of $k$, we have
+    raising both sides of the inequality to the $k$\th power, we have
     \begin{align*}
         \Prob{\cardin{X - \Ex{X}}
            \geq%
@@ -663,8 +687,9 @@ interesting example.
 \begin{lemma}
     \lemlab{h:m}%
     %
-    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
-    random independent variables such that
+    \chgY{Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables}{Let $k$ be an even integer, and let $X_1, \ldots, X_n$ be $n$
+    independent random variables} such that
     $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
     $X = \sum_{i=1}^n X_i$. Then, we have
     \begin{align*}
@@ -704,13 +729,13 @@ interesting example.
     have a unique index disappear. A term that does not disappear is
     going to be of the form
     \begin{equation*}
-        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
-           X_{i_\ell}^{\alpha_\ell}}
+        \Ex{X_{j_1}^{\alpha_1} X_{j_2}^{\alpha_2} \ldots
+           X_{j_\ell}^{\alpha_\ell}}
         =%
-        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
-        \Ex{ X_{i_\ell}^{\alpha_\ell}}
+        \Ex{X_{j_1}^{\alpha_1}}\Ex{ X_{j_2}^{\alpha_2}} \ldots
+        \Ex{ X_{j_\ell}^{\alpha_\ell}}
     \end{equation*}
-    where $\alpha_i \geq 2$, and $\sum_i \alpha_i = k$. Observe that
+    where $j_1, \ldots, j_\ell$ are distinct indices, $\alpha_i \geq 2$, and $\sum_{i=1}^\ell \alpha_i = k$. Observe that
     \[
         \Ex{X_1^t} =\begin{cases}
             0 & t \text{ is odd}\\
@@ -718,7 +743,7 @@ interesting example.
         \end{cases}
     \]
     As such, all the terms in the summation of \Eqref{m:k} that have
-    value that is not zero, have value one. These terms corresponds to
+    value that is not zero, have value one. These terms correspond to
     tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
     $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
     furthermore, each such value appears an even number of times in
@@ -751,10 +776,11 @@ interesting example.
 
 
 \begin{corollary}
-    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
-    random independent variables such that
+    \chgY{Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables}{Let $k$ be an even integer, and let $X_1, \ldots, X_n$ be $n$
+    independent random variables} such that
     $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. For
-    $X = \sum_{i=1}^n X_i$, and any $k$, we have
+    $X = \sum_{i=1}^n X_i$, we have
     $\Prob{|X| \geq k \sqrt{n}} \leq 1/2^k$.
 \end{corollary}
 
@@ -763,22 +789,24 @@ purely independent -- it was enough that they are $k$-wise
 independent. We readily get the following.
 
 \begin{defn}
+    \deflab{k:wise:alt}%
     Given $n$ random variables $X_1, \ldots, X_n$ they are
-    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ of them (i.e.,
-    $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
-    we have\
+    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ distinct indices
+    $1 \leq i_1 < i_2 < \cdots < i_k \leq n$, and any $k$ values \chgY{$x_1, \ldots, x_k$}{$v_1, \ldots, v_k$},
+    we have
     \begin{equation*}
         \Prob{\Bigl. \smash{\bigcap_{\ell=1}^k} \bigl(X_{i_{\ell}} = v_\ell\bigr)}%
         \,=\,%
         \prod_{\ell=1}^k \Prob{  X_{i_{\ell}} = v_\ell }.
     \end{equation*}
 \end{defn}
+\remX{Corrected variable mismatch ($x_1, \ldots, x_k$ to $v_1, \ldots, v_k$) and removed trailing backslash before display. Note that this restates \defref{k:wise} specialized to subsets of size exactly $k$.}
 Informally, variables are $k$-wise independent, if any
 $k$ of them (on their own) looks totally random.
 
 \begin{lemma}
     Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
-    random independent variables, that are $k$-wise independent, such
+    \chgY{random independent variables, that are $k$-wise independent}{$k$-wise independent random variables}, such
     that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
     $X = \sum_{i=1}^n X_i$. Then, we have
     \begin{align*}
@@ -787,12 +815,36 @@ $k$ of them (on their own) looks totally random.
       \frac{1}{t^k}.
     \end{align*}
 \end{lemma}
+\remX{Corrected the contradictory phrasing ``random independent variables, that are $k$-wise independent'' to ``$k$-wise independent random variables''.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\nocite{mr-ra-95}
+\section{Bibliographical notes}
+
+Pairwise independence and its utility in designing hashing schemes were
+introduced in the seminal work of Carter and Wegman
+\cite{cw-uchf-79}. The use of pairwise and $k$-wise independence as a
+powerful technique for derandomization and reducing randomness in
+algorithms was pioneered by Luby \cite{l-spar-86} and Alon \etal
+\cite{abi-fsrpa-86} in the context of parallel algorithms for the maximal
+independent set problem. In particular, the pairwise independent bits
+construction via subsets (\secref{indep}) and the derandomized Max-Cut
+algorithm are from Luby \cite{l-spar-86}.
+
+The algebraic construction of $k$-wise independent random variables
+via polynomials of degree $k-1$ over finite fields (\thmref{k:wise:independent})
+was introduced by Joffe \cite{j-sadki-71}, and adapted to computer
+science in \cite{cw-uchf-79, abi-fsrpa-86}.
+The randomness-efficient amplification of \CClass{RP} algorithms using
+pairwise independent seeds (\lemref{pairwise}) is due to Chor and
+Goldreich \cite{cg-ubwsr-89} and Luby \cite{l-spar-86}.
+Tail bounds and moment inequalities for sums of $k$-wise independent
+variables (\secref{h:m:i}) were developed by Schmidt, Siegel, and
+Srinivasan \cite{sss-chbal-95}.
+Further material on limited independence and higher moment methods can
+be found in Motwani and Raghavan \cite[Chapter~3]{mr-ra-95}.
 
 \ChapterEnd{}
 
@@ -801,4 +853,3 @@ $k$ of them (on their own) looks totally random.
    
    % Local Variables:
    % mode: latex TeX-master: t End:
-

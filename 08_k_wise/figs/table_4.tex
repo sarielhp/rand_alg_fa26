@@ -1,0 +1,48 @@
+\begin{table}[htbp]
+\centering
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\setlength{\extrarowheight}{3pt}
+\begin{tabular}{@{\quad} r c @{\hspace{1.5em}} *{15}{c} @{\quad}}
+\toprule
+\rowcolor{gray!16}
+$i$ & \text{bits} & $Y_{1}$ & $Y_{2}$ & $Y_{3}$ & $Y_{4}$ & $Y_{5}$ & $Y_{6}$ & $Y_{7}$ & $Y_{8}$ & $Y_{9}$ & $Y_{10}$ & $Y_{11}$ & $Y_{12}$ & $Y_{13}$ & $Y_{14}$ & $Y_{15}$ \\
+\rowcolor{gray!16}
+\multicolumn{1}{c}{} & $\mathtt{(b_{4} \dots b_1)}$ & $1$ & $2$ & $1 \oplus 2$ & $3$ & $1 \oplus 3$ & $2 \oplus 3$ & $1 \oplus 2 \oplus 3$ & $4$ & $1 \oplus 4$ & $2 \oplus 4$ & $1 \oplus 2 \oplus 4$ & $3 \oplus 4$ & $1 \oplus 3 \oplus 4$ & $2 \oplus 3 \oplus 4$ & $1 \oplus 2 \oplus 3 \oplus 4$ \\
+\midrule
+\rowcolor{white}
+$1$ & \texttt{0001} & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+\rowcolor{gray!6}
+$2$ & \texttt{0010} & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ \\
+\rowcolor{white}
+$3$ & \texttt{0011} & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ \\
+\rowcolor{gray!6}
+$4$ & \texttt{0100} & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+\rowcolor{white}
+$5$ & \texttt{0101} & $1$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ \\
+\rowcolor{gray!6}
+$6$ & \texttt{0110} & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ \\
+\rowcolor{white}
+$7$ & \texttt{0111} & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ \\
+\rowcolor{gray!6}
+$8$ & \texttt{1000} & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+\rowcolor{white}
+$9$ & \texttt{1001} & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+\rowcolor{gray!6}
+$10$ & \texttt{1010} & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ \\
+\rowcolor{white}
+$11$ & \texttt{1011} & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ \\
+\rowcolor{gray!6}
+$12$ & \texttt{1100} & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $0$ & $0$ \\
+\rowcolor{white}
+$13$ & \texttt{1101} & $1$ & $0$ & $1$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ & $1$ \\
+\rowcolor{gray!6}
+$14$ & \texttt{1110} & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ \\
+\rowcolor{white}
+$15$ & \texttt{1111} & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $1$ & $0$ \\
+\bottomrule
+\end{tabular}
+\caption{Truth table of $2^k - 1 = 15$ pairwise independent random bits constructed from $k=4$ independent bits.}
+\label{tbl:pairwise_k4}
+\end{table}
+

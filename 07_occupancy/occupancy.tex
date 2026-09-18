@@ -314,6 +314,8 @@ The next lemma bounds that probability by bounding its complement.
 \section{Occupancy problems}
 
 \begin{problem}
+    \problab{occ-questions}
+    %
     We are throwing $m$ balls into $n$ bins randomly (i.e., for every
     ball we randomly and uniformly pick a bin independently of all other
     balls from the $n$ available bins, and place the ball in the bin
@@ -356,9 +358,9 @@ The next lemma bounds that probability by bounding its complement.
 
 \subsection{Understanding pileups}
 
-The \emphOnly{load}\index{load} of a bin is the number of balls in the bin. Here we are
-interested in the maximum load---what is the maximum number of balls in a
-single bin?
+The \emphOnly{load}\index{load} of a bin is the number of balls in the
+bin. Here we are interested in the maximum load---what is the maximum
+number of balls in a single bin?
 
 \subsubsection{Intuition}
 
@@ -450,12 +452,11 @@ One can prove a better bound, but that requires doing the exact calculations.
     \end{equation*}
 \end{example}
 
-For problem
-\itemlab{heavy_bin}, the above question suggests the bound 
-XXX
-
-Suppose $n$ balls are placed independently and uniformly into $n$ bins,
-with $n$ sufficiently large.  How many ball
+For problem \probref{occ-questions} \itemref{heavy_bin}, the above
+question suggests the bound $O( \log n)$. Somewhat surprisingly, one can
+do better, with a bit of tedious calculations.  Suppose $n$ balls are
+placed independently and uniformly into $n$ bins, with $n$ sufficiently
+large.  How many balls are there in the bin with heaviest load?
 
 
 \begin{theorem}
