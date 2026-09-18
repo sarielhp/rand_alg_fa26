@@ -23,7 +23,7 @@ NOTES_DIR    = File.join(REPO_ROOT, "notes")
 WEBPAGE_DIR  = File.join(REPO_ROOT, "webpage")
 LECTURES_DIR = File.join(WEBPAGE_DIR, "content", "lectures")
 TOOLS_DIR    = File.join(REPO_ROOT, "tools")
-SYNC_SCRIPT  = File.join(TOOLS_DIR, "webpage_copy")
+SYNC_SCRIPT  = File.join(TOOLS_DIR, "deploy_webpage")
 
 HUGO_BIN         = "hugo"
 HUGO_BUILD_FLAGS = ["--minify"].freeze
@@ -164,7 +164,7 @@ def main
     opts.separator ""
     opts.separator "Options:"
     opts.on("--[no-]build", "Build Hugo webpage after updating (default: true)") { |v| options[:build] = v }
-    opts.on("--[no-]sync", "Deploy webpage to server using webpage_copy (default: true)") { |v| options[:sync] = v }
+    opts.on("--[no-]sync", "Deploy webpage to server using deploy_webpage (default: true)") { |v| options[:sync] = v }
     opts.on("--clean-old", "Remove old superseded PDF files (e.g. 03_quick_sort.pdf)") { options[:clean_old] = true }
     opts.on("-n", "--dry-run", "Show what would be copied and updated without making changes") { options[:dry_run] = true }
     opts.on("-h", "--help", "Show this help message") do
