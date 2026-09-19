@@ -50,6 +50,7 @@
 
 # --- Project-Specific Junk, Caches & Probes ---
 junk/
+fragment/
 auto/
 .auctex-auto/
 .bws/
