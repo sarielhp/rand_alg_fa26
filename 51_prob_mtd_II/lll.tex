@@ -27,7 +27,7 @@
 \section{The \Lovasz{} Local Lemma}
 
 \begin{lemma}
-    \lemlab{basic}%
+    \lemlab{basic-conditional}%
     %
     \begin{compactenumi}
         \item $\ds \Prob{A \sep{B \cap C}} = \frac{\Prob{A \cap B
@@ -37,11 +37,14 @@
         events which are not necessarily independent. Then,
         \begin{align*}
             \ds \Prob{\Bigl. \cap_{i=1}^{n}\eta_{i}}%
-            =%
+            &\EQ%
             \Prob{\Bigl. \eta_{1}} %
             * \Prob{\Bigl. \eta_{2}\sep{\eta_{1}}}
             \Prob{\Bigl. \eta_{3}\sep{\eta_{1}\cap \eta_{2}}}%
-            *\ldots *%
+            *
+            \\&%
+            \qquad\qquad
+            \ldots *%
             \Prob{\Bigl. \eta_{n}\sep{\eta_{1}\cap \ldots \cap
                   \eta_{n-1}}}.
         \end{align*}
@@ -51,15 +54,16 @@
 \begin{proof}
     (i) We have that
     \begin{align*}
-    {\frac{\Prob{A \cap B \sep{C}}}
-       {\Prob{B \sep{C}}}} 
-    =
-    {      \frac{\Prob{A \cap B \cap C}}{\Prob{C}}}
+        {\frac{\Prob{A \cap B \sep{C}}}
+           {\Prob{B \sep{C}}}} 
+        &\EQ
+        {      \frac{\Prob{A \cap B \cap C}}{\Prob{C}}}
     \!
     \left/
     \;
         {\frac{\Prob{B \cap C}}{\Prob{C}}} \right.
-    =
+      \\&
+      \EQ
     \frac{\Prob{A \cap B \cap C}}
     {\Prob{B \cap C}} = \Prob{A \sep{B \cap C}}.
     \end{align*}
@@ -136,7 +140,7 @@ We need the following technical lemma.
        \sep{ \cap_{j \in R} \overline{\Event_j}}} = \Prob{\Event_i}
     \leq x_i$, by arguing as above.
     
-    By \lemref{basic} (i), we have that    
+    By \lemref{basic-conditional} (i), we have that    
     \begin{align*}
     \Prob{\Event_i \sep{\bigcap_{j \in S} \overline{\Event_j}}} =
     \frac{\Prob{\Event_i \cap \pth{ \cap_{j \in N}
@@ -147,38 +151,51 @@ We need the following technical lemma.
     \end{align*}
     We bound the numerator by
     \begin{align*}
-    \Prob{\Event_i \cap \pth{ \cap_{j \in N} \overline{\Event_j} }
-       \sep{ \cap_{m \in R} \overline{\Event_m}}} \leq \Prob{\Event_i
-       \sep{ \cap_{m \in R} \overline{\Event_m}}} = \Prob{\Event_i}
-    \leq x_i \prod_{(i,j) \in E} \pth{1-x_j},
+        \ProbCond{\Event_i \cap \pth{ \cap_{j \in N} \overline{\Event_j} }
+        }{ \cap_{m \in R} \overline{\Event_m}}%
+        &\LEQ%
+        \Prob{\Event_i
+           \sep{ \cap_{m \in R} \overline{\Event_m}}} = \Prob{\Event_i}
+        \\&
+        \LEQ%
+        x_i \prod_{(i,j) \in E} \pth{1-x_j},
     \end{align*}   
     since $\Event_i$ is mutually independent of $\EuScript{C}(R)$. As for
     the denominator, let $N=\brc{j_1, \ldots, j_r}$. We have, by
-    \lemref{basic} (ii), that
-    \begin{eqnarray*}
-        \Prob{ \overline{\Event_{j_1}} \cap \ldots \cap
+    \lemref{basic-conditional} (ii), that
+    \begin{align*}
+      &\Prob{ \overline{\Event_{j_1}} \cap \ldots \cap
            \overline{\Event_{j_r}} \sep{ \cap_{m \in R}
-              \overline{\Event_m}}} \hspace{-4cm}&&\hspace{3.0cm}= 
+      \overline{\Event_m}}}
+      \\&
+      \qquad\EQ
         \Prob{\overline{\Event_{j_1}} \sep{
               \cap_{m \in R} \overline{\Event_m}}}
-        \Prob{\overline{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \;\cap\;
+%      \\&
+%      \qquad\qquad
+      \Prob{\overline{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \;\cap\;
               \pth{ \cap_{m \in R} \overline{\Event_m}}}} \\
-        &&\cdots 
-        \Prob{\overline{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
+        &
+        \qquad\qquad\qquad\cdots \qquad
+           \Prob{\overline{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
               \ldots \cap \overline{\Event_{j_{r-1}}}
-              \;\cap \; \pth{ \cap_{m \in R} \overline{\Event_m}}}} \\
-        &=& 
+        \;\cap \; \pth{ \cap_{m \in R} \overline{\Event_m}}}}
+      \\&
+      \qquad\EQ 
         \pth{1 - \Prob{{\Event_{j_1}} \sep{
                  \cap_{m \in R} \overline{\Event_m}}}} \;
         \pth{ 1 - \Prob{{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \cap
-                 \pth{ \cap_{m \in R} \overline{\Event_m}}}}} \\
-        &&\cdots 
+                 \pth{ \cap_{m \in R} \overline{\Event_m}}}}} 
+        \\&
+        \qquad\qquad\qquad\cdots \qquad
         \pth{ 1 - \Prob{{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
                  \ldots \cap \overline{\Event_{j_{r-1}}} \;\cap\;
-                 \pth{ \cap_{m \in R} \overline{\Event_m}}}} \;} \\
-        &\geq& \pth{1 -x_{j_1}} \cdots \pth{1 - x_{j_r}}
+                 \pth{ \cap_{m \in R} \overline{\Event_m}}}} \;} 
+        \\&
+        \qquad\GEQ
+        \pth{1 -x_{j_1}} \cdots \pth{1 - x_{j_r}}
         \geq \prod_{(i,j) \in E} \pth{1 -x_j},
-    \end{eqnarray*}
+    \end{align*}
     by \Eqref{ind} and induction, as every probability term
     in the above expression has less than $\cardin{S}$ items
     involved. It thus follows, that 

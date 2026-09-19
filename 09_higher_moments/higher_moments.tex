@@ -22,9 +22,15 @@
 {Rudolph Herzog}
 
 
+
 \section{Higher moment inequalities}
 \seclab{h:m:i}
 
+\subsection{Stronger concentration inequality}
+
+%\flog
+
+\subsubsection{Higher-order Chebyshev inequality}
 The following is the higher
 moment variant of Chebychev inequality.
 \begin{lemma}
@@ -35,21 +41,23 @@ moment variant of Chebychev inequality.
         \ds%
         \Prob{\cardin{X - \Ex{X}}
            \geq%
-           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}
+           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}  
         \leq
         \frac{1}{t^k}
     \end{equation*}
 \end{lemma}
 \begin{proof}
-    Setting $Z = \cardin{X - \Ex{X}}^k$, and
+    Setting $Z = \cardin{X - \Ex{X}}^k$, and 
     raising the inequality by a power of $k$, we have
     \begin{align*}
-        \Prob{\cardin{X - \Ex{X}} \geq%
+        \Prob{\cardin{X - \Ex{X}}
+           \geq%
            t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
-        &\EQ %
-        \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
-        \\&
-        \EQ%
+        &
+        \EQ %
+      \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
+      \\&
+      \EQ%
       \Prob{Z \geq t^k \Ex{Z}}%
       \leq%
       \frac{1}{t^k},
@@ -57,56 +65,50 @@ moment variant of Chebychev inequality.
     by Markov's inequality.
 \end{proof}
 
-\subsubsection{Random walk on the integers}
+
+\subsubsection{Stronger concentration inequality}
 
 The problem is that computing (or even bounding) the $k$\th moment
 $M_k(X) = \Ex{|X-\Ex{X}|^k}$ is usually not easy. Let us do it for one
 interesting example.
-
 \begin{lemma}
-    \lemlab{moments:r:w}%
+    \lemlab{h:m}%
     %
     Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
     random independent variables such that
     $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
     $X = \sum_{i=1}^n X_i$. Then, we have
-    \begin{compactenumi}
-        \item $\Ex{X} = 0$.
-        \item $\Ex{X^2} = n$.
-
-        \item $\Ex{X^4} = 6n^2 - 5n$.
-
-        \item $\Ex{ X^{k}} \leq n^{k/2} (k/2)^k$.  if is $k$ even.
-    \end{compactenumi}
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
 \end{lemma}
-\begin{proof}
+\begin{proof}    
     Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
     computing
-    \begin{align}
+    \begin{align*}
         M_k(X)%
-        &\EQ%
+        &=%
         \Ex{  X^{k}}%
         =%
         \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
-        \nonumber{}
-        \\&
-        \EQ%
+        =%
         \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
-        \nonumber{}
         \\&
-        \EQ%
+        =%
         \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
         \Ex{X_{i_1} X_{i_2} \cdots
            X_{i_k} }%
         \eqlab{m:k}
-    \end{align}
+    \end{align*}
     Consider a term in the above summation, where one of the indices
     (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
     independence, we have
     \begin{align*}
       \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
-      =
+      = 
       \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
     \end{align*}
     since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
@@ -145,124 +147,16 @@ interesting example.
         \leq n^{k/2} (k/2)^k.
     \end{equation*}
 
-    We can do better for the specific cases $k=2$ and $k=4$. Indeed,
-    we have
-    \begin{equation*}
-        M_2(X)%
-        =%
-        \Ex{  X^{2}}%
-        =%
-        \sum_{i=1}^n \Ex{X_i^2} + 2\sum_{i < j} \Ex{X_i X_j}
-        =%
-        n.
-    \end{equation*}
-    And
-    \begin{align*}
-        M_4(X)%
-        &\EQ%
-        \Ex{  X^{4}}%
-        \EQ%
-        \sum_{i=1}^n \Ex{X_i^4} + \binom{4}{2}\sum_{i \neq j} \Ex{X_i^2 X_j^2}
-        \\&
-        \EQ%
-        n + 6 n(n-1)
-        \EQ%
-        6n^2 - 5n.
-    \end{align*}
-\end{proof}
-
-
-\begin{lemma}
-    \lemlab{h:m}%
-    %
-    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
-    random independent variables such that
-    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
-    $X = \sum_{i=1}^n X_i$. Then, we have
-    \begin{align*}
-      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-      \leq%
-      \frac{1}{t^k}.
-    \end{align*}
-\end{lemma}
-\begin{proof}
-    \textbf{\textcolor{red}{[Note: There seems to be replication in the text here with the proof of \lemref{moments:r:w}.]}}
-
-    Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
-    computing
-    \begin{align}
-        M_k(X)%
-        &\EQ%
-        \Ex{  X^{k}}%
-        =%
-        \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
-        \nonumber\\&        
-        \EQ%
-        \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
-           X_{i_k} }%
-        \nonumber\\&        
-        \EQ%
-        \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
-        \Ex{X_{i_1} X_{i_2} \cdots
-           X_{i_k} }%
-        \eqlab{m:k:II}
-    \end{align}
-    Consider a term in the above summation, where one of the indices
-    (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
-    independence, we have
-    \begin{align*}
-      \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
-      =
-      \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
-    \end{align*}
-    since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
-    have a unique index disappear. A term that does not disappear is
-    going to be of the form
-    \begin{equation*}
-        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
-           X_{i_\ell}^{\alpha_\ell}}
-        =%
-        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
-        \Ex{ X_{i_\ell}^{\alpha_\ell}}
-    \end{equation*}
-    where $\alpha_i \geq 2$, and $\sum_i \alpha_i = k$. Observe that
-    \[
-        \Ex{X_1^t} =\begin{cases}
-            0 & t \text{ is odd}\\
-            1 & t \text{ is even.}
-        \end{cases}
-    \]
-    As such, all the terms in the summation of \Eqref{m:k:II} that have
-    value that is not zero, have value one. These terms corresponds to
-    tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
-    $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
-    furthermore, each such value appears an even number of times in
-    $T$ (here $k/2$ is an integer as $k$ is even by assumption). We
-    conclude that the total number of such tuples is at most
-    \[
-        n^{k/2} (k/2)^k.
-    \]
-    Note, that this is a naive bound -- indeed, we choose the $k/2$
-    values that are in $I(T)$, and then we generate the tuple $T$, by
-    choosing values for each coordinate separately. We thus conclude
-    that
-    \begin{equation*}
-        M_k(X) = \Ex{  X^{k}}%
-        \leq n^{k/2} (k/2)^k.
-    \end{equation*}
-
     Since $k$ is even, we have $\Ex{X^k} = \Ex{|X|^k}$, and by
     \lemref{cheby:higher}, we have
     \begin{align*}
-      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-      &\EQ%
-      \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
-      \\&
-      \LEQ
-      \Prob{ \cardin{X} \geq%
-         t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}}
-      \leq%
-      {1}/{t^k}.
+        \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+        &\EQ%
+        \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
+        \\&
+        \LEQ% 
+        \Prob{ \cardin{X} \geq%
+           t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
     \end{align*}
 \end{proof}
 
@@ -276,22 +170,42 @@ interesting example.
 \end{corollary}
 
 Observe, that the above proof did not require all the variables to be
-purely independent -- it was enough that they are $k$-wise
-independent. We readily get the following.
+purely independent---it was enough that they are $k$-wise independent, see
+\defref{k-wise-independent}.  We thus readily get the following.
 
-\begin{defn}
-    Given $n$ random variables $X_1, \ldots, X_n$ they are
-    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ of them (i.e.,
-    $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
-    we have\
-    \begin{equation*}
-        \Prob{\Bigl. \smash{\bigcap_{\ell=1}^k} \bigl(X_{i_{\ell}} = v_\ell\bigr)}%
-        \,=\,%
-        \prod_{\ell=1}^k \Prob{  X_{i_{\ell}} = v_\ell }.
-    \end{equation*}
-\end{defn}
-Informally, variables are $k$-wise independent, if any
-$k$ of them (on their own) looks totally random.
+
+\begin{lemma}
+    Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
+    \defrefY{$k$-wise independent}{k-wise-independent} random variable,
+    such that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\smash{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}\Bigr.}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
+\end{lemma}
+
+
+
+%\section{Higher moment inequalities}
+%\seclab{h:m:i}
+
+
+\paragraph*{Random walk on the integers.}
+
+Consider starting at $0$, and at each point in time either going left or right probability $1/2$ (moving by one unit). Let $X$ be the location after $n$ such steps---this process is strongly concentrated.
+
+
+\begin{corollary}
+    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. For
+    $X = \sum_{i=1}^n X_i$, and any $k$, we have
+    $\Prob{|X| \geq k \sqrt{n}} \leq 1/2^k$.
+\end{corollary}
+
+
 
 \begin{lemma}
     Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
@@ -404,6 +318,33 @@ Chebychev's inequality.
 
 \subsection{Bounding the random walk away from zero}
 
+It is easy to verify the following (indeed, we did some of these
+calculations above already).
+
+
+\begin{exercise}
+    \exelab{moments:r:w}%
+    %
+    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    random independent variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Show that:
+    \begin{compactenumi}
+        \smallskip%
+        \item $\Ex{X} = 0$.
+        \smallskip%
+        \item $\Ex{X^2} = n$.
+
+        \smallskip%
+        \item $\Ex{X^4} = 6n^2 - 5n$.
+
+        \smallskip%
+        \item $\Ex{ X^{k}} \leq n^{k/2} (k/2)^k$.  if is $k$ even.
+    \end{compactenumi}
+\end{exercise}
+
+
+
 
 \begin{lemma}
     \lemlab{away:from:0}%
@@ -418,9 +359,9 @@ Chebychev's inequality.
     \end{align*}
 \end{lemma}
 \begin{proof}
-    Let $Z = X^2$ and observe that $Z \geq 0$.  By
-    \lemref{moments:r:w}, we have $\Ex{Z} = n$, and
-    $\Ex{Z^2} = 6n^2 - 5n$. For any $\theta \in [0,1]$, by
+    Let $Z = X^2$ and observe that $Z \geq 0$. Observer that
+    $\Ex{Z} = n$, and $\Ex{Z^2} = 6n^2 - 5n$, by
+    \exeref{moments:r:w}. For any $\theta \in [0,1]$, by
     \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}}, we have
     \begin{align*}
         \Prob{ Z > \theta n}
@@ -448,11 +389,11 @@ Chebychev's inequality.
     \end{equation*}
 \end{proof}
 
+
 \subsubsection{Why Chebychev's inequality does not work in this case}
 
-Let us try to derive the above using Chebychev.  By
-\lemref{moments:r:w}, we have $\Ex{Z} = n$, and
-$\Ex{Z^2} = 6n^2 - 5n$. Thus, we have
+Let us try to derive the above using Chebychev.  
+Thus, we have
 \begin{align*}
     \Var{Z}
     &\EQ%
@@ -486,8 +427,8 @@ not too much larger.
    \section{Tools from previous lecture}
    
    
-   \IncFragment{Markov}
-   
+   \IncFragment{Markov}%
+   \IncFragment{k-wise-independent}%
 
 }
 

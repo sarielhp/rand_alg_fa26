@@ -228,7 +228,11 @@ are $k$-wise independent.
 
 \subsection{Definition}
 
+\begin{fragment}{k-wise-independent}
 \begin{defn}
+    \deflab{k-wise-independent}%
+    \index{independent!$k$-wise}%
+    % 
     A set of variables $X_1, \ldots, X_n$ are \emphOnly{$k$-wise
        independent}\index{$k$-wise
        independent} if for any set $I = \{i_1, i_2, \ldots, i_t\}$ of
@@ -244,6 +248,7 @@ are $k$-wise independent.
         \Prob{X_{i_j} = v_j}.
     \end{equation*}
 \end{defn}
+\end{fragment}
 
 Observe, that verifying the above property needs to be done only for
 $t=k$.
@@ -543,7 +548,7 @@ We summarize the result for later use.
     \end{theorem}
 \end{fragment}
 
-\subsection{Applications of $k$-wide independent variables}
+\subsection{Applications of $k$-wise independent variables}
 \subsubsection{Product of expectations}
 
 \begin{lemma}
@@ -619,174 +624,6 @@ We thus get the following result.
 \end{fragment}
 
 
-
-\section{Higher moment inequalities}
-\seclab{h:m:i}
-
-The following is the higher
-moment variant of Chebychev inequality.
-\begin{lemma}
-    \lemlab{cheby:higher}%
-    %
-    For a random variable $X$, we have that
-    \begin{equation*}
-        \ds%
-        \Prob{\cardin{X - \Ex{X}}
-           \geq%
-           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}  
-        \leq
-        \frac{1}{t^k}
-    \end{equation*}
-\end{lemma}
-\begin{proof}
-    Setting $Z = \cardin{X - \Ex{X}}^k$, and 
-    raising the inequality by a power of $k$, we have
-    \begin{align*}
-        \Prob{\cardin{X - \Ex{X}}
-           \geq%
-           t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
-        &
-        \EQ %
-      \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
-      \\&
-      \EQ%
-      \Prob{Z \geq t^k \Ex{Z}}%
-      \leq%
-      \frac{1}{t^k},
-    \end{align*}
-    by Markov's inequality.
-\end{proof}
-
-The problem is that computing (or even bounding) the $k$\th moment
-$M_k(X) = \Ex{|X-\Ex{X}|^k}$ is usually not easy. Let us do it for one
-interesting example.
-\begin{lemma}
-    \lemlab{h:m}%
-    %
-    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
-    random independent variables such that
-    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
-    $X = \sum_{i=1}^n X_i$. Then, we have
-    \begin{align*}
-      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-      \leq%
-      \frac{1}{t^k}.
-    \end{align*}
-\end{lemma}
-\begin{proof}    
-    Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
-    computing
-    \begin{align*}
-        M_k(X)%
-        &=%
-        \Ex{  X^{k}}%
-        =%
-        \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
-        =%
-        \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
-           X_{i_k} }%
-        \\&
-        =%
-        \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
-        \Ex{X_{i_1} X_{i_2} \cdots
-           X_{i_k} }%
-        \eqlab{m:k}
-    \end{align*}
-    Consider a term in the above summation, where one of the indices
-    (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
-    independence, we have
-    \begin{align*}
-      \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
-      = 
-      \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
-    \end{align*}
-    since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
-    have a unique index disappear. A term that does not disappear is
-    going to be of the form
-    \begin{equation*}
-        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
-           X_{i_\ell}^{\alpha_\ell}}
-        =%
-        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
-        \Ex{ X_{i_\ell}^{\alpha_\ell}}
-    \end{equation*}
-    where $\alpha_i \geq 2$, and $\sum_i \alpha_i = k$. Observe that
-    \[
-        \Ex{X_1^t} =\begin{cases}
-            0 & t \text{ is odd}\\
-            1 & t \text{ is even.}
-        \end{cases}
-    \]
-    As such, all the terms in the summation of \Eqref{m:k} that have
-    value that is not zero, have value one. These terms corresponds to
-    tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
-    $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
-    furthermore, each such value appears an even number of times in
-    $T$ (here $k/2$ is an integer as $k$ is even by assumption). We
-    conclude that the total number of such tuples is at most
-    \[
-        n^{k/2} (k/2)^k.
-    \]
-    Note, that this is a naive bound -- indeed, we choose the $k/2$
-    values that are in $I(T)$, and then we generate the tuple $T$, by
-    choosing values for each coordinate separately. We thus conclude
-    that
-    \begin{equation*}
-        M_k(X) = \Ex{  X^{k}}%
-        \leq n^{k/2} (k/2)^k.
-    \end{equation*}
-
-    Since $k$ is even, we have $\Ex{X^k} = \Ex{|X|^k}$, and by
-    \lemref{cheby:higher}, we have
-    \begin{align*}
-        \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
-        &\EQ%
-        \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
-        \\&
-        \LEQ% 
-        \Prob{ \cardin{X} \geq%
-           t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq {1}/{t^k}.
-    \end{align*}
-\end{proof}
-
-
-\begin{corollary}
-    Consider $k$ be an even integer and let $X_1, \ldots, X_n$ be $n$
-    random independent variables such that
-    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. For
-    $X = \sum_{i=1}^n X_i$, and any $k$, we have
-    $\Prob{|X| \geq k \sqrt{n}} \leq 1/2^k$.
-\end{corollary}
-
-Observe, that the above proof did not require all the variables to be
-purely independent -- it was enough that they are $k$-wise
-independent. We readily get the following.
-
-\begin{defn}
-    Given $n$ random variables $X_1, \ldots, X_n$ they are
-    \emphOnly{$k$-wise independent}\index{$k$-wise independent}, if for any $k$ of them (i.e.,
-    $i_1 < i_2, \ldots, i_k$), and any $k$ values $x_1, \ldots, x_k$,
-    we have\
-    \begin{equation*}
-        \Prob{\Bigl. \smash{\bigcap_{\ell=1}^k} \bigl(X_{i_{\ell}} = v_\ell\bigr)}%
-        \,=\,%
-        \prod_{\ell=1}^k \Prob{  X_{i_{\ell}} = v_\ell }.
-    \end{equation*}
-\end{defn}
-Informally, variables are $k$-wise independent, if any
-$k$ of them (on their own) looks totally random.
-
-\begin{lemma}
-    Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
-    random independent variables, that are $k$-wise independent, such
-    that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
-    $X = \sum_{i=1}^n X_i$. Then, we have
-    \begin{align*}
-      \Prob{\smash{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}\Bigr.}%
-      \leq%
-      \frac{1}{t^k}.
-    \end{align*}
-\end{lemma}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
