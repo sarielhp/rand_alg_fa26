@@ -103,22 +103,26 @@ verifying that $f(\cdot)$ it is indeed a valid density function.
 
 \begin{lemma}
     We have $I = \int_{-\infty}^\infty f(x) \diffX{x} = 1$, where
-    $f(x) = \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}$.
+    \begin{equation*}
+        f(x) = \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}.
+    \end{equation*}
 \end{lemma}
 \begin{proof}
     Observe that 
     \begin{align*}
       I^2
-      &=%
+      &\EQ%
         \Bigl(\int_{x=-\infty}^\infty f(x)\, \diffX{x} \Bigr)^2%
-        =%
+        \\&
+        \EQ
         \Bigl( \int_{x=-\infty}^\infty f(x)\, \diffX{x} \Bigr)
         \Bigl( \int_{y=-\infty}^\infty f(y)\, \diffX{y} \Bigr)
-        =%
+        \\&
+        \EQ
         \int_{x=-\infty}^\infty
         \int_{y=-\infty}^\infty f(x) f(y)\, dx \, dy
       \\&%
-      =%
+      \EQ
       \int_{x=-\infty}^\infty
       \int_{y=-\infty}^\infty g(x, y) \diffX{x} \diffX{y}.
     \end{align*}
@@ -145,19 +149,24 @@ verifying that $f(\cdot)$ it is indeed a valid density function.
     \]
     As such, 
     \begin{align*}
-      I^2 &=%
+        I^2
+        &\EQ
             \frac{1}{2\pi} \int_{r=0}^\infty \int_{\alpha=0}^{2\pi} \exp
             \Bigl( -\frac{r^2}{2} \Bigr) \cardin{J} \, d\alpha \, dr%
-            =%
+            \\&
+            \EQ
             \frac{1}{2\pi} \int_{r=0}^\infty \int_{\alpha=0}^{2\pi} \exp
             \Bigl({ -\frac{r^2}{2}}\Bigr) r \, d\alpha \, dr
       \\
-          &=%
+          &\EQ
             \int_{r=0}^\infty
             \exp \Bigl( -\frac{r^2}{2} \Bigr) r \, dr
-            =%
+            \\&
+            \EQ
             \Bigl[ - \exp\Bigl( -\frac{r^2}{2} \Bigr) \Bigr]_{r=0}^{r=\infty}
-            = - \exp( -\infty) - (-\exp( 0 ) ) = 1.
+            \\&
+            \EQ%
+            \exp( -\infty) - (-\exp( 0 ) ) = 1.
     \end{align*}
 \end{proof}
 
@@ -169,19 +178,22 @@ verifying that $f(\cdot)$ it is indeed a valid density function.
     The density function of $X$, see \Eqref{normal:2d} is symmetric
     around $0$, which implies that $\Ex{X} =0$. As for the variance,
     we have
-    \begin{equation*}
+    \begin{align*}
         \Var{X}%
-        =%
+        \\&
+        \EQ% 
         \Ex{X^2} - \pth{\Ex{X}}^2%
         =%
         \Ex{X^2}%
-        =%
+        \\&
+        \EQ%
         \int_{x=-\infty}^\infty x^2 \Prob{X =x}
         \diffX{x}
+        \\&
         =
         \frac{1}{\sqrt{2\pi}}\int_{x=-\infty}^\infty x^2\exp(-x^2/2)
         \diffX{x}.        
-    \end{equation*}
+    \end{align*}
     Observing that
     \begin{equation*}
         x^2 \exp\bigl( -x^2/2 \bigr)%/2)
@@ -191,22 +203,27 @@ verifying that $f(\cdot)$ it is indeed a valid density function.
         + \exp\bigl(-x^2/2\bigr), 
     \end{equation*}
     implies (using integration by guessing) that
-    \begin{equation*}
-        \Var{X} =
+    \begin{align*}
+        \Var{X}
+        &\EQ%
         \frac{1}{\sqrt{2\pi}}
-        \Bigl[ -x \exp(-x^2/2) \Bigr]_{x=-\infty}^{\infty} +
+        \Bigl[ -x \exp(-x^2/2) \Bigr]_{x=-\infty}^{\infty}
+        \\&
+        \qquad+
         \frac{1}{\sqrt{2\pi}}
         \int_{-\infty}^\infty \exp(-x^2/2) \diffX{x} %
-        =%
+        \\&
+        \EQ%
         0+1
-        =%
+        \EQ%
         1.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The standard multi-dimensional normal %
+\subsection{The multi-dimensional normal %
    distribution}
 
 The \emphOnly{multi-dimensional normal distribution}\index{multi-dimensional normal distribution}, denoted by
@@ -263,13 +280,13 @@ properties.\footnote{The normal distribution has such useful
 \begin{proof}
     (A) Let $f(\cdot)$ denote the density function of
     $\NormalY{0}{1}$, and observe that the density function of $\pntA$ is
-    \begin{math}
+    \begin{equation*}
         f(X_1) f(X_2) \cdots f(X_\hdim),
         = %
         \frac{1}{\mysqrt{2\pi}} \exp \pth{ -X_1^2/2}
         \cdots
         \frac{1}{\mysqrt{2\pi}} \exp \pth{ -X_\hdim^2/2},
-    \end{math}
+    \end{equation*}
     which readily implies the claim.
 
     
@@ -376,26 +393,30 @@ known as the \emphOnly{chi-square distribution with $k$ degrees of
 \begin{proof}
     Arguing as in the proof of Chernoff's inequality, using
     $t=\eps/4<1/2$, we have
-    \begin{equation*}
+    \begin{align*}
         \Prob{Z \geq 1+\eps}%
-        \leq%
+        &\LEQ%
         \Prob{\exp(tkZ) \geq \exp\bigl( tk(1+\eps)\bigr)}
         \leq
         \frac{\Ex{\exp(tkZ)}}
         {{\exp\bigl( tk(1+\eps)\bigr)}}
-        =%
+        \\&%
+        \EQ%
         \prod_{i=1}^k \frac{\Ex{\exp( tX_i^2) }}
         {\exp\bigl( t(1+\eps)\bigr)}.
-    \end{equation*}
+    \end{align*}
     Using the substitution $x= \frac{y}{\sqrt{1-2t}}$ and
     $\diffX{x} = \frac{1}{\sqrt{1-2t}} \diffX{y}$, we have
     \begin{align*}
-      \Ex{\exp( tX_i^2) }%
-      &=%
+        V
+        &\EQ
+        \Ex{\exp( tX_i^2) }%
+      \EQ%
         \int_{x=-\infty}^\infty \frac{\exp(tx^2)}{\mysqrt{2\pi}} \exp
         \pth{ -\frac{x^2}{2}} \diffX{x}%
         % \\&%
-      =%
+        \\&
+        \EQ%
       \frac{1}{\sqrt{2\pi}}
       \int_{x=-\infty}^\infty \exp
       \pth{ -(1-2t)\frac{x^2}{2}} \diffX{x}%
@@ -406,7 +427,7 @@ known as the \emphOnly{chi-square distribution with $k$ degrees of
       \pth{ -\frac{1-2t}{2}\pth{\frac{y}{\sqrt{1-2t}}}^2}
       \frac{1}{\sqrt{1-2t}}
       \diffX{y}%
-      % \\&
+      \\&
       =
       \frac{1}{\sqrt{1-2t}}
       \cdot
@@ -415,7 +436,7 @@ known as the \emphOnly{chi-square distribution with $k$ degrees of
       \pth{ -\frac{y^2}{2} }
       \diffX{y}%
       \\&
-      =%
+      \EQ%
       \frac{1}{\sqrt{1-2t}}.
     \end{align*}
 
@@ -445,13 +466,14 @@ known as the \emphOnly{chi-square distribution with $k$ degrees of
       \pth{\frac{\eps}{2}}^{i}}.%
     \end{align*}
     As such, we have
-    \begin{equation*}
+    \begin{align*}
         \Prob{Z \geq 1+\eps}%
-        \leq%
+        &\leq%
         \exp\pth{\frac{1}{2}\sum_{i=1}^\infty
            \pth{\frac{\eps}{2}}^{i}
            -
            \frac{\eps}{4} \pth{1+\eps} }^k
+        \\&
         =%
         \exp\pth{
            -\frac{\eps^2}{8} + 
@@ -462,7 +484,7 @@ known as the \emphOnly{chi-square distribution with $k$ degrees of
         \exp\pth{-\frac{k \eps^2}{16}}
         \leq %
         \frac{\BadProb}{2},
-    \end{equation*}
+    \end{align*}
     since, for $\eps < 1/2$, we have
     $\frac{1}{2}\sum_{i=3}^\infty (\eps/ 2)^{i}\leq (\eps/2)^3 \leq
     {\eps^2}/{16}$. The last step in the above inequality follows by
@@ -479,11 +501,12 @@ yields better constants):
     Let $Y_1, \ldots, Y_k$ be $k$ independent random variables with
     $Y_i \sim \NormalY{0}{1}$. Let $Z = \sum_{i=1}^k Y_i^2/k$. For any
     $x >0$, we have that
-    \begin{equation*}
-        \Prob{Z  \leq 1 -2 \sqrt{ x/k}} \leq \exp(-x)%
-        \qquad\text{and}\qquad 
+    \begin{align*}
+        &\Prob{Z  \leq 1 -2 \sqrt{ x/k}} \leq \exp(-x)%
+        \\
+        \text{and}\qquad&
         \Prob{Z  \geq 1 + 2 \sqrt{ x/k} + 2x/k} \leq \exp(-x).%
-    \end{equation*}   
+    \end{align*}   
 \end{lemma}
 
 For our purposes, we require that $\exp(-x) \leq \BadProb/2$, which
@@ -502,7 +525,9 @@ We thus get the following result.
     independent random variables
     $X_1, \ldots, X_k \sim \NormalY{0}{1}$, we have for
     $Z = \sum_i X_i^2/k$ that that
-    $\Prob{ 1-\eps \leq Z \leq 1+\eps} \geq 1 - \BadProb$.
+    \begin{equation*}
+        \Prob{ 1-\eps \leq Z \leq 1+\eps} \geq 1 - \BadProb.
+    \end{equation*}
 \end{corollary}
 
 
@@ -597,10 +622,12 @@ We thus get the following result.
 We thus got the famous J{}L-Lemma.
 
 \begin{theorem}[The Johnson-Lindenstrauss Lemma]
+    ~
+    \noindent%
     Given a set $\PS$ of $n$ points in $\Re^\hdim$, and a parameter
     $\eps$, one can reduce the dimension of $\PS$ to
-    $k = O(\eps^{-2} \log n)$ dimensions, such that all pairwise
-    distances are $1\pm \eps$ preserved.
+    $k = O(\eps^{-2} \log n)$ dimensions, such that all pairwise distances
+    are $1\pm \eps$ preserved.
 \end{theorem}
 
 %------------------------------------------------------------------
@@ -626,7 +653,7 @@ additional information about the normal distribution.
 \end{lemma}
 \begin{proof}
     We have
-    \begin{math}
+    \begin{equation*}
         \Prob{Y \leq \alpha}%
         =%
         \Prob{\sigma X + \mu \leq \alpha}%
@@ -634,7 +661,7 @@ additional information about the normal distribution.
         \Prob{ X \leq \frac{\alpha-\mu}{\sigma}}%
         =%
         \int_{y=-\infty}^{(\alpha-\mu)/{\sigma}} f(y) \diffX{y},
-    \end{math}
+    \end{equation*}
     where $f(x) = \frac{1}{\mysqrt{2\pi}} \exp \pth{ -x^2/2}$.
     Substituting $y= (x - \mu)/\sigma$, and observing that
     $\diffX{y}/\diffX{x} = 1/\sigma$, we have
@@ -706,6 +733,7 @@ additional information about the normal distribution.
         =%
         \frac{1}{\sqrt{2\pi}}\int_{-\infty}^d \exp\pth{-\frac{x^2}{2}} \diffX{x}
         % \\&%
+      \\&%
       =%
       \frac{1}{\sqrt{2\pi } }\int_{y=-\infty}^z
       \exp\pth{-\frac{y^2}{2\sigma^2}} \frac{\diffX{x}}{ \diffX{y}} \diffX{y},
