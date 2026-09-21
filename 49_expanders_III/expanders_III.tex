@@ -131,20 +131,21 @@ $\Graph$, and finally $e_3$ is a ``zig'' step in $\GraphB$ (see \figref{zigzag:p
 Another way of representing a zig-zag-zig path $v_1 v_2 v_3 v_4$
 starting at the vertex $v_1 = (i,v) \in V(\GraphD)$, is to
 parameterize it by two integers $\ell, \ell'\in\RangeI{d}$, where
-\[
-v_1 = (i,v), \;\;\;\; v_2 = \pth[]{i,\NXExt{v}{\GraphB}{\ell}}
-\;\;\;\; 
-v_3 =
-\pth{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}},
-\NXExt{v}{\GraphB}{\ell}}
-%\NX{v}{\ell}}
-\;\;\;\; 
-v_4 =
-\pth{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}} \;, \;\;
-\NXExt{\pth{\NXExt{v}{\GraphB}{\ell}\MakeSBig}}{\GraphB}{\ell'}}.
-%
-%v_3 = \pth{\NX{i}{\NX{v}{\ell}},\NX{\NX{v}{\ell}}{\ell'}}.
-\]
+\begin{align*}
+    &v_1
+    \EQ (i,v), && v_2 \EQ \pth[]{i,\NXExt{v}{\GraphB}{\ell}}
+    \\&
+    v_3 \EQ \pth{
+       \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}},
+       \NXExt{v}{\GraphB}{\ell}}
+    % \NX{v}{\ell}}
+    &
+    &v_4 \EQ
+    \pth{ \NXExt{i}{\Graph}{\MakeSBig\NXExt{v}{\GraphB}{\ell}} \;, \;\;
+       \NXExt{\pth{\NXExt{v}{\GraphB}{\ell}\MakeSBig}}{\GraphB}{\ell'}}.
+    % 
+    % v_3 = \pth{\NX{i}{\NX{v}{\ell}},\NX{\NX{v}{\ell}}{\ell'}}.
+\end{align*}
 
 Let $Z$ be the set of all (unordered) pairs of vertices of $\GraphC$
 connected by such a zig-zag-zig path. Note, that every vertex $(i,v)$
@@ -190,14 +191,19 @@ We next bound the tension of the zig-zag product graph.
     = \pth{\RangeI{D}, E'}$ be a $(D,d)$-graph. Fix any function $f:
     \RangeI{n}\times \RangeI{D} \rightarrow \Re$, and observe that
     \begin{align*}
-        \psi &= \ExExt{\substack{u,v \in \RangeI{n} \\
+        \psi
+        &\EQ
+        \ExExt{\substack{u,v \in \RangeI{n} \\
               k,\ell \in \RangeI{D}}\,}{\cardin{f(u,k) - f(v,\ell)}^2}
-        = \ExExt{ k,\ell \in \RangeI{D} \,}{\ExExt{u,v \in \RangeI{n}}
+        \\&
+        \EQ%%
+        \ExExt{ k,\ell \in \RangeI{D} \,}{\ExExt{u,v \in \RangeI{n}}
            {\cardin{f(u,k) - f(v,\ell)}^2}}\\
         &\leq \ExExt{ k,\ell \in \RangeI{D} \,}{ \BiDialX{\Graph}
            \ExExt{uv \in E(\Graph)} {\cardin{f(u,k) - f(v,\ell)}^2}} %
         % 
-        = \BiDialX{\Graph} \underbrace{\ExExt{ k,\ell \in \RangeI{D} \,}{
+        \\&
+        \EQ \BiDialX{\Graph} \underbrace{\ExExt{ k,\ell \in \RangeI{D} \,}{
               \ExExtS{u \in \RangeI{n}\\
                     p \in \RangeI{D}}
                  {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}}_{=\Delta_1}.
@@ -205,17 +211,22 @@ We next bound the tension of the zig-zag product graph.
        Now,
     \begin{align*}
         %
-        \Delta_1 &= \ExExtS{u \in \RangeI{n}\\
+        \Delta_1
+        &\EQ%
+        \ExExtS{u \in \RangeI{n}\\
               \ell \in \RangeI{D} \,}{
            \ExExt{k, p \in \RangeI{D}}
            {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}
-        \;\; \leq \;\;  \ExExtS{u \in \RangeI{n}\\
+        \\&
+        \LEQ%
+        \ExExtS{u \in \RangeI{n}\\
               \ell \in \RangeI{D} \,}{
            \BiDialX{\GraphB}
            \ExExt{k p \in E(\GraphB)}
            {\cardin{f(u,k) - f\pth{ \NX{u}{p},\ell}}^2}}\\
         %
-        &=  \BiDialX{\GraphB}
+        &\EQ%
+        \BiDialX{\GraphB}
         \underbrace{\ExExtS{u \in \RangeI{n}\\
               \ell \in \RangeI{D} \,}{
               \ExExtS{p \in \RangeI{D}\\
@@ -226,13 +237,14 @@ We next bound the tension of the zig-zag product graph.
     Now,
     \begin{align*}
         \Delta_2
-        &= 
+        &\EQ 
         \ExExtS{   j \in \RangeI{d}\\
            \ell \in \RangeI{D} \,}{
            \ExExtS{u \in \RangeI{n}\\
               p \in \RangeI{D}}
            {\cardin{f\pth{u,\NX{p}{j}} - f\pth{ \NX{u}{p},\ell}}^2}}
-        =
+        \\&
+        \EQ
         {\ExExtS{j \in \RangeI{d}\\
               \ell \in \RangeI{D} \,}{
               \ExExtS{v \in \RangeI{n}\\
@@ -254,13 +266,17 @@ We next bound the tension of the zig-zag product graph.
     \end{align*}
     Now, we have
     \begin{align*}
-        \Delta_3 &= \ExExtS{
+        \Delta_3
+        &=
+        \ExExtS{
            j \in \RangeI{d}\\
            v \in \RangeI{n} \,}{ \ExExtS{
               p \in \RangeI{D}\\
               i \in \RangeI{d} }
            {\cardin{f\pth{\NX{v}{p},\NX{p}{j}} - f\pth{ v,\NX{p}{i}}}^2}}
-        = \ExExtS{
+        \\&
+        \EQ%
+        \ExExtS{
            \pth[]{u,k}\pth[]{\ell,v} \in E\pth[]{ \ZProd{\Graph}{\GraphB}}}
            {\cardin{f\pth{u, k} - f\pth{ \ell, v} \MakeBig}},
     \end{align*}
@@ -321,13 +337,14 @@ effect our analysis, so we keep them in.
     that $\EVal(\Graph) = 1- 1/\BiDialX{\Graph}$, and thus
     \begin{align*}
         \BiDialX{\Graph^2}%
-        = %
+        &\EQ %
         \frac{1}{1-\EVal\pth{\Graph^2}}%
         =%
         \frac{1}{1-\pth{\EVal\pth{\Graph}}^2}%
         =%
         \frac{1}{1-\pth{1- \frac{1}{\BiDialX{\Graph}}}^2}%
-        =%
+        \\&%
+        \EQ%
         \frac{\BiDialX{\Graph}}{2- \frac{1}{\BiDialX{\Graph}}}%
         =%
         \frac{\pth{\BiDialX{\Graph}}^2}{2\BiDialX{\Graph} - 1}.

@@ -38,28 +38,28 @@
 
 \section{What are randomized algorithms?}
 
-Randomized algorithms are algorithms that makes random decision during
-their execution. Specifically, they are allowed to use variables, such
-that their value is taken from some random distribution. It is not
+Randomized algorithms are algorithms that make random decisions during
+their execution. Specifically, they are allowed to use variables whose
+values are drawn from some probability distribution. It is not
 immediately clear why adding the ability to use randomness helps an
 algorithm. But it turns out that the benefits are quite
-substantial. Before listing them, let start with an example.
+substantial. Before listing them, let us start with an example.
 
 
 %--------------------------------------------------------------------
 
 \subsection{The benefits of unpredictability}
 
-Consider the following game. The adversary has a equilateral triangle,
-with three coins on the vertices of the triangle (which are, numbered
-by, I don't known, 1,2,3). Initially, the adversary set each of the
-three coins to be either heads or tails, as she sees fit.
+Consider the following game. The adversary has an equilateral triangle,
+with three coins on the vertices of the triangle (which are numbered,
+say, by $1,2,3$). Initially, the adversary sets each of the three
+coins to be either heads or tails, as she sees fit.
 
 At each round of the game, the player can ask to flip certain coins
-(say, flip coins at vertex $1$ and $3$). If after the flips all three
-coins have the same side up, then the game stop. Otherwise, the
+(say, flip coins at vertices $1$ and $3$). If after the flips all three
+coins have the same side up, then the game stops. Otherwise, the
 adversary is allowed to rotate the board by $0, 120$ or $-120$
-degrees, as she seems fit. And the game continues from this point
+degrees, as she sees fit. And the game continues from this point
 on. To make things interesting, the player does not see the board at
 all, and does not know the initial configuration of the coins.
 
@@ -67,13 +67,13 @@ all, and does not know the initial configuration of the coins.
 
 \paragraph*{A randomized algorithm.}
 The randomized algorithm in this case is easy -- the player randomly
-chooses a number among $1,2,3$ at every round. Since, at every point
-in time, there are two coins that have the same side up, and the other
-coin is the other side up, a random choice hits the lonely coin, and
-thus finishes the game, with probability $1/3$ at each step.  In
-particular, the number of iterations of the game till it terminates
-behaves like a geometric variable with geometric distribution with
-probability $1/3$ (and thus the expected number of rounds is
+chooses a vertex among $1,2,3$ at every round and flips the coin at
+that vertex. Since, at every point in time, there are two coins that
+have the same side up, and the remaining coin has the opposite side up,
+a random choice hits the lonely coin, and thus finishes the game, with
+probability $1/3$ at each step. In particular, the number of iterations
+of the game till it terminates is distributed geometrically with
+parameter $1/3$ (and thus the expected number of rounds is
 $3$). Clearly, the probability that the game continues for more than
 $i$ rounds, when the player uses this random algorithm, is
 $(2/3)^i$. In particular, it vanishes to zero relatively quickly.
@@ -86,7 +86,7 @@ deterministic algorithm, then the adversary can simulate the algorithm
 herself, and know at every stage what coin the player would ask to
 flip (it is easy to verify that flipping two coins in a step is
 equivalent to flipping the other coin -- so we can restrict ourselves
-to a single coin flip at each step).  In particular, the adversary can
+to a single coin flip at each step). In particular, the adversary can
 rotate the board in the end of the round, such that the player (in the
 next round) flips one of the two coins that are in the same
 state. Namely, the player never wins.
@@ -98,13 +98,13 @@ where at each stage the player can flip one or two coins, and the
 adversary can rotate the board by $0,90,180, 270$ degrees after each
 round. Surprisingly, there is a deterministic winning strategy for
 this case. The interested reader can think what it is (this is one of
-these brain teasers that are not immediate, and might take you 15
+those brain teasers that are not immediate, and might take you 15
 minutes to solve, or longer [or much longer]).
 
 \paragraph*{The unfair game of the analysis of algorithms.}
 
-The underlying problem with analyzing algorithm is the inherent
-unfairness of worst case analysis. We are given a problem, we propose
+The underlying problem with analyzing algorithms is the inherent
+unfairness of worst-case analysis. We are given a problem, we propose
 an algorithm, then an all-powerful adversary chooses the worst input
 for our algorithm. Using randomness gives the player (i.e., the
 algorithm designer) some power to fight the adversary by being
@@ -118,7 +118,7 @@ Advantages of randomized algorithms:
 \begin{compactenumA}
     \item \textbf{Best.} There are cases where only randomized
     algorithms are known or possible, especially for games. For
-    example, consider the 3 coins example given above.
+    example, consider the three-coins example given above.
     
     \smallskip%
     \item \textbf{Speed.} In some cases randomized algorithms are
@@ -131,23 +131,23 @@ Advantages of randomized algorithms:
     
     
     \smallskip%
-    \item \textbf{Derandomization.}  Some deterministic algorithms
-    arises from derandomizing the randomized algorithms, and this are
-    the only algorithm we know for these problems (i.e., discrepancy).
+    \item \textbf{Derandomization.} Some deterministic algorithms
+    arise from derandomizing randomized algorithms, and these are
+    the only algorithms we know for these problems (e.g., discrepancy).
     
     
     \smallskip%
-    \item \textbf{Adversary arguments and lower bounds.}  %
-    The standard worst case analysis relies on the idea that the
+    \item \textbf{Adversary arguments and lower bounds.} %
+    The standard worst-case analysis relies on the idea that the
     adversary can select the input on which the algorithm performs
     worst. Inherently, the adversary is more powerful than the
     algorithm, since the algorithm is completely predictable. By using
     a randomized algorithm, we can make the algorithm unpredictable
-    and break the adversary lower bound.
+    and break the adversary's lower bound.
 
-    Namely, randomness makes the algorithm vs. adversary game a more
-    balanced game, by giving the algorithm additional power aga\-inst
-    the adversary.
+    Namely, randomness makes the algorithm vs.\ adversary contest
+    more balanced, giving the algorithm additional power against the
+    adversary.
 \end{compactenumA}
 
 
@@ -157,19 +157,19 @@ Advantages of randomized algorithms:
 
 Randomized algorithms are not the same as \emphOnly{average-case
    analysis}\index{average-case
-   analysis}. In average case analysis, one assumes that is given some
-distribution on the input, and one tries to analyze an algorithm
+   analysis}. In average-case analysis, one assumes that one is given some
+distribution on the inputs, and one tries to analyze an algorithm's
 execution on such an input. 
 
 On the other hand, randomized algorithms do not assume random inputs
--- inputs can be arbitrary.  As such, randomized algorithm analysis is
-more widely applicable, and more general.
+-- inputs can be arbitrary. As such, the analysis of randomized algorithms is
+more widely applicable and more general.
 
-While there is a lot of average case analysis in the literature, the
-problem that it is hard to find distribution on inputs that are
-meaningful in comparison to real world inputs. In particular, for
-numerous cases, the average case analysis exposes structure that does
-not exist in real world input.
+While there is a lot of average-case analysis in the literature, the
+problem is that it is hard to find distributions on inputs that are
+meaningful in comparison to real-world inputs. In particular, in
+numerous cases, average-case analysis exploits structure that does
+not exist in real-world inputs.
 
 
 \Section{Examples of randomized algorithms}
@@ -178,7 +178,7 @@ not exist in real world input.
 
 The input is a 2SAT formula. That is a 2CNF boolean formula -- that
 is, the formula is a conjunction of clauses, where each clause is made
-out of two literals, which are \si{ored} together. A literal here is
+out of two literals, which are \si{or}ed together. A literal here is
 either a variable or its negation. For example, the input formula
 might be
 \begin{equation*}
@@ -187,15 +187,15 @@ might be
     \wedge
     (\overline{x_1} \vee x_{17}).
 \end{equation*}
-(Here, $\vee$ is a boolean or, and $\wedge$ is a boolean and.)  Assume
+(Here, $\vee$ is a boolean or, and $\wedge$ is a boolean and.) Assume
 that $F$ is using $n$ variables (say $x_1, \ldots, x_n \in \{0,1\}$),
-and $m$ clauses.  The task at hand is to compute a satisfying
-assignment for $F$. That is, determine what values has to be assigned
+and $m$ clauses. The task at hand is to compute a satisfying
+assignment for $F$. That is, determine what values have to be assigned
 to $x_1,\ldots, x_n$.
 
 This problem can be solved in linear time (i.e., $O(n+m)$) by a
 somewhat careful and somewhat clever usage of directed graphs and
-strong connected components. Here, we present a much simpler
+strongly connected components. Here, we present a much simpler
 randomized algorithm -- we will present some intuition why this
 algorithm works. We hopefully will provide a more detailed formal
 proof later in the course.
@@ -207,9 +207,9 @@ The algorithm starts with an arbitrary assignment to the variables of
 $F$. If $F$ evaluates to \TRUE, then the algorithm is done. Otherwise,
 there must be a clause, say $C_i = \ell_i \vee \ell_i'$, that is not
 satisfied. The algorithm randomly chooses (with equal probability) one
-of the literals of $C_i$, and flip the value assigned to variable in
-this literal. Thus, if the algorithm chosen $\ell_i' =
-\overline{x_{17}}$, then the algorithm would flip the value of
+of the literals of $C_i$, and flips the value assigned to the variable in
+this literal. Thus, if the algorithm chose $\ell_i' =
+\overline{x_{17}}$, then the algorithm flips the value of
 $x_{17}$. The algorithm continues to the next iteration.
 
 \begin{claim}[Proof later in the course]
@@ -222,16 +222,16 @@ $x_{17}$. The algorithm continues to the next iteration.
 
 \subsubsection{Intuition}
 
-Fix a specific satisfying assignment $\Xi$ to $F$.  Assume $X_i$ is
+Fix a specific satisfying assignment $\Xi$ to $F$. Assume $X_i$ is
 the number of variables in the assignment in the beginning of the
 $i$\th iteration that agree with $\Xi$. If $X_i = n$, then the
 algorithm found $\Xi$, and it is done. Otherwise, $X_{i}$ changes by
 exactly one at each iteration. That is $X_{i+1}= X_{i} +1$ or
-$X_{i+1}= X_{i} -1$. If both variables  of $C_{i}$ are assigned the
+$X_{i+1}= X_{i} -1$. If both variables of $C_{i}$ are assigned the
 ``wrong'' value (i.e., the negation of their value in $\Xi$), then
 $X_{i+1} = X_i +1$. The other option is that one of the variables of
 $C_i$ is assigned the wrong value. The probability that the algorithm
-guess the right variable to flip is $1/2$. Thus, we have
+guesses the right variable to flip is $1/2$. Thus, we have
 $X_{i+1}= X_{i} +1$ with probability $1/2$, and
 $X_{i+1}= X_{i} -1$ with probability $1/2$.
 
@@ -239,7 +239,7 @@ Thus, the execution of the algorithm is a random process. Starting
 with $X_1$ being some value in the range
 $\IRY{0}{n} =\{ 0, \ldots, n\}$, the question is how long do we have
 to run this process till $X_i = n$? It turns out that the answer is
-$O(n^2)$, because essentially this process is related  to the random
+$O(n^2)$, because essentially this process is related to the random
 walk on the line, described next.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -252,9 +252,9 @@ walk on the line, described next.
 Let $\ZZ$ denote the set of all integer numbers. Consider the random
 process, that starts at time zero, with the ``player'' being at
 position $X_0=0$. In the $i$\th step of the game, the player randomly
-choose with probability half to go left -- that is, to move to
+chooses with probability half to go left -- that is, to move to
 $X_{i-1}-1$, or with equal probability to the right (i.e.,
-$X_i = X_{-1}+1$). The sequence $\EuScript{X} = X_0, X_1, \ldots$ is a
+\chgY{$X_i = X_{-1}+1$}{$X_i = X_{i-1}+1$}\remX{Corrected subscript typo: the rightward step from $X_{i-1}$ reaches $X_i = X_{i-1}+1$, not $X_{-1}+1$.}). The sequence $\EuScript{X} = X_0, X_1, \ldots$ is a
 \emph{random walk} on the integers. A natural question is how many
 times would the walk visit the origin, in the infinite walk
 $\EuScript{X}$?
@@ -287,7 +287,7 @@ visits the origin is
 (Why the last argument is valid would be explained in following
 lectures.)
 
-Namely, the random walk visits the origin infinite number of times. 
+Namely, the random walk visits the origin an infinite number of times. 
 
 \SubSubSection{Walk on the two dimensional grid}
 
@@ -298,11 +298,11 @@ moves with (equal) probability to one of the four adjacent
 locations. That is, if $X_{i-1} = (x_{i-1}, y_{i-1})$, then $X_i$ is
 one of the following four locations with equal probability:
 \begin{equation*}
-    (x_i-1,y_i),\quad
-    (x_i+1,y_i),\quad
-    (x_i,y_i-1),%
+    (x_{i-1}-1,y_{i-1}),\quad
+    (x_{i-1}+1,y_{i-1}),\quad
+    (x_{i-1},y_{i-1}-1),%
     \text{ ~ and ~ }%
-    (x_i,y_i+1).    
+    (x_{i-1},y_{i-1}+1).    
 \end{equation*}
 
 As before, one can ask what is the number of times this random walk
@@ -316,10 +316,10 @@ origin at time $2n$.
 
 Arguing as above, we have that the expected number of times the walk
 visits the origin is $\sum_{n=1}^\infty \Theta(1/n) =
-+\infty$. Namely, the walk visit the origin infinite number of times.
++\infty$. Namely, the walk visit the origin infinite number of times. 
 
 
-\SubSubSection{Walk on the two dimensional grid}
+\SubSubSection{Walk on the three dimensional grid}%
 
 The same question can be asked when the underlying set is
 $\ZZ \times \ZZ \times \ZZ$ -- as before the walk starts at the
@@ -327,7 +327,7 @@ origin, and at each step the walk goes to one of the six adjacent
 cells. It turns out that the probability of being in the origin at
 time (say) $6n$ is $\Theta(1/n^{3/2})$ (the proof is not clean or easy
 in this case), and as such, the expected number of times this walk
-visits the origin $\sum_{n=1}^\infty \Theta(1/n^{3/2}) =
+visits the origin is $\sum_{n=1}^\infty \Theta(1/n^{3/2}) =
 O(1)$. Surprise!
 
 
@@ -362,22 +362,20 @@ prime.
     Given a positive integer $n$, it can be written using
     $T = \ceil{\log_{10} n}$ digits. Furthermore, one can decide in
     $O(T^4) = O( \log^4 n)$ randomized time if $n$ is prime. More
-    precisely, if $n$ is not prime, the algorithm would return ``not
-    prime'' with probability half, if it is prime, it would return
-    ``prime''.
+    precisely, if $n$ is prime, the algorithm always returns ``prime''; if $n$ is not prime (composite), the algorithm returns ``not prime'' with probability at least $1/2$.%
 \end{theorem}
 
-A natural way to decide if a number $n$ with $t$ bits is prime, is to
-run the above algorithm (say), $10t$ times. If any of the runs returns
-that the number is not prime, then we return ``not prime''. Otherwise,
-we return the number of is a prime. The probability that a composite
-number would be reported as prime is $1/2^{10t} \leq 1/10^t$, which is
-a tiny number, for $t$, say, larger than $512$.
+A natural way to decide if a number $n$ with $t$ bits is prime, is to run
+the above algorithm (say), $10t$ times. If any of the runs returns that
+the number is not prime, then we return ``not prime''. Otherwise, we
+return that the number is prime. The probability that a composite number
+would be reported as prime is $1/2^{10t} \leq 1/10^t$, which is a tiny
+number, for $t$, say, larger than $512$.
 
 
 This gives us an efficient way to pick random prime numbers -- the
-time to compute such a number is polynomial in the number of bits its
-uses.  Now, we can deploy \RSA as computing large random prime numbers
+time to compute such a number is polynomial in the number of bits it
+uses. Now, we can deploy \RSA as computing large random prime numbers
 is the main technical difficulty in computing it.
 
 
@@ -394,7 +392,7 @@ $\G$ weights from the range $[0,1]$. It then computes the \MST $\Tree$
 of this graph (according to the random weights on the edges). Let $e$
 be the heaviest edge in $\Tree$. Removing it breaks $\Tree$ into two
 subtrees, with two disjoint sets of vertices $S$ and $T$. Let $(S,T)$
-denote the set of all the edges in $\G$ that have one end point in $S$
+delete the set of all the edges in $\G$ that have one end point in $S$
 and one in $T$. The algorithm outputs the edges of $(S,T)$ as the
 candidate to be the minimum cut.
 
@@ -402,21 +400,64 @@ The following result is quite surprising.
 
 \begin{theorem}
     The above algorithm always outputs a cut, and it outputs a min-cut
-    with probability $\geq 2/n^2$. 
+    with probability $\geq 2/n^2$.
 \end{theorem}
 
 It turns out that if you run the above algorithm
 \begin{math}
     O(n^2 \log n)
 \end{math}
- times, and returns the smallest cut computed, then
-with probability $\geq 1-1/n^{O(1)}$, the returned cut is the minimum
-cut! This  algorithm has running time (roughly) $O(n^4)$ -- it can be
-made faster, but this is already pretty good.
+times, and return the smallest cut computed, then with probability
+$\geq 1-1/n^{O(1)}$, the returned cut is the minimum cut! This algorithm has
+running time (roughly) $O(n^4)$ -- it can be made faster, but this is
+already pretty good.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bibliographical notes}
+
+The coin-flipping game on a rotating polygon is a classic brain teaser;
+the square version is often known as the four-coins-on-a-turntable
+puzzle. The advantage that randomized strategies enjoy over
+deterministic strategies against an adversary is a manifestation of the
+minimax theorem of game theory (von Neumann) and Yao's minimax principle
+(see \cite{mr-ra-95}).
+
+The simple randomized algorithm for 2SAT based on a random walk on the
+hypercube was discovered by Papadimitriou \cite{p-ssta-91}. For
+comparison, the linear-time deterministic algorithm for 2SAT using
+strongly connected components of the implication graph is due to Aspvall
+\etal \cite{apt-ltat-79}.
+
+The recurrence and transience of simple random walks on the integer
+lattices $\ZZ^d$ was settled in a celebrated paper by P{\'o}lya
+\cite{p-uawbi-21}, who proved that the walk is recurrent for $d \in \{1,
+2\}$ and transient for $d \geq 3$ (a dichotomy colorfully summarized by
+Kakutani: ``a drunk man will find his way home, but a drunk bird may get lost
+forever''). An accessible introduction to random walks and Markov chains is
+given in the textbook by Norris \cite{n-mc-98}.
+
+The \RSA public-key cryptosystem was introduced by Rivest, Shamir, and
+Adleman \cite{rsa-modsp-78}. The polynomial-time randomized primality
+testing algorithm described in this chapter is the Miller--Rabin test,
+originating in the work of Miller \cite{m-rhtp-76} (who proved
+deterministic correctness assuming the Extended Riemann Hypothesis) and
+Rabin \cite{r-patp-80} (who converted it into an unconditional randomized
+Monte Carlo algorithm); see also Solovay and Strassen \cite{ss-fmctp-77}
+for an earlier randomized primality test based on Jacobi symbols. Decades
+later, Agrawal \etal \cite{aks-pp-04} resolved a long-standing open
+problem by discovering the first unconditional deterministic
+polynomial-time algorithm for primality testing.
 
 
+The randomized contraction algorithm for the minimum cut problem, along
+with its formulation via random edge weights and minimum spanning trees, was
+developed by David Karger \cite{k-gmcro-93}. Karger and Stein
+\cite{ks-namcp-96} later improved the running time to near-linear in the
+number of vertices via a recursive contraction strategy.
 
 
 \ChapterEnd{}
@@ -428,4 +469,3 @@ made faster, but this is already pretty good.
 % mode: latex
 % TeX-master: t
 % End: 
-
