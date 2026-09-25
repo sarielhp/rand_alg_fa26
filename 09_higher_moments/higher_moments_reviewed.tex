@@ -1,0 +1,452 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{9}{73}
+
+\Chapter{Higher Moments and Some Inequalities}
+
+\ChapterPrefix{}
+\ChapterGen{}
+
+\QuotePExt{%
+   \indent%
+   During a native rebellion in German East Africa, the Imperial
+   Ministry in Berlin issued the following order to its
+   representatives on the ground: “The natives are to be instructed
+   that on pain of harsh penalties, every rebellion must be announced,
+   in writing, six weeks before it breaks out.”  }%
+{Dead Funny: Humor in Hitler's Germany}%
+{Rudolph Herzog}
+
+
+
+\section{Higher moment inequalities}
+\seclab{h:m:i}
+
+\subsection{Stronger concentration inequality}
+
+\subsubsection{Higher-order Chebyshev inequality}
+The following is the higher-moment variant of the Chebyshev inequality.
+\begin{lemma}
+    \lemlab{cheby:higher}%
+    %
+    For a random variable $X$, an integer $k \geq 1$, and $t > 0$, we have that
+    \begin{equation*}
+        \ds%
+        \Prob{\cardin{X - \Ex{X}}
+           \geq%
+           t {\Ex{ \bigl. {\cardin{X -  \Ex{X}}}^k} }^{1/k}}  
+        \leq
+        \frac{1}{t^k}.
+    \end{equation*}
+\end{lemma}
+\begin{proof}
+    Setting $Z = \cardin{X - \Ex{X}}^k$, and 
+    raising both sides of the inequality inside the probability by a power of $k$, we have
+    \begin{align*}
+        \Prob{\cardin{X - \Ex{X}}
+           \geq%
+           t \ExChar \bigl[ \cardin{X - \Ex{X}}^k \bigr]^{1/k} } %
+        &
+        \EQ %
+      \Prob{Z^{1/k} \geq t \Ex{ Z }^{1/k}}
+      \\&
+      \EQ%
+      \Prob{Z \geq t^k \Ex{Z}}%
+      \leq%
+      \frac{1}{t^k},
+    \end{align*}
+    by Markov's inequality.
+\end{proof}
+
+
+\subsubsection{Concentration for sums of independent random signs}
+
+The problem is that computing (or even bounding) the $k$\th moment
+$M_k(X) = \Ex{|X-\Ex{X}|^k}$ is usually not easy. Let us do it for one
+interesting example.
+\begin{lemma}
+    \lemlab{h:m}%
+    %
+    Let $k > 0$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    independent random variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
+\end{lemma}
+\begin{proof}    
+    Observe that $\Ex{X} = n \Ex{X_1} = 0$.  We are interested in
+    computing
+    \begin{align*}
+        M_k(X)%
+        &=%
+        \Ex{  X^{k}}%
+        =%
+        \Ex{  \Bigl(\smash{\sum_i} X_i \Bigr)^{k}}%
+        =%
+        \Ex{\Bigl. \smash{\sum_{i_1=1}^n}  \ldots \smash{\sum_{i_k=1}^n}  X_{i_1} X_{i_2} \cdots
+           X_{i_k} }%
+        \\&
+        =%
+        \sum_{i_1=1}^n  \ldots \sum_{i_k=1}^n
+        \Ex{X_{i_1} X_{i_2} \cdots
+           X_{i_k} }.
+        \eqlab{m:k}
+    \end{align*}
+    Consider a term in the above summation, where one of the indices
+    (say $i_1$) has a unique value among $i_1, i_2, \ldots, i_k$. By
+    independence, we have
+    \begin{align*}
+      \Ex{X_{i_1} X_{i_2} \cdots X_{i_k} }
+      = 
+      \Ex{X_{i_1}}\Ex{ X_{i_2} \cdots X_{i_k} } = 0,
+    \end{align*}
+    since $\Ex{X_{i_1}} = 0$.  As such, in the above all terms that
+    have a unique index disappear. A term that does not disappear is
+    going to be of the form
+    \begin{equation*}
+        \Ex{X_{i_1}^{\alpha_1} X_{i_2}^{\alpha_2} \ldots
+           X_{i_\ell}^{\alpha_\ell}}
+        =%
+        \Ex{X_{i_1}^{\alpha_1}}\Ex{ X_{i_2}^{\alpha_2}} \ldots
+        \Ex{ X_{i_\ell}^{\alpha_\ell}}
+    \end{equation*}
+    where $\alpha_i \geq 2$, and $\sum_{i=1}^\ell \alpha_i = k$. Observe that
+    \[
+        \Ex{X_1^t} =\begin{cases}
+            0 & t \text{ is odd}\\
+            1 & t \text{ is even.}
+        \end{cases}
+    \]
+    As such, all the terms in the summation of \Eqref{m:k} that have
+    value that is not zero, have value one. These terms correspond to
+    tuples $T = (i_1, i_2, \ldots, i_k)$, such that the set of values
+    $I(T) = \brc{ i_1, \ldots, i_k}$ has at most $k/2$ values, and
+    furthermore, each such value appears an even number of times in
+    $T$ (here $k/2$ is an integer as $k$ is even by assumption). We
+    conclude that the total number of such tuples is at most
+    \[
+        n^{k/2} (k/2)^k.
+    \]
+    Note, that this is a naive bound -- indeed, we choose the $k/2$
+    values that are in $I(T)$, and then we generate the tuple $T$, by
+    choosing values for each coordinate separately. We thus conclude
+    that
+    \begin{equation*}
+        M_k(X) = \Ex{  X^{k}}%
+        \leq n^{k/2} (k/2)^k.
+    \end{equation*}
+
+    Since $k$ is even, we have $\Ex{X^k} = \Ex{|X|^k}$, and by
+    \lemref{cheby:higher}, we have
+    \begin{align*}
+        \Prob{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}%
+        &\EQ%
+        \Prob{\cardin{X} \geq t \pth{n^{k/2} (k/2)^k}^{1/k}}
+        \\&
+        \LEQ% 
+        \Prob{ \cardin{X} \geq%
+           t {\Ex{ \bigl. {\cardin{X}}^k} }^{1/k}} \leq \frac{1}{t^k}.
+    \end{align*}
+\end{proof}
+
+
+\begin{corollary}
+    \corlab{cor:rw:concentration}%
+    Let $k > 0$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    independent random variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. For
+    $X = \sum_{i=1}^n X_i$, setting $t=2$ in \lemref{h:m} yields
+    $\Prob{|X| \geq k \sqrt{n}} \leq 1/2^k$.
+\end{corollary}
+
+Observe, that the above proof did not require all the variables to be
+purely independent---it was enough that they are $k$-wise independent, see
+\defref{k-wise-independent}.  We thus readily get the following.
+
+
+\begin{lemma}
+    \lemlab{lem:k:wise:sum}%
+    Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
+    \defrefY{$k$-wise independent}{k-wise-independent} random variables,
+    such that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\smash{\cardin{X} \geq \frac{tk}{2} \sqrt{n}}\Bigr.}%
+      \leq%
+      \frac{1}{t^k}.
+    \end{align*}
+\end{lemma}
+
+
+
+\paragraph*{Random walk on the integers.}
+
+Consider starting at $0$, and at each point in time either going left or
+right with probability $1/2$ (moving by one unit). Let $X$ be the
+location after $n$ such steps---this process is strongly concentrated.
+Indeed, interpreting $X_i \in \{-1, +1\}$ as the step taken at time $i$,
+the total displacement after $n$ steps is $X = \sum_{i=1}^n X_i$. Applying
+\corref{cor:rw:concentration} shows that the probability of the walk
+reaching distance $k\sqrt{n}$ from the origin is at most $2^{-k}$.
+
+\section{More inequalities about expectations}
+
+\subsection{Cauchy–Schwarz inequality for expectations}
+
+\begin{theorem}
+    \thmlab{cauchy:schwarz}%
+    Let $X, Y$ be two random variables (not necessarily
+    independent) with finite second moments. We have that
+    \begin{equation*}
+        \cardin{\Ex{ XY }}
+        \leq \sqrt{ \Ex{X^2}}  \sqrt{ \Ex{Y^2}} .
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    By the discrete Cauchy–Schwarz inequality, we have
+    \begin{align*}
+        \cardin{\Ex{ XY \bigr.}\Bigr.}
+        &\EQ
+        \cardin{\sum_{(x,y) \in \Sigma} \Prob{ X=x \cap Y=y} xy}
+        \\&
+        \EQ
+        \cardin{\sum_{(x,y) \in \Sigma} \sqrt{\Prob{ X=x \cap Y=y}} x
+        \sqrt{\Prob{ X=x \cap Y=y}}y}
+      \\&
+      \LEQ
+      \sqrt{\sum_{(x,y) \in \Sigma} \pth{\sqrt{\Prob{ X=x \cap Y=y}} x}^2}
+      \\&\qquad\times%
+      \sqrt{\sum_{(x,y) \in \Sigma}  \pth{\sqrt{\Prob{ X=x \cap Y=y}}y}^2}
+      \\&
+      =
+      \sqrt{\sum_{x} \Prob{ X=x } x^2}
+      \sqrt{\sum_{y}  \Prob{Y=y}y^2}
+      \\&
+      \EQ%
+      \sqrt{\Ex{\smash{X^2}}} \sqrt{\Ex{\smash{Y^2}}}.
+    \end{align*}
+\end{proof}
+
+\subsection{Paley–Zygmund inequality}
+
+The following is an inequality somewhat similar in spirit to
+Chebychev's inequality.
+
+\begin{theorem}
+    \thmlab{paley:zygmund}%
+    %
+    For $Z \geq 0$ a random variable with finite second moment $\Ex{Z^2} < \infty$, and
+    $\theta \in [0,1]$, we have
+    \begin{equation*}
+        \Prob{Z > \theta \Ex{Z}\bigr.}
+        \geq%
+        (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}.
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    Let $B$ be an indicator random variable that is $1$ $\iff$
+    $Z \leq \theta \Ex{Z}$, and let $\overline{B} = 1- B$. Observe
+    that
+    $\gamma = \Ex{\ts\smash{\smash{\overline{B}}^2}\ts}\Bigr.=
+    \Ex{\ts\smash{\overline{B}}\ts\bigr.} = \Prob{Z > \theta
+       \Ex{Z}\bigr.}$.  Observe that
+    $\Ex{Z B \bigr.} \leq \theta \Ex{Z}$, since $Z \geq 0$ and $B=1$ only when $Z \leq \theta \Ex{Z}$.  We thus
+    have
+    \begin{align*}
+        \Ex{Z}%
+        &\EQ%
+        \Ex{Z (B + \overline{B}) }
+        \EQ%
+        \Ex{Z B \bigr.} + \Ex{ \smash{Z \overline{B} } \bigr.}
+        \\&%
+        \LEQ
+        \theta \Ex{Z} +
+        \sqrt{\Ex{Z^2}} \sqrt{ \Ex{\ts\smash{\smash{\overline{B}}^2}\ts } \bigr. }
+        \\&%
+        \EQ%
+        \theta \Ex{Z} +
+        \sqrt{\Ex{Z^2}}  \sqrt{\gamma},
+    \end{align*}
+    by the Cauchy--Schwarz inequality (\thmref{cauchy:schwarz}).
+    Rearranging, we have
+    \begin{equation*}
+        (1-\theta)\Ex{Z}
+        \leq
+        \sqrt{\Ex{Z^2}}  \sqrt{\gamma}.
+    \end{equation*}
+    This implies
+    \begin{align*}
+        % \qquad\implies\qquad
+      (1-\theta)^2\frac{\Ex{Z}^2}{\Ex{Z^2}}
+      \leq
+      \gamma
+      =
+      \Prob{Z > \theta
+      \Ex{Z}\bigr.}.
+    \end{align*}
+\end{proof}
+
+\subsubsection{Why the Paley--Zygmund inequality is useful}
+\seclab{paley:zygmund:useful}
+
+Most classical tail bounds (Markov, Chebyshev, Chernoff) are \emphOnly{concentration inequalities}---they provide \emph{upper} bounds showing that a random variable rarely deviates far from its expectation or rarely exceeds a large threshold. In contrast, the Paley--Zygmund inequality provides a guaranteed \emph{lower} bound on the probability that a non-negative random variable achieves at least a constant fraction of its expectation:
+\begin{equation*}
+    \Prob{Z > \theta \Ex{Z}} \geq (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}.
+\end{equation*}
+Whenever the second moment is controlled by the square of the first moment, say $\Ex{Z^2} \leq C (\Ex{Z})^2$, the inequality guarantees that $Z$ is strictly positive with constant probability:
+\begin{equation*}
+    \Prob{Z > 0} \geq \lim_{\theta \to 0^+} \Prob{Z > \theta \Ex{Z}} \geq \frac{\Ex{Z}^2}{\Ex{Z^2}} \geq \frac{1}{C}.
+\end{equation*}
+In such regimes, Chebyshev's inequality is useless for anti-concentration
+because the standard deviation $\sigma = \sqrt{\Var{Z}}$ is of the same
+order of magnitude as $\Ex{Z}$, yielding an upper bound on deviations
+around the mean that exceeds $1$ and cannot rule out that $Z = 0$.
+
+
+
+\subsection{Bounding the random walk away from zero}
+\seclab{away:from:zero}
+
+It is easy to verify the following (indeed, we did some of these
+calculations above already).
+
+
+\begin{exercise}
+    \exelab{moments:r:w}%
+    %
+    Let $k > 0$ be an even integer and let $X_1, \ldots, X_n$ be $n$
+    independent random variables such that
+    $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
+    $X = \sum_{i=1}^n X_i$. Show that:
+    \begin{compactenumi}
+        \smallskip%
+        \item $\Ex{X} = 0$.
+        \smallskip%
+        \item $\Ex{X^2} = n$.
+
+        \smallskip%
+        \item $\Ex{X^4} = 3n^2 - 2n$.
+
+        \smallskip%
+        \item $\Ex{ X^{k}} \leq n^{k/2} (k/2)^k$, if $k$ is even.
+    \end{compactenumi}
+\end{exercise}
+
+\begin{lemma}
+    \lemlab{away:from:0}%
+    %
+    Let $X_1, \ldots, X_n$ be $n$ independent random variables such
+    that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$, and let
+    $X = \sum_{i=1}^n X_i$. Then, we have
+    \begin{align*}
+      \Prob{\cardin{X} \geq \frac{\sqrt{n}}{2}}
+      \geq%
+      \frac{3}{16}.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    Let $Z = X^2$ and observe that $Z \geq 0$. Observe that
+    $\Ex{Z} = n$, and $\Ex{Z^2} = 3n^2 - 2n$, by
+    \exeref{moments:r:w}. For any $\theta \in [0,1]$, by
+    the \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}}, we have
+    \begin{align*}
+        \Prob{ Z > \theta n}
+        &\EQ%
+        \Prob{Z > \theta \Ex{Z}\bigr.}
+        \geq%
+        (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}
+        =
+        (1-\theta)^2 \frac{n^2}{3n^2 - 2n}
+        \\&
+        \GEQ% 
+        \frac{(1-\theta)^2}{3}.
+    \end{align*}
+    Thus, for $\theta = 1/4$, we have
+    \begin{equation*}
+        \Prob{\cardin{X} > \frac{\sqrt{n}}{2}}
+        =%
+        \Prob{ Z > n/4}
+        \geq
+        \frac{(1-1/4)^2}{3}
+        =
+        \frac{9}{48}
+        =
+        \frac{3}{16}.
+    \end{equation*}
+\end{proof}
+
+
+\subsubsection{Why Chebychev's inequality does not work in this case}
+
+Let us try to derive the above using Chebychev.  
+Using the corrected fourth moment, we have
+\begin{align*}
+    \Var{Z}
+    &\EQ%
+    \Ex{\smash{Z^2}} - (\Ex{Z})^2
+    \EQ
+    3n^2 - 2n - n^2
+    \\&
+    \EQ
+    2n^2 - 2n = 2n(n-1).
+\end{align*}
+By Chebychev's inequality, we have
+\begin{equation*}
+    \Prob{ |Z - \Ex{Z}| > t \sqrt{\Var{Z}}} \leq \frac{1}{t^2}.
+\end{equation*}
+To bound the event that $Z$ deviates by $\Ex{Z}/2 = n/2$ away from its mean, we set $t \sqrt{\Var{Z}} = \Ex{Z}/2$, which gives:
+\begin{equation*}
+    t = \frac{\Ex{Z}}{2\sqrt{\Var{Z}}} = \frac{n}{2\sqrt{2n(n-1)}} \approx \frac{1}{2\sqrt{2}} \approx 0.354.
+\end{equation*}
+Because $t < 1$, Chebychev's inequality yields an upper bound of
+$1/t^2 \approx 8 > 1$, which provides no information whatsoever.
+
+\bigskip
+
+As this example highlights, the \thmrefY{Paley-Zygmund inequality}{\si{paley:zygmund}} succeeds precisely where Chebyshev's inequality fails: when the standard deviation is of the same order of magnitude as the expectation ($\Var{Z} = \Theta(\Ex{Z}^2)$), Chebyshev's inequality cannot bound $Z$ away from zero, whereas Paley--Zygmund guarantees that $Z$ is positive with constant probability.
+
+
+\section{Bibliographical notes}
+
+The higher-order Chebyshev inequality (\lemref{cheby:higher}) is a
+standard extension of the Bienaym{\'e}--Chebyshev inequality
+\cite{b-cadld-1853, c-dvm-1867}; see Motwani and Raghavan
+\cite[Chapter~3]{mr-ra-95}.  The higher moment method for sums of
+$k$-wise independent random variables (\secref{h:m:i}) was systematically
+investigated by Schmidt \etal \cite{sss-chbal-95}.
+
+The Paley--Zygmund inequality (\thmref{paley:zygmund}) was established
+by Paley and Zygmund in 1930 \cite{pz-nafv-30, pz-naf-32} in their work
+on random Fourier series. In combinatorics and the analysis of randomized
+algorithms, it serves as the primary engine for anti-concentration and
+the second moment method; see Alon and Spencer \cite[Chapter~4]{as-pm-00}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newpage
+\StandAloneMode{
+   \section{Tools from previous lecture}
+   
+   
+   \IncFragment{Markov}%
+   \IncFragment{k-wise-independent}%
+
+}
+
+
+\ChapterEnd{}
+
+   % -------------------------------------------------------------------------
+
+
+   % Local Variables:
+   % mode: latex TeX-master: t End:

@@ -433,9 +433,7 @@ backend=biber]{biblatex}
 % in standalone appendices.  A chapter webpage already contains each fragment
 % at its original location, so TeX4ht only needs a transparent wrapper and can
 % omit the repeated standalone copies.
-\DeclareDocumentEnvironment{fragment}{m +b}{%
-   #2%
-}{}
+\newenvironment{fragment}[1]{}{}
 \DeclareDocumentCommand{\IncFragment}{m}{}
 
 \newcommand{\QuoteOpen}{}

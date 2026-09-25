@@ -489,43 +489,6 @@ backend=biber]{biblatex}
 
 \newcommand{\FragmentName}[1]{\RootFile{fragment/\FragNormKey{#1}.tex}}
 
-\newwrite\FragOutHandle
-\newwrite\FragProbeOut
-\newread\FragProbeIn
-\newif\ifInJunkDir
-\InJunkDirfalse
-
-% Detect whether XeTeX was invoked with -output-directory=junk
-\edef\FragProbeSecret{\number\uniformdeviate 1000000}
-\immediate\openout\FragProbeOut=frag_probe.tmp
-\immediate\write\FragProbeOut{\FragProbeSecret}
-\immediate\closeout\FragProbeOut
-
-\openin\FragProbeIn=junk/frag_probe.tmp
-\ifeof\FragProbeIn
-  \InJunkDirfalse
-\else
-  \read\FragProbeIn to \FragReadSecret
-  \closein\FragProbeIn
-  \def\trimspace#1 {#1}
-  \edef\FragReadSecretClean{\expandafter\trimspace\FragReadSecret}
-  \ifx\FragReadSecretClean\FragProbeSecret
-    \InJunkDirtrue
-  \else
-    \InJunkDirfalse
-  \fi
-\fi
-
-\newcommand{\FragWritePrefix}{%
-  \ifx\bookMode\undefined
-    % Standalone chapter mode
-    \ifInJunkDir ../../fragment/\else ../fragment/\fi
-  \else
-    % Master book mode
-    \ifInJunkDir ../fragment/\else fragment/\fi
-  \fi
-}
-
 \newenvironment{fragment}[1]{}{}
 
 \makeatletter
