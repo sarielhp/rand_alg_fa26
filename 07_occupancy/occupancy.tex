@@ -31,10 +31,7 @@
 \section{Some needed math}
 
 
-% Keep review annotations out of the shared fragment export.
-\begingroup
-\RenewDocumentEnvironment{fragment}{m +b}{#2}{}
-\begin{fragment}{d:approx:basic}
+\begin{fragment}{d_approx_basic}
 \begin{lemma}
     \lemlab{approximation:basic}%
     %
@@ -68,7 +65,6 @@
     \end{compactenumi}
 \end{lemma}
 \end{fragment}
-\endgroup
 
 \begin{proof}
     \textbf{(i)} Let $h(x) = e^x - 1 - x$. Observe that
