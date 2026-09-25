@@ -515,13 +515,8 @@ backend=biber]{biblatex}
 }
 \makeatother
 
-\newcommand{\QuoteOpen}{}
-\newcommand{\QuoteClose}{}
-\newcommand{\QuoteWrite}[2]{}
-
 \newcommand{\Quote}[2]{%
    \SaveIndent
-   \QuoteWrite{#1}{#2}%
    \begin{center}%
       {\footnotesize
          \begin{quote}
@@ -1358,32 +1353,6 @@ backend=biber]{biblatex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Macros to embed figures in text
 
-\newlength{\RecordedWidth}
-\newcommand{\RecordWidth}[1]{\settowidth{\RecordedWidth}{#1}}%
-
-\newlength{\msize}%
-
-%-------------------------------------------------------------------
-% \minipageWFigure{ TEXT }{ Figure }{ Figure caption/label }
-%-------------------------------------------------------------------
-\newcommand{\minipageWFigure}[3]{%
-   \RecordWidth{#2}%
-   \setlength{\msize}{\dimexpr(\textwidth-1.1\RecordedWidth)\relax}
-   \noindent%
-   \SaveIndent%
-   \begin{minipage}{\msize}%
-       \RestoreIndent%
-       #1
-   \end{minipage}%
-   \null\hfill%
-   \begin{minipage}{\RecordedWidth}
-       \null\hfill%
-       #2%       
-
-       #3%
-   \end{minipage}%
-}
-
 \newcommand{\EBRY}[2]{#1_{\langle#2\rangle}}%
 
 \newcommand{\NiceFrac}[2]{%
@@ -1557,8 +1526,6 @@ backend=biber]{biblatex}
 \MakePerPage{footnote} % Resets footnote counter on every page
 
 \allowdisplaybreaks % Allows page breaks inside multiline math environments
-
-\newcommand{\BigH}{\rule[-0.4em]{0pt}{1.3em}}%
 
 %-----------------------------------------------------------------------------
 % Bibliography & Document Begin

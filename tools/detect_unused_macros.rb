@@ -26,7 +26,7 @@ PROTECTED_MACROS = Set.new(%w[
   Chapter ChapterPrefix ChapterGen ChapterEnd RealChapterEndInner
   fragment IncFragment FragmentName FragWritePrefix FragOutHandle FragProbeOut
   FragProbeIn FragProbeSecret FragReadSecret FragReadSecretClean InJunkDir
-  deflabel Quote QuoteOpen QuoteClose QuoteWrite SaveIndent RestoreIndent
+  deflabel Quote SaveIndent RestoreIndent
   setheadingcolor mysectionstyle FragmentSave
   delX newX chgY remX SpellIgnore
   True False TRUE FALSE

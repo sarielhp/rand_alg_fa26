@@ -31,6 +31,8 @@ class NumberSyncer
     puts '=== Synchronizing Chapter & Page Numbers ==='
     check_git_clean unless @options[:force] || @options[:dry_run]
 
+    sync_fragments_first
+
     extracted_maps = run_xelatex_passes(@options[:passes] || 2)
     plan = plan_updates(extracted_maps)
 
@@ -46,6 +48,16 @@ class NumberSyncer
     apply_updates(plan)
     commit_updates(plan, tag_name)
     puts "\nDone! To revert these changes, run: tools/sync_numbers.rb --revert"
+  end
+
+  def sync_fragments_first
+    sync_bin = File.join(@root_dir, 'tools', 'sync_fragments')
+    return unless File.exist?(sync_bin)
+
+    puts "\n--- Synchronizing LaTeX Fragments ---"
+    args = [sync_bin]
+    args << '--dry-run' if @options[:dry_run]
+    system(*args) || exit(1)
   end
 
   def check_git_clean

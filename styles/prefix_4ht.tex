@@ -436,13 +436,8 @@ backend=biber]{biblatex}
 \newenvironment{fragment}[1]{}{}
 \DeclareDocumentCommand{\IncFragment}{m}{}
 
-\newcommand{\QuoteOpen}{}
-\newcommand{\QuoteClose}{}
-\newcommand{\QuoteWrite}[2]{}
-
 \newcommand{\Quote}[2]{%
    \SaveIndent
-   \QuoteWrite{#1}{#2}%
    \begin{center}%
       {\footnotesize
          \begin{quote}
@@ -1123,7 +1118,6 @@ backend=biber]{biblatex}
       
 \newcommand{\problab}[1]{\label{prob:#1}}%
 \newcommand{\probref}[1]{\HLink{Problem}{prob:#1}}%
-\newcommand{\probrefY}[2]{\hyperref[prob:#1]{#2}}
 
 \newcommand{\lemlab}[1]{\label{lemma:#1}}
 \newcommand{\lemref}[1]{\HLink{Lemma}{lemma:#1}}%
@@ -1304,31 +1298,6 @@ backend=biber]{biblatex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Macros to embed figures in text
 
-\newlength{\RecordedWidth}
-\newcommand{\RecordWidth}[1]{\settowidth{\RecordedWidth}{#1}}%
-
-\newlength{\msize}%
-
-%-------------------------------------------------------------------
-% \minipageWFigure{ TEXT }{ Figure }{ Figure caption/label }
-%-------------------------------------------------------------------
-\newcommand{\minipageWFigure}[3]{%
-   \RecordWidth{#2}%
-   \setlength{\msize}{\dimexpr(\textwidth-1.1\RecordedWidth)\relax}
-   \noindent%
-   \SaveIndent%
-   \begin{minipage}{\msize}%
-       \RestoreIndent%
-       #1
-   \end{minipage}%
-   \null\hfill%
-   \begin{minipage}{\RecordedWidth}
-       \null\hfill%
-       #2%       
-
-       #3%
-   \end{minipage}%
-}
 
 \newcommand{\EBRY}[2]{#1_{\langle#2\rangle}}%
 
@@ -1498,8 +1467,6 @@ backend=biber]{biblatex}
 \newcommand{\snark}[1]{%
    \marginnote{\raggedright\scriptsize\sffamily\color{gray}#1}%
 }
-
-\newcommand{\BigH}{\rule[-0.4em]{0pt}{1.3em}}%
 
 \newcommand{\binsY}[2]{\sqcup_{\geq #1}\pth{#2}}
 \newcommand{\ballsY}[2]{\text{\Football}_{\geq #1}\pth{#2}}
