@@ -1,0 +1,23 @@
+\begin{theorem}[Fundamental theorem of Markov chains]
+        \thmlab{fundamental}%
+        %
+        Any irreducible, finite, and aperiodic Markov chain has the
+        following properties.
+        \begin{compactenumi}
+            \item All states are ergodic.
+            
+            \item There is a unique stationary distribution $\pi$ such
+            that, for $1 \leq i \leq n$, we have $\pi_i > 0$.
+            
+            \item For $1 \leq i \leq n$, we have $\MCVstProb{i}{i} =1$
+            and $\MCExSteps{i}{i} = 1/ \pi_i$.
+            
+            \item Let $N(i,t)$ be the number of times the Markov chain
+            visits state $i$ in $t$ steps. Then
+            \begin{equation*}
+                \lim_{t \rightarrow \infty} \frac{N(i,t)}{t} = \pi_i.
+            \end{equation*}
+            Namely, independent of the starting distribution, the
+            process converges to the stationary distribution.
+        \end{compactenumi}
+    \end{theorem}

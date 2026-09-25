@@ -1,0 +1,32 @@
+\begin{lemma}
+    \lemlab{approximation:basic}%
+    %
+    For any positive integer $n$, we have the following bounds%
+    \footnote{Nitty-picky: In (iii), assume $n\geq2$; in (v), $k$ is an
+       integer with $1\leq k\leq n$. (Nitpicking is the official english word,
+       but nitty-picky is so much nicer.)}.
+    \begin{compactenumi}
+        \medskip%
+        \item $1+x \leq e^x$ \;\;and\;\; $1-x \leq e^{-x}$, for all $x$.
+
+        \medskip
+        \item $(1+1/n)^n \LEQ e \LEQ \bigl(1+1/n\bigr)^{n+1}$.
+
+        \medskip
+        \item $(1-1/n)^n \leq \frac{1}{e} \leq (1-1/n)^{n-1} $.
+
+        \medskip
+        \item \itemlab{n_factory_bound}
+        $(n/e)^n \LEQ n! \LEQ (n+1)^{n+1} / e^n$.
+
+        \item \itemlab{binomial_2} For any $k \leq n$, we have:
+        \begin{math}
+            \ds%
+            \pth[]{\frac{n}{k}}^k
+            \LEQ%
+            \binom{n}{k}%
+            \LEQ%
+            \pth[]{\frac{n e}{k}}^k.
+        \end{math}
+    \end{compactenumi}
+\end{lemma}

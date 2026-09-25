@@ -1,0 +1,24 @@
+\begin{theorem}
+        Let
+        $\RangeSpace_1 = \pth{\GroundSet,\RangeSet^1}, \ldots,
+        \RangeSpace_k = \pth{\GroundSet,\RangeSet^k}$
+        be range spaces with \VC dimension $\Dim_1, \ldots, \Dim_k$,
+        respectively.  Next, let $f\pth{ \range_1, \ldots, \range_k}$
+        be a function that maps any $k$-tuple of sets
+        $\range_1 \in \RangeSet^1, \ldots, \range_k \in \RangeSet^k$
+        into a subset of $\GroundSet$. Here, the function $f$ is
+        restricted to be defined by a sequence of set operations like
+        complement, intersection and union.  Consider the range set
+        \begin{align*}
+          \RangeSetA%
+          =%
+          \Set{ f\pth{ \range_1, \ldots, \range_k}}{ \range_1
+          \in \RangeSet_1, \ldots, \range_k \in \RangeSet_k \bigr.}
+        \end{align*}
+        and the associated range space $\RangeSpaceA =
+        \pth{\GroundSet, \RangeSetA}$. Then, the \VC dimension of
+        $\;\RangeSpaceA$ is bounded by $O\pth{ k \Dim \lg k}$, where
+        $\Dim = \max_i \Dim_i$.
+        
+        \thmlab{VC:combination}
+    \end{theorem}

@@ -1,0 +1,19 @@
+\begin{defn}
+    \deflab{k-wise-independent}%
+    \index{independent!$k$-wise}%
+    % 
+    A set of variables $X_1, \ldots, X_n$ are \emphOnly{$k$-wise
+       independent}\index{$k$-wise
+       independent} if for any set $I = \{i_1, i_2, \ldots, i_t\}$ of
+    indices, for $t \leq k$, and any set of values $v_1, \ldots, v_t$,
+    we have that
+    \begin{equation*}
+        \Prob{
+           X_{i_1} = v_1 \text{ and }
+           X_{i_2} = v_2 \text{ and } \cdots \text{ and }
+           X_{i_t} = v_t}%
+        =%
+        \prod_{j=1}^t        
+        \Prob{X_{i_j} = v_j}.
+    \end{equation*}
+\end{defn}
