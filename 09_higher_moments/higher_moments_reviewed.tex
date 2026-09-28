@@ -63,10 +63,13 @@ The following is the higher-moment variant of the Chebyshev inequality.
 \end{proof}
 
 
-\subsubsection{Concentration for sums of independent random signs}
+\subsubsection{Concentration of sums of independent random signs}
 
 The problem is that computing (or even bounding) the $k$\th moment
-$M_k(X) = \Ex{|X-\Ex{X}|^k}$ is usually not easy. Let us do it for one
+\begin{equation*}
+    M_k(X) = \Ex{|X-\Ex{X}|^k}
+\end{equation*}
+ is usually not easy. Let us do it for one
 interesting example.
 \begin{lemma}
     \lemlab{h:m}%
@@ -294,10 +297,16 @@ Chebychev's inequality.
     \end{align*}
 \end{proof}
 
-\subsubsection{Why the Paley--Zygmund inequality is useful}
+\subsubsection{Why the Paley--Zygmund inequality is useful.}
 \seclab{paley:zygmund:useful}
 
-Most classical tail bounds (Markov, Chebyshev, Chernoff) are \emphOnly{concentration inequalities}---they provide \emph{upper} bounds showing that a random variable rarely deviates far from its expectation or rarely exceeds a large threshold. In contrast, the Paley--Zygmund inequality provides a guaranteed \emph{lower} bound on the probability that a non-negative random variable achieves at least a constant fraction of its expectation:
+Most classical tail bounds (Markov, Chebyshev, Chernoff) are
+\emphOnly{concentration inequalities}---they provide \emph{upper} bounds
+showing that a random variable rarely deviates far from its expectation
+or rarely exceeds a large threshold. In contrast, the Paley--Zygmund
+inequality provides a guaranteed \emph{lower} bound on the probability
+that a non-negative random variable achieves at least a constant fraction
+of its expectation:
 \begin{equation*}
     \Prob{Z > \theta \Ex{Z}} \geq (1-\theta)^2 \frac{\Ex{Z}^2}{\Ex{Z^2}}.
 \end{equation*}
