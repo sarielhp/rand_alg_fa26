@@ -118,7 +118,7 @@
     \end{tabular}
     \caption{The ``middle'' of the binomial distribution for different
        values of $n$. It very quickly converges to the normal
-       distribution (under appropriate rescaling and translation.}
+       distribution (under appropriate rescaling and translation).}
     \figlab{binomial:distribution:middle}%
 \end{figure}%
 }%
@@ -146,7 +146,7 @@
           \rowcolor{red!10}
           \multicolumn{2}{c}{%
           $\Bigl.X_i \in \brc{-1,+1}$%
-          \qquad\qquad %
+          \qquad %
           $\Prob{X_i=-1} = %
           \Prob{X_i=1} = 1/2\Bigr.$%
           }
@@ -164,7 +164,8 @@
           $\Prob{\bigl.\cardin{Y - {n}/{2}} \geq \Delta
           } \leq 2\exp\pth{-\tfrac{2\Delta^2}{n}} \Bigr.$
           &
-            \corref{Chernoff:0:1}%
+            \corref{Chernoff:special}%
+            %\corref{Chernoff:0:1}%
             \\
           \bottomrule
         \end{tabular}
@@ -179,7 +180,7 @@
             \rowcolor{red!10}
             \multicolumn{3}{c}{%
             $X_i \in \brc{0,1}$
-            \qquad\qquad%
+            \quad\quad%
             $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
             $\Prob{ X_i = 0 } =1-p_i$
             }
@@ -191,7 +192,7 @@
               \begin{math}
                   P=\Prob{\bigl. Y > (1+\delta)\mu }%
                   <%
-                  \pth{\NiceFrac{e^\delta}{(1+\delta)^{1+\delta}} }^\mu
+                  \pth{\frac{e^\delta}{(1+\delta)^{1+\delta}} }^\mu
               \end{math}
           }\\
         &
@@ -255,22 +256,24 @@
             \bottomrule
           \end{tabular}}%
           &
-          \begin{tabular}[t]{l l l}
+            % SUBTABLE 3
+            \begin{tabular}[t]{l l l}
             \toprule 
             \rowcolor{red!10}
             \multicolumn{3}{c}{%
             $X_i \in \brc{0,1}$
-            \qquad\qquad%
+            \quad%
             $\Bigl.\!\Prob{ X_i = 1 } =p_i$,
             $\Prob{ X_i = 0 } =1-p_i$
             }
             \\
             \midrule 
-            $\delta \geq 0\Bigl.$%
+            $\delta \in (0,1)\Bigl.$%
             &
               \multicolumn{2}{l}{
               $\Prob{ Y < (1-\delta)\mu } < \Bigl(
-              \NiceFrac{e^{-\delta}}{(1-\delta)^{1-\delta}}
+              %\NiceFrac{e^{-\delta}}{(1-\delta)^{1-\delta}}
+              \frac{e^{-\delta}}{(1-\delta)^{1-\delta}}
               \Bigr)^\mu \Biggr.$}
               \\&
             &
@@ -438,7 +441,7 @@
 \end{document}
 }%
 
-\section{Concentration of mass and Chernoff's inequality}
+\section{Concentration of mass}
 
 \subsection{Example: Binomial distribution}
 
@@ -448,17 +451,17 @@ think about the value of the variable as the number of heads in
 flipping a fair coin $n$ times. Clearly, as the value of $n$ increases
 the probability of getting a number of heads that is significantly
 smaller or larger than $n/2$ is tiny. Here we are interested in
-quantifying exactly how far can we divert from this expected
+quantifying exactly how far we can deviate from this expected
 value. Specifically, if $X \sim \DistBinom{n}{1/2}$, then we would be
 interested in bounding the probability $\Prob{ X > n/2 + \Delta}$,
 where $\Delta = t \sigma_X = t \sqrt{n}/2$ (i.e., we are $t$ standard
 deviations away from the expectation). For $t >2$, this probability is
 roughly $2^{-t}$, which is what we prove here.
 
-More surprisingly, if you look only on the middle of the distribution,
+More surprisingly, if you look only at the middle of the distribution,
 it looks the same after clipping away the uninteresting tails, see
 \figref{binomial:distribution:middle}; that is, it looks more and more
-like the normal distribution. This is a universal phenomena known the
+like the normal distribution. This is a universal phenomenon known as the
 \emphOnly{central limit theorem}\index{central limit theorem} -- every sum of nicely behaved random
 variables behaves like the normal distribution. We unfortunately need
 a more precise quantification of this behavior, thus the following.
@@ -480,16 +483,16 @@ Consider the game where a player starts with $Y_0=1$ dollars. At every
 round, the player can bet a certain amount $x$ (fractions are
 fine). With probability half she loses her bet, and with probability
 half she gains an amount equal to her bet.  The player is not allowed
-to go all in -- because if she looses then the game is over. So it is
-natural to ask what her optimal betting strategy is, such that in the
+to go all in -- because if she loses then the game is over. So it is
+natural to ask what her optimal betting strategy is, such that at the
 end of the game she has as much money as possible.
 
 
 \paragraph*{Is the game pointless?}
 
-So, let $Y_{i-1}$ be the money the player has in the end of the
+So, let $Y_{i-1}$ be the money the player has at the end of the
 $(i-1)$\th round, and she bets an amount $\psi_i \leq Y_{i-1}$ in the
-$i$\th round.  As such, in the end of the $i$\th round, she has
+$i$\th round.  As such, at the end of the $i$\th round, she has
 \begin{align*}
     Y_{i} = \begin{cases}
         Y_{i-1} - \psi_{i} & \text{\textsc{lose}: probability half}\\
@@ -510,8 +513,8 @@ And as such, we have that
 $\Ex{\bigl. Y_i} = \Ex{\Ex{Y_{i}\bigl| {Y_{i-1}} } \Bigl.\! } = \Ex{
    \bigl. Y_{i-1}} = \cdots = \Ex{Y_0 \bigl.} = 1\Big.$. In
 particular, $\Ex{Y_n} = 1$ -- namely, on average, independent of the
-player strategy she is not going to make any money in this game (and
-she is allowed to change her bets after every round). Unless, she is
+player's strategy she is not going to make any money in this game (and
+she is allowed to change her bets after every round). Unless she is
 lucky\footnote{``I would rather have a general who was lucky than one
    who was good.'' -- Napoleon Bonaparte.}...
 
@@ -531,7 +534,7 @@ she is investing in\footnote{``I am a great believer in luck, and I
 she is going to be lucky in -- so she still needs to be careful.
 
 
-\paragraph*{In a search of a good strategy.}
+\paragraph*{In search of a good strategy.}
 
 Of course, there are many safe strategies the player can use, from not
 playing at all, to risking only a tiny fraction of her money at each
@@ -541,7 +544,7 @@ luck.
 
 Here, we restrict ourselves to a simple strategy -- at every round,
 the player would bet $\beta$ fraction of her money, where $\beta$ is a
-parameter to be determined.  Specifically, in the end of the $i$\th
+parameter to be determined.  Specifically, at the end of the $i$\th
 round, the player would have
 \begin{align*}
     Y_{i} = \begin{cases}
@@ -551,11 +554,11 @@ round, the player would have
 \end{align*}
 By our assumption, the player is going to win in at least
 $M=(1+\delta)n/2$ rounds.  Our purpose here is to figure out what the
-value of $\beta$ should be so that player gets as rich as
-possible\footnote{This optimal choice is known as Kelly criterion,
+value of $\beta$ should be so that the player gets as rich as
+possible\footnote{This optimal choice is known as the Kelly criterion,
    see \remref{kelly}.}.  Now, if the player is successful in $\geq M$
 rounds, out of the $n$ rounds of the game, then the amount of money
-the player has, in the end of the game, is
+the player has, at the end of the game, is
 \begin{align*}
     Y_n%
     &\geq%
@@ -590,8 +593,8 @@ simplicity of exposition).  Thus, we have that $\ds Y_n \geq \exp\pth{
     Consider a Chernoff game with $n$ rounds, starting with one
     dollar, where the player wins in $\geq (1+\delta)n/2$ of the
     rounds. If the player bets $\delta/4$ fraction of her current
-    money, at all rounds, then in the end of the game the player would
-    have at least $\exp\pth{n \delta^2 / 16}$ dollars.
+    money, at all rounds, then at the end of the game the player has
+    at least $\exp\pth{n \delta^2 / 16}$ dollars.
 \end{lemma}
 
 
@@ -599,7 +602,7 @@ simplicity of exposition).  Thus, we have that $\ds Y_n \geq \exp\pth{
     Note, that \lemref{chernoff:games} holds if the player wins any
     $\geq (1+\delta)n/2$ rounds. In particular, the statement does not
     require randomness by itself -- for our application, however, it
-    is more natural and interesting to think about the player wins as
+    is more natural and interesting to think about the player's wins as
     being randomly distributed.
 \end{remark}
 
@@ -608,7 +611,7 @@ simplicity of exposition).  Thus, we have that $\ds Y_n \geq \exp\pth{
     %
     Interestingly, the idea of choosing the best fraction to bet is an
     old and natural question arising in investments strategies, and
-    the right fraction to use is known as
+    the right fraction to use is known as the
     \href{https://en.wikipedia.org/wiki/Kelly_criterion}{\emphOnly{Kelly
           criterion}\index{Kelly
           criterion}}, going back to Kelly's work from 1956
@@ -619,7 +622,7 @@ simplicity of exposition).  Thus, we have that $\ds Y_n \geq \exp\pth{
 
 The above implies that if a player is lucky, then she is going to
 become filthy rich\footnote{Not that there is anything wrong with that
-   -- many of my friends are filthy,}. Intuitively, this should be a
+   -- many of my friends are filthy.}. Intuitively, this should be a
 pretty rare event -- because if the player is rich, then (on average)
 many other people have to be poor. We are thus ready for the kill.
 
@@ -637,7 +640,7 @@ many other people have to be poor. We are thus ready for the kill.
 \begin{proof}
     Imagine that we are playing the Chernoff game above, with
     $\beta=\delta/4$, starting with $1$ dollar, and let $Y_i$ be the
-    amount of money in the end of the $i$\th round.  Here $X_i=1$
+    amount of money at the end of the $i$\th round.  Here $X_i=1$
     indicates that the player won the $i$\th round.  We have, by
     \lemref{chernoff:games} and Markov's inequality, that
     \begin{align*}
@@ -657,19 +660,18 @@ many other people have to be poor. We are thus ready for the kill.
 \medskip%
 \noindent%
 \textbf{This is crazy -- so intuition maybe?} %
-If the player is $(1+\delta)/2$-lucky then she can make a lot of
-money; specifically, at least $f(\delta)=\exp()n \delta^2 / 16)$
-dollars by the end of the game. Namely, beating the odds has
-significant monetary value, and this value grows quickly with
-$\delta$. Since we are in a ``zero-sum'' game settings, this event
-should be very rare indeed. Under this interpretation, of course, the
-player needs to know in advance the value of $\delta$ -- so imagine
-that she guesses it somehow in advance, or she plays the game in
-parallel with all the possible values of $\delta$, and she settles on
-the instance that maximizes her profit.
+If the player is $(1+\delta)/2$-lucky then she can make a lot of money;
+specifically, at least $f(\delta)=\exp(n \delta^2 / 16)$ dollars by the end of the
+game.  Namely, beating the odds has significant monetary value, and this
+value grows quickly with $\delta$. Since we are in a ``zero-sum'' game
+setting, this event should be very rare indeed. Under this
+interpretation, of course, the player needs to know in advance the value
+of $\delta$ -- so imagine that she guesses it somehow in advance, or she plays
+the game in parallel with all the possible values of $\delta$, and she settles
+on the instance that maximizes her profit.
 
 \paragraph*{Can one do better?}
-No, not really. Chernoff inequality is tight (this is a challenging
+No, not really. The Chernoff inequality is tight (this is a challenging
 homework exercise) up to the constant in the exponent. The best bound
 I know for this version of the inequality has $1/2$ instead of $1/16$
 in the exponent. Note, however, that no real effort was taken to
@@ -682,7 +684,7 @@ optimize the constants -- this is not the purpose here.
 Above, we used the following well known facts.
 \begin{lemma}
     \begin{compactenumA}[label=(\Alph*)]
-        \item \emphOnly{Markov's inequality}\index{Markov's inequality}. For any positive random variable
+        \item \emphOnly{Markov's inequality}\index{Markov's inequality}. For any non-negative random variable
         $X$ and $t > 0$, we have
         \begin{equation*}
             \Prob{X \geq t} \leq \Ex{X}/t.
@@ -738,14 +740,15 @@ Above, we used the following well known facts.
 \end{fragment}
 %
 \begin{proof}
-    Clearly, for an arbitrary $t$, to specified shortly, we have
+    Clearly, for an arbitrary $t > 0$, to be specified shortly, we have
     \begin{align*}
         \Prob{Y \geq \Delta} = \Prob{\exp \pth{ t Y } \geq \exp
            \pth{t\Delta}} \leq \frac{\Ex{\exp \pth{t Y}}}{\exp
            \pth{t\Delta}},
     \end{align*}
-    the first part follows by the fact that $\exp(\cdot)$ preserve
-    ordering, and the second part follows by the Markov inequality.
+    the first part follows by the fact that $\exp(\cdot)$ preserves ordering
+    (requiring $t > 0$), and the second part follows by the Markov
+    inequality.
 
     Observe that
     \begin{align*}
@@ -851,27 +854,27 @@ By the symmetry of $Y$, we get the following:
 
 
 \begin{remark}
-    Before going any further, it is might be instrumental to
-    understand what this inequalities imply.  Consider then case where
-    $X_i$ is either zero or one with probability half. In this case
-    $\mu = \Ex{Y} = n/2$. Set $\delta = t\sqrt{n}$ ($\sqrt{\mu}$ is
-    approximately the standard deviation of $X$ if $p_i = 1/2$).  We
-    have by
+    Before going any further, it might be instrumental to understand what
+    these inequalities imply.  Consider the case where $X_i$ is either
+    zero or one with probability half. In this case $\mu = \Ex{Y} =
+    n/2$. Set $\Delta = t\sqrt{n}$%
+    ($\sqrt{\mu}$ is approximately the standard deviation of $X$ if
+    $p_i = 1/2$).  We have by \corref{Chernoff:0:1}:%
     \begin{align*}
         \Prob{\cardin{Y - \frac{n}{2}} \geq \Delta }
         &\leq 2\exp \pth{-2\Delta^2/n} = 2\exp \pth{-2(t\sqrt{n})^2/n} \\
         &= 2\exp \pth{-2 t^2}.
     \end{align*}
-    Thus, Chernoff inequality implies exponential decay (i.e., $\leq
+    Thus, the Chernoff inequality implies exponential decay (i.e., $\leq
     2^{-t}$) with $t$ standard deviations, instead of just polynomial
-    (i.e., $\leq 1/t^2$) by the Chebychev's inequality.
+    (i.e., $\leq 1/t^2$) by Chebyshev's inequality.
 \end{remark}
 
 
 
 \section{To read or not to read?}
 
-From this point on, this note deteriorates into very tedious low-level calculus calculations. Its a repository of proofs that the bounds stated are correct. This is useful to read if you are interested in understanding the low-level details of how such bounds are proved, or enjoy such math (a lot of the math requires cleverness). I do not think, however, it provides much intuition for the inequalities themselves. Read from this point on for your own enjoyment, or suffering. You had been warned!
+From this point on, this note deteriorates into very tedious low-level calculus calculations. It's a repository of proofs that the bounds stated are correct. This is useful to read if you are interested in understanding the low-level details of how such bounds are proved, or enjoy such math (a lot of the math requires cleverness). I do not think, however, it provides much intuition for the inequalities themselves. Read from this point on for your own enjoyment, or suffering. You have been warned!
 
 \paragraph*{Another  warning.}
 
@@ -883,7 +886,7 @@ It is very easy to misuse Chernoff's inequality (and its pals), and get brillian
 
 
 
-Here we present the Chernoff bound in a more general settings.
+Here we present the Chernoff bound in a more general setting.
 
 \begin{fragment}{Chernoff_simplified}
     \begin{theorem}
@@ -891,12 +894,14 @@ Here we present the Chernoff bound in a more general settings.
         \index{Chernoff inequality}%
         \index{Chernoff inequality!simplified form}%
         %
-        Let $X_1, \ldots, X_n$ be $n$ independent\newline
-        variables, where $\Prob{ \bigl. X_i = 1 } =p_i$
-        and $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$,
-        for all $i$.  Let $X = \sum_{i=1}^{b} X_i$.
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta > 0$, we
-        have
+        Let $X_1, \ldots, X_n$ be $n$ independent variables, where
+        \begin{equation*}
+            \Prob{ \bigl. X_i = 1 } =p_i
+            \qquad\text{and}\qquad
+            \Prob{ \bigl. X_i = 0 } =q_i = 1-p,
+        \end{equation*}
+        for all $i$.  Let $X = \sum_{i=1}^{n} X_i$ and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta > 0$, we have
         \begin{equation*}
             \Prob{ \bigl. X > (1+\delta)\mu } < \pth{
                \NiceFrac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu.
@@ -916,11 +921,11 @@ Here we present the Chernoff bound in a more general settings.
         %     \eqlab{large}
         %     \\
         %     %
-        %     \text{and} \qquad\qquad %
-        %     &\delta \geq e^2%
-        %     &&\Prob{\Bigl. X > (1+\delta)\mu } < \exp \pth{ \Bigl. -
-        %        \frac{\mu \delta \ln \delta}{2}}.%
-        %     \eqlab{v:large}
+        %                %     \text{and} \qquad\qquad %
+        %                %     &\delta \geq e^2%
+        %                %     &&\Prob{\Bigl. X > (1+\delta)\mu } < \exp \pth{ \Bigl. -
+        %        \frac{\mu \delta \ln \delta}{2}}.
+        %                %     \eqlab{v:large}
         %     %
         % \end{align}
     \end{theorem}%
@@ -1028,21 +1033,20 @@ We need the following low level lemma.
 \begin{theorem}
     \thmlab{Chernoff:2}%
     %
-    Let $X_1, \ldots, X_n$ be $n$ independent\newline
-    random variables, where
-    $\Prob{ \bigl. X_i = 1 } =p_i$ and
-    $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$,
-    for all $i$.
-    For $X = \sum_{i=1}^{n} X_i$, its expectation is
-     $\mu = \Ex{\bigl. X} = \sum_i p_i$.  We have that
-     \begin{equation*}
+    Let $X_1, \ldots, X_n$ be $n$ independent\newline random variables,
+    where $\Prob{ \bigl. X_i = 1 } =p_i$ and
+    $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$, for all $i$.  For
+    $X = \sum_{i=1}^{n} X_i$, its expectation is
+    $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta \in (0,1)$, we have
+    that%
+    \begin{equation*}
          \Prob{\bigl. X < (1-\delta)\mu } <
          \Bigl[  \frac{e^{-\delta}}{(1-\delta)^{1-\delta}} \Bigr]^\mu.
     %     \qquad\text{ or alternatively }\qquad%
     %     \Prob{\bigl. X < (1-\delta)\mu } < \exp\pth{-\mu\delta^2/2}.
      \end{equation*}
 
-    For any positive $\tau > 1$, we have that
+    For any $\tau > 1$, we have that
     \[
       \Prob{ X < \mu/\tau \bigr.} %
       \leq%
@@ -1102,7 +1106,7 @@ We need the following low level lemma.
     \begin{math}
         p_i = \Prob{ \bigl. X_i = 1 },
     \end{math}
-    for all $i$.  let $X = \sum_{i=1}^{n} X_i$, and
+    for all $i$.  Let $X = \sum_{i=1}^{n} X_i$, and
     $\mu = \Ex{\bigl. X} = \sum_i p_i$. For all $\delta \geq 0$, we
     have
     \begin{math}
@@ -1144,9 +1148,8 @@ We need the following low level lemma.
         \begin{math}
             \Prob{  X_i = 0 } =1- p_i,
         \end{math}
-        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{b} X_i$, and
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta, \in (0,1)$,
-        we have
+        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{n} X_i$, and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta \in (0,1)$, we have
         \begin{equation*}
             \Prob{ \bigl. X > (1+\delta)\mu } < \exp \pth{-\mu \delta^2 /
                3}.
@@ -1201,12 +1204,11 @@ We need the following low level lemma.
         \begin{math}
             \Prob{  X_i = 0 } =1- p_i,
         \end{math}
-        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{b} X_i$, and
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta \in (0,4)$,
-        we have
+        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{n} X_i$, and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta \in (0,4)$, we have
         \begin{equation*}
             \Prob{ \bigl. X > (1+\delta)\mu } < \exp \pth{-\mu \delta^2 /
-               4},
+               4}.
         \end{equation*}
     \end{lemma}
 \end{fragment}
@@ -1245,20 +1247,19 @@ We need the following low level lemma.
         \begin{math}
             \Prob{  X_i = 0 } =1- p_i,
         \end{math}
-        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{b} X_i$, and
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta \in (0,6)$,
-        we have
+        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{n} X_i$, and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta \in (0,6)$, we have
         \begin{equation*}
             \Prob{ \bigl. X > (1+\delta)\mu } < \exp \pth{-\mu \delta^2 /
-               5},
+               5}.
         \end{equation*}
     \end{lemma}
 \end{fragment}
 \begin{proof}
-    \lemref{chernoff:small:delta} implies a stronger bound, so we need
-    to prove the claim only for $\delta \in (4,5]$.  Continuing as in
-    the proof of \lemref{chernoff:small:delta:1}, for case $c=5$, we
-    have to prove that
+    \lemref{chernoff:small:delta} implies a stronger bound, so we need to
+    prove the claim only for $\delta \in (4,6]$. Continuing as in the
+    proof of \lemref{chernoff:small:delta:1}, for case $c=5$, we have to
+    prove that
     \begin{equation*}
         f(\delta) = \delta^2/5 + \delta -(1+\delta) \ln(1+\delta)
         \leq 0,
@@ -1291,9 +1292,8 @@ We need the following low level lemma.
         \begin{math}
             \Prob{ X_i = 0 } =1- p_i,
         \end{math}
-        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{b} X_i$, and
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta > 2e-1$, we
-        have
+        for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{n} X_i$, and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta > 2e-1$, we have
         $\Prob{ \bigl. X > (1+\delta)\mu } < 2^{-\mu (1 + \delta)}$.
     \end{lemma}
 \end{fragment}
@@ -1321,12 +1321,12 @@ We need the following low level lemma.
     \begin{math}
         \Prob{  X_i = 0 } =1- p_i,
     \end{math}
-    for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{b} X_i$, and
+    for $i=1,\ldots, n$.  Let $X = \sum_{i=1}^{n} X_i$, and
     $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For $\delta > e^2$, we have
     \begin{math}
         \Prob{ \bigl. X > (1+\delta)\mu }%
         <%
-        \exp \pth{ \Bigl. - \frac{\mu \delta \ln \delta}{2}}.%
+        \exp \pth{ \Bigl. - \frac{\mu \delta \ln \delta}{2}}.
     \end{math}
 \end{lemma}
 \begin{proof}
@@ -1337,8 +1337,8 @@ We need the following low level lemma.
         \pth{ \frac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu \nonumber \\
         &=%
         \exp \pth{ \Bigl.\ts \mu \delta - \mu\pth{1+\delta}\ln \pth{
-              1+\delta}}.%
-        \eqlab{c:imply}%
+              1+\delta}}.
+        \eqlab{c:imply}
     \end{align}
     As such, we have
     \begin{align*}
@@ -1379,7 +1379,7 @@ We need the following low level lemma.
         \begin{math}
             \Prob{  X_i = 0 } =1- p_i,
         \end{math}
-        for $i=1,\ldots, n$.  Let $Y = \sum_{i=1}^{b} X_i$, and
+        for $i=1,\ldots, n$.  Let $Y = \sum_{i=1}^{n} X_i$, and
         $\mu = \Ex{ Y} = \sum_i p_i$.  For $\delta \in (0,1]$, and
         $\BadProb \in (0,1]$, we have
         \begin{equation*}
@@ -1408,8 +1408,9 @@ We need the following low level lemma.
         \BadProb,
     \end{equation*}
     since
-    $-\mu(1+\xi) > -\mu \xi > \mu \frac{3 \ln \BadProb^{-1}}{\mu
-       \delta^2} > \log_2 \BadProb^{-1}$, since $\delta \in (0,1]$.
+    $\mu(1+\xi) > \mu \xi = \mu\delta + \frac{3 \ln \BadProb^{-1}}{\delta^2} \geq 3\ln
+    \BadProb^{-1} > \log_2 \BadProb^{-1}$ (which implies
+    $2^{-\mu(1+\xi)} < \BadProb$), as $\delta \in (0,1]$.
 
     If $\xi \leq 6$, then by \lemref{chernoff:delta:gap}, we have
     \begin{equation*}
@@ -1427,12 +1428,15 @@ We need the following low level lemma.
         &=%
         - \frac{\mu}{5} \pth{  \delta + \frac{3 \ln \BadProb^{-1}}{\mu
               \delta^2} }^2%
-        \\&>%
+        \\&\leq%
         - \frac{\mu}{5} \pth{ 2 \cdot  \delta \cdot \frac{3 \ln \BadProb^{-1}}{\mu
               \delta^2} }%
         =%
-        -\frac{6}{5} \cdot \frac{\ln \BadProb}{\delta} >
-        -\ln \BadProb.
+        -\frac{6}{5\delta}\ln \BadProb^{-1}
+        \leq%
+        -\ln \BadProb^{-1}
+        =%
+        \ln \BadProb.
     \end{align*}
 \end{proof}
 
@@ -1445,9 +1449,9 @@ We need the following low level lemma.
     \begin{math}
         \Prob{ X_i = 0 } =1- p_i,
     \end{math}
-    for $i=1,\ldots, n$.  Let $Y = \sum_{i=1}^{b} X_i$, and
+    for $i=1,\ldots, n$.  Let $Y = \sum_{i=1}^{n} X_i$, and
     $\mu = \Ex{ Y} = \sum_i p_i$. Assume that $\mu \leq 1/2$. Setting
-    $\delta=1$, We have, for $t >6$, that
+    $\delta=1$, we have, for $t >6$, that
     \begin{equation*}
         \Prob{Y > 1 + t} %
         \leq
@@ -1503,7 +1507,7 @@ We need the following low level lemma.
         s^{-\mu - \eta} \prod_{i=1}^n \Ex{s^{X_i}}.
     \end{align*}
     By calculations, see \lemref{technical} below, one can show that
-    $\Ex{s^{X_1}} \leq 1 + (s-1)\Ex{X_i}$. As such, by the AM-GM
+    $\Ex{s^{X_i}} \leq 1 + (s-1)\Ex{X_i}$. As such, by the AM-GM
     inequality\footnote{The inequality between arithmetic and
        geometric means:\hfill\break
        $(\sum_{i=1}^n x_i) /n \geq \sqrt[n]{x_1\cdots x_n}$.}, we have
@@ -1516,7 +1520,7 @@ We need the following low level lemma.
         \pth{\frac{1}{n}\sum_{i=1}^n \pth{\Bigl. 1 +
               (s-1)\Ex{X_i}}}^n%
         =%
-        \pth{1 + (s-1) \frac{\mu}{n}}^n.%
+        \pth{1 + (s-1) \frac{\mu}{n}}^n.
     \end{align*}
     Setting
     \begin{math}
@@ -1542,7 +1546,7 @@ We need the following low level lemma.
         1 +%
         \frac{\eta }{n - \mu - \eta } %
         \\&=%
-        \frac{ n- \mu}{n-\mu - \eta}.%
+        \frac{ n- \mu}{n-\mu - \eta}.
     \end{align*}
     As such, we have that
     \begin{align*}
@@ -1572,7 +1576,7 @@ We need the following low level lemma.
         \pth{1 + \pth{\frac{\mu + \eta}{\mu}-1} \frac{\mu}{n}}^n%
         = %
         \pth{\frac{\mu}{\mu + \eta}}^{\mu + \eta} \pth{1 +
-           \frac{\eta}{n}}^n.%
+           \frac{\eta}{n}}^n.
     \end{math}%
  }
 \end{remark}
@@ -1601,9 +1605,9 @@ We need the following low level lemma.
 \begin{theorem}
     \thmlab{useful:chernoff}%
     %
-    Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random
-    variables, let $\overline{X} = (\sum_{i=1}^n X_i)/n\bigl.$, and
-    let $p = \Ex{X}$. We have that
+    Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random variables, let
+    $\overline{X} = (\sum_{i=1}^n X_i)/n\bigl.$, and let
+    $p = \Ex{\overline{X}}$.  We have that
     \begin{align*}
         \Prob{\bigl.\,\overline{X} - p \geq t\, }
         &\leq
@@ -1646,7 +1650,7 @@ We need the following low level lemma.
         \leq%
         -4.
     \end{align*}
-    Indeed, $t\in (-p,q)$ and the denominator is minimized for
+    Indeed, $t\in (-p,q)$ and the denominator $(q-t)(p+t)$ is maximized for
     $t = (q-p)/2$, and as such
     \begin{math}
         (q-t)(p+t)%
@@ -1665,7 +1669,7 @@ We need the following low level lemma.
 
     The first bound now readily follows from plugging this bound into
     \corref{easy:form}. The second bound follows by considering the
-    random variants $Y_i =1-X_i$, for all $i$, and plugging this into the
+    random variables $Y_i =1-X_i$, for all $i$, and plugging this into the
     first bound. Indeed, for $\overline{Y} = 1-\overline{X}$, we have
     that $q = \Ex{\overline{Y}}$, and then
     \begin{math}
@@ -1688,9 +1692,9 @@ We need the following low level lemma.
 \begin{corollary}
     \corlab{useful:chernoff:2}%
     %
-    Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random
-    variables, let $Y = \sum_{i=1}^n X_i$, and let $\mu = \Ex{X}$. For
-    any $\Delta > 0$, we have
+    Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random variables, let
+    $Y = \sum_{i=1}^n X_i$, and let $\mu = \Ex{Y}$.  For any
+    $\Delta > 0$, we have
     \begin{math}%
         \ds%
         \Prob{\bigl.\,Y - \mu \geq \Delta\, }%
@@ -1726,8 +1730,8 @@ We need the following low level lemma.
     \thmlab{special:h:i:e}%
     %
     Let $X_1, \ldots, X_n \in [0,1]$ be $n$ independent random
-    variables, let $X= (\sum_{i=1}^n X_i)$, and let $\mu = \Ex{X}$. We
-    have that
+    variables, let $X = \sum_{i=1}^n X_i$, and let $\mu = \Ex{X}$.
+    For any $\eps \in [0,1]$, we have that
     \begin{align*}
         \Prob{\bigl.{X} - \mu \geq \eps \mu }
         &\leq
@@ -1765,7 +1769,7 @@ We need the following low level lemma.
            \iff%
            e^{x/2} \leq 1+x,
        \end{math}
-       which readily holds for $x \in [0,1]$.%
+       which readily holds for $x \in [0,1]$. %
     }. %
     Now, $g(0) =f (0) = 0$, and by integration, we have that
     \begin{math}
@@ -1842,34 +1846,11 @@ We need the following low level lemma.
     $\Ex{s^X} \leq 1 + (s-1)\Ex{X}$.
 \end{lemma}
 \begin{proof}
-    For the sake of simplicity of exposition, assume that $X$ is a
-    discrete random variable, and that there is a value
-    $\alpha \in (0,1/2)$, such that $\beta = \Prob{X = \alpha } > 0
-    $.
-    Consider the modified random variable $X'$, such that
-    $\Prob{ X' = 0 } = \Prob{X = 0} + \beta/2$, and
-    $\Prob{X' = 2\alpha } = \Prob{X = \alpha } + \beta/2$. Clearly,
-    $\Ex{X} = \Ex{X'}$. Next, observe that
-    \begin{math}
-        \Ex{s^{X'}} - \Ex{s^X}%
-        =%
-        (\beta/2)( s^{2\alpha} + s^{0}) - \beta s^{\alpha} \geq 0,
-    \end{math}
-    by the convexity of $s^x$. We conclude that $ \Ex{s^X}$ achieves
-    its maximum if takes only the values $0$ and $1$. But then, we
-    have that
-    \begin{math}
-        \Ex{s^X}%
-        =%
-        \Prob{X=0}s^0 + \Prob{X=1}s^1%
-        =%
-        (1-\Ex{X}) + \Ex{X} s %
-        =%
-        1 + ( s-1)\Ex{X},
-    \end{math}
-    as claimed.
+    By convexity, since $s \geq 1$, the function $x \mapsto s^x$ is convex on
+    $[0, 1]$, so $s^x \leq (1-x)s^0 + x s^1 = 1 + (s-1)x$ pointwise for all
+    $x \in [0, 1]$. Taking expectations on both sides immediately yields
+    $\Ex{s^X} \leq 1 + (s-1)\Ex{X}$ for any random variable $X \in [0, 1]$.
 \end{proof}
-
 
 
 
@@ -2066,11 +2047,24 @@ here for the sake of completeness.
 
 \section{Bibliographical notes}
 
+The general technique of bounding tail probabilities of sums of
+independent random variables by applying Markov's inequality to the
+moment-generating function was introduced by Bernstein \cite{b-mcief-24}.
+Chernoff \cite{c-maetbso-52} proved the bound in the context of the
+asymptotic efficiency of hypothesis tests, noting that the bound itself
+was communicated to him by Herman Rubin.  The convenient multiplicative
+forms for independent Poisson trials (\thmref{Chernoff:simplified} and
+\lemref{chernoff:small:delta:1}) were introduced and popularized in the
+computer science literature by Angluin and Valiant \cite{av-fpahm-79}.
+Hoeffding \cite{h-pissbrv-63} proved the general bound for bounded
+independent random variables (\thmref{Hoeffding:inequality}) as well as
+the stronger form for variables in $[0,1]$ (\thmref{h:mysterious}).
+
 Some of the exposition here follows more or less the exposition in
 \cite{mr-ra-95}.  \exeref{Chernoff:tight} (without the hint) is from
 \cite{m-gd-99}. McDiarmid \cite{m-ombd-89} provides a survey of
-Chernoff type inequalities, and \thmref{special:h:i:e} and
-\secref{special:h:inequality} is taken from there (our proof has
+Chernoff type inequalities; \thmref{special:h:i:e} and
+\secref{special:h:inequality} are taken from there (our proof has
 somewhat weaker constants).
 
 
@@ -2082,7 +2076,7 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Exercises}
 
-\Exercise{Chernoff inequality is tight.}%
+\Exercise{The Chernoff inequality is tight.}%
 {10}%
 {Chernoff:tight}%
 {%
@@ -2095,7 +2089,7 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
              n}},
    \end{align*}
    where $C$ is a suitable constant. That is, the well-known Chernoff
-   bound $P(n, \Delta) \leq \exp(-\Delta^2/2n))$ is close to the
+   bound $P(n, \Delta) \leq \exp(-\Delta^2/(2n))$ is close to the
    truth.%
 }{%
    \Solution{%
@@ -2134,14 +2128,14 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
           \frac{2^n}{4\sqrt{n}} \exp \pth{ - \frac{4D}{n} \cdot
              \frac{i(i+1)}{2} }
       \end{align*}
-      In particular, the first term in \Eqref{sol} is
+      In particular, the first term in \Eqref{sum} is
       \begin{align*}
           \binom{n}{n/2 + \Delta/2} \geq \frac{2^n}{4\sqrt{n}} \exp
           \pth{ - \frac{4D}{n} \cdot \frac{\Delta(\Delta+2)}{8} }
       \end{align*}
       and
       \begin{align*}
-          \binom{n}{n/2 + \Delta/2 + \sqrt{n} - 1} &\geq&
+          \binom{n}{n/2 + \Delta/2 + \sqrt{n} - 1} &\geq
           \frac{2^n}{4\sqrt{n}} \exp \pth{ - \frac{4D}{n} \cdot
              \frac{(\Delta+2\sqrt{n} - 2 )(\Delta+2\sqrt{n} )}{8} }\\
           &\geq%
@@ -2168,7 +2162,7 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
           \frac{1}{2^n} \cdot \sqrt{n} \cdot \frac{2^n}{4\sqrt{n}
              e^{6000}} = \frac{1}{4e^{6000}},
       \end{align*}
-      and the claim holds in this case (With the horrendous constant
+      and the claim holds in this case (with the horrendous constant
       $C = 4e^{6000}$).
 
       If $\Delta \geq 100\sqrt{n}$ then,
@@ -2209,7 +2203,7 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
    }%
 }
 
-\Exercise{Chernoff inequality is tight by direct calculations.}%
+\Exercise{The Chernoff inequality is tight by direct calculations.}%
 {10}%
 {Chernoff:tight:2}%
 {%
@@ -2246,33 +2240,32 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
         \sum_{i=t\sqrt{n} + 1}^{(t+1)\sqrt{n}} \binom{2n}{n - i} \leq
         c 2^{2n} \exp \pth{-t^2/ 2}.
         \]
-        In particular, conclude that when flipping fair coin $2n$
+        In particular, conclude that when flipping a fair coin $2n$
         times, the probability to get less than $n - t\sqrt{n}$ heads
         (for $t$ an integer) is smaller than $c' \exp \pth{-t^2/2}$,
         for some constant $c'$.
 
         \medskip
 
-        \item Let $X$ be the number of heads in $2n$ coin flips.
-        Prove that for any integer $t > 0$ and any $\delta >0$
-        sufficiently small, it holds that
+        \item Let $X$ be the number of heads in $2n$ coin flips.  Prove
+        that for any $\delta >0$ sufficiently small, it holds that
         \[
             \Prob{ X < (1- \delta) n} \geq \exp \pth{-c''\delta^2 n },
         \]
-        where $c''$ is some constant. Namely, the Chernoff inequality
-        is tight in the worst case.
+        where $c''$ is some constant. Namely, the Chernoff inequality is
+        tight in the worst case.
     \end{compactenumA}
  }{}
 
 
-\Exercise{Tail inequality for geometric variables}%
-{10}%
-{geometric:tail:inequality}{%
-   Let $X_1, \ldots, X_m$ be $m$ independent random variables with
-   geometric distribution with probability $p$ (i.e., $\Prob{X_i = j}
-   = (1-p)^{j-1} p$). Let $Y = \sum_{i} X_i$, and let $\mu = \Ex{Y} =
-   m/p$. Prove that
-   \begin{math}
+ \Exercise{Tail inequality for geometric variables}%
+ {10}%
+ {geometric:tail:inequality}{%
+    Let $X_1, \ldots, X_m$ be $m$ independent random variables with geometric
+    distribution with probability $p$ (i.e.,
+    $\Prob{X_i = j} = (1-p)^{j-1} p$). Let $Y = \sum_{i} X_i$, and let
+    $\mu = \Ex{Y} = m/p$. For any $\delta \in (0,1]$, prove that
+    \begin{math}
        \ds \Prob{\bigl. Y \geq (1+\delta) \mu \MakesBig }%
        \leq%
        \exp \pth[]{ - \nfrac{m \delta^2}{8}}.
@@ -2281,9 +2274,9 @@ Dubhashi and Panconesi \cite{dp-cmara-09}.
    % Solution
    Let $Z_1, \ldots, Z_\tau$ be a sequence of independent random
    variables, such that $Z_i=1$ with probability $p$ and $0$
-   otherwise, where $\tau = (1+\delta) \mu$. Since a geometric
+   otherwise, where $\tau = (1+\delta) \mu$. A geometric
    variable with probability $p$ can be interpreted as the number of
-   random variables $Y_i$ one has to read till encountering one. Let
+   trials needed until the first success. Let
    $\rho = \Ex{\sum_{1}^{\tau} Z_i} = (1+\delta)m$.  As such,
    \begin{align*}
        \Prob{Y \geq (1+\delta) \mu }%
