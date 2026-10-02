@@ -24,6 +24,7 @@
 %-----------------------------------------------------------------------------
 % Typography, Fonts & Math Packages
 %-----------------------------------------------------------------------------
+\usepackage{amssymb}
 \usepackage{mathtools}
 \PassOptionsToPackage{warnings-off={mathtools-overbracket,mathtools-colon}}{unicode-math}
 \usepackage{fontspec}
@@ -817,7 +818,8 @@ backend=biber]{biblatex}
 
 \newcommand{\NNN}{\mathbb{N}}%
 \providecommand{\NN}{\mathbb{N}}%
-\renewcommand{\Re}{\mathbb{R}}%
+\renewcommand{\Re}{\mathbb{R}XXX}%
+%\shogi
 \newcommand{\reals}{\Re}%
 \newcommand{\ZZ}{\mathbb{Z}}%
 
@@ -1176,6 +1178,7 @@ backend=biber]{biblatex}
 
 \newcommand{\corlab}[1]{\label{cor:#1}}
 \newcommand{\corref}[1]{\HLink{Corollary}{cor:#1}}%
+\newcommand{\correfY}[2]{\hyperref[cor:#2]{#1}}
 
 %    -----------------------------------------------------------------
 %    -----------------------------------------------------------------

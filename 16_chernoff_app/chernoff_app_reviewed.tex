@@ -16,21 +16,20 @@
 We revisit \QuickSort{}. We remind the reader that the running time of
 \QuickSort{} is proportional to the number of comparisons performed by
 the algorithm. Next, consider an arbitrary element $u$ being
-sorted. Consider the $i$\th level recursive subproblem that contains
-$u$, and let $S_i$ be the set of elements in this subproblem. We
-consider $u$ to be \emph{successful} in the $i$\th level, if
-$\cardin{S_{i+1}} \leq \cardin{S_i}/2$. Namely, if $u$ is successful,
-then the next level in the recursion involving $u$ would include a
-considerably smaller subproblem. Let $X_i$ be the indicator variable
-which is $1$ if $u$ is successful.
+sorted. Consider the $i$\th level recursive subproblem that contains $u$,
+and let $S_i$ be the set of elements in this subproblem. We consider $u$
+to be \emph{successful} in the $i$\th level, if
+$\cardin{S_{i+1}} \leq \tfrac{3}{4}\cardin{S_i}$. Namely, if $u$ is
+successful, then the next level in the recursion involving $u$ would
+include a considerably smaller subproblem. Let $X_i$ be the indicator
+variable which is $1$ if $u$ is successful.
 
 We first observe that if \QuickSort{} is applied to an array with $n$
 elements, then $u$ can be successful at most $T = \ceil{\lg n}$ times,
 before the subproblem it participates in is of size one, and the
-recursion stops. Thus, consider the indicator variable $X_i$ which is
-$1$ if $u$ is successful in the $i$\th level, and zero otherwise. Note
-that the $X_i$s are independent, and $\Prob{X_i = 1} = 1/2$.%
-\remX{The claim $\Prob{X_i = 1} = 1/2$ does not hold for the stated definition $\cardin{S_{i+1}} \leq \cardin{S_i}/2$. If $u$ is near the median of $S_i$, choosing a pivot on either side of $u$ leaves $u$ in a subproblem of size $> \cardin{S_i}/2$ unless the pivot is adjacent to $u$. For such an element, $\Prob{X_i = 1} \leq 2/\cardin{S_i} \to 0$ as $\cardin{S_i} \to \infty$. In standard analyses (e.g., Motwani--Raghavan), a step is defined to be successful if the pivot is chosen from the middle half $[ \cardin{S_i}/4, 3\cardin{S_i}/4 ]$, which happens with probability at least $1/2$ and guarantees $\cardin{S_{i+1}} \leq \frac{3}{4}\cardin{S_i}$, requiring at most $\lceil \log_{4/3} n \rceil$ successful steps.}
+recursion stops. Thus, consider the indicator variable $X_i$ which is $1$
+if $u$ is successful in the $i$\th level, and zero otherwise. Note that
+the $X_i$s are independent, and $\Prob{X_i = 1} \geq 1/2$.%
 
 If $u$ participates in $v$ levels, then we have the random variables
 $X_1, \ldots, X_v$. To make things simpler, we extend this
@@ -41,64 +40,49 @@ probability $1/2$. The question is how many elements in the sequence
 we need to read, until we get $T$ ones.
 
 \begin{lemma}
-    Let $X_1, X_2,\ldots$ be an infinite sequence of independent
-    random $0/1$ variables\newX{ with $\Prob{X_i = 1} = 1/2$}. Let $M$ be an arbitrary parameter. Then
-    the probability that we need to read more than $2M + 4t\sqrt{M}$
+    \lemlab{easy:quick:sort}%
+    %
+    Let $X_1, X_2,\ldots$ be an infinite sequence of independent random
+    $0/1$ variables with $\Prob{X_i = 1} \geq 1/2$. Let $M$ be an arbitrary
+    parameter. Then the probability that we need to read more than $6M$
     variables of this sequence until we collect $M$ ones is at most
-    $2\exp \pth{-t^2}$, for $t \leq \sqrt{M}$. If $t \geq \sqrt{M}$
-    then this probability is at most $2\exp \pth{- t \sqrt{M}}$.
-
-    \lemlab{easy:quick:sort}
+    $2\exp \pth{- M}$.
 \end{lemma}
 
 \begin{proof}
-    Consider the random variable $Y = \sum_{i=1}^L X_i$, where $L = 2M
-    + 4t \sqrt{M}$. Its expectation is $L/2$, and using the Chernoff
-    inequality, we get
+    Consider the random variable $Y = \sum_{i=1}^L X_i$, where $L =
+    6M$. Its expectation is $3M$, and using the
+    \correfY{Chernoff inequality}{Chernoff:0:1}, we
+    get
     \begin{align*}
-      \alpha%
-      &=%
-        \Prob{\bigl. Y \leq M}%
+        \alpha%
+        &\EQ%
+        \Prob{\Bigl. Y \leq M}%
         \leq%
-        \Prob{\cardin{Y - {L}/{2}} \geq {L}/{2} - M \bigr.}%
-        \leq%
-        2\exp \Bigl(-\tfrac{2}{L}\pth{{L}/{2} - M}^2 \Bigr)\\
-      &=%
-        2\exp \Bigl(-{2}\bigl({M + 2t \sqrt{M} - M}\bigr)^2 / L \Bigr)
-        =%
-        2\exp\pth{-2\bigl(2t \sqrt{M} \bigr)^2 / L}\\
-      &=%
-        2\exp \Bigl(-\frac{8t^2 M}{L} \Bigr),
+        \Prob{\Bigl.\cardin{Y - 3M} \geq 2M \bigr.}%
+        \LEQ%
+        2\exp \Bigl(-\frac{2(2M)^2}{ 6M } \Bigr)
+        \\&
+        \LEQ%
+        2\exp\Bigl( -M   \Bigr).
     \end{align*}
-    by \corref{Chernoff:0:1}. For $t \leq \sqrt{M}$ we have that
-    $L = 2M + 4t\sqrt{M} \leq 6M \leq 8M$, as such in this case
-    $\Prob{Y \leq M} \leq 2\exp \pth{-t^2}$.
-
-    If $t \geq \sqrt{M}$, then $\displaystyle \alpha \leq 2\exp
-    \pth{-\frac{8t^2 M}{2M + 4t\sqrt{M}}} \leq 2\exp \pth{-\frac{8t^2
-          M}{6t\sqrt{M}}} \leq 2\exp \pth{- t \sqrt{M}}.  $
 \end{proof}
 
 
 Going back to the \QuickSort{} problem, we have that if we sort $n$
-elements, the probability that $u$ will participate in more than $L =
-(4+c)\ceil{\lg n} = 2\ceil{\lg n} + 4 c\sqrt{\lg n} \sqrt{\lg n }$, is
-smaller than $2\exp \pth{ - c\sqrt{\lg n} \sqrt{\lg n } } \leq 1/n^c$,
-by \lemref{easy:quick:sort}.%
-\remX{The identity $(4+c)\ceil{\lg n} = 2\ceil{\lg n} + 4c\sqrt{\lg n}\sqrt{\lg n}$ is inconsistent: $2\ceil{\lg n} + 4c\lg n = (2+4c)\lg n$, which equals $(4+c)\lg n$ only when $c = 2/3$. Furthermore, $\exp(-c\lg n) = n^{-c/\ln 2}$; bounding $2\exp(-c\lg n) \leq 1/n^c$ requires $n^{c(1/\ln 2 - 1)} \geq 2$, which holds only for sufficiently large $c$ or $n$.}%
-There are $n$ elements being sorted, and
-as such the probability that any element would participate in more
-than $(4+c+1)\ceil{\lg n}$ recursive calls is smaller than $1/n^{c}$.%
-\remX{To apply the union bound over all $n$ elements and deduce an overall failure probability $\leq 1/n^c$, the failure probability for each individual element must be bounded by $1/n^{c+1}$. This corresponds to replacing $c$ by $c+1$ in the parameter choice for $L$.}
+elements, for $M=c \ln n$, the probability that $u$ will participate in
+more than $6M$ rounds is at most $2\exp( -M) = 2/n^c$, by
+\lemref{easy:quick:sort}.  There are $n$ elements being sorted, and as
+such the probability that any element would participate in more than
+$6 c \ln n$ recursive calls is smaller than $2/n^{c-1}$.
 \begin{lemma}
     For any $c > 0$, the probability that \QuickSort{} performs more
-    than $(6+c)n\lg n$ \newX{comparisons}, is smaller than $1/n^{c}$.
+    than $cn\lg n$ comparisons, is smaller than $2/n^{c-1}$.
 \end{lemma}
-\remX{The lemma is missing the unit of measurement ("comparisons") and a proof. The claim follows by observing that each comparison involves a pivot and another element, so each element is compared at most once at each level of the recursion tree it participates in. Summing the depth over all $n$ elements yields at most $n \cdot (6+c)\lg n$ total comparisons with probability at least $1 - 1/n^c$.}
 
 
 
-\section{How many times can the minimum change?}
+\section{The minimums they are a-\SpellIgnore{c{h{}an}g{}in}?}
 
 Let $\Pi = \pi_1 \ldots \pi_n$ be a random permutation of $\brc{1,
    \ldots, n}$. Let $\Event_i$ be the event that $\pi_i$ is the
@@ -175,22 +159,47 @@ perhaps surprising.
     Follows readily from Chernoff's inequality, as $Z=\sum_i X_i$ is a
     sum of independent indicator variables, and, since by linearity of
     expectations, we have
-    \begin{equation*}
+    \begin{align*}
         \mu%
-        =%
+        &\EQ%
         \Ex{\bigl. Z}%
         =%
         \sum_i \Ex{\big. X_i}%
         =%
         \sum_{i=1}^n \frac{1}{i}%
-        \geq%
-        \int_{x=1}^{n+1} \frac{1}{x} \mathrm{d}x%
+        \leq%
+        1 + \int_{x=1}^{n+1} \frac{1}{x} \mathrm{d}x%
         =%
-        \ln (n+1)%
-        \geq%
-        \ln n.
+        1 + \ln (n+1).
+        \\&\
+        \LEQ
+        2 + \ln n,
+    \end{align*}
+    and similarly $\mu \gq \ln n$.
+    Next, we set $\delta = t-1$, and use
+%    \lemref{chernoff:small:delta:1}
+    \lemref{chernoff:delta:big}.
+    \begin{equation*}
+        \Prob{ Z > t( \ln n+2)}
+        \LEQ 
+        \Prob{ \bigl. Z > (1+\delta)\mu } < 2^{-\mu (1 + \delta)}
+        <%
+        2^{-t \ln n}
+        \leq
+        n^{-t/2 }.
     \end{equation*}
-    Next, we set $\delta = t-1$, and use \thmref{Chernoff:simplified}.%
+.
+
+    
+
+            \begin{equation*}
+                \Prob{ \bigl. Z > (1+\delta)\mu } < \exp \pth{-\mu \delta^2 /
+                   3}.
+            \end{equation*}
+
+        
+    XXX
+
     \remX{Critical directional issue: The proof derives $\mu = \Ex{Z} \geq \ln n$, but setting $\delta = t-1$ yields $(1+\delta)\mu = t\mu \geq t\ln n$. Chernoff's upper tail bound applies to $\Prob{Z > (1+\delta)\mu} = \Prob{Z > t\mu}$. Because $t\ln n \leq t\mu = t H_n$, the event $\{Z > t\mu\}$ is a subset of $\{Z > t\ln n\}$, so $\Prob{Z > t\ln n} \geq \Prob{Z > t\mu}$. Thus, bounding $\Prob{Z > t\mu}$ does not establish an upper bound on $\Prob{Z > t\ln n}$. For example, when $t=1$, $t\ln n = \ln n < H_n = \Ex{Z}$, so $Z > \ln n$ is a sub-expectation event where upper-tail Chernoff bounds do not apply directly. To make the argument rigorous, the theorem should bound deviations from the expectation $\Prob{Z > t H_n}$ (or $\Prob{Z > t \Ex{Z}}$), or account for the additive difference $H_n - \ln n \leq 1$. Additionally, the explicit tail bounds invoked correspond to Lemma~15.13 (the small-$\delta$ Chernoff bound) and \lemref{chernoff:delta:big} rather than the general \thmref{Chernoff:simplified}.}
 \end{proof}
 
@@ -300,9 +309,9 @@ same analysis.  In the following, let $\rho_i$ denote the route taken
 by $v_i$ in step 1.
 
 \begin{exercise}
-    \chgY{Once a packet $v_j$ that travel along a path $\rho_j$ can not
-    leave a path $\rho_i$, and then join it again later}{A packet $v_j$ traveling along a path $\rho_j$ cannot leave a path $\rho_i$ and then rejoin it later}. Namely,
-    $\rho_i \cap \rho_j$ is a (possibly empty) contiguous path.
+    A packet $v_j$ traveling along a path $\rho_j$ cannot leave a path
+    $\rho_i$ and then rejoin it later. Namely, $\rho_i \cap \rho_j$ is a
+    (possibly empty) contiguous path.
 \end{exercise}
 
 \begin{lemma}
@@ -337,17 +346,15 @@ by $v_i$ in step 1.
     the lemma since once a packet leaves $\pi$, it would never join it
     again and as such will never again delay $\packet$.
 
-    Since $\packetA$ is ready to follow $e_{\mu}$ at time $\tau$, some
-    packet $\omega$ (which may be $\packetA$ itself) in $S$ traverses
-    $e_\mu$ at time $\tau$. Now $\omega$ must leave $\pi$ at time
-    $\tau$ -- if not, some packet will follow $e_{\mu+1}$ \chgY{at step $\mu+1$}{at time $\tau+1$} with lag $\ell$.%
-    \remX{Correction from "at step $\mu+1$" to "at time $\tau+1$": packet $\omega$ traverses $e_\mu$ at time $\tau$, so it is ready for edge $e_{\mu+1}$ at time $\tau+1$. Its lag at time $\tau+1$ is $(\tau+1) - (\mu+1) = \tau - \mu = \ell$, which directly contradicts the maximality of $\tau$.}%
-    ~But this violates the maximality of
-    $\tau$.  We charge to $\omega$ the increase in the lag of
-    $\packet$ from $\ell$ to $\ell+1$. Since $\omega$ leaves $\pi$, it
-    will never be charged again. Thus, each member of $S$ whose route
-    intersects $\pi$ is charged for at most one delay, establishing the
-    lemma.
+    Since $\packetA$ is ready to follow $e_{\mu}$ at time $\tau$, some packet
+    $\omega$ (which may be $\packetA$ itself) in $S$ traverses $e_\mu$ at time
+    $\tau$. Now $\omega$ must leave $\pi$ at time $\tau$ -- if not, some packet will
+    follow $e_{\mu+1}$ at time $\tau+1$ with lag $\ell$.  But this
+    violates the maximality of $\tau$.  We charge to $\omega$ the increase in the
+    lag of $\packet$ from $\ell$ to $\ell+1$. Since $\omega$ leaves
+    $\pi$, it will never be charged again. Thus, each member of $S$ whose
+    route intersects $\pi$ is charged for at most one delay, establishing
+    the lemma.
 \end{proof}
 
 
@@ -358,16 +365,14 @@ Let $H_{i j}$ be an indicator variable that is $1$ if $\rho_i$ and
 $\rho_j$ share an edge, and $0$ otherwise. The total delay for $v_i$
 is at most $\sum_{j \neq i} H_{i j}$.
 
-Crucially, for a fixed $i$, the variables $H_{i1}, \ldots, H_{i N}$
-are \delX{independent} \newX{conditionally independent} given the path
-$\rho_i$.%
-\remX{The variables $H_{ij}$ are not unconditionally independent: if $\rho_i$ happens to be long, it is more likely to intersect any other path $\rho_j$, making the $H_{ij}$ positively correlated. Conditioning on the specific path $\rho_i$ makes the destinations and routes of all other packets mutually independent, establishing conditional independence.}
-Indeed, imagine first picking the destination of
-$v_i$, and let the associated path be $\rho_i$. Now, pick the
-destinations of all the other packets in the network. Since the
-sampling of destinations is done with replacement, whether or not the
-path $\rho_j$ of $v_j$ intersects $\rho_i$, is independent of whether
-$\rho_k$ intersects $\rho_i$. Of course, the probabilities
+Crucially, for a fixed $i$, the variables $H_{i1}, \ldots, H_{i N}$ are almost
+independent. Formally, they are conditionally independent given the path
+$\rho_i$ (i.e., fix $\rho_i$ and then evaluate these variables).  Indeed,
+imagine first picking the destination of $v_i$, and let the associated
+path be $\rho_i$. Now, pick the destinations of all the other packets in the
+network. Since the sampling of destinations is done with replacement,
+whether or not the path $\rho_j$ of $v_j$ intersects $\rho_i$, is independent
+of whether $\rho_k$ intersects $\rho_i$. Of course, the probabilities
 $\Prob{ \smash{H_{ij} = 1}}$ and $\Prob{ H_{ik} = 1}$ are probably
 different.  Confusingly, however, $H_{11}, \ldots, H_{N{} N}$ are not
 independent. Indeed, imagine $k$ and $j$ being close vertices on the
@@ -549,6 +554,8 @@ interested reader is referred to~\cite{mu-pcrap-05}.
    \IncFragment{c_h_r_0_1}%
    \IncFragment{Chernoff_simplified}%
    \IncFragment{chernoff_delta_big}%
+   \IncFragment{chernoff_small_delta_1}%
+   \IncFragment{chernoff_delta_big}
 
 }
 
