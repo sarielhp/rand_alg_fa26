@@ -1,0 +1,319 @@
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+\ifx\bookMode\undefined%
+    \input{prefix}%
+\fi
+\ChapterNumPage{18}{158}
+
+\Chapter{Discrepancy and Derandomization}
+\ChapterPrefix{}
+\ChapterGen{}
+
+
+
+\QuotePExt{%
+``Shortly after the celebration of the
+   four thousandth anniversary of the opening of space,
+   Angary J. Gustible discovered Gustible's planet. The
+   discovery turned out to be a tragic mistake.
+ 
+   Gustible's planet was inhabited by highly intelligent life
+   forms. They had moderate telepathic powers. They immediately
+   mind-read Angary J. Gustible's entire mind and life history, and
+   embarrassed him very deeply by making up an opera concerning his
+   recent divorce.''}%
+{Gustible's Planet}%
+{Cordwainer Smith}
+
+
+
+\section{Discrepancy}
+
+Consider a set system $(\GroundSet,\Ranges)$, where
+$n =\cardin{\GroundSet}$, and $\Ranges \subseteq 2^\GroundSet$. A
+natural task is to partition $\GroundSet$ into two sets
+$\SetA, \SetB$, such that for any range $\range \in \Ranges$, we have
+that
+\begin{math}
+    \chi(\range) = \cardin{\bigl. \cardin{\SetA \cap \range} -
+       \cardin{\SetB \cap \range}}
+\end{math}
+is minimized. In a perfect partition, we would have that
+$\chi(\range) = 0$---the two sets $\SetA,\SetB$ partition every range
+perfectly in half. A natural way to do so is to consider this as a
+coloring problem---an element of $\GroundSet$ is colored by $+1$ if
+it is in $\SetA$, and $-1$ if it is in $\SetB$.
+
+
+\begin{defn} 
+    Consider a set system $\RangeSpace = (\GroundSet,\Ranges)$, and let
+    $\chi: \GroundSet \rightarrow \brc{-1,+1}$ be a function (i.e., a
+    coloring).  The \emphOnly{discrepancy}\index{discrepancy} of $\range \in \Ranges$ is
+    $\chi(\range) = \cardin{\sum_{x \in \range} \chi(x)}$.  The
+    \emphOnly{discrepancy of $\chi$}\index{discrepancy of $\chi$} is the maximum discrepancy over all
+    the ranges---that is,
+    \begin{equation*}
+        \discX{\chi} = \max_{\range \in \Ranges} \chi(\range).
+    \end{equation*}
+    The \emphOnly{discrepancy}\index{discrepancy} of $\RangeSpace$ is
+    \begin{equation*}
+        \discX{\RangeSpace}%
+        =%
+        \min_{\chi:\GroundSet \rightarrow \brc{-1,+1}} \discX{\chi}.
+    \end{equation*}    
+\end{defn}
+
+Bounding the discrepancy of a set system is quite important, as it
+provides a way to shrink the size of the set system while introducing
+small error. Computing the discrepancy of a set system is generally
+quite challenging. A rather decent bound follows by using random
+coloring. 
+
+    
+\begin{defn}
+    For a vector $\vecV = (v_1,\ldots, v_n) \in \Re^n$,
+    $\norm{\vecV}_\infty = \max_{i} \cardin{v_i}$.
+\end{defn}
+
+For technical reasons, it is easy to think about the set
+system as an incidence matrix.
+
+\begin{defn}       
+    For an $m \times n$ binary matrix $\Matrix$ (i.e., each entry is
+    either $0$ or $1$), consider a vector $\vecb \in \brc{-1,
+       +1}^n$. The \emphOnly{discrepancy}\index{discrepancy} of $\vecb$ \newX{(with respect to $\Matrix$)} is
+    \chgY{$\dist{\Matrix \vecb}_\infty$}{$\norm{\Matrix \vecb}_\infty$}.
+\end{defn}
+
+
+\begin{theorem}
+    Let $\Matrix$ be an $n \times n$ binary matrix (i.e., each entry
+    is either $0$ or $1$), then there always exists a vector
+    $\vecb \in \brc{-1, +1}^n$, such that
+    $\norm{\Matrix \vecb}_\infty \leq 4 \sqrt{n \ln n}$.%
+    \remX{Standardized the norm notation to $\norm{\cdot}_\infty$ (replacing `\textbackslash dist') and clarified the base of the logarithm as natural logarithm $\ln n$.}
+    Specifically, a random coloring provides such a coloring
+    with high probability.
+\end{theorem}
+
+\begin{proof}
+    Let $v = (v_1, \ldots, v_n)$ be a row of $\Matrix$. Choose a random
+    \begin{equation*}
+        \vecb = (b_1, \ldots, b_n) \in \brc{-1,+1}^n.
+    \end{equation*}
+    Let
+    $i_1,\ldots, i_\tau$ be the indices such that $v_{i_j} =1$, and
+    let
+    \begin{equation*}
+        Y%
+        =%
+        \DotProd{v}{\vecb} = \sum_{i=1}^n v_i b_i = \sum_{j=1}^\tau v_{i_j}
+        b_{i_j}%
+        =%
+        \sum_{j=1}^\tau b_{i_j}.
+    \end{equation*}
+    As such $Y$ is the sum of \chgY{$m$}{$\tau$} independent random variables that
+    accept values in $\brc{-1,+1}$.%
+    \remX{Corrected `$m$' to `$\tau$', as $Y$ is the sum over the $\tau \leq n$ non-zero entries of the specific row $v$. The dimension $m$ was the row count in Definition~18.1.3.}  Clearly,
+    \begin{equation*}
+        \Ex{Y}%
+        =%
+        \Ex{\bigl. \DotProd{v}{\vecb}\!\ts  }%
+        =%
+        \Ex{\Bigl.\smash{\sum_{i}} v_i b_i} =%
+        \sum_{i} \Ex{v_i b_i} = \sum_{i} v_i \Ex{b_{i}} = 0.
+    \end{equation*}
+
+    By \thmrefY{Chernoff inequality}{Chernoff:special} and the
+    symmetry of $Y$, we have that, for \chgY{$\Delta = 4 \sqrt{n \ln{m}}$}{$\Delta = 4 \sqrt{n \ln{n}}$},
+    it holds
+    \begin{align*}
+        \Prob{\bigl.\cardin{Y}\MakeSBig \geq \Delta} 
+        &\EQ %
+        2 \Prob{\bigl. \DotProd{v}{\vecb}  \geq \Delta }
+        =%
+        2 \Prob{\Bigl. \smash{\sum_{j=1}^\tau b_{i_j}} \geq \Delta}%
+        \\
+        &\LEQ%
+        2 \exp \pth{ - \frac{\Delta^2}{2\tau}}
+        =%
+        2 \exp \pth{-8 {\frac{n\ln n}{\tau}}}%
+        \leq%
+        \frac{2}{n^{8}},
+    \end{align*}
+    since $\tau \leq n$.%
+    \remX{Set $m=n$ to match the $n \times n$ matrix in the theorem statement and Section~18.2. In the general case of an $m \times n$ matrix, setting $\Delta = 4\sqrt{n \ln m}$ gives bound $2/m^8$ per row, which sums to $2/m^7$ across all $m$ rows via union bound.}
+    \newX{Applying a union bound over all $n$ rows of $\Matrix$, the} probability that any entry in
+    $\Matrix \vecb$ exceeds (in absolute value) $4 \sqrt{n \ln n}$ is
+    smaller than $n \cdot (2/n^8) = 2/n^7$. Thus, with probability at least $1 - 2/n^7$,
+    all the entries of $\Matrix \vecb$ have absolute value smaller than
+    $4 \sqrt{n \ln n}$.%
+    \remX{The original text had a typographical corruption `$4\sqrt{n \ln ,}$' with a stray comma, used scalar $b$ instead of vector $\vecb$, used $m$ instead of $n$, and omitted the union bound step over the $n$ rows ($n \cdot (2/n^8) = 2/n^7$).}
+    
+   In particular, there exists a vector $\vecb \in \brc{-1,+1}^n$ such
+   that $\norm{\Matrix \vecb}_\infty \leq 4 \sqrt{n \ln n}$.
+   \remX{Standardized bound from $\dist{\Matrix \vecb}_\infty \leq 4\sqrt{n\ln m}$ to $\norm{\Matrix \vecb}_\infty \leq 4\sqrt{n\ln n}$.}
+\end{proof}
+
+We might spend more time on discrepancy later on---it is a
+fascinating topic, well worth its own course.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Method of Conditional Probabilities}
+
+In previous lectures, we encountered the following problem.
+
+\begin{problem}[Set Balancing/Discrepancy]
+    Given a binary matrix $\Matrix$ of size $n \times n$, find a
+    vector $\vecA \in \brc{-1,+1}^n$, such that
+    \chgY{$\dist{\Matrix \vecA}_\infty$}{$\norm{\Matrix \vecA}_\infty$} is minimized.
+\end{problem}
+
+Using random assignment and the Chernoff inequality, we showed that
+there exists $\vecA$, such that
+\chgY{$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$}{$\norm{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$}. Can we
+derandomize this algorithm?  Namely, can we come up with an efficient
+\emph{deterministic} algorithm that has low discrepancy?
+
+To derandomize our algorithm, construct a computation tree of depth
+$n$, where in the $i$\th level we expose the $i$\th coordinate of
+$\vecA$.  This tree $T$ has depth $n$. The root represents all
+possible random choices, while a node at depth $i$ represents all
+computations when the first $i$ bits are fixed. For a node $v \in T$,
+let $P(v)$ be the probability that a random computation starting from
+$v$ succeeds---here randomly assigning the remaining bits can be
+interpreted as a random walk down the tree to a leaf.
+
+Formally, the algorithm is \emphOnly{successful}\index{successful} if \newX{it} ends up with a vector
+$\vecA$, such that
+\chgY{$\dist{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$}{$\norm{\Matrix \vecA}_\infty \leq 4 \sqrt{ n\ln n}$}.
+
+Let $v_l$ and $v_r$ be the two children of $v$.
+Clearly, $P(v) = (P(v_l) + P(v_r))/2$. In particular, $\max( P(v_l),
+P(v_r)) \geq P(v)$. Thus, if we could compute $P(\cdot)$ quickly (and
+deterministically), then we could derandomize the algorithm.%
+\remX{In this conceptual overview, $P(v)$ represents the exact probability of success, which we would wish to maximize. However, exactly computing the joint success probability $\Prob{\bigcap_\ind \overline{C_\ind} \sep{\vecA_v}}$ is \#P-hard. The method of conditional probabilities bypasses this by instead maintaining a tractable upper bound (pessimistic estimator) on the failure probability, as developed below.}
+
+
+Let $C_\ind^+$ be the bad event that
+$\row_\ind \cdot \vecA > 4 \sqrt{n \ln n}$, where $\row_\ind$ is the
+$\ind$\th row of $\Matrix$.  Similarly, $C_\ind^-$ is the bad event that
+$\row_\ind \cdot \vecA < -4 \sqrt{n \ln{n}}$, and let
+$C_\ind = C_\ind^+ \cup C_\ind^-$.  Consider the probability
+$\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first $k$
+coordinates of $\vecA$ are specified).  Let
+$\row_\ind = (\rowc_1,\ldots, \rowc_n)$.  We have that
+\begin{align*}
+    \ProbCond{C_\ind^+ }{\vecA_1, \ldots, \vecA_k}%
+    &\EQ
+    \Prob{\smash{\sum_{i=k+1}^{n}} \vecA_i \rowc_i > 4 \sqrt{n \ln{n}} -
+       \smash{\sum_{i=1}^{k}} \vecA_i \rowc_i }%
+    \\[0.4cm]&
+    \EQ%
+    \Prob{\Bigl.\smash{\sum_{i \geq k+1, \rowc_i \ne 0 }} \vecA_i \rowc_i >
+       L}%
+    =%
+    \Prob{\Bigl. \smash{\sum_{i \geq k+1, \rowc_i = 1}} \vecA_i > L},
+\end{align*}
+where
+\begin{math}
+    L = 4 \sqrt{n \ln{n}} - \sum_{i=1}^{k} \vecA_i \rowc_i
+\end{math}
+is a known quantity (since $\vecA_1, \ldots, \vecA_k$ are known). Let
+$V = \sum_{i \geq k+1, \rowc_i =1 } 1$. We have,
+\begin{align*}
+    \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}} 
+    &\EQ%
+    \Prob{\Bigl. \smash{\displaystyle \sum\nolimits_{{i \geq k+1,\, \rowc_i = 1}} }\pth{ \vecA_i +
+          1} > L + V}%
+    \\[0.3cm]&%
+    \EQ%
+    \Prob{\Bigl. \smash{\sum\nolimits_{{i \geq k+1,\, \rowc_i = 1} }}\frac{{ \vecA_i +
+             1}}{2} > \frac{L + V}{2}},
+\end{align*}
+\remX{Corrected undefined subscript `$\alpha_i = 1$' to `$\rowc_i = 1$', matching the coordinates $\row_\ind = (\rowc_1, \dots, \rowc_n)$.}%
+\medskip%
+The last quantity is the probability that in $V$ flips of a fair $0/1$
+coin one gets more than $(L+V)/2$ heads. Thus,
+\begin{equation*}
+    P_\ind^+ = \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}
+    =%
+    \sum_{i = \ceil{(L+V)/2}}^{V} \binom{V}{i}
+    \frac{1}{2^V}%
+    =%
+    \frac{1}{2^V} { \sum_{i = \ceil{(L+V)/2}}^{V}
+       \binom{V}{i}}.    
+\end{equation*}%
+\remX{Corrected two critical errors in the conditional probability formula: (1) replaced the macro `\textbackslash Vertices' (which typeset as the vertex set symbol $\VV$) with the scalar integer $V$ denoting the number of remaining non-zero entries in row $\ind$; (2) corrected the denominator from $2^n$ to $2^V$, since there are only $V$ remaining coin flips in this row. Furthermore, for strict inequality $\sum \frac{\vecA_i+1}{2} > (L+V)/2$, the lower summation limit for integer heads is $\lfloor (L+V)/2 \rfloor + 1$ (which equals $\lceil (L+V)/2 \rceil$ when $(L+V)/2$ is not an integer). If $(L+V)/2 < 0$, the sum includes all $0 \leq i \leq V$ and equals $1$; if $(L+V)/2 \geq V$, the probability is $0$.}%
+This implies that we can compute $P_\ind^+$ in polynomial
+time!  Indeed, we are adding $V \leq n$ numbers, each one of
+them is a binomial coefficient that has polynomial size
+representation in $n$, and can be computed in polynomial
+time (why?).  One can define in similar fashion $P_\ind^-$, and
+let $P_\ind = P_\ind^+ + P_\ind^-$. Clearly, $P_\ind$ can be computed in
+polynomial time, by applying a similar argument to the
+computation of $P_\ind^- = \Prob{C_\ind^- \sep{\vecA_1, \ldots,
+      \vecA_k}}$.
+
+
+For a node $v \in T$, let $\vecA_v$ denote the portion of $\vecA\,$
+that was fixed when traversing from the root of $T$ to $v$.  Let
+$P(v) = \sum_{\ind=1}^{n} \Prob{C_\ind \sep{\vecA_v}}$.%
+\remX{Here $P(v)$ serves as a pessimistic estimator (an upper bound on the failure probability $\Prob{\bigcup_\ind C_\ind \sep{\vecA_v}}$). By the law of total probability applied to each bad event, $\Prob{C_\ind \sep{\vecA_v}} = \frac{1}{2}\Prob{C_\ind \sep{\vecA_{v_l}}} + \frac{1}{2}\Prob{C_\ind \sep{\vecA_{v_r}}}$, so $P(v) = (P(v_l) + P(v_r))/2$ holds exactly.}  By the above
+discussion $P(v)$ can be computed in polynomial time.  Furthermore, we
+know by the previous result on discrepancy that at the root \newX{$r = \mathrm{root}(T)$}, we have \chgY{$P(r) < 1$}{$P(r) \leq 2/n^7 < 1$} (that was
+the bound used to show that there exists a good assignment).
+
+As before, for any $v \in T$, we have $\min(P(v_l), P(v_r)) \leq P(v)$.%
+\remX{Corrected direction from $P(v) \geq \min(P(v_l), P(v_r))$: since $P(v) = (P(v_l)+P(v_r))/2$, the minimum of the two children is at most the average $P(v)$. Choosing the child minimizing $P$ guarantees that the failure bound does not increase.}
+Thus, we have a polynomial \emph{deterministic} algorithm
+for computing a set balancing with discrepancy smaller than $4\sqrt{n
+   \ln{n}}$. Indeed, set $v = \mathrm{root}(T)$, and start traversing down the
+tree. At each stage, compute $P(v_l)$ and $P(v_r)$ (in polynomial
+time), and set $v$ to the child with lower value of
+$P(\cdot)$. Clearly, after $n$ steps, we reach a leaf that
+corresponds to a vector $\vecA'$ such that $\norm{\Matrix \vecA'}_\infty \leq 4 \sqrt{n \ln{n}}$.%
+\remX{Replaced `$A$' with `$\Matrix$' to avoid colliding with vector $\vecA$. Because $P(v)$ never increases along the path and $P(r) < 1$, at the leaf $u$ we have $\sum_{\ind=1}^n \Prob{C_\ind \sep{\vecA_u}} = P(u) \leq P(r) < 1$. Since all coordinates are fixed at the leaf, each term $\Prob{C_\ind \sep{\vecA_u}}$ is deterministically $0$ or $1$, forcing all terms to be $0$. Thus, no bad event occurs and $\norm{\Matrix \vecA'}_\infty \leq 4\sqrt{n\ln n}$.}
+
+\begin{theorem}
+    Using the method of conditional probabilities, one can compute in
+    polynomial time in $n$, a vector $\vecA \in \brc{-1,+1}^n$, such
+    that $\norm{\Matrix \vecA}_\infty \leq 4 \sqrt{n \ln{n}}$.%
+    \remX{Replaced `$\dist{A \vecA}_\infty \leq 4\sqrt{n\log n}$' with `$\norm{\Matrix \vecA}_\infty \leq 4\sqrt{n\ln n}$', fixing matrix notation and clarifying natural log.}
+\end{theorem}
+
+Note that this method might fail to find the best
+assignment. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 5
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliographical Notes}
+
+There is a lot of nice work on discrepancy in geometric settings. See
+the books~\cite{c-dmrc-01, m-gd-99}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\StandAloneMode{%
+   \section{From previous lectures}
+   
+   \IncFragment{c_special}
+   
+}
+
+
+\ChapterEnd{}
+
+%\end{document}%
