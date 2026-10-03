@@ -818,7 +818,9 @@ backend=biber]{biblatex}
 
 \newcommand{\NNN}{\mathbb{N}}%
 \providecommand{\NN}{\mathbb{N}}%
-\renewcommand{\Re}{\mathbb{R}XXX}%
+\AtBeginDocument{%
+   \renewcommand{\Re}{\mathbb{R}}%
+}
 %\shogi
 \newcommand{\reals}{\Re}%
 \newcommand{\ZZ}{\mathbb{Z}}%
