@@ -12,5 +12,5 @@
     "enable_dbus": null,
     "enable_wsl": null,
     "enable_etc_auto_bind": null
-  },"profiles":["agy","ai"]
+  },"profiles":["ai","agy"],"max_file_count":25000
 }
