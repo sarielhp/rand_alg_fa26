@@ -12,5 +12,5 @@
     "enable_dbus": null,
     "enable_wsl": null,
     "enable_etc_auto_bind": null
-  },"profiles":["ai","agy"],"max_file_count":25000
+  },"profiles":["ai","agy"],"max_file_count":25000,"binds_ro":["/home/sariel/bin/"]
 }
