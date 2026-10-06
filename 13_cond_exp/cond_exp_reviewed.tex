@@ -1,9 +1,5 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
+
 \ChapterNumPage{13}{102}
 
 
@@ -51,17 +47,16 @@
         =%
         \sum_{x} x \ProbCond{X = x}{Y = y}.
     \end{equation*}
-    \remX{Clarified that $y$ satisfies $\Prob{Y=y} > 0$ to ensure the conditional probability is well-defined, and changed the summation domain from the sample space $\Omega$ to the support of $X$ (consistent with the proofs below).}%
-    The expression $\ExCond{X}{Y}$ denotes the
-    \emphOnly{conditional expectation}\index{conditional expectation} of $X$
-    given $Y$; it is the random variable $g(Y)$, where $g(y) = \ExCond{X}{Y = y}$.
+    The expression $\ExCond{X}{Y}$ denotes the \emphOnly{conditional
+       expectation}\index{conditional expectation} of $X$ given $Y$; it
+    is the random variable $g(Y)$, where $g(y) = \ExCond{X}{Y = y}$.
 \end{defn}
 
-\chgY{As such, the conditional expectation is a function from the value of
-$y$, to the average value of $X$. As such, one can think of
-conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words, $g(y) = \ExCond{X}{Y=y}$ is a deterministic function mapping each realized value $y$ of $Y$ to the conditional expectation of $X$. When evaluated on the random variable $Y$ itself, $\ExCond{X}{Y} = g(Y)$ is a random variable that takes the numerical value $g(y)$ whenever $Y = y$.}
-\remX{The original text described $\ExCond{X}{Y}$ as a ``shorthand for $\ExCond{X}{Y=y}$'' and repeated ``As such''. In probability theory, $\ExCond{X}{Y=y}$ is a deterministic number (for a given $y$), whereas $\ExCond{X}{Y}$ is a random variable. Making this explicit is essential because Lemma~\ref{lemma:conditional:expectation} takes the expectation of this random variable.}
-
+In other words, $g(y) = \ExCond{X}{Y=y}$ is a deterministic function
+mapping each realized value $y$ of $Y$ to the conditional expectation of
+$X$. When evaluated on the random variable $Y$ itself,
+$\ExCond{X}{Y} = g(Y)$ is a random variable that takes the numerical
+value $g(y)$ whenever $Y = y$.
 
 \begin{fragment}{conditional_expectation}
 \begin{lemma}%
@@ -91,7 +86,6 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words,
         =%
         \Ex{X}.
     \end{align*}
-    \remX{Unified the inline math and `align*' environment into a single display. In the original text, $\ExExt{Y}{\dots}$ notationally placed the realization index $y$ inside an expectation with respect to $Y$; expanding directly as $\sum_y \Prob{Y=y} \ExCond{X}{Y=y}$ resolves this notation clash.}%
 \end{proof}
 
 \begin{fragment}{product_expectation}
@@ -117,8 +111,6 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words,
         =%
         \Ex{\bigl. X Y}.
     \end{align*}
-    \remX{Changed the inline math in the lemma statement to a displayed `equation*' to fix an overfull `\textbackslash{}hbox' (51pt too wide). In the proof, replaced the split inline-math and single-line `equation*' by an `align*' environment to eliminate a 54.5pt overfull `\textbackslash{}hbox'. Also unified notation to use $\ExCond{X}{Y}$ and $\ExCond{X}{Y=y}$ consistently instead of switching to $\Ex{X \sep{Y}}$.}%
-    \remX{Pedagogical note: Lemma~\ref{lemma:expectations:product} is a special case of the general ``taking out what is known'' property of conditional expectation: for any function $g(Y)$, one has $\Ex{g(Y) \ExCond{X}{Y}} = \Ex{g(Y) X}$. Here $g(Y) = Y$.}%
 \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -147,7 +139,6 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words,
         \frac{1}{2} Y_{i-1}
         = \frac{3}{4} Y_{i-1}.
     \end{equation*}
-    \remX{Clarified that $X_i$ is independent of $Y_{i-1}$ because $Y_{i-1}$ depends only on the previous variables $X_1, \ldots, X_{i-1}$.}%
     Therefore, by \lemref{conditional:expectation} we have
     \begin{equation*}
         \Ex{Y_i}%
@@ -180,10 +171,9 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words,
         \leq
         0.9^n,
     \end{align*}
-    \remX{Corrected the first relation from `$=$' to `$\leq$': since $Y_n = (1/2)^{n - \sum X_i}$, the event $Y_n \geq (1/2)^{n/4}$ corresponds to $\sum X_i \geq (3/4)n$, which strictly contains $\sum X_i > (3/4)n$ whenever $(3/4)n$ is an integer. Also corrected the subsequent `$\leq$' to `$=$' when substituting $\Ex{Y_n} = (3/4)^n$, and split the display into an `align*' environment to eliminate a 59.7pt overfull `\textbackslash{}hbox'.}%
     where the second inequality is Markov's inequality, and the final
-    inequality holds because $3 \cdot 2^{1/4} / 4 \approx 0.8919 < 0.9$.
-    By symmetry (considering $1 - X_i$), we also have
+    inequality holds because $3 \cdot 2^{1/4} / 4 \approx 0.8919 < 0.9$.  By
+    symmetry (considering $1 - X_i$), we also have
     \begin{equation*}
         \Prob{ \sum\nolimits_i X_i < (1/4) n }
         =%
@@ -191,7 +181,6 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.}{In other words,
         <%
         0.9^n.
     \end{equation*}
-    \remX{Placed the symmetric lower-tail bound in a display to eliminate a 2.7pt inline overfull `\textbackslash{}hbox'.}%
 \end{proof}
 
 

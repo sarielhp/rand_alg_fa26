@@ -33,7 +33,7 @@
 % \Part{Hash Tables}
 \section{Introduction}
 
-We are interested here in \newX{a} dictionary data structure. The settings for
+We are interested here in a dictionary data structure. The settings for
 such a data-structure:
 \begin{compactenumA}
     \item $\cU$: universe of keys with total order: numbers, strings,
@@ -63,22 +63,21 @@ might use a \emph{balanced} search tree (i.e., red-black tree). The
 time to perform an operation like lookup, insert, delete take
 $O(\log |S|)$ time (comparisons).
 
-Naturally, the above are \chgY{potently an ``overkill''}{potentially overkill}, in the sense that
-sorting is unnecessary. In particular, the universe $\cU$ may not be
-(naturally) totally ordered.  The keys correspond to large objects
-(images, graphs etc) for which comparisons are expensive.  Finally, we
-would like to improve ``average'' performance of lookups to $O(1)$
-time, even at cost of extra space or errors with small probability:
-many applications for fast lookups in networking, security, etc.
+Naturally, the above are potentially overkill, in the sense that sorting
+is unnecessary. In particular, the universe $\cU$ may not be (naturally)
+totally ordered.  The keys correspond to large objects (images, graphs
+etc) for which comparisons are expensive.  Finally, we would like to
+improve ``average'' performance of lookups to $O(1)$ time, even at cost
+of extra space or errors with small probability: many applications for
+fast lookups in networking, security, etc.
 
 
 \paragraph*{Hashing and Hash Tables.}%
 
-The hash-table data structure has an associated (hash) table/array $T$
-of size $m$ (the table \emphOnly{size}\index{size}).  \chgY{A hash function
-$h: \cU \rightarrow \{0,\ldots,m-1\}$.}{We use a hash function
-$h: \cU \rightarrow \{0,\ldots,m-1\}$.} An item $x \in \cU$ hashes to
-slot $h(x)$ in $T$.
+The hash-table data structure has an associated (hash) table/array $T$ of
+size $m$ (the table \emphOnly{size}\index{size}).  We use a hash function
+$h: \cU \rightarrow \{0,\ldots,m-1\}$. An item $x \in \cU$ hashes to slot
+$h(x)$ in $T$.
 
 
 Given a set $S \subseteq \cU$, in a perfect ideal situation, each
@@ -86,9 +85,9 @@ element $x \in S$ hashes to a distinct slot in $T$, and we store $x$
 in the slot $h(x)$. The \Algorithm{Lookup} for an item $y \in \cU$, is
 to check if $T[h(y)] = y$. This takes constant time.
 
-Unfortunately, \emph{collisions} are unavoidable, and \newX{there are} several
-different techniques to handle them.
-Formally, two items $x \neq y$  \emphOnly{collide}\index{collide} if  $h(x) = h(y)$.
+Unfortunately, \emph{collisions} are unavoidable, and there are several
+different techniques to handle them.  Formally, two items $x \neq y$
+\emphOnly{collide}\index{collide} if $h(x) = h(y)$.
 
 A standard technique to handle collisions is to use \emphOnly{chaining}\index{chaining}
 (aka \emph{open hashing}). Here, we handle collisions as follows:
@@ -114,12 +113,12 @@ A standard technique to handle collisions is to use \emphOnly{chaining}\index{ch
 Other techniques for handling collisions include associating a list of
 locations where an element can be (in certain order), and check these
 locations in this order. Another useful technique is \emphOnly{cuckoo
-   hashing}\index{cuckoo
-   hashing} which we will discuss later on: Every value has two
-possible locations. When inserting, insert in one of the locations,
-otherwise, kick out the stored value to its other location. Repeat
-till stable. \chgY{if no stability then rebuild table.}{If stability is not reached within a bounded number of evictions, the entire table is rebuilt with fresh hash functions.}
-\remX{Cuckoo hashing was introduced here as ``which we will discuss later on'', but the chapter does not revisit it. See the review report for concrete proposals on adding a concise treatment of Cuckoo Hashing and open addressing.}
+   hashing}\index{cuckoo hashing} which we will discuss later on: Every
+value has two possible locations. When inserting, insert in one of the
+locations, otherwise, kick out the stored value to its other
+location. Repeat till stable. If stability is not reached within a
+bounded number of evictions, the entire table is rebuilt with fresh hash
+functions.
     
 The relevant questions when designing a hashing scheme, include:
 \begin{compactenumI}%[label=(\Roman*)]
@@ -296,14 +295,16 @@ when $S$ changes. Hence $O(1)$ expected look up/insert/delete time
 \begin{defn}
     \chgY{For a number $p$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$.}{For a positive integer $n$, let $\ZZ_n = \brc{0, \ldots, n-1 \bigl. }$. When $p$ is prime, $\ZZ_p$ forms a finite field $\mathbb{F}_p$.}
     
-    For two integer numbers $x$ and $y$, the \emphOnly{quotient}\index{quotient} of $x/y$
-    is $x \bdiv y = \floor{x/y}$. The \emphOnly{remainder}\index{remainder} of $x/y$ is
-    $x \bmod y = x - y \floor{x/y}$. If \chgY{the $x \bmod y = 0$, than}{$x \bmod y = 0$, then} $y$
-    \emphOnly{divides}\index{divides} $x$, denoted by $y \divides x$.  We use
-    $\alpha \equiv \beta \pmod{p}$ or $\alpha \equiv_p \beta$ to
-    denote that $\alpha$ and $\beta$ are \emphOnly{congruent modulo $p$}\index{congruent modulo $p$};
-    that is $\alpha \bmod p = \beta \bmod p$ -- equivalently,
-    $p \divides \pth[]{\alpha - \beta}$.
+    For two integer numbers $x$ and $y$, the
+    \emphOnly{quotient}\index{quotient} of $x/y$ is
+    $x \bdiv y = \floor{x/y}$. The \emphOnly{remainder}\index{remainder}
+    of $x/y$ is $x \bmod y = x - y \floor{x/y}$. If \chgY{the
+       $x \bmod y = 0$, than}{$x \bmod y = 0$, then} $y$
+    \emphOnly{divides}\index{divides} $x$, denoted by $y \divides x$.  We
+    use $\alpha \equiv \beta \pmod{p}$ or $\alpha \equiv_p \beta$ to denote that
+    $\alpha$ and $\beta$ are \emphOnly{congruent modulo
+       $p$}\index{congruent modulo $p$}; that is
+    $\alpha \bmod p = \beta \bmod p$ -- equivalently, $p \divides \pth[]{\alpha - \beta}$.
 \end{defn}
 
 \begin{remark}
@@ -387,7 +388,7 @@ hash value of $x$ in two stages:
     \end{equation*}
     The size of $L(x)$ is maximized when $x = 0$. The number of such
     elements is at most $\ceil{p/m}$ (note, that since $p$ is a prime,
-    $p/m$ is fractional).  One of the numbers in \chgY{$O(x)$}{$L(x)$} is $x$ itself.
+    $p/m$ is fractional).  One of the numbers in $L(x)$ is $x$ itself.
     As such, we have that
     \begin{equation*}
         \cardin{B}%
@@ -408,7 +409,6 @@ hash value of $x$ in two stages:
     $m\floor{p/m} < p$,
     which is true since $p$ is a prime, and $1 <m < p$.    
 \end{proof}
-\remX{Corrected typo $O(x)$ to $L(x)$, and fixed the comma splice before ``The number of such elements''.}
 
 
 \begin{claim}
@@ -484,14 +484,13 @@ and maps it randomly and uniformly, to some other pair
 $x' = f_{a,b}(x)$ and $y' = f_{a,b}(y)$ (where $x', y'$ are again off
 the main diagonal).
 
-Now consider the smaller grid $\ZZ_m \times \ZZ_m$. The main diagonal
-of this \si{subgrid} is bad -- it corresponds to a collision. One can
-think about the last step, of computing
-$h_{a,b}(x) = f_{a,b}(x) \bmod m$, as tiling the larger grid, by the
-smaller \chgY{grid. in}{grid in} the natural way. Any diagonal that is in distance
-$mi$ from the main diagonal get marked as bad. At most $1/m$ fraction
-of the off diagonal cells get marked as bad.
-See    \figref{grid:p:m}.
+Now consider the smaller grid $\ZZ_m \times \ZZ_m$. The main diagonal of this
+\si{subgrid} is bad -- it corresponds to a collision. One can think about
+the last step, of computing $h_{a,b}(x) = f_{a,b}(x) \bmod m$, as tiling
+the larger grid, by the smaller grid in the natural way. Any diagonal
+that is in distance $mi$ from the main diagonal get marked as bad. At
+most $1/m$ fraction of the off diagonal cells get marked as bad.  See
+\figref{grid:p:m}.
 
 As such, the random mapping of $(x,y)$ to $(x',y')$ causes a collision
 only if we map the pair to a badly marked pair, \chgY{and the probability

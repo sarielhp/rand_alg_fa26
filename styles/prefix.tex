@@ -7,6 +7,19 @@
 %   - prefix_latex.tex for standard LaTeX / XeLaTeX / LuaLaTeX PDF builds
 %-----------------------------------------------------------------------------
 
+% Include only once - second time... igmore
+\ifdefined\PrefixLoadedAlready
+  \endinput
+\fi
+
+\def\PrefixLoadedAlready{}
+
+
+\makeatletter
+\def\input@path{{styles/}}
+\makeatother
+
+
 \makeatletter
 \def\LWR@isWarp{0}%
 \ifx\warpMode\undefined\else\def\LWR@isWarp{1}\fi
