@@ -46,17 +46,17 @@ $\rho(x,y) = \Prob{(X = x) \cap (Y = y) }$. Observe that
   \frac{\rho(x,y)}{\sum_{z} \rho(z, y)}
 \end{align*}
 and
-\begin{math}
-    \ds \Ex{ X \sep{ Y = y}}%
+\begin{equation*}
+    \Ex{ X \sep{ Y = y}}%
     =%
     \sum_{x} x \Prob{ X = x \sep{Y = y}} = \frac{\sum_x {} x \rho(x,
        y)}{\sum_z \rho(z, y)} = \frac{\sum_x {} x \rho(x,
        y)}{\Prob{Y=y}}.
-\end{math}
+\end{equation*}
 
-The \emph{conditional expectation} \index{conditional expectation} of
-$X$ given $Y$, is the random variable $\Ex{X \sep{Y}}$ is the random
-variable $f(y ) =\Ex{X \sep{Y = y}}$.
+The \emph{conditional expectation}\index{conditional expectation} of $X$
+given $Y$, denoted by $\Ex{X \sep{Y}}$, is the random variable $f(Y)$,
+where $f(y) = \Ex{X \sep{Y = y}}$.
 
 \medskip%
 \noindent%
@@ -79,11 +79,18 @@ As a reminder, for any two random variables $X$ and $Y$, we have
 
 \subsection{Martingales}
 
-Intuitively, martingales are a sequence of random variables describing
-a process, where the only thing that matters at the beginning of the
-$i$\th step is where the process was in the end of the $(i-1)$\th
-step. That is, it does not matter how the process arrived to a certain
-state, only that it is currently at this state.
+Intuitively, a martingale is a sequence of random variables describing
+a ``fair game'': given the entire history up to the end of the
+$(i-1)$\th step, the conditional expectation of the process at the
+$i$\th step is equal to its current value. That is, the process has
+zero expected drift, regardless of how it arrived at its current state.%
+
+Intuitively (but not strictly correctly), the only thing that matters at
+the beginning of the $i$\th step is where the process was in the end of
+the $(i-1)$\th step. That is, it does not matter how the process arrived
+to a certain state, only that it is currently at this state.
+
+
 
 \begin{defn}
     A sequence of random variables $X_0, X_1, \ldots, $ is said to be
@@ -92,8 +99,10 @@ state, only that it is currently at this state.
 \end{defn}
 
 In particular, note that for a martingale, we have
-$\ExCond{X_i }{X_0, \ldots, X_{i-1}} = \ExCond{X_i }{X_{i-1}} =
-X_{i-1}$.
+$\ExCond{X_i }{X_{i-1}} = X_{i-1}$ as well (by the tower property).
+However, satisfying $\ExCond{X_i}{X_{i-1}} = X_{i-1}$ alone is strictly
+weaker than being a martingale, as the expectation must remain unbiased
+conditioned on the entire history $X_0, \ldots, X_{i-1}$.%
 
 
 \begin{lemma}
@@ -124,7 +133,7 @@ X_{i-1}$.
 \begin{example}
     Consider the sum of money after participating in a sequence of
     fair bets. That is, let $X_i$ be the amount of money a gambler has
-    after playing $i$ rounds. In each round it either gains one
+    after playing $i$ rounds. In each round the gambler either gains one
     dollar, or loses one dollar (with equal probability). Clearly, we
     have
     \begin{equation*}
@@ -145,17 +154,19 @@ X_{i-1}$.
 \begin{example}
     Let $Y_i = X_i^2 - i$, where $X_i$ is as defined in the above
     example. We claim that $Y_0, Y_1, \ldots$ is a martingale. Let us
-    verify that this is true. Given $Y_{i-1}$, we have $Y_{i-1} =
-    X_{i-1}^2 - (i-1)$. We have that
+    verify that this is true. Conditioned on the history
+    $X_0, \ldots, X_{i-1}$ (which determines $Y_0, \ldots, Y_{i-1}$),
+    we have that
     \begin{align*}
-        \Ex{Y_{i} \sep{ Y_{i-1}}}%
+        \Ex{Y_{i} \sep{ X_0, \ldots, X_{i-1}}}%
         &=%
-        \Ex{X_i^2 - i \sep{ X_{i-1}^2 - (i-1) }}%
-        =%
-        \frac{1}{2} \pth{ \pth[]{X_{i-1}+1}^2 - i) } + \frac{1}{2}
-        \pth{ \pth{X_{i-1}-1}^2 - i }\\
+        \Ex{X_i^2 - i \sep{ X_0, \ldots, X_{i-1}}}%
+        \\
         &=%
-        X_{i-1}^2 +1 - i%
+        \frac{1}{2} \pth{ (X_{i-1}+1)^2 - i } + \frac{1}{2}
+        \pth{ (X_{i-1}-1)^2 - i }\\
+        &=%
+        X_{i-1}^2 + 1 - i%
         =%
         X_{i-1}^2 - (i-1)%
         =%
@@ -166,7 +177,7 @@ X_{i-1}$.
 
 
 \begin{example}
-    Let $U$ be a urn with $b$ black balls, and $w$ white balls. We
+    Let $U$ be an urn with $b$ black balls, and $w$ white balls. We
     repeatedly select a ball and replace it by $c$ balls having the
     same color. Let $X_i$ be the fraction of black balls after the
     first $i$ trials.  We claim that the sequence $X_0, X_1, \ldots$
@@ -177,12 +188,18 @@ X_{i-1}$.
     \begin{align*}
         \Ex{ X_i \sep{X_{i-1}, \ldots, X_0}}%
         &=%
-        X_{i-1} \cdot \frac{(c-1) + X_{i-1}n_{i-1}}{n_{i}} + (1 -
-        X_{i-1}) \cdot \frac{X_{i-1}n_{i-1}}{n_{i}}%
+        X_{i-1} \cdot \frac{(c-1) + X_{i-1}n_{i-1}}{n_{i}}%
+        \\& \phantom{=}%
+        + (1 - X_{i-1}) \cdot \frac{X_{i-1}n_{i-1}}{n_{i}}%
         \\&%
         =%
-        \frac{X_{i-1}(c-1) + X_{i-1}n_{i-1}}{n_i} = X_{i-1} \frac{c-1
-           + n_{i-1}}{n_i} = X_{i-1} \frac{n_{i}}{n_i} = X_{i-1}.
+        \frac{X_{i-1}(c-1) + X_{i-1}n_{i-1}}{n_i}
+        \\&%
+        =%
+        X_{i-1} \frac{c-1 + n_{i-1}}{n_i}
+        \\&%
+        =%
+        X_{i-1} \frac{n_{i}}{n_i} = X_{i-1}.
     \end{align*}
 \end{example}
 
@@ -207,19 +224,19 @@ X_{i-1}$.
     \begin{align*}
       X_i = \ExCond{ f(\G)}{I_1,\ldots, I_i},
     \end{align*}
-    while $X_0 = \Ex{f(G)}$ and $X_m = f(G)$. This sequence of random
-    variable begin a martingale follows immediately from a theorem
-    that would be described in the next lecture.
+    while $X_0 = \Ex{f(\G)}$ and $X_m = f(\G)$.  That this sequence of
+    random variables is a martingale follows immediately from a theorem
+    that will be described in the next lecture.
 
     One can define similarly a \emphic{vertex exposure
-       martingale}{martingale!vertex exposure}, where the graph $G_i$
-    is the graph induced on the first $i$ vertices of the random graph
+       martingale}{martingale!vertex exposure}, where $X_i = \ExCond{f(\G)}{G_i}$,
+    and $G_i$ is the graph induced on the first $i$ vertices of the random graph
     $\G$.
 \end{example}
 
 
 \begin{example}[The sheep of Mabinogion]
-    The following is taken from medieval Welsh manuscript based on
+    The following is taken from a medieval Welsh manuscript based on
     Celtic mythology:
     \begin{quote}
         ``And he came towards a valley, through which ran a river; and
@@ -235,35 +252,35 @@ X_{i-1}$.
 
     More concretely, we start at time $0$ with $w_0$ white sheep, and
     $b_0$ black sheep. At every iteration, a random sheep is picked,
-    it bleats, and a sheep of the other color turns to this color. the
+    it bleats, and a sheep of the other color turns to this color. The
     game stops as soon as all the sheep have the same color. No sheep
-    dies or get born during the game.  Let $X_i$ be the expected
+    dies or is born during the game.  Let $X_i$ be the expected
     number of black sheep in the end of the game, after the $i$\th
-    iteration. For reasons that we would see later on, this
+    iteration. For reasons that we will see later on, this
     sequence is a martingale.
 
     The original question is somewhat more interesting -- if we are
-    allowed to take a way sheep in the end of each iteration, what is
+    allowed to take away a sheep in the end of each iteration, what is
     the optimal strategy to maximize $X_i$?
 \end{example}
 
 \subsubsection{Azuma's inequality}
+\mbox{}\par
+A sequence of random variables $X_0, X_1, \ldots$ has
+\emphOnly{bounded differences}\index{bounded differences}
+if $|X_i - X_{i-1}| \leq \Delta$, for some $\Delta$.
 
-A sequence of random variables $X_0, X_1, \ldots$ has \emphOnly{bounded
-   differences}\index{bounded
-   differences} if $\cardin{X_i - X_{i-1}} \leq \Delta$, for some
-$\Delta$.
-
-\begin{theorem}[Azuma's Inequality.]
+\begin{theorem}[Azuma's Inequality]
+    \thmlab{azuma}%
     Let $ X_0, \ldots, X_m$ be a martingale with $X_0 =0$, and
     \begin{equation*}
         |X_{i+1}-X_i| \leq 1, \qquad\text{ for }\quad i=0, \ldots, m-1.
     \end{equation*}
     For any $\lambda > 0$, we have
-    \begin{math}\ds
-        \Bigg.  \Prob{X_m > \lambda \sqrt{m}} <
+    \begin{equation*}
+        \Prob{X_m > \lambda \sqrt{m}} <
         \exp\pth{-\lambda^2/2}.
-    \end{math}
+    \end{equation*}
 \end{theorem}
 \begin{proof}
     Let $\alpha = \lambda / \sqrt{m}$. Let $Y_i = X_i - X_{i-1}$, so
@@ -287,8 +304,10 @@ $\Delta$.
       \allowdisplaybreaks%
       \Ex{ e^{\alpha Y_i} \sep{ X_0, \ldots, X_{i-1}}}
       &\leq %
-        \Ex{ h( Y_i) \sep{ X_0, \ldots, X_{i-1}}} = h \pth{ \Ex{ Y_i
-        \sep{ X_0, \ldots, X_{i-1}}}}%
+        \Ex{ h( Y_i) \sep{ X_0, \ldots, X_{i-1}}}
+      \\&%
+        =%
+        h \pth{ \Ex{ Y_i \sep{ X_0, \ldots, X_{i-1}}}}%
       \\
       &%
         =%
@@ -297,80 +316,57 @@ $\Delta$.
         \frac{e^{\alpha} +e^{-\alpha}}{2}%
       \\&%
       =%
-      \frac{(1+ \alpha + \frac{\alpha^2}{2!} + \frac{\alpha^3}{3!}+
-      \cdots) + (1 -\alpha + \frac{\alpha^2}{2!} -
-      \frac{\alpha^3}{3!}+ \cdots)}{2}%
-      \\ &%
-           =%
-           1 + \frac{\alpha^2}{2} + \frac{\alpha^4}{4!} +
-           \frac{\alpha^6}{6!} + \cdots%
-      \\ &%
-           \leq%
-           1 + \frac{1}{1!}  \pth{\frac{\alpha^2}{2}} + \frac{1}{2!}
-           \pth{\frac{\alpha^2}{2}}^2 + \frac{1}{3!}
-           \pth{\frac{\alpha^2}{2}}^3 + \cdots%
-           =%
-           \exp\pth{\alpha^2/2},
+      \frac{1}{2} \sum_{k=0}^\infty \frac{\alpha^k + (-\alpha)^k}{k!}
+      =%
+      \sum_{k=0}^\infty \frac{\alpha^{2k}}{(2k)!}%
+      \\&%
+      \leq%
+      \sum_{k=0}^\infty \frac{1}{k!} \pth{\frac{\alpha^2}{2}}^k
+      =%
+      \exp\pth{\alpha^2/2},
     \end{align*}
     as $(2i)! \geq 2^i {}i!$.
 
-    We have that
-    \begin{equation*}
-        \tau%
-        =%
-        \Ex{e^{\alpha X_m}}%
-        =%
-        \Ex{ \Bigl.\smash{\prod_{i=1}^{m} e^{\alpha Y_i}}}
-        =
-        \Ex{ \Bigl.\smash{g(X_0, \ldots, X_{m-1})
-              e^{\alpha Y_m}}},
-        \qquad\text{where}\qquad
-        g(X_0, \ldots, X_{m-1}) = \prod_{i=1}^{m-1} e^{\alpha Y_i}.
-    \end{equation*}
-
-    By the martingale property, we have that
-    \begin{equation*}
-        \ExCond{Y_i}{X_0,\ldots, X_{m-1}}
-        =%
-        \ExCond{Y_i}{g(X_0, \ldots, X_{m-1})}
-        = 0.
-    \end{equation*}
-    By the above, this implies that
-    \begin{math}
-        \ExCond{ \smash{e^{\alpha Y_i}} }{ g(X_0, \ldots, X_{i-1}) }
-        \leq \exp\pth{\alpha^2/2}.
-    \end{math}
-    Hence, by \lemref{expectations:product}, we have that
+    Let $\tau = \Ex{e^{\alpha X_m}} = \Ex{\prod_{i=1}^{m} e^{\alpha Y_i}}$.
+    By the law of total expectation, conditioning on $X_0, \ldots, X_{m-1}$ yields
     \begin{align*}
-      \tau
-      =%
-      \Ex{e^{\alpha X_m}}%
-      &=%
-        \Ex{ \Bigl.\smash{\prod_{i=1}^{m} e^{\alpha Y_i}}}%
-        =%
-        \Ex{ g(X_0,\ldots, X_{m-1})  e^{\alpha
-        Y_m}} %
-      \\[0.3cm]%
-      &%
-        =%
-        \Ex{ \biggl. g(X_0,\ldots, X_{m-1})
-        \ExCond{e^{\alpha Y_m}}{g(X_0, \ldots, X_{m-1})} }
-        \leq%
-        e^{\alpha^2/2} \Ex{ g(X_0, \ldots, X_{m-1})}
-      \\[0.3cm]%
-      &%
-        \leq%
-        \exp\pth[]{m \alpha^2/2}.
+        \tau
+        &=
+        \Ex{ \ExCond{ \prod_{i=1}^m e^{\alpha Y_i} }{ X_0, \ldots, X_{m-1} } }
+        \\
+        &=
+        \Ex{ \pth{\prod_{i=1}^{m-1} e^{\alpha Y_i}}
+             \ExCond{ e^{\alpha Y_m} }{ X_0, \ldots, X_{m-1} } }.
     \end{align*}
+    Since $\ExCond{Y_m}{X_0, \ldots, X_{m-1}} = 0$, our earlier bound applies to step $m$:
+    \begin{equation*}
+        \ExCond{ e^{\alpha Y_m} }{ X_0, \ldots, X_{m-1} }
+        \leq
+        \exp\pth{\alpha^2/2}.
+    \end{equation*}
+    Therefore,
+    \begin{equation*}
+        \tau
+        \leq
+        e^{\alpha^2/2} \Ex{ \prod_{i=1}^{m-1} e^{\alpha Y_i} }.
+    \end{equation*}
+    Repeating this conditioning inductively for each factor $i = m-1, \ldots, 1$, we obtain
+    \begin{equation*}
+        \tau
+        \leq
+        \exp\pth{m \alpha^2 / 2}.
+    \end{equation*}
 
     Therefore, by Markov's inequality, we have
     \begin{align*}
         \Prob{ X_m > \lambda \sqrt{m}}%
         &=%
         \Prob{ e^{\alpha X_m} > e^{\alpha \lambda \sqrt{m}} } %
-        =%
-        \frac{\Ex{e^{\alpha X_m}}}{e^{\alpha \lambda \sqrt{m}}} =
-        e^{m \alpha^2/2 -\alpha \lambda \sqrt{m}}
+        \\ &%
+        \leq%
+        \frac{\Ex{e^{\alpha X_m}}}{e^{\alpha \lambda \sqrt{m}}}%
+        \leq
+        \exp\pth{m \alpha^2/2 -\alpha \lambda \sqrt{m}}
         \\ &%
         = \exp \pth{m
            (\lambda / \sqrt{m})^2/2 - (\lambda / \sqrt{m}) \lambda
@@ -382,31 +378,36 @@ $\Delta$.
 Here is an alternative form.
 
 \begin{theorem}[Azuma's Inequality]
+    \thmlab{azuma:two:sided}%
     Let $ X_0, \ldots, X_m$ be a martingale sequence such
-    that and $|X_{i+1}-X_i| \leq 1$ for all $0 \leq i < m$.
+    that $|X_{i+1}-X_i| \leq 1$ for all $0 \leq i < m$.
     Let $\lambda > 0$ be arbitrary. Then
-    \begin{math}
-        \ds%
-        \biggl.  \Prob{\cardin{X_m - X_0} > \lambda \sqrt{m}} <
+    \begin{equation*}
+        \Prob{\cardin{X_m - X_0} > \lambda \sqrt{m}} <
         2\exp\pth{-\lambda^2/2}.
-    \end{math}
+    \end{equation*}
 \end{theorem}
 
 
 \begin{example}
     Let $\chi(H)$ be the chromatic number of a graph
-    $H$. What is chromatic number of a random graph? How
-    does this random variable behaves?
+    $H$. What is the chromatic number of a random graph? How
+    does this random variable behave?
 
     Consider the vertex exposure martingale, and let $X_i =
-    \Ex{\chi(G) \sep{ G_i}}$. Again, without proving it, we claim
-    that $X_0, \ldots, X_n=X$ is a martingale, and as such, we have:
-    $\Prob{\cardin{X_n - X_0} > \lambda \sqrt{n}} \leq
-    e^{-\lambda^2/2}$. However, $X_0 = \Ex{ \chi(G) }$, and $X_n =
-    \Ex{ \chi(G) \sep{ G_n}} = \chi(G)$.  Thus,
+    \ExCond{\chi(G)}{G_i}$. Note that exposing the edges incident to vertex $i$
+    changes the chromatic number by at most $1$, so $|X_i - X_{i-1}| \leq 1$.
+    Again, without proving it, we claim
+    that $X_0, \ldots, X_n$ is a martingale, and as such, by Azuma's inequality,
+    \begin{equation*}
+        \Prob{\cardin{X_n - X_0} > \lambda \sqrt{n}} <
+        2\exp\pth{-\lambda^2/2}.
+    \end{equation*}
+    However, $X_0 = \Ex{ \chi(G) }$, and $X_n =
+    \ExCond{\chi(G)}{G_n} = \chi(G)$.  Thus,
     \begin{align*}
-    \Prob{\cardin{\chi(G) - \Ex{\chi(G)}} > \lambda \sqrt{n}} \leq
-    e^{-\lambda^2/2}.
+    \Prob{\cardin{\chi(G) - \Ex{\chi(G)}} > \lambda \sqrt{n}} <
+    2\exp\pth{-\lambda^2/2}.
     \end{align*}
     Namely, the chromatic number of a random graph is highly
     concentrated! And we do not even (need to) know what is the
