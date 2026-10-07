@@ -3,12 +3,14 @@
         \index{Chernoff inequality}%
         \index{Chernoff inequality!simplified form}%
         %
-        Let $X_1, \ldots, X_n$ be $n$ independent\newline
-        variables, where $\Prob{ \bigl. X_i = 1 } =p_i$
-        and $\Prob{ \bigl. X_i = 0 } =q_i = 1-p_i$,
-        for all $i$.  Let $X = \sum_{i=1}^{b} X_i$.
-        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta > 0$, we
-        have
+        Let $X_1, \ldots, X_n$ be $n$ independent variables, where
+        \begin{equation*}
+            \Prob{ \bigl. X_i = 1 } =p_i
+            \qquad\text{and}\qquad
+            \Prob{ \bigl. X_i = 0 } =q_i = 1-p,
+        \end{equation*}
+        for all $i$.  Let $X = \sum_{i=1}^{n} X_i$ and
+        $\mu = \Ex{\bigl. X} = \sum_i p_i$.  For any $\delta > 0$, we have
         \begin{equation*}
             \Prob{ \bigl. X > (1+\delta)\mu } < \pth{
                \NiceFrac{e^\delta}{(1+\delta)^{1+\delta}}}^\mu.
@@ -28,11 +30,11 @@
         %     \eqlab{large}
         %     \\
         %     %
-        %     \text{and} \qquad\qquad %
-        %     &\delta \geq e^2%
-        %     &&\Prob{\Bigl. X > (1+\delta)\mu } < \exp \pth{ \Bigl. -
-        %        \frac{\mu \delta \ln \delta}{2}}.%
-        %     \eqlab{v:large}
+        %                %     \text{and} \qquad\qquad %
+        %                %     &\delta \geq e^2%
+        %                %     &&\Prob{\Bigl. X > (1+\delta)\mu } < \exp \pth{ \Bigl. -
+        %        \frac{\mu \delta \ln \delta}{2}}.
+        %                %     \eqlab{v:large}
         %     %
         % \end{align}
     \end{theorem}%
