@@ -12,26 +12,26 @@
 
 
 \QuotePExt{%
-   The Peace of Olivia. How sweat and peaceful it sounds! There the
+   The Peace of Olivia. How sweet and peaceful it sounds! There the
    great powers noticed for the first time that the land of the Poles
    lends itself admirably to partition.%
 }%
 {The tin drum}%
-{Gunter Grass}%
+{G{\"u}nter Grass}%
 
 \bigskip%
 \noindent%
 Consider the problem of throwing $n$ balls into $n$ bins. It is well
 known that the maximum load is $\Theta( \log n / \log \log n)$ with
 high probability. Here we show that if one is allowed to pick $d$ bins
-for each ball, and throw it into the bin that contains less balls,
+for each ball, and throw it into the bin that contains fewer balls,
 then the maximum load of a bin decreases to
 $\Theta( \log \log n/ \log d)$. A variant of this approach leads to
-maximum load $\Theta( (\log \log n)/ d)$.
+a maximum load of $\Theta( (\log \log n)/ d)$.
 
-As a concrete example, for $n=10^9$, this leads to maximum load $13$
-in the regular case, compared to maximum load of $4$, with only
-two-choices -- see \figref{n:bins:2:choices}.
+As a concrete example, for $n=10^9$, this leads to a maximum load of $13$
+in the regular case, compared to a maximum load of $4$ with only
+two choices---see \figref{n:bins:2:choices}.
 
 
 
@@ -45,11 +45,11 @@ two-choices -- see \figref{n:bins:2:choices}.
 \subsection{The game}
 
 Consider throwing $n$ balls into $n$ bins. Every bin can contain a
-single ball. As such, as we throw the balls, some balls would be
+single ball. As such, as we throw the balls, some balls are
 rejected because their assigned bin already contains a ball. We
 collect all the rejected balls, and throw them again into a second row
-of $n$ bins. We repeat this process till all the balls had found a
-good and loving home (i.e., an empty bin). How many rows one needs
+of $n$ bins. We repeat this process until all the balls have found a
+good and loving home (i.e., an empty bin). How many rows does one need
 before this process is completed?
 
 \subsection{Analysis}
@@ -58,8 +58,8 @@ before this process is completed?
 \begin{lemma}
     \lemlab{strong:conc}%
     %
-    Let $m = \alpha n$ balls be thrown into $n$ bins.  Let $\Yend$ the
-    number of bins that are not empty in the end of the process (here,
+    Let $m = \alpha n$ balls be thrown into $n$ bins.  Let $\Yend$ be the
+    number of bins that are not empty at the end of the process (here,
     we allow more than one ball into a bin).
     \begin{compactenumA}
         \item For $\alpha \in (0,1]$, we have
@@ -86,24 +86,26 @@ before this process is completed?
     \end{compactenumA}
 \end{lemma}
 \begin{proof}
-    (A) The probability of the $i$\th ball to be the first ball in its
-    bin, is $\pth{ 1- \frac{1}{n}}^{i-1}$. To see this we use backward
-    analysis -- throw in the $i$\th ball, and now throw in the earlier
+    (A) The probability of the $i$\th ball being the first ball in its
+    bin is $\pth{ 1- \frac{1}{n}}^{i-1}$. To see this we use backward
+    analysis---throw in the $i$\th ball, and now throw in the earlier
     $i-1$ balls. The probability that none of the earlier balls hit
     the same bin as the $i$\th ball is as stated. Now, the expected
     number of non-empty bins is the number of balls that are first in
     their bins, which in turn is
     \begin{align*}
       \mu%
-      =%
+      &=%
       \sum_{i=0}^{m-1} \pth{ 1- \frac{1}{n}}^{i}
       \geq%
       m (1-1/n)^{m-1}
+      \\
       &\geq%
         (m-\alpha) (1-1/n)^{m-\alpha}
-      \\&
+%      \\&
       =%
       (m-\alpha) (1-1/n)^{\alpha(n-1)}
+      \\&
       \geq %
       (m-\alpha) \exp( -\alpha)
       \\&
@@ -112,11 +114,12 @@ before this process is completed?
       =%
       \alpha n  - \alpha^2 n
       -\alpha + \alpha^2
+      \\&
       \geq
-      \frac{m-\alpha}{e},
+      \alpha n - \alpha^2 n - 1,
     \end{align*}
     using $m = \alpha n \leq n$, and $(1-1/n)^{n-1} \geq 1/e$, see
-    \lemref{approximation:basic}.
+    \lemref{approximation:basic}.%
 
     \medskip%
     (B) We repeat the above analysis from the point of view of the
@@ -151,16 +154,15 @@ before this process is completed?
 \smallskip%
 
 \begin{remark_unnumbered}
-    The reader might be confused by cases (A) and (B) of
-    \lemref{strong:conc} for $\alpha =1$, as the two lower bounds are
-    different. Observe that (A) is loose if $\alpha$ is relatively
-    large and close to $1$.
+    Cases (A) and (B) of \lemref{strong:conc} for $\alpha =1$, are a bit
+    confusing, as the two lower bounds are different. Observe that (A) is
+    loose if $\alpha$ is relatively large and close to $1$.
 \end{remark_unnumbered}
 
 \medskip%
 \noindent%
 \textbf{Back to the problem.}  Let $\alpha_1=1$ and $n_1 = \alpha_1n$.
-For $i >1$, inductively, assume that numbers of balls being thrown in
+For $i >1$, inductively, assume that the number of balls being thrown in
 the $i$\th round is
 \begin{equation*}
     n_i = \alpha_i n + O( \sqrt{ \alpha_{i-1} n \log n} ). 
@@ -170,8 +172,8 @@ stored in the $i$\th row is
 \begin{equation*}
     s_i = n_i  \exp( -\alpha_i) \pm O(\sqrt{n_i  \log n}).
 \end{equation*}
-As such, as long as the first term is significantly large than the
-second therm, we have that
+As such, as long as the first term is significantly larger than the
+second term, we have that
 $s_i = n \alpha_i \exp(-\alpha_i) (1 \pm o(1))$. For the time being,
 let us ignore the $o(1)$ term. We have that
 \begin{equation*}
@@ -183,7 +185,10 @@ let us ignore the $o(1)$ term. We have that
     =%
     n \alpha_i^2,
 \end{equation*}
-since $\exp(-\alpha_i) \geq 1-\alpha_i$.
+since $\exp(-\alpha_i) \geq 1-\alpha_i$.  Note that
+$s_i\geq n_i \exp(-\alpha_i)$ via \lemref{strong:conc} (A), so
+$n_{i+1} = n_i - s_i \leq n\alpha_i^2$ serves as an upper bound on the number of
+unplaced balls carried forward.
 
 
 \begin{defn}
@@ -193,7 +198,7 @@ since $\exp(-\alpha_i) \geq 1-\alpha_i$.
 \begin{observation}
     Consider the sequence $\alpha_1 =1$, $c = \alpha_2=1-1/e$, and
     $\alpha_{i+1} = \alpha_i^2$, for $i>2$. We have that
-    $\alpha_{i+1} = c^{2^{i-2}}$. In particular, for
+    $\alpha_i = c^{2^{i-2}}$. In particular, for
     \begin{equation*}
         \Delta%
         =%
@@ -201,20 +206,19 @@ since $\exp(-\alpha_i) \geq 1-\alpha_i$.
         =%
         3 + \lg \frac{\lg n}{\lg (1/c)}
         =
-        3 + \lg \lg n  - \lg\lg \frac{1}{1-1/e}
-        \leq 3 + \lg \lg n.
+        3 + \lg \lg n  - \lg\lg \frac{1}{1-1/e},
     \end{equation*}
-    we have that $\alpha_\Delta = c^{2^{\Delta-2}} < 1/n$.
+    we have that $\alpha_\Delta = c^{2^{\Delta-2}} < 1/n$.%
 \end{observation}
 
 The above observation almost implies that we need $\Delta$ rows. The
 problem is that the above calculations (i.e., the high probability
-guarantee in \lemref{strong:conc}) breaks down when $n_i = O(\log n)$
+guarantee in \lemref{strong:conc}) break down when $n_i = O(\log n)$
 -- that is, when $\alpha_i = O((\log n) / n)$. However, if one throws
 in $O( \log n)$ balls into $n$ bins, the probability of a single
 collision is at most $O( (\log n)^2/n)$. In particular, this implies
-that after roughly additional $c$ rows, the probability of any ball
-left is $\leq 1/n^c$.
+that after roughly $c$ additional rows, the probability of any ball
+being left is $\leq 1/n^c$.
 
 The above argumentation, done more carefully, implies the following --
 we omit the details because (essentially) the same analysis for a more
@@ -223,8 +227,8 @@ the same argumentation).
 
 \begin{theorem}
     Consider the process of throwing $n$ balls into $n$ bins in
-    several rounds. Here, a ball that can not be placed in a round,
-    because their chosen bin is already occupied, are promoted to the
+    several rounds. Here, any ball that cannot be placed in a round,
+    because its chosen bin is already occupied, is promoted to the
     next round. The next round throws all the rejected balls from the
     previous round into a new row of $n$ empty bins.  This process,
     with high probability, ends after $M = \lg \lg n +\Theta(1)$
@@ -268,8 +272,8 @@ the same argumentation).
     %
     Let $m = \alpha n$ balls be thrown into $n$ bins, with $d$ rows,
     where $\alpha >0$. Here every bin can contain only a single ball,
-    and if inserting the ball into  $i$\th row failed, then we throw
-    it in the next row, and so on, till it finds an empty bin, or it is
+    and if inserting the ball into the $i$\th row failed, then we throw
+    it in the next row, and so on, until it finds an empty bin, or it is
     rejected because it failed on the $d$\th row. Let $Y(d,n, m)$ be
     the number of balls that did not get stored in this matrix of
     bins. We have
@@ -278,12 +282,12 @@ the same argumentation).
         $Y(d,n, \alpha n ) \leq n \alpha^{(2^{d} + 1)/2}$, with high
         probability.
 
-        \item \itemlab{strong:c:3:B} We
+        \item \itemlab{strong:c:3:B} We have
         $\Ex{\bigl. Y(d,n, dn)} = O( n \log d) $.
 
         \item For a constant $c>1$, we have
-        $\Ex{\bigl. Y(d,n, c n \log d )} = n/e^{-d/2} $, assuming $d$
-        is sufficiently large.
+        $\Ex{\bigl. Y(d,n, c n \log d )} \leq n/e^{d/2}$, assuming $d$ is
+        sufficiently large.
 
     \end{compactenumA}
     
@@ -294,7 +298,7 @@ the same argumentation).
     $s_1 = n\alpha \exp(-\alpha)$ balls are placed in the first
     row. As such, in expectation
     $n_2 = n \alpha (1 - \exp( -\alpha)) \leq n\alpha^2$ balls get
-    thrown into the second row. Using Chenroff inequality, we get that
+    thrown into the second row. Using Chernoff's inequality, we get that
     $n_2 \leq 2 \alpha^{2}n$, with high probability. Setting
     $\gamma_1 = \alpha$, and $\gamma_i = 2 \gamma_{i-1}^2$, we get the
     claim via 
@@ -303,9 +307,9 @@ the same argumentation).
     
     (B) As long as we throw $\Omega( n \log d)$ balls into a row, we
     expect by \lemref{strong:conc} that at least $n(1-1/d^{O(1)})$
-    balls to get stored in this row. As such, let $D = O(\log d )$,
-    and observe that the first $d-D$ rows in expectation contains
-    $n(d-D)(1-1/d^{O(1)})$ balls. This implies that only $O(D n)$ are
+    balls get stored in this row. As such, let $D = O(\log d )$,
+    and observe that the first $d-D$ rows in expectation contain
+    $n(d-D)(1-1/d^{O(1)})$ balls. This implies that only $O(D n)$ balls are
     not stored in these first $d-D$ rows, which implies the claim.
 
 
@@ -314,7 +318,7 @@ the same argumentation).
         D= \ceil{(c \log d-1)/(1-1/e)} + 1 = O(\log d),
     \end{equation*}
     and the second group is the remaining rows. As long as the number
-    of balls arriving to a row is larger than $n$, we expect at least
+    of balls arriving at a row is larger than $n$, we expect at least
     $n(1-1/e)$ of them to be stored in this row. As such, after the
     first $D$ rows, we expect the number of remaining balls to be
     $\leq n$. Indeed, if we have $i$ such rows, then the expected
@@ -327,11 +331,11 @@ the same argumentation).
         cn \log d - i n(1-1/e) \leq n \implies i (1-1/e) \geq c \log
         d-1 \implies i \geq (c \log d-1)/(1-1/e) \geq D - 1.
     \end{math}    
-    As such, $n_D \leq n$, for $i \geq D$.
+    As such, $n_i \leq n$, for $i \geq D$.
     
     The same argumentation implies that the number of balls arriving
-    to the $D+i$ row, in expectation, is at most $n/e^i$. In
-    particular, we get that the number of balls failed to be placed is
+    at the $(D+i)$\th row, in expectation, is at most $n/e^i$. In
+    particular, we get that the number of balls that fail to be placed is
     at most $n/e^{d-D} \leq n/e^{d/2}$.~
 \end{proof}
 
@@ -344,17 +348,16 @@ the same argumentation).
 
 \paragraph*{Making $d$ choices.}
 Let us throw $n$ balls into $n$ bins. For each ball, we first pick
-randomly $d\geq 2$ bins, and place the ball in the bin (among these
-$d$ bins) that currently contains the smallest number of balls (here,
-a bin might contain an arbitrary number of balls). If there are
-several bins with the same minimum number of bins, we resolve it
-arbitrarily.
+randomly $d\geq 2$ bins, and place the ball in the bin (among these $d$
+bins) that currently contains the smallest number of balls (here, a bin
+might contain an arbitrary number of balls). If there are several bins
+with the same minimum load, we resolve it arbitrarily.
 
 Here, we will show the surprising result that the maximum number of
 balls in any bin is bounded by
-$O\bigl( \tfrac{\log \log n}{\log d} \bigr)$ with high probability in
+$O\bigl( \tfrac{\log \log n}{\log d} \bigr)$ with high probability at
 the end of this process. For $d=1$, which is the regular balls into
-bins setting, we already seen that this quantity is
+bins setting, we have already seen that this quantity is
 $\Theta\bigl( \tfrac{\log n}{ \log \log n}\bigr)$, so this result is
 quite surprising.
 
@@ -365,7 +368,7 @@ quite surprising.
 
 \begin{defn}
     The \emphOnly{load}\index{load} of a bin is the number of balls in it. The
-    \emphOnly{height}\index{height} of a ball, is the load of the bin it was inserted
+    \emphOnly{height}\index{height} of a ball is the load of the bin it was inserted
     into, just after it was inserted.
 \end{defn}
 
@@ -393,7 +396,7 @@ Some notations:
 \newcommand{\GoodEvent}{\mathcal{G}}%
 
 
-Let $\BLX{i} = \binsY{i}{n}$ be the number of bins, in the end of the
+Let $\BLX{i} = \binsY{i}{n}$ be the number of bins, at the end of the
 process, that have load $\geq i$.
 
 \begin{observation}
@@ -428,29 +431,29 @@ process, that have load $\geq i$.
 \end{lemma}
 
 \begin{proof}
-    (A) The claim for $i=1,2,3,4$ follows readily from
+    (A) The claim for $i=1,2,3,4$ follows  from
     \obsref{t:c:stupid}.
 
     Let $\BadEvent_i$ be the bad event that $\BLX{i} > \beta_i$, for
-    $i=1,\ldots, n$. The following analysis is conditioned on none of
-    these bad events happening. Let
+    $i=1,\ldots, n$. The following analysis is conditioned on none of these
+    bad events happening. Let
     $\GoodEvent_k = {\cap_{i=1}^k \overline{\BadEvent_i}}$ be the good
     event.  Let $Y_t$ be an indicator variable that is one $\iff$
-    $h(t) \geq i+1$ conditioned on $\GoodEvent_{i-1}$ (for clarity, we
-    omit mentioning this conditioning explicitly). We have that
+    $h(t) \geq i+1$ conditioned on $\GoodEvent_i$ (for clarity, we omit
+    mentioning this conditioning explicitly). We have that
     \begin{equation*}
         \tau_j = \Prob{Y_j=1 } \leq p_i%
         \qquad\text{ for }\qquad%
         p_i=\pth{ \beta_i /n}^d,
     \end{equation*}
-    as all $d$ probes must hit bins of height at least $i$, and there
-    are at most $\beta_i$ such bins. This readily implies that
+    as all $d$ probes must hit bins of load at least $i$, and there are
+    at most $\beta_i$ such bins. This readily implies that
     $\Ex{ \ballsY{i+1}{n} } \leq p_i n$.  The variables
     $Y_1, \ldots, Y_n$ are not independent, but consider a variable
-    $Y_j'$ that is $1$ if $Y_j=1$, or if $Y_j=0$, then $Y_j'$ is $1$
-    with probability $p_i-\tau_j$. Clearly, the variables
-    $Y_1',\ldots, Y_n'$ are independent, and
-    $\sum_i Y_j' \geq \sum_i Y_i$.  For $i < I$, setting
+    $Y_j'$ that is $1$ if $Y_j=1$, or if $Y_j=0$, then $Y_j'$ is $1$ with
+    probability $p_i-\tau_j$. Clearly, the variables $Y_1',\ldots, Y_n'$ are
+    independent, and $\sum_{j=1}^n Y_j' \geq \sum_{j=1}^n Y_j$. For
+    $i < I$, setting
     \begin{equation*}
         \beta_{i+1} = 2np_i  = 2 n \pth{\beta_i/n}^d,        
     \end{equation*}
@@ -461,15 +464,15 @@ process, that have load $\geq i$.
       =%
       \Prob{\BadEvent_{i+1}}%{\cap_{k=1}^i\overline{\BadEvent_{1}}}%
       &=% 
-        \Prob{\ballsY{i+1}{n} > \beta_{i+1}}%
-        \\&
-        =%
-        \Prob{\ballsY{i+1}{n} > 2np_i}
-        \\&
-        \leq 
-        \Prob{ \textstyle{\sum_i} Y_t' > (1+1)n p_i}%
-        \\&
-        % \\&%
+      \Prob{\ballsY{i+1}{n} > \beta_{i+1}}%
+      \\&
+      =%
+      \Prob{\ballsY{i+1}{n} > 2np_i}
+      \\&
+      \leq 
+      \Prob{ \textstyle{\sum_{t=1}^n} Y_t' > (1+1)n p_i}%
+      \\&
+      % \\&%
       \leq%
       \exp( -n p_i/4 )
       =
@@ -477,11 +480,12 @@ process, that have load $\geq i$.
     \end{align*}
 
     (B) We have $\beta_{I+1} \leq 16 c \log n$.  Setting
-    $\Delta = 2e \cdot 16 c \log n$, and conditioning on the good
-    event $\GoodEvent_{1}$, consider the sequence $Y_1', \ldots Y_n'$
-    as above, where the $Y_i$ is the indicator that the $i$\th ball
-    has height $\geq I+1$. Arguing as above, for $Y' = \sum_i Y_i'$,
-    we have $\Ex{Y} \leq \beta_{i+1}$. As such, we have
+    $\Delta = 2e \cdot 16 c \log n$, and conditioning on the good event
+    $\GoodEvent_I$,%
+    ~consider the sequence $Y_1', \ldots, Y_n'$ as above, where $Y_t$ is
+    the indicator that the $t$\th ball has height $\geq I+1$. Arguing as
+    above, for $Y' = \sum_{t=1}^n Y_t'$, we have
+    $\Ex{Y'} \leq \beta_{I+1}$. As such, we have
     \begin{equation*}
         \Prob{\BLX{I+1} > \Delta}
         \leq%
@@ -505,10 +509,12 @@ process, that have load $\geq i$.
         \Prob{\GoodEvent_{I+1}}%
         =%
         \prod_{\ell=4}^{I+1} \ProbCond{\overline{\BadEvent_{\ell+1}}}{
-           \cap_{k=1}^\ell\overline{\BadEvent_{1}}}
+           {\cap_{k=1}^\ell\overline{\BadEvent_k}}}
         =%
         \prod_i
-        (1-\alpha_i) \geq 1-1/n^{c-1},        
+        (1-\alpha_i)
+        \geq
+        1-1/n^{c-1},        
     \end{equation*}
     since $I \leq n$.
 
@@ -530,7 +536,7 @@ process, that have load $\geq i$.
         =%
         O(1/n^{d-1-\eps}) \ll 1,
     \end{equation*}
-    for $\eps > 0$ an arbitrary constant, and $n$ sufficient large.
+    for $\eps > 0$ an arbitrary constant, and $n$ sufficiently large.
     Using Markov's inequality, we get that
     $q = \Prob{\ballsY{I+1+j}{n} \geq 1} = O(1/n^{d-1-\eps})$. The
     probability that the first $j$ such rounds fail (i.e., that
@@ -567,14 +573,14 @@ process, that have load $\geq i$.
 \begin{theorem}
     When throwing $n$ balls into $n$ bins, with $d$ choices, with
     probability $\geq 1-1/n^{O(1)}$, we have that the maximum load of
-    a bin is $O(1) + \tfrac{\lg \lg n}{\lg d} $
+    a bin is $O(1) + \tfrac{\lg \lg n}{\lg d}$.
 \end{theorem}
 \begin{proof}
     By \lemref{how:betas:behave}, with the desired probability the
     $\beta_i$s bound the load in the bins for $i \leq I$.  By
     \lemref{beta:i:good}, it follows that for
     $I = O(1) + \tfrac{\lg \lg n}{\lg d}\Bigr.$, we have that
-    $\beta_I \leq o(\log n)$. Thus giving us the desired bound.
+    {$\beta_{I+1} \leq 16 c \ln n$}.  ~This gives the desired bound.
 \end{proof}
 
 It is not hard to verify that our upper bounds (i.e., $\beta_i$) are
@@ -583,7 +589,7 @@ not too badly off, and as such the maximum load in the worst case is
 
 \begin{theorem}
     When throwing $n$ balls into $n$ bins, with $d$ choices (where the
-    ball is placed with the bin with the least load), with probability
+    ball is placed into the bin with the least load), with probability
     $\geq 1-o(1/n)$, we have that the maximum load of a bin is at
     least $\tfrac{\lg \lg n}{\lg d} - O(1)$.
 \end{theorem}
@@ -593,7 +599,7 @@ not too badly off, and as such the maximum load in the worst case is
 As a direct application, we can use this approach for open hashing,
 where we use two hash functions, and place an element in the bucket of
 the hash table with fewer elements. By the above, this improves the
-worst case search time from $O( \log n / \log \log n)$ to
+worst-case search time from $O( \log n / \log \log n)$ to
 $O( \log \log n)$. This comes at the cost of doubling the time it
 takes to do lookup on average.
 
@@ -609,10 +615,10 @@ takes to do lookup on average.
 Consider throwing a ball into $n$ bins (which might already have some
 balls in them) as follows -- you pick uniformly a number
 $X_i \in \IRX{n/d}$, for $i=1,\ldots, d$. Next, you try locations
-$Y_1, \ldots, Y_d$, where $Y_j = X_j + j(n/d)$, for $j=1,\ldots,
-d$. Let $L_j$ be the load of bin $Y_j$, for $j=1,\ldots, d$, and let
-$L = \min_j L_j$ be the minimum load of any bin. Let $\tau$ be the
-minimum index such that $L_j = L$. We throw the ball into $Y_\tau$.
+$Y_1, \ldots, Y_d$, where $Y_j = X_j + (j-1)(n/d)$, for $j=1,\ldots, d$.  ~Let
+$L_j$ be the load of bin $Y_j$, for $j=1,\ldots, d$, and let
+$L = \min_j L_j$ be the minimum load of any bin. Let $\tau$ be the minimum
+index such that $L_j = L$. We throw the ball into $Y_\tau$.
 
 What the above scheme does, is to partition the $n$ bins into $d$
 groups each of size $n/d$, placed from left to right. We pick a bin
@@ -631,7 +637,7 @@ The following proof is informal for the sake of simplicity.
     filled. So each row has $n/d$ entries, and there are $d$ rows. We
     can now think about the above algorithm as first trying to place
     the ball in the first row (if there is an empty bin), otherwise,
-    trying the new row and so on. If all the $d$ locations are full,
+    trying the next row and so on. If all the $d$ locations are full,
     in the row filling game we fail to place this ball.  By
     \lemref{strong:conc:3} \itemref{strong:c:3:B}, we have that the
     number of unplaced balls is
@@ -643,14 +649,14 @@ The following proof is informal for the sake of simplicity.
     \end{equation*}
     and the height of these balls is one.
 
-    We now use the same argumentation for balls of height 2 --
-    \lemref{strong:conc:3} (C) implies that at most $dn/e^{-d/2}$
-    balls have height strictly larger than $2$. 
+    Applying the same argumentation for balls of height
+    2---\lemref{strong:conc:3} (C) implies that at most {$dn/e^{d/2}$}
+    balls have height strictly larger than $2$.
 
     \lemref{strong:conc:3} (A) implies that now we can repeat the same
     analysis as the power of two choices, the critical difference is
     that every one of the $d$ groups, behaves like a separate height.
-    Since there are $O( \log \log n)$ maximum height in the regular
+    Since the maximum height is $O( \log \log n)$ in the regular
     analysis, this implies that we get $O( (\log \log n)/d)$ maximum
     load, with high probability.
 \end{proof}
@@ -681,9 +687,9 @@ The following proof is informal for the sake of simplicity.
        \end{tabular}%
     \caption{Simulation of the three schemes described here. This was
     done with $n=1,000,000,000$ balls thrown into $n$ bins. Since
-    $\log \log n$ is so small (i.e., $\approx 3$ in this case, there
-    does not seem to be any reasonable cases where the is a
-    significant differences between $d$-choices and the go-left
+    $\log \log n$ is so small (i.e., $\approx 3$ in this case), there
+    do not seem to be any reasonable cases where there is a
+    significant difference between $d$-choices and the go-left
     variant. In the simulations, the \emph{go-left} variant always has
     a somewhat better distribution, as shown above.}
  \figlab{n:bins:2:choices}
@@ -696,15 +702,15 @@ The following proof is informal for the sake of simplicity.
 
 Interestingly, one can prove that two choices are not really
 necessary. Indeed, consider the variant where the $i$\th ball randomly
-chooses a random location $r_i$. The ball then is placed in the bin
-with least load among the bins $r_i$ and $r_{i-1}$ (the first ball
+chooses a random location $r_i$. The ball is then placed in the bin
+with the least load among the bins $r_i$ and $r_{i-1}$ (the first ball
 inspects only a single bin -- $r_1$). It is not difficult to show that
-the above analysis applies in this settings, and the maximum load is
+the above analysis applies in this setting, and the maximum load is
 $O( \log \log n)$ -- despite making only $n$ choices for $n$
 balls. Intuitively, what is going on is that the power of two choices
 lies in the ability to avoid following a horrible, no good, terrible
 choice, by having an alternative. This alternative choice does not
-have to be quite of the same quality as the original choice - it can
+have to be of quite the same quality as the original choice---it can
 be stolen from the previous ball, etc.
 
 
@@ -724,13 +730,13 @@ load $< \ceil{j/2}$, then the algorithm places the ball in the
 min-load bin among these. Otherwise, the algorithm continues to the
 next iteration.
 
-Experiments shows that on average, this algorithm only probes $1.96$
-bins per ball (thus, making less probes than $2$-choices). In this
-settings, the experiments show that $4$-choices with move left do
-better, but if one use the threshold $< \ceil{j/3}$, then the average
-number of probes is $2.30179$, while having again a better
+Experiments show that on average, this algorithm only probes $1.96$
+bins per ball (thus, making fewer probes than $2$-choices). In this
+setting, the experiments show that $4$-choices with go-left do
+better, but if one uses the threshold $< \ceil{j/3}$, then the average
+number of probes is $2.30179$, while again having a better
 performance. The intuition is that a sequence of really bad choices
-are rare, and one can afford to try harder in such cases to get out of
+is rare, and one can afford to try harder in such cases to get out of
 them.
 
 A theoretical analysis of this variant should be interesting.
@@ -746,15 +752,15 @@ A theoretical analysis of this variant should be interesting.
 
 The multi-row balls into bins (\secref{balls:many:rows}) is from the
 work by Broder and Karlin \cite{bk-mah-90}. The power of two choices
-(\secref{power:2:choices}) is from Azar \etal \cite{abku-ba-90}.
+(\secref{power:2:choices}) is from Azar \etal~\cite{abku-ba-90}.
 
-%Surprisingly, one can improve the load balancing to
-%$O( (\log \log n)/d )$ by breaking the bins into $d$ groups of size
-%$n/d$, choosing the $i$\th bin from these $n/d$ locations, and always
-%placing the ball in the left most bin in case of a tie.
+The restricted $d$ choices structure, the always go-left rule, described
+in \secref{restricted:d:choices}, is due to V{\"{o}}ck{}i{n}g
+\cite{v-hshlb-03}.
 
-The restricted $d$ choices structure, the always go-left rule,
-described in \secref{restricted:d:choices}, is from \cite{v-hshlb-03}.
+The memory-based variant of \secref{a:t:c}, where each ball chooses
+between a fresh random bin and the bin inspected by the previous ball,
+was introduced and analyzed by Mitzenmacher \etal \cite{mps-bbm-02}.
 
 
 
