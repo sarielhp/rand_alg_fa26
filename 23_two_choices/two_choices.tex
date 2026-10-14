@@ -63,7 +63,7 @@ before this process is completed?
     we allow more than one ball into a bin).
     \begin{compactenumA}
         \item For $\alpha \in (0,1]$, we have
-        \begin{math}
+        \begin{equation*}
             \mu%
             =%
             \Ex{\Yend}%
@@ -71,14 +71,16 @@ before this process is completed?
             (m-\alpha) \exp( -\alpha)%
             \geq%
             \alpha n - \alpha^2 n - 1.
-        \end{math}
+        \end{equation*}
         
         \item  If $\alpha \geq 1$, then
-        $\mu = \Ex{\Yend} \geq n\pth{ 1-\exp\pth{ -\alpha }}$.
+        \begin{equation*}
+            \mu = \Ex{\Yend} \geq n\pth{ 1-\exp\pth{ -\alpha }}.
+        \end{equation*}
 
         \item We have
         \begin{math}
-            \Bigl.  \Prob{\bigl.\cardin{\Yend - \mu} > \smash{\sqrt{3
+            \Bigl.  \Prob{\Bigl.\cardin{\Yend - \mu} > \smash{\sqrt{3
                      c m \log n}}} %
             \leq%
             1/n^c.
@@ -376,14 +378,18 @@ quite surprising.
 
 Some notations:
 \begin{compactenumA}
+    \smallskip%
     \item $\beta_i$: An upper bound on the number of bins that have
     load at least $i$ by the end of the process.
     
+    \smallskip%
     \item $h(i)$: The height of the $i$\th ball.
 
+    \smallskip%
     \item $\binsY{i}{t}$: Number of bins with load at least $i$ at
     time $t$.
 
+    \smallskip%
     \item $\ballsY{i}{t}$: Number of balls with height at least $i$ at
     time $t$.
 \end{compactenumA}
@@ -420,11 +426,16 @@ process, that have load $\geq i$.
     $\beta_{I} \geq 16c\ln n$, where $c> 1$ is an arbitrary
     constant. Then, with probability $\geq 1-1/n^c$, we have that
     \begin{compactenumA}
+        \smallskip%
         \item $\BLX{i} \leq \beta_i$, for $i=1,\ldots, I$.
+        \smallskip%
         \item $\BLX{I+1} \leq c' \log n$, for some constant $c'$. %
+
+        \smallskip%
         \item For $j > 0$, and any constant $\eps > 0$, we have
         $\Prob{ \BLX{I+1+j} > 0} \leq O(1/n^{(d-1-\eps)j})$.
 
+        \smallskip%
         \item With probability $\geq 1-1/n^c$, the maximum load of a
         bin is $I+O(c)$.
     \end{compactenumA}
@@ -452,7 +463,17 @@ process, that have load $\geq i$.
     $Y_1, \ldots, Y_n$ are not independent, but consider a variable
     $Y_j'$ that is $1$ if $Y_j=1$, or if $Y_j=0$, then $Y_j'$ is $1$ with
     probability $p_i-\tau_j$. Clearly, the variables $Y_1',\ldots, Y_n'$ are
-    independent, and $\sum_{j=1}^n Y_j' \geq \sum_{j=1}^n Y_j$. For
+    independent, and $\sum_{j=1}^n Y_j' \geq \sum_{j=1}^n Y_j$. Importantly,
+    \begin{equation*}
+        \forall j
+        \qquad
+        \Prob{Y_j =1}
+        =
+        p_i.
+    \end{equation*}
+
+
+    For
     $i < I$, setting
     \begin{equation*}
         \beta_{i+1} = 2np_i  = 2 n \pth{\beta_i/n}^d,        
