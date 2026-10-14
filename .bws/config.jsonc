@@ -1,9 +1,6 @@
 {
   "stack": "latex-review",
-  "reviewed_stack": {
-    "source": "embedded",
-    "sha256": "0007b2b52b5006655d2a78a7439b45619c0df7a3d64dd6c7039bb595f77ef8f5"
-  },
+  "reviewed_stack": {"source":"/home/sariel/.config/bws/stacks/latex-review.json","sha256":"61a8120a0f444d1a6de0e6ca96475376ce4bf7fa827bb798beb93f55c2a9ff57"},
   "features": {
     "enable_ssh": null,
     "ssh_keys": null,
