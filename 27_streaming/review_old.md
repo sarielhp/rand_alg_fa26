@@ -4,12 +4,7 @@ All locations below refer to the original [streaming.tex](/home/sariel/papers/te
 
 ## What was done
 
-- Created
-  [streaming_review.tex](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming_review.tex):
-  **2 tracked prose edits and 23 review notes**, plus silent
-  mechanical corrections. Mathematical repairs are proposals in notes
-  and this report; the annotated chapter is not a corrected edition.
-
+- Created [streaming_review.tex](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming_review.tex): **2 tracked prose edits and 23 review notes**, plus silent mechanical corrections. Mathematical repairs are proposals in notes and this report; the annotated chapter is not a corrected edition.
 - Read the entire chapter, the included Chernoff statement, and the shared preamble/macros. Checked all arguments, including the unproved stronger sampling lemma and the two-pass theorem's dependencies. Performed separate simplification, notation, and writing passes.
 - Correctness, notation/simplification, and adversarial verification used fresh-context agents with **high reasoning effort**; the writing reviewer also used high effort. Agents inherited the session model; the exact runtime model identifier and coordinator effort are not exposed. No lower-effort override was requested.
 - **Verification: independent-agent.** All 17 reported errors/gaps, both simplifications, four notation proposals, and mathematical wording changes were independently checked. Two overly strong diagnoses were rejected: the heavy-hitter paragraph does not literally promise all hitters, and the chapter's final general-pass space bound has not been disproved. These are reported as gaps. The longer deterministic counter calculation is valid; its shortening is only S2.
@@ -18,20 +13,11 @@ All locations below refer to the original [streaming.tex](/home/sariel/papers/te
 
 ## Summary
 
-**10 errors, 7 gaps, 2 simplifications, 4 notation findings, and 4
-writing findings.** The main repairs are in median selection: invalid
-pivot ranks, an off-by-one output rank, inconsistent comparison/space
-accounting, and a false thinning invariant. The reservoir induction
-and the deterministic cancellation argument are sound once the
-sampling units and update cases are stated correctly.
+**10 errors, 7 gaps, 2 simplifications, 4 notation findings, and 4 writing findings.** The main repairs are in median selection: invalid pivot ranks, an off-by-one output rank, inconsistent comparison/space accounting, and a false thinning invariant. The reservoir induction and the deterministic cancellation argument are sound once the sampling units and update cases are stated correctly.
 
 ### Errors
 
-- **E1**, [line
-  38](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming.tex:38):
-  independent qualities do not imply the random rank order used by the
-  secretary calculation. **High confidence.**
-
+- **E1**, [line 38](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming.tex:38): independent qualities do not imply the random rank order used by the secretary calculation. **High confidence.**
 - **E2**, [line 84](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming.tex:84): the integral evaluates to `ln(n−1)−ln(r−2)`; the asymptotic conclusion also needs a lower bound. **High confidence.**
 - **E3**, [line 324](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming.tex:324): both sample pivot ranks omit division by two; the upper rank exceeds the sample size. **High confidence.**
 - **E4**, [line 336](/home/sariel/papers/teach/26/fa26_rand_alg/notes/27_streaming/streaming.tex:336): selection from the inclusive interval is off by one, and the failure check misses invalid ranks. **High confidence.**
@@ -76,7 +62,10 @@ sampling units and update cases are stated correctly.
 ### Writing
 
 - **W1**, lines 36 and 444: move the streaming-model introduction before the algorithms and add an overview connecting online selection, sampling, multipass selection, and heavy hitters; annotated as a suggestion.
-- **W2**, lines 273–276: explain why the next lemma needs two bracketing order statistics; tracked in the review copy.
+
+- **W2**, lines 273–276: explain why the next lemma needs two
+  bracketing order statistics; tracked in the review copy.
+
 - **W3**, lines 228 and 245: the guarantee is an interval event, not an exact rank distance; a sufficient bad event is not itself necessarily failure. The second correction is tracked; the first is a mathematical wording note.
 - **W4**, original displays ending at lines 77, 158, 179, 260, and 549: split the long equations across lines. The original also lacks the bibliography files needed for an isolated build; details below.
 

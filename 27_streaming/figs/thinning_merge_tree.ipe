@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE ipe SYSTEM "ipe.dtd">
+<ipe version="70218" creator="thinning_merge_tree.rb">
+<info tex="xetex" bbox="cropbox"/>
+<preamble>
+\usepackage{fontspec,unicode-math,cancel,xcolor}
+\setmainfont{NewCM10-Book.otf}
+\setmathfont{NewCMMath-Book.otf}
+\newcommand{\kept}[1]{\textcolor{blue}{#1}}
+</preamble>
+<ipestyle name="thinning">
+<layout paper="330 210" origin="0 0" frame="330 210" crop="yes"/>
+<symbol name="arrow/normal(spx)">
+<path fill="sym-stroke">0 0 m -1 0.35 l -1 -0.35 l h</path>
+</symbol>
+<arrowsize name="normal" value="4"/>
+<pen name="normal" value="0.6"/>
+<textsize name="normal" value="\large"/>
+<textsize name="small" value="\normalsize"/>
+</ipestyle>
+<page>
+<layer name="tree"/>
+<view layers="tree" active="tree"/>
+<text layer="tree" pos="30 195" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$[5,6]$</text>
+<text layer="tree" pos="110 195" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$[1,7]$</text>
+<text layer="tree" pos="220 195" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$[2,8]$</text>
+<text layer="tree" pos="300 195" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$[3,4]$</text>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+30 183 m 54 151 l
+</path>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+110 183 m 86 151 l
+</path>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+220 183 m 244 151 l
+</path>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+300 183 m 276 151 l
+</path>
+<text layer="tree" pos="70 138" stroke="black" type="label"
+  halign="center" valign="center" size="small">$[\cancel{1},\kept{5},\cancel{6},\kept{7}]$</text>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+70 127 m 70 121 l
+</path>
+<text layer="tree" pos="70 110" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$\kept{[5,7]}$</text>
+<text layer="tree" pos="260 138" stroke="black" type="label"
+  halign="center" valign="center" size="small">$[\cancel{2},\kept{3},\cancel{4},\kept{8}]$</text>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+260 127 m 260 121 l
+</path>
+<text layer="tree" pos="260 110" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$\kept{[3,8]}$</text>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+70 98 m 148 61 l
+</path>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+260 98 m 182 61 l
+</path>
+<text layer="tree" pos="165 48" stroke="black" type="label"
+  halign="center" valign="center" size="small">$[\cancel{3},\kept{5},\cancel{7},\kept{8}]$</text>
+<path layer="tree" stroke="black" pen="normal" arrow="normal/normal">
+165 37 m 165 31 l
+</path>
+<text layer="tree" pos="165 20" stroke="black" type="label"
+  halign="center" valign="center" size="normal">$\kept{[5,8]}$</text>
+</page>
+</ipe>

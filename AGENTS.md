@@ -87,7 +87,11 @@ Both offsets are unified into a single macro placed immediately above `\Chapter{
 
 ## 4. Automation Tools (`tools/`)
 
-All repository scripts MUST be written in **Ruby** (`tools/*.rb`). Standalone executable scripts must use `#!/usr/bin/env ruby` and have executable permissions (`chmod +x`).
+Use **Ruby or Julia** for scripts. Prefer Ruby for routine automation, file manipulation, and glue code. Prefer Julia when runtime performance matters or it offers a better platform or libraries for the task, including drawing figures (for example, `BasicCompGeometry.IpeDraw`). Do not choose Ruby solely because the task is possible in Ruby.
+
+For standalone Julia scripts, put `using QuickEnv` before other package imports and run with `julia script.jl`. Let QuickEnv discover and reuse suitable environments to avoid manual environment setup. Do not add per-script `Project.toml`/`Manifest.toml` files or manual `Pkg.activate`/`Pkg.add` boilerplate unless an established project requires an explicit environment.
+
+Standalone executable scripts must use the appropriate shebang (`#!/usr/bin/env ruby` or `#!/usr/bin/env julia`) and have executable permissions (`chmod +x`).
 
 ### 1. `tools/sync_chapters_info` (symlink to `tools/sync_numbers.rb`)
 - **Purpose**: Synchronizes `\ChapterNumPage{C}{P}` in all 58 chapter `.tex` files with the actual chapter numbers and starting pages determined by `book.tex`.
@@ -167,7 +171,7 @@ The primary LaTeX build driver on the system is `/home/sariel/bin/l`.
 
 ## 6. Coding & Behavioral Rules for AI Agents
 
-1. **Scripting Language**: Always use **Ruby** for automation, testing, file manipulation, and data processing. Never create Python, Bash, or Perl scripts unless Ruby lacks necessary native bindings.
+1. **Scripting Language**: Use **Ruby or Julia**. Prefer Ruby for routine automation and Julia when runtime performance matters or it is the better platform, including figure generation. Start standalone Julia scripts with `using QuickEnv` before other package imports to avoid manual environment setup. Do not create Python, Bash, or Perl scripts unless neither Ruby nor Julia is suitable.
 2. **Token Efficiency & Brevity**: Keep chat responses concise, terse, and direct. Omit conversational filler.
 3. **Clickable Links**: In responses and artifacts, always link code symbols, tools, and files using markdown links with the `file://` scheme (e.g. `[tools/sync_chapters_info](file:///home/sariel/rand_alg/notes_test/tools/sync_chapters_info)`).
 4. **Git Hygiene**:

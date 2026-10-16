@@ -24,7 +24,10 @@
 \bigskip%
 
 
-Here, we are interested in the \emphi{streaming model}---where the input arrives one item at a time, and usually we can store only a few items. Surprisingly, we can still do various tasks efficiently, expeciall if ywe use ranodmness.
+Here, we are interested in the \emphi{streaming model}---where the input
+arrives one item at a time, and usually we can store only a limited amount
+of information---usually only a sliver of the original data.  Surprisingly,
+we can still do various tasks efficiently, mostly by using randomness.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -37,7 +40,6 @@ them (and then we are stuck with them), or we let them go and see the
 next candidate. We win the game if we hire the best candidate out of the
 $n$ candidates.
 
-\remX{E1: Independence alone does not give a random arrival order. Assume distinct qualities in uniformly random order; see review.md.}
 
 The question is what is the natural strategy to win the game?  Let
 $P(r)$ be the probability that we win, when the strategy is to see the
@@ -221,8 +223,12 @@ the array $B$.
     \end{math}
 \end{observation}
 
+The following is a strengthening of the original analysis we did for
+median selection. Here, we use Chernoff inequality instead of Chebychev,
+thus getting stronger bounds.
+
 \begin{lemma}
-    Let $\eps \in (0,1/2)$ be a fixed parameter, and let $B$ be a set
+    Let $\eps, \BadProb \in (0,1/2)$ be fixed parameters, and let $B$ be a set
     of $n$ numbers. Let $Z$ be the median of the random sample (with
     replacement) of $B$ of size $k$.  We have that
     \begin{equation*}
@@ -234,15 +240,14 @@ the array $B$.
            \rankY{B}{ \smash{\frac{1+\eps}{2} n}}%
         }
         \geq%
-        1-\delta,
+        1-\BadProb,
         \qquad\text{where}\qquad%
-        k\geq \ceil{\frac{12}{ \eps^2} \ln \frac{2}{\delta}}.
+        k\geq \ceil{\frac{12}{ \eps^2} \ln \frac{2}{\BadProb}}.
     \end{equation*}
-    Namely, with probability at least $1-\delta$, the returned value
+    Namely, with probability at least $1-\BadProb$, the returned value
     $Z$ is $(\eps/2)n$ positions away from the true median.
 \end{lemma}
 
-\remX{N4: Declare the failure parameter. W3: Replace the exact rank-distance sentence by the statement that Z lies between the two displayed order statistics; see review.md.}
 \begin{proof}
     Let $L = \rankY{B}{(1-\eps)n/2}$, and let $e_i$ be the $i$\th
     sample number, for $i=1,\ldots, k$.  Let $X_i=1$ if and only if
@@ -255,7 +260,7 @@ the array $B$.
         \mu = \Ex{Y} = \frac{1-\eps}{2}  k%
         \geq%
         \frac{k}{4} \geq
-        \frac{3}{\eps^2} \ln \frac{2}{\delta} .
+        \frac{3}{\eps^2} \ln \frac{2}{\BadProb} .
     \end{equation*}
 
     The lower-tail failure event is contained in the event $Y \geq
@@ -270,38 +275,39 @@ the array $B$.
         \LEQ %
         \exp\pth{ - \frac{\eps^2 \mu}{3}}
         \leq %
-        \exp\pth{ - \frac{\eps^2}{3} \cdot         \frac{3}{\eps^2} \ln \frac{2}{\delta} 
+        \exp\pth{ - \frac{\eps^2}{3} \cdot         \frac{3}{\eps^2} \ln \frac{2}{\BadProb} 
         }
         \leq%
-        \frac{\delta}{2}.
+        \frac{\BadProb}{2}.
     \end{align*}
-    by Chernoff's inequality (see \lemref{chernoff:small:delta:1}).
+    by \lemrefY{Chernoff's inequality}{chernoff:small:delta:1}.
 
     This implies that
     $\Prob{\bigl. \rankY{B}{(1-\eps)n/2} > Z } \leq \delta/2$.  The
     claim now follows by realizing that by symmetry (i.e., reversing
     the order), we have that
     \begin{equation*}
-        \Prob{ Z > \rankY{B}{(1+\eps)n/2} } \leq \delta/2,
+        \Prob{ Z > \rankY{B}{(1+\eps)n/2} }
+        \LEQ
+        \BadProb /2,
     \end{equation*}
     and putting these two inequalities together.
 \end{proof}
 
-\chgY{The above already implies that we can get a good estimate for the
-median. We need something somewhat stronger -- we state it without
-proof since it follows by similarly mucking around with Chernoff's
-inequality.}{ For exact median selection, we need two sample order statistics that bracket the true median and leave only a short interval of possible ranks. The following lemma gives both guarantees.}
-\remX{W2: State why the stronger lemma is needed; see review.md.}
+For exact median selection, we need two sample order statistics that
+bracket the true median, and leave only a short interval of possible
+ranks. The following lemma gives both guarantees. Then, the algorithm can
+simply filter all the elements that fall within this interval. The double
+bounds below ensure this interval is not too long.
 
 \begin{lemma}
     \lemlab{stronger:median}%
     %
-    Let $\eps \in (0,1/2)$, $B$ an array of $n$ elements, and let
-    $S = \brc{e_1, \ldots, e_k}$ be a set of $k$ samples picked
-    uniformly and randomly from $B$. Then, for some absolute constant
+    Let $\eps, \BadProb \in (0,1/2)$, $B$ an array of $n$ elements, and let
+    $S = \brc{e_1, \ldots, e_k}$ be a set of $k$ samples picked uniformly and
+    randomly (with repetition) from $B$. Then, for some absolute constant
     $c$, and an integer $k$, such that
-    $k\geq \ceil{\frac{c}{\eps^2} \ln \frac{1}{\delta}} $, we have
-    that
+    $k\geq \ceil{\frac{c}{\eps^2} \ln \frac{1}{\BadProb}} $, we have that
     \begin{equation*}
         \Prob{%
            \rankY{S}{k_- }
@@ -309,11 +315,10 @@ inequality.}{ For exact median selection, we need two sample order statistics th
            \rankY{B}{n/2}
            \leq
            \rankY{S}{k^+} }
-        \geq 1-\delta.
+        \geq 1-\BadProb.
     \end{equation*}
-    for $k_- = \floor{(1-\eps)k/2}$, and $k^+ = \floor{(1+\eps)k/2}$.
-
-    One can prove even a stronger statement:
+    for $k_- = \floor{(1-\eps)k/2}$, and $k^+ = \floor{(1+\eps)k/2}$.  Ignoring
+    floor functions for simplicity, the following stronger statement is correct:
     \begin{equation*}
         \Prob{%
            \rankY{B}{(1-2\eps)n/2}
@@ -327,86 +332,20 @@ inequality.}{ For exact median selection, we need two sample order statistics th
            \rankY{B}{(1+2\eps)n/2}
         }
       %\\&
-      \geq 1-\delta        
+      \geq 1-\BadProb        
     \end{equation*}
     (the constant $c$ would have to be slightly bigger).
 \end{lemma}
 
-\remX{G2: Specify the sampling law and valid integer ranks. N3: Use matching subscripts for both sample ranks; see review.md.}
-
 
 \subsection{A median selection with few comparisons}
 
-
-The above suggests a natural algorithm for computing the median (i.e.,
-the element of rank $n/2$ in $B$). Pick a random sample $S$ of
-$k = O(n^{2/3} \log n)$ elements. Next, sort $S$, and pick the
-elements $L$ and $R$ of ranks $(1-\eps)k$ and $(1+\eps)k$ in $S$,
-respectively. Next, scan the elements, and compare them to $L$ and
-$R$, and keep only the elements that are between. In the end of this
-process, we have computed:
-
-\remX{E3: Both pivot ranks need division by two. N2: Use H consistently for the upper pivot. E5: Use linear-time selection for the two sample pivots to preserve the claimed comparison bound; see review.md.}
-\begin{compactenumA}
-    \smallskip%
-    \item $\alpha$: The rank of the number $L$ in the set $B$.
-    \smallskip%
-    \item $T = \Set{ x \in B}{L \leq x \leq H}$.
-\end{compactenumA}
-\smallskip%
-Compute, by brute force (i.e., sorting) the element of rank
-$n/2 - \alpha$ in $T$. Return it as the desired median. If
-$n/2 - \alpha$ is negative, then the algorithm failed, and it tries
-again.
-
-\remX{E4: The rank within the inclusive interval is off by one; also reject zero and ranks exceeding its size. See review.md.}
-
-
-\begin{lemma}
-    The above algorithm performs $2n +O(n^{2/3} \log n)$ comparisons,
-    and reports the median. This holds with high probability.
-\end{lemma}
-\begin{proof}
-    Set $\eps = 1/n^{1/3}$, and $\delta = 1/n^{O(1)}$, and observe
-    that \lemref{stronger:median} implies that with probability
-    $\geq 1-1/\delta$, we have that the desired median is between $L$
-    and $H$. In addition, \lemref{stronger:median} also implies that
-    $\cardin{T} \leq 4\eps n \leq 4n^{2/3}$, which readily implies the
-    correctness of the algorithm.
-
-\remX{E6: The success probability should be one minus delta. G5: The small interval bound requires distinct or consistently tie-broken keys; see review.md.}
-
-    As for the bound on the number of comparisons, we have, with high
-    probability, that the number of comparisons is
-    \begin{equation*}
-        O\pth{ \cardin{S} \log \cardin{S}
-           +
-           \cardin{T} \log \cardin{T}}
-        +2n
-        =%
-        O\pth{\sqrt{n} \log^2 n + n^{2/3} \log n } + 2n,
-    \end{equation*}
-    since deciding if an element is between $L$ and $H$ requires two
-    comparisons.        
-\end{proof}
-
-\remX{E5: Sorting the stated sample contributes an extra logarithmic factor; the displayed square-root term does not follow. See review.md.}
-
-
-\begin{lemma}
-    The above algorithm can be modified to perform
-    $(3/2)n +O(n^{2/3} \log n)$ comparisons, and reports the median
-    correctly. This holds with high probability.
-\end{lemma}
-
-\begin{proof}
-    The trick is to randomly compare each element either first to $L$
-    or first to $H$ with equal probability. For elements that are
-    either smaller than $L$ or bigger than $H$, this requires $(3/2)n$
-    comparisons in expectation. Thus improving the bound from $2n$ to $(3/2)n$.
-\end{proof}
-
-\remX{G3: Expectation alone does not establish high probability. S1: Comparing every item to the lower pivot first proves the desired scan bound directly; see review.md.}
+The above can be plugged into the two round randomized selection
+algorithm we had seen before. Since we used Chernoff's inequality, we get
+a somewhat stronger result. Interestingly, the algorithm needs to scan
+the data only twice. We omit the easy and tedious details since they just
+involve plugging in the improved sampling lemma in the previous
+algorithm -- here the sample is going to be of size $O(n^{2/3})$.
 
 
 \begin{lemma}
@@ -420,14 +359,8 @@ again.
     The algorithm reports the median correctly, and it succeeds with
     high probability.
 \end{lemma}
-\begin{proof}
-    Implement the above algorithm, using the random sampling from
-    \thmref{stream:sample}.
-\end{proof}
 
-\remX{G4: The reservoir itself needs an extra logarithmic factor in space, and the proof must cover sampling without replacement. G5: Specify tie-breaking and failure handling; see review.md.}
-
-
+%XXX
 \begin{remark}
     Interestingly, one can do better if one is more careful. The basic
     idea is to do thinning -- given two sorted sequences of size $s$,
@@ -444,13 +377,11 @@ again.
     If during this process we have two sequences of the same level, we
     merge them and perform thinning on them. As such, we maintain
     $O( \log n)$ buffer sequences each of size $s$. Assume that our
-    stream has size $n$, and $n$ is a power of $2$. Then in the end
-    of process, we would have only a single sequence of level
-    $h = \log_2(n/s)$. By induction, it is easy to prove that an
-    element of rank $r$ in this sequence, has rank between $2^h (r-1)$
-    and $2^hr$ in the original stream.
-
-\remX{E7: This induction claim is false: a sample of size two from eight items can retain items of ranks five and eight. The corrected invariant accumulates error with the level; see review.md.}
+    stream has size $n$, and $n$ is a power of $2$. Then in the end of
+    process, we would have only a single sequence of level
+    $h = \log_2(n/s)$. Every element rank can be estimated roughly within
+    an additive factor of $2^h$.
+\remX{E1: Rank error accumulates over thinning levels; even the proposed median bracket can miss the median. See review.md.}
 
     Thus, setting $s=\sqrt{n}$, we get that after a single pass, using
     $O( \sqrt{n} \log n)$ space, we have a sorted sequence, where the
@@ -458,20 +389,19 @@ again.
     true rank. We pick the two consecutive elements (or more
     carefully, the predecessor, and successor), and filter the stream
     again, keeping only the elements in between these two elements. It
-    is to show that $O( \sqrt{n})$ would be kept, and we can extract
-    the median using $O( \sqrt{n} \log n)$ time.
-
-\remX{E7: A wider bracket retains O(square root of n times log n) items; use linear-time selection for the stated extraction time. See review.md.}
+    is to show that (roughly) $O( \sqrt{n})$ would be kept, and we can extract
+    the median using (roughly) $O( \sqrt{n} \log n)$ time.
+\remX{E1: Widen the bracket to cover a logarithmic number of summary positions; linear selection preserves the final space bound. See review.md.}
 
     We thus got that one can compute the median in two passes using
     $O(\sqrt{n} \log n)$ space. It is not hard to extend this
     algorithm to $\alpha$-passes, where the space required becomes
-    $O(n^{1/\alpha} \log n)$.
-
-\remX{G7: The cited general-pass theorem has logarithmic exponent two minus two divided by the number of passes. A sharper bound here needs a proof; see review.md.}
+    $O(n^{1/\alpha} \log^{O(1)} n)$.
 
     This elegant algorithm goes back to 1980, and it is by Munro and
     Paterson \cite{mp-ssls-80}.
+    The exact rank bounds for this thinning procedure, including matching
+    examples, are proved in \secref{thinning:appendix}.
 \end{remark}
 
 
@@ -510,27 +440,26 @@ here is to do this using as little space as possible.
 
 \subsection{A randomized algorithm}
 
-\remX{N4: Introduce the failure probability before using it. G6: Specify whether the sample should contain every heavy hitter at a fixed prefix; see review.md.}
-
-An easy randomized algorithm, would maintain a random sample of size
-$m = \ceil{(1/\eps) \ln( 1/\BadProb)}$, using \secrefY{reservoir
+An easy randomized algorithm, with target failure probability $\BadProb$,
+would maintain a random sample of size
+$m = \ceil{(1/\eps) \ln( 1/\eps\BadProb)}$, using \secrefY{reservoir
    sampling}{reservoir:sampling}. The probability the sample fails to
 contain a heavy hitter after $t$ insertions is
-\begin{equation*}
+\begin{align*}
     (1-\eps)^m
-    \leq
+    &\LEQ
     \exp(-\eps m )%
     \leq%
-    \exp\pth{-\eps \ceil{\frac{1}{\eps} \ln \frac{1}{\BadProb}} }%
+    \exp\pth{-\eps \ceil{\frac{1}{\eps} \ln \frac{1}{\eps \BadProb}} }%
     \leq 
-    \exp\pth{- \ln \frac{1}{\BadProb}}%
-    = 
-    \exp\pth{ \BadProb }%
-    =
-    \BadProb.
-\end{equation*}
-
-\remX{E8: Use the hypergeometric miss probability for a reservoir sample, and remove the incorrect exponential of the failure probability. G6: An all-hitters guarantee needs a union bound; see review.md.}
+    \exp\pth{- \ln \frac{1}{\eps \BadProb}}%
+    \\&
+    \EQ 
+    {\eps \BadProb}.
+\end{align*}
+Applying the union bound to all $\floor{1/\eps}$ heavy hitters, we get an
+overall failure probability $\leq \BadProb$.
+\remX{E2: Group the sample-size denominator explicitly and use a hypergeometric upper bound for a fixed hitter. See review.md.}
 
 
 
@@ -545,22 +474,29 @@ To this end, let
     k = \ceil{1/\eps}. 
 \end{equation*}
 At each point in time, we maintain a set $S$ of $k$ elements, with a
-counter for each element. Let $S_t$ be the version of $S$ after $t$
-were inserted. When $s_{t+1}$ arrives, we increase its counter if it
-is already in $S_t$. If $\cardin{S_t} < k$, then we just insert
-$s_{t+1}$ to the set, and set its counter to $1$. Otherwise, $|S_t|=k$
-and $s_{t+1} \notin S_t$. We then decrease all the $k$ counters of
-elements in $S_t$ by $1$. If a counter of an element in $S_{t+1}$ is
-zero, then we delete it from the set.
+counter for each element. Let $S_t$ be the version of $S$ after $t$ were
+inserted. When $s_{t+1}$ arrives, we do one of the following:
+\begin{compactenumA}
+    \smallskip%
+    \item $s_{t+1}$ is in the set $S_t$. Then, we increase its counter.
 
-\remX{E9: Make the three update cases mutually exclusive; otherwise a repeated item can have its counter reset. The set has at most k elements; see review.md.}
+    \smallskip%
+    \item If $\cardin{S_t} < k$, then we insert $s_{t+1}$ to the set, and
+    set its counter to $1$.
+
+    \smallskip%
+    \item Otherwise, $|S_t|=k$ and $s_{t+1} \notin S_t$. We then decrease
+    all the $k$ counters of elements in $S_t$ by $1$. If a counter of an
+    element in $S_{t+1}$ is zero, then we delete it from the set.
+\end{compactenumA}
+    
 
 
 \paragraph*{Correctness.}
 
 \begin{lemma}
     The above algorithm, after the insertion of $t$ elements, the set
-    $S_{t+1}$ would contain all the elements in the stream that
+    $S_{t}$ would contain all the elements in the stream that
     appears at least $\eps t$ times. 
 \end{lemma}
 \begin{proof}
@@ -580,26 +516,22 @@ zero, then we delete it from the set.
     \end{math}
     We have that the counter for $u$ in the end of the stream must
     have value at least
-    \begin{equation*}
+    \begin{align*}
         u - \frac{t}{k+1}%
-        \geq%
+        &\GEQ%
         \eps t - \frac{t}{k+1}
         = 
         \eps t - \frac{t}{\ceil{1/\eps}+1}
-        \geq%
+        \\&
+        \GEQ%
         t \frac{\ceil{1/\eps}\eps +\eps - 1}{\ceil{1/\eps}+1}
         \geq%
         t \frac{\eps}{\ceil{1/\eps}+1} > 0.
-    \end{equation*}
+    \end{align*}
+\remX{S1, N2: Shorten the cancellation calculation and use e for the element, keeping u as its frequency. See review.md.}
     This implies that the counter of $u$ is strictly larger than $0$,
-    which implies that $u$ appears in $S_{t+1}$.
+    which implies that $u$ appears in $S_{t}$.
 \end{proof}
-
-\remX{E10: After t insertions the conclusion concerns the state with subscript t, and e is the element whereas u is its frequency. S2: The final positivity argument can be one line; see review.md.}
-
-
-
-
 
 
 
@@ -613,6 +545,160 @@ zero, then we delete it from the set.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Appendix: Exact rank bounds for hierarchical thinning}
+\seclab{thinning:appendix}
+
+Consider $2^h$ disjoint input blocks, each containing $s$ elements.
+Sort each block, and combine them along a complete binary tree of
+height $h$. At each internal node, merge the two child summaries and
+retain positions $2,4,\ldots,2s$. Thus there are $h$ rounds and
+$2^h-1$ merge-and-thin operations, on $n=2^h s$ input elements.
+Assume that the elements are distinct; ties can be broken consistently
+by their positions in the input. All ranks below are one-based ranks
+in this total order, rather than the order-statistic notation $R_B(t)$
+used earlier.
+
+\begin{lemma}[Exact rank bounds]
+    \lemlab{thinning:exact:ranks}
+    Let $z_1<\cdots<z_s$ be the final summary, and let $r_i$ be the
+    rank of $z_i$ among all $2^h s$ input elements. For every
+    $h\geq 0$, $s\geq 1$, and $1\leq i\leq s$,
+    \begin{equation}
+        \eqlab{thinning:exact:ranks}
+        2^h i
+        \ \leq\ r_i\ \leq\
+        1+\sum_{j=0}^{h}\binom{h}{j}\min\{s,i-1+j\}.
+    \end{equation}
+    Both bounds are attained for every choice of $h,s,i$ (on possibly
+    different inputs). In particular, for $h\geq 1$,
+    \begin{equation}
+        \eqlab{thinning:uniform:error}
+        0\leq r_i-2^h i\leq (h-2)2^{h-1}+1.
+    \end{equation}
+    The upper bound in \Eqrefbare{thinning:uniform:error} is attained
+    whenever $i+h-1\leq s$. Near the end of the summary,
+    \Eqrefbare{thinning:exact:ranks} is sharper; in particular,
+    $r_s=2^h s$.
+\end{lemma}
+\begin{proof}
+    \emph{The error introduced by one merge.}
+    For a node $v$ of height $\ell$, let $F_v(x)$ count its original
+    input elements at most $x$, and let $C_v(x)$ count its retained
+    elements at most $x$. Define the error
+    $E_v(x)=F_v(x)-2^\ell C_v(x)$. At a leaf this error is zero.
+    If $u,w$ are the children of $v$, put $a=C_u(x)$ and $b=C_w(x)$.
+    The first $a+b$ positions of the merged summaries are at most $x$,
+    so
+    \begin{equation*}
+        C_v(x)=\floor{\frac{a+b}{2}},
+        \qquad
+        E_v(x)=E_u(x)+E_w(x)
+             +2^{\ell-1}\bigl((a+b)\bmod 2\bigr).
+    \end{equation*}
+    Thus each merge contributes exactly either zero or $2^{\ell-1}$
+    to the error. Summing over the tree gives the exact identity
+    \begin{equation}
+        \eqlab{thinning:error:sum}
+        E_{\mathrm{root}}(x)
+        =\sum_{\ell=1}^{h}2^{\ell-1}
+          \sum_{\substack{v\text{ of height }\ell\\
+                          u,w\text{ children of }v}}
+          \bigl((C_u(x)+C_w(x))\bmod 2\bigr).
+    \end{equation}
+    There are $2^{h-\ell}$ nodes of height $\ell$. Consequently,
+    $0\leq E_{\mathrm{root}}(x)\leq h2^{h-1}$ for $h\geq1$.
+    For $x=z_i$, the element $z_i$ survives at every node on its path
+    from its leaf to the root. Its position in each corresponding
+    merged summary is even, so the parity term at each of these
+    nodes is zero. Subtracting their possible contributions yields
+    \begin{equation*}
+        0\leq r_i-2^h i
+        \leq h2^{h-1}-\sum_{\ell=1}^{h}2^{\ell-1}
+        =(h-2)2^{h-1}+1,
+    \end{equation*}
+    proving \Eqrefbare{thinning:uniform:error}.
+
+    \smallskip\noindent\emph{An exact bound for a threshold.}
+    For $0\leq c\leq s$, define
+    \begin{equation*}
+        M_\ell(c)=\sum_{j=0}^{\ell}\binom{\ell}{j}\min\{s,c+j\}.
+    \end{equation*}
+    We claim that $F_v(x)\leq M_\ell(c)$ whenever $C_v(x)=c$,
+    and that this bound is attainable. At a leaf, $M_0(c)=c$.
+    Each function $M_\ell$ is nondecreasing and discretely concave:
+    its successive differences are nonnegative and nonincreasing,
+    because this holds for each summand $\min\{s,c+j\}$.
+    Suppose the claim holds at height $\ell-1$. For $c<s$, the child
+    counts satisfy $a+b\in\{2c,2c+1\}$. Monotonicity allows their
+    sum to be increased to $2c+1$, and concavity shows that the
+    maximum occurs at the balanced pair $a=c$, $b=c+1$. Hence
+    \begin{equation*}
+        F_v(x)\leq M_{\ell-1}(a)+M_{\ell-1}(b)
+        \leq M_{\ell-1}(c)+M_{\ell-1}(c+1)=M_\ell(c),
+    \end{equation*}
+    where the last equality is Pascal's identity. For $c=s$, both
+    child counts are $s$, and $F_v(x)=2^\ell s=M_\ell(s)$.
+
+    To attain the bound, recursively prescribe child counts $c,c+1$
+    at every node with prescribed count $c<s$, and counts $s,s$
+    at a node with prescribed count $s$. At each leaf, choose exactly
+    the prescribed number of distinct elements below a fixed
+    threshold, and the remaining elements above it. Each merge
+    produces the prescribed count, and equality holds throughout the
+    recurrence. Equivalently, a leaf reached by taking $j$ right
+    branches contains $\min\{s,c+j\}$ elements below the threshold;
+    there are $\binom{\ell}{j}$ such leaves.
+
+    \smallskip\noindent\emph{The exact upper bound and its attainment.}
+    Choose a threshold immediately below $z_i$. Exactly $i-1$
+    summary elements and $r_i-1$ original elements lie below it.
+    The threshold bound gives $r_i\leq M_h(i-1)+1$, as claimed.
+    For equality, use the preceding construction with $c=i-1$.
+    In the leftmost leaf, designate its smallest element above the
+    threshold as $z$, and choose it smaller than every other element
+    above the threshold in the entire input. Along the path from
+    this leaf to the root, the prescribed child counts below $z$
+    are always $c,c+1$. Inductively, $z$ survives in the left child,
+    has position $2c+2$ in the merged summaries, and survives again.
+    It is therefore the $(c+1)$st final summary element, with true
+    rank $M_h(c)+1$. This proves attainment for every $i$.
+    If $i+h-1\leq s$, no summand is truncated, and
+    \begin{equation*}
+        M_h(i-1)+1
+        =2^h(i-1)+h2^{h-1}+1
+        =2^h i+(h-2)2^{h-1}+1.
+    \end{equation*}
+    For $i=s$, the same formula with truncation gives
+    $M_h(s-1)+1=2^h s$.
+
+    \smallskip\noindent\emph{Attaining the lower bound.}
+    Put the input in increasing order, with consecutive blocks
+    assigned to consecutive leaves. Inductively, a node of height
+    $\ell$ retains exactly the elements at local original ranks
+    $2^\ell,2\cdot2^\ell,\ldots,s2^\ell$. The root therefore has
+    $r_i=2^h i$ for every $i$, attaining all lower bounds at once.
+\end{proof}
+
+For $s\geq h$, the maximum possible rank error over all inputs and
+summary positions is thus exactly $(h-2)2^{h-1}+1$ for $h\geq1$.
+It is $\Theta(h2^h)$ as $h$ grows, so the additive $O(2^h)$ estimate
+in the marked remark requires this additional factor of $h$.
+
+\Needspace{0.65\textheight}
+\paragraph*{Example ($h=2$).}
+For $s=2$, \figref{thinning:merge:tree} shows four blocks of the keys
+$1,\ldots,8$ producing the summary $[5,8]$. Thus $r_1=5$, whereas
+$2^h\cdot1=4$: the error is $1$, attaining the upper bound in
+\lemref{thinning:exact:ranks}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\linewidth]{\File{figs/thinning_merge_tree.pdf}}
+    \caption{Two rounds of thinning. At each merge, odd positions are
+       crossed out and even positions (blue) form the retained summary.}
+    \figlab{thinning:merge:tree}
+\end{figure}
 
 \StandAloneMode{
    \section{From previous lectures}
