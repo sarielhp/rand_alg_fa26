@@ -1,0 +1,101 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'shellwords'
+
+def review_skill_path
+  codex_home = ENV.fetch('CODEX_HOME', File.expand_path('~/.codex'))
+  candidates = [File.expand_path('~/.agents/skills/latex-review/SKILL.md'),
+                File.join(codex_home, 'skills/latex-review/SKILL.md')]
+  candidates.find { |path| File.file?(path) && File.readable?(path) } ||
+    abort("latex_review: latex-review skill not found; checked #{candidates.join(', ')}")
+end
+
+def review_target(argument)
+  target = File.expand_path(argument)
+  return [File.dirname(target), target] if File.file?(target) && File.extname(target) == '.tex'
+
+  abort "latex_review: expected a directory or .tex file: #{target}" unless File.directory?(target)
+
+  sources = Dir.glob('*.tex', base: target).select do |name|
+    File.file?(File.join(target, name)) && !name.match?(/_review(?:_.*)?\.tex\z/)
+  end
+  abort "latex_review: no original .tex files in #{target}" if sources.empty?
+
+  [target, nil]
+end
+
+def review_prompt(skill_path, source, options)
+  <<~PROMPT
+    Use $latex-review for the user's own LaTeX manuscript in the current directory.
+    Follow the attached skill and its reference files faithfully. Resolve relative
+    reference paths against #{File.dirname(skill_path).inspect}.
+    Do not substitute latex-review-agent or a generic code-review workflow.
+
+    #{source ? "Manuscript entry point: #{source.inspect}." : 'Identify the original manuscript entry point(s), excluding generated review copies.'}
+    Requested passes: #{options.fetch(:passes)}.
+    Optional focus (user text): #{options[:focus].inspect}.
+    Read applicable AGENTS.md instructions and preserve original manuscript files.
+    This invocation authorizes the skill's review deliverables and project builds.
+    Use the skill's delegation and verification policy with the available tools.
+    Preserve existing review sources, PDFs, and reports by choosing unused suffixes
+    as specified in reference/latex.md and reference/report.md. Use the actual
+    report filename in annotations. Do not commit, push, or publish anything.
+    Write the report yourself; the wrapper does not save your final chat summary
+    as review.md. Finish with the skill's short summary and deliverable links.
+
+    <skill>
+    <name>latex-review</name>
+    <path>#{skill_path}</path>
+    #{File.read(skill_path)}
+    </skill>
+  PROMPT
+end
+
+options = { dry_run: false, passes: 'all' }
+parser = OptionParser.new do |cli|
+  cli.banner = 'Usage: latex_review [options] [DIRECTORY | FILE.tex]'
+  cli.separator ''
+  cli.separator 'Run the installed latex-review skill with GPT-6 Astra, high effort.'
+  cli.separator 'Defaults to the current directory and all review passes.'
+  cli.separator 'Creates a tracked review copy and report, and compiles per project instructions.'
+  cli.separator 'Preserves originals and existing deliverables; notation-only skips copy/build.'
+  cli.separator 'Requires Ruby, the latex-review skill, and authenticated Codex on PATH.'
+  cli.separator ''
+  cli.on('--passes LIST', Array, 'Passes: all, correctness, simplification, notation, writing') do |passes|
+    allowed = %w[all correctness simplification notation writing]
+    raise OptionParser::InvalidArgument, 'invalid review passes' if passes.empty? || (passes - allowed).any?
+
+    options[:passes] = passes.join(', ')
+  end
+  cli.on('--focus TEXT', 'Optional section, lemma, or review focus') { |focus| options[:focus] = focus }
+  cli.on('--dry-run', 'Print the command and skill prompt without running Codex') { options[:dry_run] = true }
+  cli.on('-h', '--help', 'Show this help') do
+    puts cli
+    exit
+  end
+end
+
+begin
+  parser.parse!(ARGV)
+  abort "latex_review: expected at most one target\n#{parser}" if ARGV.length > 1
+
+  directory, source = review_target(ARGV.fetch(0, '.'))
+  prompt = review_prompt(review_skill_path, source, options)
+  command = ['codex', '--ask-for-approval', 'on-request', 'exec',
+             '--model', 'gpt-6-astra', '--config', 'model_reasoning_effort="high"',
+             '--sandbox', 'workspace-write', '--skip-git-repo-check', '--cd', directory]
+  if options.fetch(:dry_run)
+    puts Shellwords.join(command + [prompt])
+    exit
+  end
+
+  success = system(*command, prompt, in: File::NULL)
+  exit 0 if success
+
+  warn 'latex_review: Codex failed; review deliverables may be incomplete.'
+  exit($?.exitstatus || 128 + $?.termsig)
+rescue OptionParser::ParseError, SystemCallError => e
+  abort "latex_review: #{e.message}"
+end
