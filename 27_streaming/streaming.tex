@@ -25,7 +25,7 @@
 
 
 Here, we are interested in the \emphi{streaming model}---where the input
-arrives one item at a time, and usually we can store only limited amount
+arrives one item at a time, and usually we can store only a limited amount
 of information---usually only a sliver of the original data.  Surprisingly,
 we can still do various tasks efficiently, mostly by using randomness.
 
@@ -287,7 +287,9 @@ thus getting stronger bounds.
     claim now follows by realizing that by symmetry (i.e., reversing
     the order), we have that
     \begin{equation*}
-        \Prob{ Z > \rankY{B}{(1+\eps)n/2} } \leq \delta/2,
+        \Prob{ Z > \rankY{B}{(1+\eps)n/2} }
+        \LEQ
+        \BadProb /2,
     \end{equation*}
     and putting these two inequalities together.
 \end{proof}
@@ -295,7 +297,7 @@ thus getting stronger bounds.
 For exact median selection, we need two sample order statistics that
 bracket the true median, and leave only a short interval of possible
 ranks. The following lemma gives both guarantees. Then, the algorithm can
-simply filter all the element that fall within this interval. The double
+simply filter all the elements that fall within this interval. The double
 bounds below ensure this interval is not too long.
 
 \begin{lemma}
@@ -330,7 +332,7 @@ bounds below ensure this interval is not too long.
            \rankY{B}{(1+2\eps)n/2}
         }
       %\\&
-      \geq 1-\delta        
+      \geq 1-\BadProb        
     \end{equation*}
     (the constant $c$ would have to be slightly bigger).
 \end{lemma}
@@ -341,7 +343,9 @@ bounds below ensure this interval is not too long.
 The above can be plugged into the two round randomized selection
 algorithm we had seen before. Since we used Chernoff's inequality, we get
 a somewhat stronger result. Interestingly, the algorithm needs to scan
-the data only twice. We omit the easy details since they just involve plugging in the improved sampling lemma in the previous algorithm.
+the data only twice. We omit the easy and tedious details since they just
+involve plugging in the improved sampling lemma in the previous
+algorithm -- here the sample is going to be of size $O(n^{2/3})$.
 
 
 \begin{lemma}
@@ -356,9 +360,7 @@ the data only twice. We omit the easy details since they just involve plugging i
     high probability.
 \end{lemma}
 
-\remX{G4: The reservoir itself needs an extra logarithmic factor in space, and the proof must cover sampling without replacement. G5: Specify tie-breaking and failure handling; see review.md.}
-
-
+%XXX
 \begin{remark}
     Interestingly, one can do better if one is more careful. The basic
     idea is to do thinning -- given two sorted sequences of size $s$,
@@ -378,16 +380,17 @@ the data only twice. We omit the easy details since they just involve plugging i
     stream has size $n$, and $n$ is a power of $2$. Then in the end of
     process, we would have only a single sequence of level
     $h = \log_2(n/s)$. Every element rank can be estimated roughly within
-    a additive factor of $2^h$.
+    an additive factor of $h2^h$ (proving the exact bound here is quite
+    tedious).
 
     Thus, setting $s=\sqrt{n}$, we get that after a single pass, using
     $O( \sqrt{n} \log n)$ space, we have a sorted sequence, where the
-    rank of the elements is roughly $\sqrt{n}$ approximation to the
-    true rank. We pick the two consecutive elements (or more
-    carefully, the predecessor, and successor), and filter the stream
-    again, keeping only the elements in between these two elements. It
-    is to show that (roughly) $O( \sqrt{n})$ would be kept, and we can extract
-    the median using (roughly) $O( \sqrt{n} \log n)$ time.
+    rank of the elements is roughly $\sqrt{n}$ approximation to the true
+    rank. We pick the two consecutive elements (or more carefully, the
+    predecessor, and successor), and filter the stream again, keeping
+    only the elements in between these two elements. It is to show that
+    (roughly) $O( \sqrt{n} \log n)$ would be kept, and we can extract the
+    median using (roughly) $O( \sqrt{n} \log^2 n)$ time.
 
     We thus got that one can compute the median in two passes using
     $O(\sqrt{n} \log n)$ space. It is not hard to extend this
@@ -396,6 +399,8 @@ the data only twice. We omit the easy details since they just involve plugging i
 
     This elegant algorithm goes back to 1980, and it is by Munro and
     Paterson \cite{mp-ssls-80}.
+    The exact rank bounds for this thinning procedure, including matching
+    examples, are proved in \secref{thinning:appendix}.
 \end{remark}
 
 
@@ -468,7 +473,7 @@ To this end, let
 \end{equation*}
 At each point in time, we maintain a set $S$ of $k$ elements, with a
 counter for each element. Let $S_t$ be the version of $S$ after $t$ were
-inserted. When $s_{t+1}$ arrives, we done one of the following:
+inserted. When $s_{t+1}$ arrives, we do one of the following:
 \begin{compactenumA}
     \smallskip%
     \item $s_{t+1}$ is in the set $S_t$. Then, we increase its counter.
@@ -537,6 +542,7 @@ inserted. When $s_{t+1}$ arrives, we done one of the following:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \StandAloneMode{
    \section{From previous lectures}
