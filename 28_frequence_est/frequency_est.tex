@@ -1,15 +1,9 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
 
 
+%\BookMode{\newpage}%
+%\noindent%
 
-\BookMode{\newpage}%
-
-\noindent%
 \ChapterNumPage{28}{219}
 \Chapter{Frequency Estimation over a Stream}
 
@@ -46,11 +40,31 @@ $X \sim \Distribution$), we have that $\Ex{X} = \rho$. We can use $X$
 to estimate our desired quantity, but this might not provide the
 desired estimation.
 
+There are going to be two main tools we are going to use:
+\begin{compactenumI}
+    \smallskip%
+    \item \textsf{Averaging}\footnote{MVSA: Make variance small again!
+       This is really what this step do.}: If we take enough sample and
+    average them we get a good estimate to the mean, and this estimate is
+    concentrated, either because of Chebychev (sometimes we can use
+    Chernoff directly).
+
+    \smallskip
+    \item \textsf{Median selection}: We can generate several estimates
+    using averaging for the mean. The next step is taking the median of
+    the estimates! This turned out to work very well (the correctness
+    would follow from Chernoff's inequality).
+    
+\end{compactenumI}
+\smallskip%
+For our application, the two can be implemented using small space, and
+they are modular in nature, making the whole design surprisingly clean.
+
 \paragraph*{Example: Estimating $p$ for a coin.}
-Assume we have a coin that is head with probability $p$. A natural way
-to estimate $p$ is to flip the coin once and return $1$ if it is head,
-and zero otherwise.  Let $X$ be the result of the coin flip, and
-observe that $\Ex{X} = p$. But this is not very useful estimator.
+Assume we have a coin that comes up heads with probability $p$. A natural
+way to estimate $p$ is to flip the coin once and return $1$ if it comes
+up heads, and zero otherwise.  Let $X$ be the result of the coin flip,
+and observe that $\Ex{X} = p$. But this is not a very useful estimator.
 
 
 
@@ -58,36 +72,40 @@ observe that $\Ex{X} = p$. But this is not very useful estimator.
 
 \subsubsection{The challenge}
 
-The basic problem is that $X \sim \Distribution$ might be much bigger
-than $\rho$. Or more specifically, its variance might be huge, where
+The basic problem is that $X \sim \Distribution$ might be much bigger than
+$\rho$. Or more specifically, its variance might be huge\footnote{It is
+   definitely larger than zero, so stop worrying about that.}, where
 $\Distribution$ is a distribution we have access to. Let
 \begin{equation*}
     \rho = \Ex{\Distribution}\qquad\text{and}\qquad
     \nu = \Var{\Distribution}.
 \end{equation*}
- We would to generate a variable $Z$, such that
+ We would like to generate a variable $Z$, such that
 \begin{equation}
     \Ex{Z} = \rho%
     \qquad\text{and}\qquad
     \Var{Z} \leq (\eps^2/4) \rho^2.
     \eqlab{small:variance}
 \end{equation}
-This would imply by \thmrefY{Chebychev's
-   inequality}{Chebychev:inequality} that
-\begin{equation*}
+This would imply\footnote{A minor technicality is that the analysis fails
+   if $\Var{Z}=0$. Oh no! They killed Kenny.} by \thmrefY{Chebyshev's
+   inequality}{Chebyshev:inequality} that
+\begin{align*}
     \Prob{ |Z - \rho| \geq \eps \rho}%
-    =%
+    &\EQ%
     \Prob{ |Z - \Ex{Z}| \geq 2\sqrt{(\eps^2/4) \rho^2}}
-    \leq%
+    \\&
+    \LEQ%
     \Prob{ |Z - \Ex{Z}| \geq 2 \sqrt{\Var{Z}}}%
     \leq \frac{1}{4}.
-\end{equation*}
+\end{align*}
+
 
 \subsubsection{Taming of the variance}
 
-The basic idea is to take $\alpha = \ceil{\frac{\nu}{\rho}} $
-independent variables $X_1, \ldots, X_\alpha \sim \Distribution$, and
-let $Y = \sum_i X_i / \alpha$. We have by linearity of expectation that
+The basic idea is to take $\alpha$ independent samples
+$X_1, \ldots, X_\alpha \sim \Distribution$, and let
+$Y = \sum_i X_i / \alpha$. We have by linearity of expectation that
 \begin{equation*}
     \Ex{Y} = \sum_i \Ex{X_i}/\alpha = \Ex{X} = \rho.
 \end{equation*}
@@ -122,17 +140,22 @@ We thus summarize the result.
     \lemlab{averaging:estimator}%
     %
     Let $\Distribution$ be a non-negative distribution with
-    $\rho = \Ex{\Distribution}$ and $\nu = \Var{\Distribution}$, and
-    let $\eps \in (0,1)$ be a parameter.  For
-    \begin{math}
+    \begin{equation*}
+        \rho = \Ex{\Distribution}
+        \qquad\text{and}\qquad
+        \nu = \Var{\Distribution}
+    \end{equation*}
+    (formally, both need to be finite, and the variance should be
+    positive), and let $\eps \in (0,1)$ be a parameter.  For
+    \begin{equation*}
         \displaystyle%
         \alpha\geq \Bigl\lceil{ \frac{4 \VarSymb[\Distribution]\bigr.}
            {\eps^2(\ExSym[\Distribution])^2\bigr.}  } \Bigr\rceil,
-    \end{math}
-    consider sampling variables
+    \end{equation*}
+    consider sampling independently $\alpha$ samples
     $X_1, \ldots, X_\alpha \sim \Distribution$, and let
-    $Z = \sum_{i=1}^\alpha X_i /\alpha$. Then $Z$ is a ``good''
-    estimator for $\rho$. Formally, we have
+    $Z = \sum_{i=1}^\alpha X_i /\alpha$. Then $Z$ is a ``good'' estimator for
+    $\rho$. Formally, we have
     \begin{equation*}
         \Prob{ (1-\eps)\rho \leq Z \leq (1+\eps)\rho \Bigr.} \geq \frac{3}{4}.
     \end{equation*}
@@ -145,34 +168,33 @@ We thus summarize the result.
 
 \subsection{Median estimator: Success with high probability}
 
-We would like to get a better estimator, where the probability of
-success is high probability. Formally, we would have parameter
-$\BadProb$, and we would like the estimator to succeed with
-probability $\geq 1 - \BadProb$.  A natural approach is to try and use
-Chernoff to bound the probability of failure for the averaging
-estimator. This would work in some cases, but is limited to the case
-when $Z$ lies in a small bounded range. This would not work in general
-if sampling from $\Distribution$ might return a huge value with tiny
-probability. Instead, we are going to boost the averaging
-estimator. Assume, we generating
+We would like an estimator that succeeds with high probability.
+Formally, we would have parameter $\BadProb$, and we would like the
+estimator to succeed with probability $\geq 1 - \BadProb$.  A natural
+approach is to try and use Chernoff to bound the probability of failure
+for the averaging estimator. This would work in some cases, but is
+limited to the case when $Z$ lies in a small bounded range. This would
+not work in general if sampling from $\Distribution$ might return a huge
+value with tiny probability. Instead, we are going to boost the averaging
+estimator. Suppose we generate
 \begin{equation*}
     \beta = O\Bigl( \log \frac{1}{\BadProb } \Bigr)
 \end{equation*}
 instances of the averaging estimators: $Z_1, \ldots, Z_\beta$ of
-\lemref{averaging:estimator}. The \emphOnly{median estimator}\index{median estimator} returns the
-median value of the $Z$s as the desired estimate.
+\lemref{averaging:estimator} ($\beta$ has to be odd). The
+\emphOnly{median estimator}\index{median estimator} returns the median
+value of the $Z$s as the desired estimate.
 
 \paragraph*{Analysis.}
 
-Let $\Event_i$ be the event that
-$Z_i \in [(1-\eps)\rho, (1+\eps)\rho]$.  Let $G_i$ be an indicator
-variable for $\Event_i$. By \lemref{averaging:estimator},
-$\Prob{\Event_i} = \Prob{G_i=1} \geq 3/4$.  The median estimator fails
-if $\sum_{i=1}^\beta G_i < \beta/2$. Using Chernoff inequality, we get
-that this happens with probability $\leq \BadProb$. We thus get the
-following.
+Let $\Event_i$ be the event that $Z_i \in [(1-\eps)\rho, (1+\eps)\rho]$.
+Let $G_i$ be an indicator variable for $\Event_i$. By
+\lemref{averaging:estimator}, $\Prob{\Event_i} = \Prob{G_i=1} \geq 3/4$.
+The median estimator fails if $\sum_{i=1}^\beta G_i < (\beta+1)/2$. Using Chernoff
+inequality, we get that this happens with probability $\leq \BadProb$. We
+thus get the following.
 
-\bigskip
+%\bigskip
 
 \begin{fragment}{median:estimator}
 \begin{theorem}
@@ -185,7 +207,7 @@ following.
     $M \geq 24 \Bigl\lceil{ \frac{4 \nu\bigr.}{\eps^2\mu^2\bigr.}  }
     \Bigr\rceil \ln \frac{1}{\BadProb}$, and consider sampling
     variables $X_1, \ldots, X_M \sim \Distribution$. One can compute,
-    in, $O(M)$ time, a quantity $Z$ from the sampled variables, such
+    in $O(M)$ time, a quantity $Z$ from the sampled variables, such
     that
     \begin{equation*}
         \Prob{ (1-\eps)\mu \leq Z \leq (1+\eps)\mu \Bigr.} \geq 1 -
@@ -193,6 +215,8 @@ following.
     \end{equation*}
 \end{theorem}
 \end{fragment}
+
+\remX{G1: Distinguish total samples from number of groups, and round each count separately. N3: The declared constant is unused; see review.md.}
 \begin{proof}
     Let $m = \bigl\lceil{ {4 \nu}/(\eps^2\mu^2) } \bigr\rceil$ and
     $M = \ceil{24 \ln \frac{1}{\BadProb}}$. Build $M$ averaging
@@ -216,23 +240,29 @@ following.
     \begin{math}
         \Ex{Y} \geq (3/4)M.
     \end{math}
-    As such, by \lemref{Chernoff's inequality}, we have
-    \begin{equation*}
+
+    \remX{N1: Use the earlier good-group indicator notation here, keeping
+       sample variables distinct from indicators; see review.md.}  As
+    such, by \lemrefY{Chernoff's inequality}{chernoff:2:s}, we have
+    \begin{align*}
         \Prob{\bigl. \text{bad output}}
-        =%
+        &\EQ%
         \Prob{\bigl.Y < (1/2)M}
         \leq
         \Prob{\bigl.Y < (1-1/3) \Ex{Y}}
-        \leq
+        \\
+        &\LEQ
         \exp\pth{ - \frac{(1/3)^2}{2}\Ex{Y}}.
-    \end{equation*}
-    The later quantity is bounded by
-    \begin{math}
+    \end{align*}
+    The latter quantity is bounded by
+    \begin{equation*}
         \exp\pth{ - \frac{1}{18} \frac{3}{4} M} = \exp( -M/24)=
         \exp\pth{ - \ceil{24 \ln \BadProb^{-1}} /24 } \leq%
         \BadProb.
-    \end{math}
+    \end{equation*}
 \end{proof}
+
+\remX{G1 and E2: The proof changes the meaning of the total sample count and uses an incorrect failure-event equality. W2: The lower-tail Chernoff reference key is corrected in this review copy; see review.md.}
 
 
 
@@ -268,7 +298,7 @@ the stream $\STRM$ only once.
 One can pick a representative element from a stream uniformly at
 random by using reservoir sampling. That is, sample the $i$\th element
 $\strm_i$ to be the representative with probability $1/i$. Once
-sampled, the algorithm counts how many times it see the representative
+sampled, the algorithm counts how many times it sees the representative
 value later on in the stream (the counter is initialized to $1$, to
 account for the chosen representative itself). In particular, if
 $\strm_p$ is the chosen representative in the end of the stream (i.e.,
@@ -284,6 +314,8 @@ The output of the algorithm is the quantity
 where $m$ is the number of elements seen in the stream.  Let $V$ be
 the random variable that is the value of the representative in the end
 of the sequence.
+
+\remX{W3: Explicitly reset the counter to one every time the representative changes; see review.md.}
 
 \subsubsection{Analysis}
 
@@ -328,6 +360,8 @@ of the sequence.
     \end{math}
 \end{proof}
 
+\remX{S1: Sum over stream positions to avoid conditioning and division by zero frequencies; see review.md.}
+
 
 \begin{remark}
     In the above, we estimated the function $g(x)=x^k$, over the
@@ -336,6 +370,8 @@ of the sequence.
     function $g(x)$ such that $g(0)=0$, and $g(x) \geq 0$, for all
     $x \geq 0$.
 \end{remark}
+
+\remX{E6: The frequency list should end at the universe size, not at the moment order; see review.md.}
 
 \begin{lemma}
     \lemlab{f:e:some:calcs}%
@@ -348,16 +384,19 @@ of the sequence.
     $x^k - (x-1)^k \leq kx^{k-1}$. As such, we have
     \begin{equation*}
         \sum_{i=1}^n \pth{ i^k - (i-1)^k}^2%
-        \leq %
+        &\LEQ %
         \sum_{i=1}^n  ki^{k-1}\pth{ i^k - (i-1)^k}%
         \leq %
         kn^{k-1} \sum_{i=1}^n \pth{ i^k - (i-1)^k}%
-        =%
+        \\&
+        \EQ%
         kn^{k-1} n^{k}
         =%
         kn^{2k-1}.
     \end{equation*}
 \end{proof}
+
+\remX{S1: Include the immediate equality case at moment order one, which is needed by the subsequent results; see review.md.}
 
 \begin{lemma}
     \lemlab{f:e:exp:X}%
@@ -377,13 +416,15 @@ of the sequence.
     \begin{math}
         \ds%
         \Ex{\smash{X^2}}%
-        =%
+        \leq%
         \Ex{\bigl.\ExCond{\smash{X^2}}{V}\bigr.} %
-        =%
+        \leq%
         \sum_{i: \frq_i\neq 0} \frac{\frq_i}{m}\cdot m^2 k
         \frq_i^{2k-2} = mk \Frq_{2k-1}.
     \end{math}
 \end{proof}
+
+\remX{E3: The last expectation calculation turns an upper bound into an equality. Replace that equality by an inequality; see review.md.}
 
 \begin{lemma}
     \lemlab{f:e:silly:4}%
@@ -408,19 +449,25 @@ of the sequence.
     $x \geq 0$).
 \end{proof}
 
+\remX{W3: The derivative calculation is valid for positive arguments; extend convexity to zero by continuity for real moment orders between one and two.}
+
 \begin{lemma}
     \lemlab{f:e:simplify}%
     %
     For any $n$ numbers $\frq_1, \ldots,\frq_n \geq 0$, we have
-    \begin{math}
+    \begin{equation*}
         \Bigl({\sum_i \frq_i} \Bigr) \Bigl( \sum_i \frq_i^{2k-1}
         \Bigr) %
         \leq%
         n^{1-1/k} \Bigl(\sum_i \frq_i^{k}\Bigr)^2.
-    \end{math}
+    \end{equation*}
 \end{lemma}
 \begin{proof}
-    Let $M =\max_i \frq_i$ and $m = \sum_i f_i$. We have
+    Let 
+    \begin{math}
+        M =\max_i \frq_i
+    \end{math}
+    and $m = \sum_i f_i$. We have
     \begin{align*}
       \sum_i \frq_i^{2k-1}
       &\leq
@@ -441,8 +488,10 @@ of the sequence.
         \leq
         n^{(k-1)/k} \Bigl( \sum_i \frq_i^k\Bigr)^{1/k}.%
     \end{math}
-    Multiplying the above two inequality implies the claim.
+    Multiplying the above two inequalities implies the claim.
 \end{proof}
+
+\remX{N4: The local sum variable is unused and can be deleted; see review.md.}
 
 \begin{lemma}
     \lemlab{f:e:v:X}%
@@ -451,7 +500,7 @@ of the sequence.
 \end{lemma}
 \begin{proof}
     Since $m = \sum_i \frq_i$, \lemref{f:e:exp:X} and
-    \lemref{f:e:simplify} together implies that
+    \lemref{f:e:simplify} together imply that
     \begin{equation*}
         \Var{X}%
         =%
@@ -467,6 +516,8 @@ of the sequence.
         k n^{1-1/k} \Frq_k^2.
     \end{equation*}
 \end{proof}
+
+\remX{E4: Correct the moment subscript as specified in review.md.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -502,6 +553,8 @@ proportional to $M$, and we have
        \ln \frac{1}{\BadProb}  }.    
 \end{equation*}
 
+\remX{G3: Choose repetitions using the known variance-ratio bound, rather than the unknown mean and variance. G1: Retain integer rounding and a constant term when the failure parameter approaches one; see review.md.}
+
 
 % \begin{theorem}
 %     The $k$\th moment of a stream can be $(1\pm\eps)$-estimated
@@ -521,12 +574,14 @@ implies the following.
     $\eps, \BadProb \in (0,1)$, one can build a data-structure using
     $O( kn^{1-1/k}\eps^{-2} \log \BadProb^{-1})$ words, such that one
     can $(1\pm \eps)$-approximate the $k$\th moment of the elements in
-    the stream; that is, the algorithm outs a number $Z$, such that
+    the stream; that is, the algorithm outputs a number $Z$, such that
     $(1-\eps)\Frq_k \leq Z \leq (1+\eps)\Frq_k$, where
     $\Frq_k = \sum_{i=1}^n \frq_i^k$, and $\frq_i$ is the number of
     times $i$ appears in the stream $\STRM$. The algorithm succeeds
     with probability $\geq 1- \BadProb$.
 \end{theorem}
+
+\remX{E6: The stream endpoint should use the stream length, not the universe size. G1: Correct the uniform space bound; see review.md.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -535,7 +590,7 @@ implies the following.
 
 \section{Better estimation for $\Frq_2$}
 
-\subsection{Pseudo-random $k$-wide independent %
+\subsection{Pseudo-random $k$-wise independent %
    sequence of signed bits}
 
 In the following, assume that we sample $O( \log n)$ bits, such that
@@ -544,13 +599,15 @@ $b(i) \in \brc{-1,+1}$. We require that the resulting bits
 $b(1), b(2), \ldots, b(n)$ are $4$-wise independent.  To this end,
 pick a prime $p$, that is, say bigger than $n^{10}$. This can easily
 be done by sampling a number in the range $[n^{10}, n^{11}]$, and
-checking if it is prime (which can done in polynomial time).
+checking if it is prime (which can be done in polynomial time).
 
 Once we have such a prime, we generate a random polynomial
 $g(i) = \sum_{i=0}^5 c_i x^i \bmod p$, by choosing $c_0, \ldots, c_5$
 from $\ZZ_p = \brc{0, \ldots, p-1 \bigl. }$.  We had seen that
 $g(0), g(1), \ldots, g(n)$ are uniformly distributed in $\ZZ_p$, and
 they are, say, $6$-wise independent (see \thmref{k:wise:independent}).
+
+\remX{N2: The polynomial definition should use the same free variable on both sides; see review.md.}
 
 We define
 \begin{equation*}
@@ -577,7 +634,7 @@ more complicated.
     $O(\log (n/\BadProb))$, one can construct a function $b(\cdot)$,
     requiring $O( \log (n/\BadProb))$ bits of storage (or $O(1)$
     words), such that $b(1), \ldots, b(n) \in \{-1,+1\}$ with equal
-    probability, an they are $6$-wise independent. Furthermore, given
+    probability, and they are $6$-wise independent. Furthermore, given
     $i$, one can compute $b(i)$ in $O(1)$ time.
 
     The probability of this sequence to fail having the desired
@@ -587,6 +644,8 @@ more complicated.
     We repeat the above construction, but picking a prime $p$ in the
     range, say, $n^{10}/ \BadProb \ldots n^{11} /\BadProb$.
 \end{proof}
+
+\remX{E5: Conditioning on no zero outputs does not preserve the claimed independence. Keep the ternary outputs and rescale the estimator instead; this also removes the failure-budget and seed-size issues. See review.md.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -607,10 +666,12 @@ the quantity
     \sum_{j=1}^m b( \strm_j),
 \end{equation*}
 which can be computed on the fly using $O(1)$ words of memory, and
-$O(1)$ time per time in the stream.
+$O(1)$ time per element in the stream.
 % Indeed, if the $j$\th item in the stream is
 % $\strm_j \in \{1,\lodts, n\}$, then we add $b(\strm_j)$ to the
 % counter of $T$.
+
+\remX{E6: Sum frequencies over the universe; sum stream positions over the stream length. E5: Rescale the output if keeping the ternary construction; see review.md.}
 
 The algorithm returns $X = T^2$ as the desired estimate.
 
@@ -645,7 +706,7 @@ The algorithm returns $X = T^2$ as the desired estimate.
     \end{equation*}
     since $\Ex{b(i)} = 0$, $\Ex{b(i)^2} =1$, and
     $\Ex{b(i)b(j) } = \Ex{b(i) } \Ex{b(j)} = 0$ (assuming the sequence
-    $b(1), \ldots, b(n)$ has not failed), by the $6$-wise Independence
+    $b(1), \ldots, b(n)$ has not failed), by the $6$-wise independence
     of the sequence of signed bits.
 
     \medskip%
@@ -750,6 +811,8 @@ The algorithm returns $X = T^2$ as the desired estimate.
     \end{equation*}
 \end{proof}
 
+\remX{S2: A centered expansion avoids the quadruple partition. E6: Correct the sum endpoints. W4: Break long displays into shorter aligned rows. See review.md.}
+
 \subsection{Improving the estimator}
 
 We repeat the same scheme as above.  Let $\BadProb, \eps \in (0,1)$ be
@@ -767,6 +830,8 @@ $Y_i = \sum_{j=1}^{\alpha} X_{i,j} / \alpha$, for
 $i=1, \ldots, \beta$. Let $Z$ be the median of $Y_1, \ldots, Y_\beta$,
 and the algorithm returns $Z$ as the estimator.
 
+\remX{G1 and G2: Round both repetition counts and initialize every sketch independently; see review.md.}
+
 
 \begin{theorem}
     Given a stream $\STRM = \strm_1, \ldots, \strm_m$ of numbers from
@@ -777,7 +842,7 @@ and the algorithm returns $Z$ as the estimator.
     this is also the time to handle a new element in the stream.
 \end{theorem}
 \begin{proof}
-    The scheme is described above. As before, using Chebychev's
+    The scheme is described above. As before, using Chebyshev's
     inequality, we have that
     \begin{equation*}
         \Prob{ \cardin{Y_i - \Frq_2} > \eps \Frq_2 }%
@@ -811,6 +876,8 @@ and the algorithm returns $Z$ as the estimator.
     \end{equation*}
     by Chernoff inequality (\lemref{chernoff:small:delta}), and
 \end{proof}
+
+\remX{G4: Justify the tail estimate for an upper bound on the mean and a non-strict threshold. W2: The earlier cross-reference is undefined. E1: Avoid division by zero variance in the Chebyshev calculation. See review.md.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
