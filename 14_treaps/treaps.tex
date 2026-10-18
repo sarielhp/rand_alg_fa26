@@ -1,9 +1,4 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
 \ChapterNumPage{14}{104}
 
 
@@ -41,8 +36,8 @@ significantly (i.e., we pretend it did not shrink at all).
 
 Now, observe that for any two random variables we have that
 $\Ex{X \MakeSBig } = \ExExt{y}{\Ex{X\left| \MakeSBig {Y=y}
-      \right.}\MakeBig }$, see
-\lemrefpage{conditional:expectation}.. As such, we have that
+      \right.}\MakeBig }$, see \lemrefpage{conditional:expectation}. As
+such, we have that
 \begin{align*}
     &\Ex{X_i \MakeBig }
     \\&=
@@ -142,9 +137,9 @@ them by $\Tree_L$ and $\Tree_R$. We build the natural tree, by
 creating a node for $x_k$, having $\Tree_L$ its left child, and
 $\Tree_R$ as its right child.
 
-We call the resulting tree a \emphOnly{treap}\index{treap}. As it is a tree over the
-elements, and a heap over the priorities; that is, \textsc{treap} =
-\textsc{tree} + \textsc{heap}.
+We call the resulting tree a \emphOnly{treap}\index{treap}. As it is a
+tree over the elements, and a heap over the priorities; that is,
+\textsc{treap} = \textsc{tree} + \textsc{heap}.
 
 
 
@@ -244,7 +239,7 @@ direction.
 
     \caption{\algRotateRight: Rotate right in action. Importantly,
        after the rotation the priorities are ordered correctly (at
-       least locally for this subtree.}
+       least locally for this subtree).}
     \figlab{rotate:right}
 \end{figure}
 
@@ -484,7 +479,7 @@ here: \url{http://valis.cs.uiuc.edu/blog/?p=6060}.
    \section{From previous lectures}
 
    \IncFragment{Markov}%
-
+   \IncFragment{conditional_expectation}
 }
 
 
