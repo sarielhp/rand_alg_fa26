@@ -1,14 +1,6 @@
 
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
 
-
-
-% \newcommand{\SCHX}{{{\CnvxBdy}^{\oplus}}}
 \ChapterNumPage{7}{54}
 
 \Chapter{The Birthday Paradox, Occupancy and the Coupon Collector
@@ -35,10 +27,7 @@
 \begin{lemma}
     \lemlab{approximation:basic}%
     %
-    For any positive integer $n$, we have the following bounds%
-    \footnote{Nitty-picky: In (iii), assume $n\geq2$; in (v), $k$ is an
-       integer with $1\leq k\leq n$. (Nitpicking is the official english word,
-       but nitty-picky is so much nicer.)}.
+    For any positive integer $n$, we have the following bounds
     \begin{compactenumi}
         \medskip%
         \item $1+x \leq e^x$ \;\;and\;\; $1-x \leq e^{-x}$, for all $x$.
@@ -65,6 +54,11 @@
     \end{compactenumi}
 \end{lemma}
 \end{fragment}
+
+Nitty-picky: In (iii), assume $n\geq2$; in (v), $k$ is an integer with
+$1\leq k\leq n$. (Nitpicking is the official English word, but
+nitty-picky is so much nicer.).
+
 
 \begin{proof}
     \textbf{(i)} Let $h(x) = e^x - 1 - x$. Observe that

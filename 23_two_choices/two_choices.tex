@@ -1,4 +1,5 @@
-@comment{\input{styles/prefix}%
+\input{styles/prefix}%
+
 \ChapterNumPage{23}{181}
 
 \Chapter{The power of two choices}
@@ -239,11 +240,11 @@ argument.
         $\Ex{\bigl. Y(d,n, dn)} = O( n \log d) $.
 
         \item For a constant $c>1$ and $m = c n \log d$ balls, we have
-        \begin{math}
+        \[
             \Ex{\bigl. Y(d,n, c n \log d ) }
             \leq%
             n/e^{d/2},
-        \end{math}
+        \]
         assuming $d$ is sufficiently large (so that $D \leq d/2$ in
         the proof below).
     \end{compactenumA}
@@ -388,7 +389,10 @@ process, that have load $\geq i$.
 
         \smallskip%
         \item For every integer $j > 0$, and any constant $\eps > 0$, we
-        have $\Prob{ \BLX{I+1+j} > 0} \leq O(1/n^{(d-1-\eps)j})$.
+        have
+        \[
+        \Prob{ \BLX{I+1+j} > 0} \leq O(1/n^{(d-1-\eps)j}).
+        \]
 
         \smallskip%
         \item The maximum load of a bin is $I+O(c)$.
