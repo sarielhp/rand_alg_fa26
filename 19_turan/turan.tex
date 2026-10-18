@@ -39,12 +39,13 @@
 \subsection{Some silly helper lemmas}
 We will need the following well-known inequality.
 
-\begin{lemma}[AM-GM inequality: Arithmetic and geometric means
-    inequality.]
-
+\begin{lemma}[AM-GM inequality]
+    The arithmetic and geometric means inequality.
     For any $x_1, \ldots, x_n \geq 0$ we have
-    $\ds \frac{x_1 + x_2 + \cdots + x_n}{n} \geq
-    \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}$.
+    \[
+    \frac{x_1 + x_2 + \cdots + x_n}{n} \geq
+    \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}.
+    \]
 \end{lemma}
 This inequality readily implies the ``inverse'' inequality:
 \begin{math}
@@ -62,18 +63,18 @@ This inequality readily implies the ``inverse'' inequality:
 \end{lemma}
 \begin{proof}
     By the SM-GM inequality and then its ``inverse'' form, we have
-    \begin{equation*}
+    \begin{align*}
         \frac{\sum_{i=1}^n \frac{1}{x_i}}{n}
-        =%
-        \frac{1/x_1 + 1/x_2 + \cdots + 1/x_n}{n}%
-        \geq%
+        &=
+        \frac{1/x_1 + 1/x_2 + \cdots + 1/x_n}{n}\\
+        &\geq
         \sqrt[\uproot{4}n]{(1/x_1) (1/x_2) \cdots (1/x_n)}
-        =%
+        =
         \frac{1}{
-           \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}}
-        \geq%
-        \frac{n}{x_1 + x_2 + \cdots + x_n}.        
-    \end{equation*}
+           \sqrt[\uproot{4}n]{x_1 x_2 \cdots x_n}}\\
+        &\geq
+        \frac{n}{x_1 + x_2 + \cdots + x_n}.
+    \end{align*}
 \end{proof}
 
 \begin{lemma}

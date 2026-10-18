@@ -55,11 +55,11 @@ maybe surprising.
     
     Now, consider $1 \leq i_1 < i_2 < \ldots < i_k \leq n$, and
     observe that
-    \begin{math}
-        \Prob{\Bigl. \Event_{i_1} \sep{ \Event_{i_2} \cap \ldots \cap
+    \begin{align*}
+        &\Prob{\Bigl. \Event_{i_1} \sep{ \Event_{i_2} \cap \ldots \cap
               \Event_{i_{k}} }}%
-        = \Prob{\Event_{i_1}},%
-    \end{math}
+        \\&= \Prob{\Event_{i_1}},%
+    \end{align*}
     since by our thought experiment, $\Event_{i_1}$ is determined
     after all the other variables
     $\Event_{i_{2}}, \ldots, \Event_{i_k}$. In particular, the
@@ -70,13 +70,13 @@ maybe surprising.
            \Event_{i_k} }%
         &=%
         \Prob{\Bigl. \Event_{i_1} \sep{ \Event_{i_2} \cap \ldots \cap
-              \Event_{i_{k}} }} \Prob{ \Event_{i_2} \cap \ldots \cap
+              \Event_{i_{k}} }}\\&\quad \Prob{ \Event_{i_2} \cap \ldots \cap
            \Event_{i_{k}} }%
         \\&%
         =%
         \Prob{\Bigl. \Event_{i_1}} \Prob{\Bigl. \Event_{i_2} \cap
            \Event_{i_2} \cap \ldots \cap \Event_{i_{k}} }%
-        =%
+        \\&=%
         \prod_{j=1}^k \Prob{\Event_{i_j}} = \prod_{j=1}^k
         \frac{1}{i_j},
     \end{align*}
@@ -92,9 +92,13 @@ maybe surprising.
     $1, \ldots, n$, and let $Z$ be the number of times, that $\pi_i$
     is the smallest number among $\pi_1, \ldots, \pi_i$, for
     $i=1,\ldots, n$. Then, we have that for $t \geq 2e$ that
-    $\Prob{ \bigl. Z > t \ln n} \leq 1/ n^{t \ln 2}$, and for
-    $t \in \pbrc[]{1, 2e}$, we have that
-    $\Prob{\bigl. Z > t \ln n} \leq 1/ n^{(t-1)^2/4}$.
+    \[
+    \Prob{ \bigl. Z > t \ln n} \leq 1/ n^{t \ln 2},
+    \]
+    and for $t \in \pbrc[]{1, 2e}$, we have that
+    \[
+    \Prob{\bigl. Z > t \ln n} \leq 1/ n^{(t-1)^2/4}.
+    \]
 \end{theorem}
 
 \begin{proof}

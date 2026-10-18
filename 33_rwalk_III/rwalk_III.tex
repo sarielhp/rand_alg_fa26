@@ -128,8 +128,11 @@ a unique stationary distribution $\pi$.
 \end{minipage}%
 
 \begin{example}[More on walking on the Lollipop]
-    To see why $\MCExSteps{u}{v} = \Theta (n^3)$, number the vertices
-    on the stem $x_1, \ldots, x_n$. Let $T_i$ be the expected time to
+    To see why
+    \[
+    \MCExSteps{u}{v} = \Theta (n^3),
+    \]
+    number the vertices on the stem $x_1, \ldots, x_n$. Let $T_i$ be the expected time to
     arrive to the vertex $x_i$ when starting a walk from $u$. Observe,
     that surprisingly, $T_1 = \Theta( n^2 )$. Indeed, the walk has to
     visit the vertex $u$ about $n$ times in expectation, till the walk
@@ -145,12 +148,12 @@ a unique stationary distribution $\pi$.
     such, we have that
     \begin{align*}
       T_{2i}%
-      =%
+      &=%
       2T_i + \Theta\pth{ i^2}%
-      =%
+      \\ &=%
       2\pth[]{\Big. 2T_{i/2} + \Theta\pth{ (i/2)^2}}%
       + \Theta\pth{ i^2}%
-      =%
+      \\ &=%
       \cdots = 2^{1 + \log_2 i}T_1 + \Theta\pth{ i^2 },
     \end{align*}
     assuming $i$ is a power of two (why not?). As such, $T_n = nT_1 +
@@ -168,7 +171,11 @@ a unique stationary distribution $\pi$.
 \begin{lemma}
     Let $\MC$ be a Markov chain, such that transition probability
     matrix $\MCPrbM$ is \emph{doubly stochastic}. Then, the
-    distribution $u = (1/n, 1/n,\ldots, 1/n)$ is stationary for $\MC$.
+    distribution
+    \[
+    u = (1/n, 1/n,\ldots, 1/n)
+    \]
+    is stationary for $\MC$.
     
     \lemlab{obvious}
 \end{lemma}
@@ -217,9 +224,9 @@ see \thmref{amazing}.)
     that not only do the rows sum to one, but the columns sum to one
     as well.  Indeed, for an edge $\dirEdge{v}{w}$ we have
     \begin{align*}
-      \sum_{x \in V, y \in \Nbr(x)} Q_{\dirEdge{x}{y},
-      \dirEdge{v}{w}} = \sum_{u \in \Nbr(v)} Q_{\dirEdge{u}{v},
-      \dirEdge{v}{w}} = \sum_{u \in \Nbr(v)} \MCPrbY{v}{w} = d(v)
+      &\sum_{x \in V, y \in \Nbr(x)} Q_{\dirEdge{x}{y},
+      \dirEdge{v}{w}} &= \sum_{u \in \Nbr(v)} Q_{\dirEdge{u}{v},
+      \dirEdge{v}{w}} \\&= \sum_{u \in \Nbr(v)} \MCPrbY{v}{w} = d(v)
       \times \frac{1}{d(v)} = 1.
     \end{align*}
     Thus, the stationary distribution for this Markov chain is
@@ -326,15 +333,17 @@ In particular, if $R_1= \cdots = R_n$, then $R_{uv} = n R$.
     - \phi_{yv}$. Thus, using Kirchhoff's Law and Ohm's Law, we obtain
     that
     % , for all $.$, we have
-    \begin{equation}
-        x \in V \setminus \brc{v}\;\;\;\;\;%
-        d(x) = \sum_{w \in
-           \Nbr(x)} \mathrm{current}(x w) = \sum_{w \in \Nbr(x)}
-        \frac{\phi_{x w}}{\mathrm{resistance}(x w)} = \sum_{w \in
+    \begin{align}
+        x \in V \setminus \brc{v} \nonumber\\
+        d(x) &= \sum_{w \in
+           \Nbr(x)} \mathrm{current}(x w) \nonumber\\
+        &= \sum_{w \in \Nbr(x)}
+        \frac{\phi_{x w}}{\mathrm{resistance}(x w)} \nonumber\\
+        &= \sum_{w \in
            \Nbr(x)} \pth{ \phi_{x v} - \phi_{wv}},%
         %
         \eqlab{voltage}
-    \end{equation}
+    \end{align}
     since the resistance of every edge is $1$ ohm. (We also have the
     ``trivial'' equality that $\phi_{vv}=0$.)  Furthermore, we have
     only $n$ variables in this system; that is, for every $x \in
@@ -345,15 +354,17 @@ In particular, if $R_1= \cdots = R_n$, then $R_{uv} = n R$.
     \begin{align*}
         x \in V \setminus \brc{v} \;\;\;\;\; &\MCExSteps{x}{v} =
         \frac{1}{d(x)}\sum_{w \in \Nbr(x)} \pth{1 + \MCExSteps{w}{v}}%
-        % 
-        \;\;\;\; \Longleftrightarrow \;\;\;\;%
-        % 
+        %
+        \\
+        &\Longleftrightarrow \;\;\;\;%
+        %
         d(x)\, \MCExSteps{x}{v} = \sum_{w
            \in \Nbr(x)} 1 + \sum_{w \in \Nbr(x)}\MCExSteps{w}{v}\\
         &%
         \Longleftrightarrow \;\;\;\; %
         \sum_{w \in \Nbr(x)} 1 = d(x)\, \MCExSteps{x}{v} - \sum_{w \in
-           \Nbr(x)}\MCExSteps{w}{v}= \sum_{w \in \Nbr(x)} \pth{
+           \Nbr(x)}\MCExSteps{w}{v}\\
+        &= \sum_{w \in \Nbr(x)} \pth{
            \MCExSteps{x}{v} - \MCExSteps{w}{v}}.
     \end{align*}
     Since $d(x) = \sum_{w \in \Nbr(x)} 1$, this is equivalent to
@@ -403,8 +414,9 @@ In particular, if $R_1= \cdots = R_n$, then $R_{uv} = n R$.
 \end{figure}
 
 \begin{example}
-    Recall the lollipop $L_n$ from \exeref{lollipop}, see
-    \figref{lollipop}.  Let $u$ be the connecting vertex between the
+    Recall the lollipop $L_n$ of \exeref{lollipop}, see
+    \figref{lollipop}.
+    Let $u$ be the connecting vertex between the
     clique and the stem (i.e., the path). The effective resistance
     between $u$ and $v$ is $n$ since there are $n$ resistors in series
     along the stem. That is $R_{uv} = n$.

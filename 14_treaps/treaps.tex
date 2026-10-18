@@ -44,16 +44,16 @@ $\Ex{X \MakeSBig } = \ExExt{y}{\Ex{X\left| \MakeSBig {Y=y}
       \right.}\MakeBig }$, see
 \lemrefpage{conditional:expectation}.. As such, we have that
 \begin{align*}
-    \Ex{X_i \MakeBig }%
-    =%
-    \ExExt{y}{\Ex{X_i\sep{X_{i-1}=y}}\Bigl. }%
-    \leq%
-    \ExExt{X_{i-1}=y}{ \frac{7}{8} y }%
-    =%
-    \frac{7}{8} \Ex{X_{i-1}\MakeBig }%
-    \leq%
-    \pth{\frac{7}{8}}^i \Ex{X_0}%
-    =%
+    &\Ex{X_i \MakeBig }
+    \\&=
+    \ExExt{y}{\Ex{X_i\sep{X_{i-1}=y}}\Bigl. }
+    \\&\leq
+    \ExExt{X_{i-1}=y}{ \frac{7}{8} y }
+    \\&=
+    \frac{7}{8} \Ex{X_{i-1}\MakeBig }
+    \\&\leq
+    \pth{\frac{7}{8}}^i \Ex{X_0}
+    \\&=
     \pth{\frac{7}{8}}^i n.
 \end{align*}
 
@@ -321,12 +321,12 @@ priority, and rotate it back so the priorities properties hold.
     $\Tree_i$.  By \lemref{treap:depth}, the probability that
     $\Tree_i$ has large depth is tiny. Specifically, we have that
     \begin{align*}
-        \alpha_i = \Prob{\MakeBig \mathrm{depth}\pth{\Tree_i} > t c'
-           \log n^c }%
-        =%
+        \alpha_i &= \Prob{\MakeBig \mathrm{depth}\pth{\Tree_i} > t c'
+           \log n^c }
+        \\&=
         \Prob{\mathrm{depth}\pth{\Tree_i} > c' t \pth{\frac{\log n^c}{
                  \log \cardin{\Tree_i}}} \cdot \log \cardin{\Tree_i} }
-        \leq%
+        \\&\leq
         \frac{1}{n^{t \cdot c}},
     \end{align*}
     as a tedious and boring but straightforward calculation
@@ -362,7 +362,7 @@ priority, and rotate it back so the priorities properties hold.
 
 \begin{figure}[t]
    \centering
-   \begin{minipage}{0.4\linewidth}
+   \begin{minipage}{0.7\linewidth}
        \begin{algorithmEnv}
            \MatchNutsAndBolts($N$: nuts, $B$: bolts) \+ \\
         Pick a random nut $n_{pivot}$ from $N$\\
@@ -445,7 +445,7 @@ resulting algorithm is depicted in \figref{sort:nuts:and:bolts}.
       T(n)%
       &=%
         \ExExt{k=\Rank(n_{pivot})}{ O(n)+T(k-1)+T(n-k) }
-        =%
+      \\&=%
         O(n) + \ExExt{k}{ T(k-1) + T(n-k)}%
       \\&%
       =%

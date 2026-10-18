@@ -56,26 +56,26 @@ possible\footnote{Or smaller!}, and $c$ as large as possible.
     
     Let $\Event_s$ be the event that a subset of $s$ vertices of $L$
     has fewer than $cs$ neighbors in $R$. Clearly,
-    \begin{equation*}
+    \begin{align*}
         \Prob{\bigl.\Event_s}%
-        \leq%
+        &\leq%
         \mybinom{n}{s} \, \mybinom{n}{cs} \pth{ \frac{cs}{n}}^{ds}%
         \leq%
         \pth{\frac{ne}{s}}^s \pth{\frac{ne}{cs}}^{cs} \pth{
            \frac{cs}{n}}^{ds}%
-        =%
+        \\&=%
         \Bigl[ \pth{\frac{s}{n}}^{d-c-1} \exp\pth{\bigl. 1+c}\,
         c^{d-c} \Bigr]^s,
-    \end{equation*}
+    \end{align*}
     since $\binom{n}{k} \leq \pth{\frac{ne}{k}}^k$. Setting
     $\alpha = 1/3$ using $s\leq \alpha n$, and $c=2$, we have
     \begin{align*}
       \Prob{\bigl. \Event_s}%
       &\leq%
         \brk{ \Bigl. \smash{ \pth{\Bigl.\smash{\frac{1}{3}}}^{d-c-1} e^{1+c} c^{d-c} }}^s%
-        \leq %
+        \\&\leq %
         \brk{ \Bigl. \smash{\Bigl(\frac{1}{3} \Bigr)^{d}}3^{1+c} e^{1+c} c^{d-c}}^s%
-        \leq %
+        \\&\leq %
         \brk{ \Bigl( \frac{1}{3} \Bigr)^{d}3^{1+c}
         e^{1+c} c^{d}}^s  \\
       &\leq%
@@ -196,8 +196,9 @@ algorithm using two-point sampling.
 \begin{theorem}%
     \thmlab{expand}%
     %
-    For $n$ large enough, there exists a bipartite graph
-    $\Graph(V,R,E)$ with $|V|=n$, $|R|= 2^{\lg^2 n}$ such that:
+    For $n$ large enough, there exists a bipartite graph\linebreak
+    $\Graph(V,R,E)$, such that $|V|=n$,
+    $|R|= 2^{\lg^2 n}$, and:
     \begin{compactenumi}
         \item Every subset of $n/2$ vertices of $V$ has at least
         $\,{2^{\lg^2 n} -n}\,$ neighbors in $R$.
@@ -222,7 +223,7 @@ algorithm using two-point sampling.
       & \leq %
         \mybinom{n}{n/2} \, \mybinom{2^{\lg^2 n}}{n} \pth{ 1 -
         \frac{n}{2^{\lg^2 n}}}^{dn/2}%
-        \leq %
+        \\&\leq %
         2^n \pth{\frac{2^{\lg^2 n}e}{n}}^n \exp \pth{ -
         \frac{dn}{2} \frac{n}{2^{\lg^2 n}}}%
       \\&%
@@ -230,7 +231,7 @@ algorithm using two-point sampling.
       2^n \underbrace{\pth{\frac{2^{\lg^2 n}e}{n}}^n}_{*}%
       \exp \Bigl({ - \frac{ {2^{\lg^2n} ( 4 \lg^2 n)/n}}{2}
       \frac{n^2}{2^{\lg^2 n}}}\Bigr)%
-      \leq%
+      \\&\leq%
       \exp \pth{\Bigl. n +
       \smash{\underbrace{n \ln {\frac{2^{\lg^2 n}e}{n}}}_{*}}
       - 2n \lg^2 n },
@@ -271,9 +272,9 @@ algorithm using two-point sampling.
         \alpha%
         = %
         \Prob{\Bigl. Y > 12 \lg^2 n }%
-        = %
+        \\&= %
         \Prob{\Bigl. Y > (1 + 2) \mu }%
-        <%
+        \\&<%
         \exp\pth{ - \mu 2^2 / 4 }%
         =%
         \exp\pth{ -4 \lg^2 n}.
@@ -318,8 +319,9 @@ vertices of $R$ except for at most $\cardin{R} - \pth{2^{\lg^2 n} -n}
 \begin{align*}
     \Prob{\Bigl. x \in L \text{ but } r_1, r_2, \ldots, r_k \notin U
     }%
-    =%
-    \Prob{\Bigl. v \text{ not connected to } U } \leq
+    &=%
+    \Prob{\Bigl. v \text{ not connected to } U } \\
+    &\leq
     \frac{n}{\cardin{R}}%
     \leq%
     \frac{n}{2^{\lg^2 n }}.
@@ -346,10 +348,10 @@ options:
     \item \lemref{derand:expander}, which as probability of failure at
     most $1/2^{\lg n} = 1/n$.
 
-    \item The third option is to use pairwise independent sampling
-    (see \lemrefpage{pairwise}). While it is not directly comparable
-    to the above two options, it is clearly inferior, and is thus less
-    useful.
+    \item The third option is to use pairwise independent
+    sampling (see\linebreak \lemrefpage{pairwise}). While it is not directly
+    comparable to the above two options, it is clearly inferior,
+    and is thus less useful.
 
 \end{compactenumA}
 \bigskip

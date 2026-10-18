@@ -181,29 +181,29 @@ a weight decrease.
     $\Phi_{t+1}%
         =%
         \sum_{i=1}^N W_{t+1}(i)$, and 
-    \begin{equation*}
+    \begin{align*}
         \Phi_{t+1}%
-        =%
+        &=%
         \sum_{i=1}^N \bigl(1-\eps m_t(i) \bigr)W_t(i)        
         =%
         \Phi_{t} -\eps 
         \sum_{i=1}^N  m_t(i)W_t(i)
-        =%
+        \\&=%
         \Phi_{t} -\eps \Phi_t
         \sum_{i=1}^N  m_t(i)\frac{W_t(i)}{\Phi_t}
-        =%
+        \&=%
         \Bigl( 1-\eps \Ex{\textbf{m}_t}\Bigr) \, \Phi_t.
-    \end{equation*}
+    \end{align*}
     We now follow the same argument as before
     \begin{align*}
       &(1-\eps)^{\mistakesY{T}{i}} \leq \Phi_T
-        \leq %
+      \\&\leq %
         N \prod_{t=1}^T \Bigl( 1-\eps \Ex{\textbf{m}_t}\Bigr)
-        \leq %
+      \\&\leq %
         N  \exp\pth{ -\eps \Ex{ \MistakesX{T}} }
-        \implies%
+      \\&\implies%
         (-\eps - \eps^2 ) \mistakesY{T}{i}
-        \leq
+      \\&\leq
         \ln N  -\eps \Ex{ \MistakesX{T}} 
       \\%
       &\implies%

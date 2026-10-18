@@ -76,9 +76,11 @@
 \begin{defn}
     An event $\Event$ is mutually independent of a set of events
     $\EuScript{C}$, if for any subset $\EuScript{U} \subseteq
-    \EuScript{C}$, we have that 
-    $\Prob{\Event \cap \pth{\bigcap_{\Event' \in U} \Event'}}
-    =\Prob{\Event } \Prob{\bigcap_{\Event' \in U} \Event'}$.
+    \EuScript{C}$, we have that
+    \[
+    \Prob{\Event \cap \pth{\bigcap_{\Event' \in U} \Event'}}
+    =\Prob{\Event } \Prob{\bigcap_{\Event' \in U} \Event'}.
+    \]
      
 
     Let $\Event_1, \ldots, \Event_n$ be events. A \emphOnly{dependency
@@ -187,20 +189,23 @@ We need the following technical lemma.
         \pth{ 1 - \Prob{{\Event_{j_2}} \sep{ \overline{\Event_{j_1}} \cap
                  \pth{ \cap_{m \in R} \overline{\Event_m}}}}} 
         \\&
-        \qquad\qquad\qquad\cdots \qquad
+        \qquad\cdots ;
         \pth{ 1 - \Prob{{\Event_{j_r}} \sep{ \overline{\Event_{j_1}} \cap
                  \ldots \cap \overline{\Event_{j_{r-1}}} \;\cap\;
                  \pth{ \cap_{m \in R} \overline{\Event_m}}}} \;} 
         \\&
         \qquad\GEQ
         \pth{1 -x_{j_1}} \cdots \pth{1 - x_{j_r}}
-        \geq \prod_{(i,j) \in E} \pth{1 -x_j},
+        \\&
+        \qquad\geq \prod_{(i,j) \in E} \pth{1 -x_j},
     \end{align*}
     by \Eqref{ind} and induction, as every probability term
     in the above expression has less than $\cardin{S}$ items
-    involved. It thus follows, that 
-    $\Prob{\Event_i \sep{\bigcap_{j \in S} \overline{\Event_j}}} \leq
-    x_i$. 
+    involved. It thus follows, that
+    \[
+    \Prob{\Event_i \sep{\bigcap_{j \in S} \overline{\Event_j}}} \leq
+    x_i.
+    \]
 \end{proof}
 
 %\bigskip
@@ -208,10 +213,11 @@ We need the following technical lemma.
 \noindent\begin{proofExt}{Proof of \Lovasz{} local lemma
        (\lemref{Lovasz})} Using \lemref{Lovasz:helper}, we have that
     \begin{align*}
-    \Prob{\cap_{i=1}^{n} \overline{\Event_i}} = \pth{1 -
+    &\Prob{\cap_{i=1}^{n} \overline{\Event_i}} = \pth{1 -
        \Prob{\Event_1}} \pth{1 - \Prob{\Event_2 \sep{\overline{\Event_1}}}}
     \cdots \pth{1 - \Prob{\Event_n \sep{ \cap_{i=1}^{n-1}
-             \overline{\Event_{i}}}}} \geq
+             \overline{\Event_{i}}}}}
+    \\&\geq
     \prod_{i=1}^{n} \pth{1-x_i}.
     \end{align*}   
 \end{proofExt}
@@ -398,10 +404,10 @@ that $I'$ has a satisfying assignment.
     the probability of any connected subgraph of $\Graph_4$ of size $r =
     \log_2 {m}$ to survive in $\Graph'$ is smaller than
     \begin{align*}
-        m d^{8r} \pth{2^{-k/2}(d+1)}^{r}%
-        =%
+        &m d^{8r} \pth{2^{-k/2}(d+1)}^{r}%
+        \\&=%
         m \pth{k2^{k/50}}^{8r } \pth{2^{-k/2}(k2^{k/50}+1)}^{r}%
-        \leq%
+        \\&\leq%
         m 2^{kr/5} \cdot 2^{-kr/4}%
         =%
         m 2^{-kr/20}%

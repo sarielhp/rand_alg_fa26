@@ -69,7 +69,10 @@ $n$. It has $n$ roots (not necessarily real), which are the
 \end{lemma}
 \begin{proof}
     Indeed, $v_1^T \MA v_2 = \lambda_2 v_1^T v_2$. Similarly, we have
-    $v_1^T \MA v_2 = (\MA^T v_1)^T v_2) =\lambda_1 v_1^T v_2$. We
+    \[
+    v_1^T \MA v_2 = (\MA^T v_1)^T v_2) =\lambda_1 v_1^T v_2.
+    \]
+    We
     conclude that either $\lambda_1 = \lambda_2$, or $v_1$ and $v_2$
     are orthogonal (i.e., $v_1^T v_2 = 0$).
 \end{proof}
@@ -89,14 +92,22 @@ need the following theorem.
 
 
 \begin{fragment}{f_t_algebraic_graph}
-\begin{theorem}[Fundamental theorem of algebraic graph theory]
+\begin{theorem}[{\small Fundamental theorem of algebraic graph theory}]
     \thmlab{{f:t:algebraic:graph}}%
     %
-    Let $\Graph= \Graph(V,E)$ be an undirected (multi)graph with
-    maximum degree $d$ and with $n$ vertices.  Let
-    $\lambda_1\geq\lambda_2\geq \cdots \geq \lambda_n$ be the
-    eigenvalues of $\Mtrx(\Graph)$ and the corresponding orthonormal
-    eigenvectors are $e_1,\ldots, e_n$. The following holds.
+    \hfill\break
+    Let
+    \[
+    \Graph= \Graph(V,E)
+    \]
+    be an undirected (multi)graph with maximum degree $d$ and with $n$
+    vertices.  Let
+    \[
+    \lambda_1\geq\lambda_2\geq \cdots \geq \lambda_n
+    \]
+    be the eigenvalues of $\Mtrx(\Graph)$ and the corresponding
+    orthonormal eigenvectors are $e_1,\ldots, e_n$. The following
+    holds.
     \begin{compactenumi}
         \item If $\Graph$ is connected then $\lambda_2 < \lambda_1$.
 
@@ -106,8 +117,10 @@ need the following theorem.
         \item $d$ is an eigenvalue if and only if $\Graph$ is regular.
 
         \item If $\Graph$ is $d$-regular then the eigenvalue
-        $\lambda_1=d$ has the eigenvector $e_1 = \frac{1}{\sqrt{n}}
-        (1,1,1, \ldots, 1)$.
+        $\lambda_1=d$ has the eigenvector
+        \[
+        e_1 = \frac{1}{\sqrt{n}} (1,1,1, \ldots, 1).
+        \]
 
         \item The graph $\Graph$ is bipartite if and only if for every
         eigenvalue $\lambda$ there is an eigenvalue $-\lambda$ of the
@@ -116,10 +129,13 @@ need the following theorem.
         \item Suppose that $\Graph$ is connected. Then $\Graph$ is bipartite if
         and only if $-\lambda_1$ is an eigenvalue.
 
-        \item If $\Graph$ is $d$-regular and bipartite, then $\lambda_n =
-        d$ and $e_n=\frac{1}{\sqrt{n}} ( 1,1, \ldots, 1, -1, \ldots,
-        -1)$, where there are equal numbers of $1$s and $-1$s in
-        $e_n$.
+        \item If $\Graph$ is $d$-regular and bipartite, then
+        \[
+        \lambda_n = d
+        \quad\text{and}\quad
+        e_n=\frac{1}{\sqrt{n}} ( 1,1, \ldots, 1, -1, \ldots, -1),
+        \]
+        where there are equal numbers of $1$s and $-1$s in $e_n$.
     \end{compactenumi}
 \end{theorem}
 \end{fragment}

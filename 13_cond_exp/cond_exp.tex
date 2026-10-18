@@ -108,21 +108,20 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.
 \end{fragment}
 \begin{proof}
     We have that
-    \begin{math}
-        \ds%
+    \begin{align*}
         \Ex{Y \cdot \Ex{X \sep{Y}}}%
-        =%
+        &=%
         \sum_y \Prob{Y = y} \cdot y \cdot \Ex{X \sep{Y =y }}
-    \end{math}
-    \begin{equation*}
-        =%
+        \\
+        &=%
         \sum_y \Prob{Y = y} \cdot y \cdot \frac{\sum_{x} x \Prob{X = x
               \cap Y=y}}{\Prob{Y=y}}%
-        =%
+        \\
+        &=%
         \sum_x \sum_y x y \cdot \Prob{ \bigl. X = x \cap Y = y}%
         =%
         \Ex{\bigl. X Y}.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,22 +164,25 @@ conditional expectation as a function $f(y) = \ExCond{X}{Y=y}$.
         Y_n \geq (1/2)^{n/4}.
     \end{equation*}
     We are now ready for our conclusions:
-    \begin{equation*}
-        \Prob{ \sum\nolimits_i X_i > (3/4) n }
+    \begin{align*}
+        &\Prob{ \sum\nolimits_i X_i > (3/4) n }
         =%
         \Prob{ Y_n \geq (1/2)^{n/4}}
         \leq%
         \frac{\Ex{Y_n}}{(1/2)^{n/4}}
-        \leq%
+        \\
+        &\leq%
         \frac{(3/4)^n}{(1/2)^{n/4}}
         =%
         \pth{\frac{2^{1/4}3}{4}}^n
         \leq
         0.9^n.
-    \end{equation*}
+    \end{align*}
     By symmetry, we have
-    $\Prob{ \sum_i X_i < (1/4) n } = \Prob{ \sum_i X_i > (3/4) n } <
-    0.9^n$.
+    \[
+        \Prob{ \sum_i X_i < (1/4) n } = \Prob{ \sum_i X_i > (3/4) n } <
+        0.9^n.
+    \]
 \end{proof}
 
 

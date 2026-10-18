@@ -155,17 +155,20 @@ $\Distor(f) = \max_{x,y} \frac{\dist{x - y}}{\DistChar(x,y)}$.
 
 \bigskip%
 \noindent%
-\begin{minipage}{0.85\linewidth}
+\begin{minipage}{0.83\linewidth}
 \paragraph*{Why is distortion necessary?}
 Consider the a graph $\Graph=(\Vertices,\Edges)$ with one vertex $s$
 connected to three other vertices $a, b, c$, where the weights on the
 edges are all one (i.e., $\Graph$ is the star graph with three leafs).
 We claim that $\Graph$ can not be embedded into Euclidean space with
-distortion $\leq \sqrt{2}$.  Indeed, consider the associated metric
-space $(\Vertices,\DistChar_G)$ and an (expansive) embedding
-$f: \Vertices \rightarrow \Re^d$.
+distortion $\leq \sqrt{2}$.  Indeed, consider the associated metric space
+$(\Vertices,\DistChar_G)$ and an (expansive)
+embedding
+\[
+f: \Vertices \rightarrow \Re^d.
+\]
 \end{minipage}%
-\begin{minipage}{0.15\linewidth}
+\begin{minipage}{0.17\linewidth}
     \hfill%
     {\includegraphics{\File{figs/star}}}
 \end{minipage}
@@ -173,7 +176,11 @@ $f: \Vertices \rightarrow \Re^d$.
 
 Consider the triangle formed by $\triangle = a'b' c'$, where
 $a' = f(a), b'= f(b)$ and $c' =f(c)$. Next, consider the following
-quantity $\max \pth{ \dist{a'-s'},\dist{b'-s'},\dist{c'-s'}}$ which
+quantity
+\[
+\max \pth{ \dist{a'-s'},\dist{b'-s'},\dist{c'-s'}},
+\]
+which
 lower bounds the distortion of $f$. This quantity is minimized when
 $r= \dist{a'-s'}=\dist{b'-s'}=\dist{c'-s'}$. Namely, $s'$ is the
 center of the smallest enclosing circle of $\triangle$. However, $r$
@@ -361,9 +368,9 @@ The partition is now defined as follows: A point $x\in \FMS$ is assigned
 to the cluster $C_y$ of $y$, where $y$ is the first point in the
 permutation in distance $\leq R$ from $x$. Formally,
 \begin{equation*}
-C_y = \brc{ x \in \FMS \sep{ x \in \Ball(y, R) \textrm { and } \pi(y)
-      \leq \pi(z) \textrm{ for all $z \in \FMS$ with } x \in \Ball(z,
-      R)}}.
+C_y = \brc{ x \in \FMS \sep{ \substack{ x \in \Ball(y, R) \textrm { and } \pi(y)
+      \leq \pi(z) \\ \textrm{ for all $z \in \FMS$ with } x \in \Ball(z,
+      R)}}}.
 \end{equation*}
 Let $P = \{C_y\}_{y \in \FMS}$ denote the resulting partition.
 
@@ -446,7 +453,10 @@ broken.)
     \begin{align*}
       \Prob{\Ball(x,t) \nsubseteq P(x)}%
       &=%
-        \sum_{k=1}^{b'} \Prob{\Event_k} = \sum_{k=a+1}^{b'} \Prob{\Event_k}
+        \sum_{k=1}^{b'} \Prob{\Event_k}
+      \\&
+        = \sum_{k=a+1}^{b'} \Prob{\Event_k}
+      \\&
         =%
         \sum_{k=a+1}^{b'} \Prob{R \in I_k} \cdot \Prob{\mathcal
         E_k\,|\,R \in I_k}     %
@@ -528,12 +538,13 @@ find such an embedding with logarithmic probabilistic distortion.
     
     Let $t = \DistChar(x,y)$ and $j = \floor{\lg \DistChar(x,y)}$, and $n_i =
     \cardin{\Ball(x,2^i)}$ for $i=0, \ldots, -\infty$. We have
-    \begin{equation*}
-    \Ex{ \DistChar_T(x,y)} \leq \sum_{i=j}^{0} \Ex{Y_i} 2^i \leq
+    \begin{align*}
+    \Ex{ \DistChar_T(x,y)} &\leq \sum_{i=j}^{0} \Ex{Y_i} 2^i \leq
     \sum_{i=j}^{0} 2^i \Prob{ \Event_i \cap \overline{\Event_{i-1}}
-       \cap \overline{\Event_{i-1}} \cdots \overline{\Event_{0}}} \leq
+       \cap \overline{\Event_{i-1}} \cdots \overline{\Event_{0}}}
+    \\&\leq
     \sum_{i=j}^{0} 2^i \cdot \frac{8t}{2^i} \ln \frac{n_i}{n_{i-3}},
-    \end{equation*}
+    \end{align*}
     by \lemref{FRT}. Thus,
     \begin{equation*}
     \Ex{ \DistChar_T(x,y)} \leq 8t \ln \pth{\prod_{i=j}^{0}
@@ -573,22 +584,29 @@ induces as the required clustering.
     in the optimal clustering.  Let $C$ be the set of $k$-medians
     returned by the algorithm, and let $\HST$ be the HST used by the
     algorithm. We have
-    \begin{equation*}
+    \begin{align*}
         \beta%
-        =%
-        \MdPrc_C(\FMS,\DistChar) \leq \MdPrc_C(\FMS,\DistChar_\HST) \leq
+        &=%
+        \MdPrc_C(\FMS,\DistChar) \leq \MdPrc_C(\FMS,\DistChar_\HST)
+        \\&
+        \leq
         \MdPrc_{\Copt}(\FMS,\DistChar_\HST) \leq \sum_{p \in \FMS}
-        \DistChar_\HST(p, \Copt) \leq \sum_{p \in \FMS} \DistChar_\HST(p,
+        \DistChar_\HST(p, \Copt)
+        \\&
+        \leq \sum_{p \in \FMS} \DistChar_\HST(p,
         \CenterPnt(p)).
-    \end{equation*}
+    \end{align*}
     Thus, in expectation we have
     \begin{align*}
       \Ex{\beta}%
       &= %
         \Ex{ \Bigl. \smash{\sum_{p \in \FMS} \DistChar_\HST(p,
         \CenterPnt(p))}}%
+      \\&
         =%
-        \sum_{p \in \FMS} \Ex{ \DistChar_\HST(p, \CenterPnt(p))} =  \sum_{p \in
+        \sum_{p \in \FMS} \Ex{ \DistChar_\HST(p, \CenterPnt(p))}
+      \\&
+        =  \sum_{p \in
         \FMS} O \pth{ \DistChar(p, \CenterPnt(p)) \log n }
       \\&%
       =%
@@ -700,17 +718,19 @@ and the distance between the closest pair of points.
     for $i=0,\ldots, m$
     and $j=1,\ldots, \beta$. Let $F: \FMS \rightarrow \Re^{(m+1) \cdot
        \beta}$ be the embedding, such that
-    \begin{equation*}
+    \begin{align*}
         F(x)%
-        =%
+        &=%
         \bigl(
         \underbrace{f_{0,1}(x), f_{0,2}(x), \ldots,
            f_{0,\beta}(x)}_{\text{first n resolution block}},
         f_{1,1}(x),
         f_{1,2}(x),
-        \ldots, f_{1,\beta}(x), \ldots, f_{m,1}(x), f_{m,2}(x), \ldots,
-        f_{\alpha,\beta}(x)\bigr).        
-    \end{equation*}
+        \ldots, f_{1,\beta}(x), \ldots,
+        \\&\qquad
+        f_{m,1}(x), f_{m,2}(x), \ldots,
+        f_{\alpha,\beta}(x)\bigr).
+    \end{align*}
 
     
     Next, consider two points $x,y \in \FMS$, with distance $\phi=
@@ -752,16 +772,20 @@ and the distance between the closest pair of points.
     probability that only $\beta/16$ of
     $\Event_1, \ldots, \Event_\beta$ happens, is
     $\Prob{Z < (1-1/2)\Ex{Z}}$. By the Chernoff inequality, we have
-    $\Prob{Z < (1-1/2)\Ex{Z}} \leq \exp \pth{ - \mu 1/(2\cdot 2^2)} =
-    \exp \pth{ -\beta/64} \leq 1/n^{10}$, if we set $c=640$.
+    \[
+    \Prob{Z < (1-1/2)\Ex{Z}} \leq \exp \pth{ - \mu 1/(2\cdot 2^2)} =
+    \exp \pth{ -\beta/64} \leq 1/n^{10},
+    \]
+    if we set $c=640$.
     
     Thus, with high probability
-    \begin{equation*}
-    \dist{F(x) - F(y)} \geq \sqrt{\sum_{j=1}^{\beta} \pth{f_{u,j}(x) -
-          f_{u,j}(y)}^2 }\geq \sqrt{ \rho^2 \frac{\beta}{16}} = 
+    \begin{align*}
+    \dist{F(x) - F(y)} &\geq \sqrt{\sum_{j=1}^{\beta} \pth{f_{u,j}(x) -
+          f_{u,j}(y)}^2 }\geq \sqrt{ \rho^2 \frac{\beta}{16}}
+    \\&= 
     \sqrt{\beta} \frac{\rho}{4} = \phi \cdot \frac{\sqrt{\beta}}{256
           \ln n}.
-    \end{equation*}    
+    \end{align*}    
     On the other hand, $\cardin{f_{i,j}(x) - f_{i,j}(y)} \leq
     \DistChar(x,y) = \phi \leq 64 \rho \ln n$. Thus,
     \begin{equation*}
@@ -857,15 +881,18 @@ $r_i > \phi n^2$, we have $E_i(x) = E_i(y)$. Thus,
 \begin{align*}
   \dist{F(x) - F(y)}^2%
   &=%
-    \sum_i \dist{E_i(x) - E_i(y)}^2 = \sum_{i, r_i <
+    \sum_i \dist{E_i(x) - E_i(y)}^2
+    \\&= \sum_{i, r_i <
     \phi n^2} \dist{E_i(x) - E_i(y)}^2\\
   &=%
     \sum_{i, \phi/n^2 < r_i < \phi
-    n^2 } \dist{E_i(x) - E_i(y)}^2 + \sum_{i, r_i < \phi/ n^2 }
+    n^2 } \dist{E_i(x) - E_i(y)}^2
+    \\&\quad + \sum_{i, r_i < \phi/ n^2 }
     \dist{E_i(x) - E_i(y)}^2 \\
   &=%
     \beta \phi^2 \lg \pth{n^4} +
     \sum_{i, r_i < \phi/n^2} (2r_i)^2 \beta
+    \\&
     \leq 4\beta \phi^2 \lg n + \frac{4\phi^2\beta}{n^4 }
     \leq 5\beta \phi^2 \lg n.
 \end{align*}
@@ -998,7 +1025,10 @@ Euclidean TSP.
         consider the set
         $U = \brc{ i \sep{ 2^i \leq \DistChar(x,y) \leq 2^{i+1},
               \text{ for } x,y \in \FMS}}$. Prove that
-        $\cardin{U} = O(n)$. Namely, there are only $n$ different
+        \[
+        \cardin{U} = O(n).
+        \]
+        Namely, there are only $n$ different
         resolutions that ``matter'' for a finite metric space.
     \end{compactenuma}
 \end{exercise}

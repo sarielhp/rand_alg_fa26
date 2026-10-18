@@ -167,20 +167,20 @@ There are many other equivalent definitions of Catalan number.
         \binom{2i}{i} \prod_{k=1}^\tau \frac{i-\tau+k}{i+k}.
     \end{math}
     Now, by \lemref{exp:lower:bound:2}, we have
-    \begin{equation*}
+    \begin{align*}
         \alpha
-        =%
+        &=%
         \prod_{k=1}^\tau \frac{i-\tau+k}{i+k}
         =%
         \prod_{k=1}^\tau \pth{ 1- \frac{\tau}{i+k}}
-        \geq 
+        \\&\geq 
         \pth{ 1- \frac{\tau}{i}}^\tau
         \geq
         \pth{ 1 - \frac{\tau^2}{i^2} \tau }
         \exp \pth{ -\frac{\tau^2}{i}}
         \geq
         \frac{1}{3},        
-    \end{equation*}
+    \end{align*}
     for $\tau \leq \sqrt{i}$, and $i \geq 11^2$.  Namely, for any $k$,
     such that $-\sqrt{i} \leq k \leq \sqrt{i}$, we have
     $\binom{2i}{i+k} \geq \binom{2i}{i}/3$.  We thus have that
@@ -215,19 +215,20 @@ There are many other equivalent definitions of Catalan number.
         \beta \geq 1/2.
     \end{math}
     We have
-    \begin{equation*}
-        \frac{1}{2} \leq \beta \leq
+    \begin{align*}
+        &\frac{1}{2} \leq \beta \leq
         \frac{1}{2^{2i}}
         \sum_{k=-\Delta}^\Delta \binom{2i}{i+k}%
         \leq%       
         \frac{2\Delta+1}{2^{2i}} \binom{2i}{i}
-        \qquad\implies\qquad
+        \\
+        \implies\quad&
         \binom{2i}{i}
         \geq%
         \frac{2^{2i}}{2(2\Delta+1)}
         \geq%
         \frac{2^{2i}}{4\sqrt{i}}.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 \begin{lemma}
@@ -361,18 +362,18 @@ arrive to $n$ in such a settings.
     $\binom{2i}{i}\leq 2^{2i}/\sqrt{i}$ (better constants are known).
     As such, since $\binom{2i}{i}\geq \binom{2i}{m}$, for all $m$, we
     have by symmetry that
-    \begin{equation*}
-        \smash{\ds \sum_{k=i + \sqrt{i}/6}^{2i} \frac{1}{2^{2i}}
+    \begin{align*}
+        &\ds \sum_{k=i + \sqrt{i}/6}^{2i} \frac{1}{2^{2i}}
            \binom{2i}{k}%
-           \geq%
+           \\&\geq%
            \sum_{k=i+1}^{2i} \frac{1}{2^{2i}}\binom{2i}{k} - \sqrt{i}/6
            \frac{1}{2^{2i}} \binom{2i}{i}%
-           \geq%
+           \\&\geq%
            \frac{1}{2} - \sqrt{i}/6 \frac{1}{2^{2i}} \cdot
            \frac{2^{2i}}{\sqrt{i}}%
            =%
-           \frac{1}{3}.}
-    \end{equation*}
+           \frac{1}{3}.
+    \end{align*}
 \end{proof}
 
 
@@ -420,21 +421,25 @@ on the earlier stages that the Markov chain went through. This is the
 \emphOnly{memorylessness property}\index{memorylessness property} of the Markov chain, and it follows as
 $\MCPrb_{ij}$ is independent of time. Formally, the memorylessness
 property is
-\begin{equation*}
-    \ProbCond{\bigl.X_{t+1} =j }{ X_0 = i_0, X_1 = i_1, \ldots, X_{t-1} =
+\begin{align*}
+    &\ProbCond{\bigl.X_{t+1} =j }{ X_0 = i_0, X_1 = i_1, \ldots, X_{t-1} =
        i_{t-1} , X_t = i }%
-    \boldsymbol{=}\ts\ts%
+    \\&\boldsymbol{=}\ts\ts%
     \ProbCond{X_{t+1} =j}{ X_t = i}%
     \ts\boldsymbol{=}\;%
     \MCPrb_{ij}.
-\end{equation*}
+\end{align*}
 The initial state of the Markov chain might also be chosen randomly in
 some cases.
 
 For states $i,j \in \MCSpc$, the \emphOnly{$t$-step transition
    probability}\index{$t$-step transition
-   probability} is $\MCPrbT{i}{j}{t} = \Prob{X_t = j \sep{ X_0 =
-      i}}$. The probability that we visit $j$ for the first time,
+   probability} is
+\[
+\MCPrbT{i}{j}{t} = \Prob{X_t = j \sep{ X_0 =
+      i}}.
+\]
+The probability that we visit $j$ for the first time,
 starting from $i$ after $t$ steps, is denoted by
 \begin{equation*}
     \MCFPrbT{i}{j}{t} = \Prob{X_t = j \text{ and } X_1 \ne j, X_2 \ne
@@ -596,18 +601,21 @@ converge to the stationary distribution.
     three. In particular, the initial state probability vector
     $\MCPVec{0} = (1,0,0)$ leads to the following sequence of state
     probability vectors
-    \begin{equation*}
-        \MCPVec{0} = (1,0,0)%
+    \begin{align*}
+        &\MCPVec{0} = (1,0,0)%
         \implies%
         \MCPVec{1} = (0,1,0)%
-        \implies%
+        \\&\implies%
         \MCPVec{2} = (0,0,1)%
         \implies%
         \MCPVec{3} = (1,0,0) %
         \implies \ldots.%
-    \end{equation*}
+    \end{align*}
     Note, that this chain still has a stationary distribution, that is
-    $(1/3, 1/3, 1/3)$, but unless you start from this distribution,
+    \[
+    (1/3, 1/3, 1/3),
+    \]
+    but unless you start from this distribution,
     you are going to converge to it.
 \end{example}
 
@@ -633,8 +641,8 @@ that we will need. The interested reader, should check the proof in
     \begin{theorem}[Fundamental theorem of Markov chains]
         \thmlab{fundamental}%
         %
-        Any irreducible, finite, and aperiodic Markov chain has the
-        following properties.
+        \hfill\break Any irreducible, finite, and aperiodic Markov chain has
+        the following properties.
         \begin{compactenumi}
             \item All states are ergodic.
             

@@ -68,17 +68,17 @@ $C_\ind = C_\ind^+ \cup C_\ind^-$.  Consider the probability,
 $\Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}$ (namely, the first
 $k$ coordinates of $\vecA$ are specified).  Let
 $\row_\ind = (\rowc_1,\ldots, \rowc_n)$.  We have that
-\begin{equation*}
+\begin{align*}
     \Prob{C_\ind^+ \sep{\vecA_1, \ldots, \vecA_k}}%
-    =
+    &=
     \Prob{\sum_{i=k+1}^{n} \vecA_i \rowc_i > 4 \sqrt{n \log{n}} -
        \sum_{i=1}^{k} \vecA_i \rowc_i }%
-    =%
+    \\&=%
     \Prob{\sum_{i \geq k+1, \rowc_i \ne 0 } \vecA_i \rowc_i >
        L}%
-    =%
+    \\&=%
     \Prob{\sum_{i \geq k+1, \rowc_i = 1 } \vecA_i > L},
-\end{equation*}
+\end{align*}
 where
 \begin{math}
     L = 4 \sqrt{n \log{n}} - \sum_{i=1}^{k} \vecA_i \rowc_i
@@ -90,7 +90,7 @@ $V = \sum_{i \geq k+1, \rowc_i =1 } 1$. We have,
   &=%
     \Prob{\sum_{\substack{i \geq k+1\\ \alpha_i = 1}}\pth{ \vecA_i +
   1} > L + V}%
-  =%
+  \\&=%
   \Prob{\sum_{\substack{i \geq k+1\\ \alpha_i = 1} }\frac{{ \vecA_i +
   1}}{2} > \frac{L + V}{2}},
 \end{align*}
@@ -256,13 +256,13 @@ main course, their beauty, hopefully, will speak for itself.
     $\Graph$. We have that
     \begin{align*}
         \Prob{\Bigl.\alpha(\Graph) \geq x }%
-        \leq%
+        &\leq%
         \binom{n}{x} \pth{1-p}^{\binom{x}{2}}%
-        <%
+        \\&<%
         \pth[]{ n \exp \pth{ -\frac{p (x-1)}{2}}}^x%
-        <%
+        \\&<%
         \pth[]{ n \exp \pth{ -\frac{3}{2} \ln n}}^x%
-        <%
+        \\&<%
         \pth[]{ \Bigl.o(1) }^x = o(1).
     \end{align*}
     Let $n$ be sufficiently large so that both these events have
@@ -413,11 +413,11 @@ the following theorem shows.
     $s^3$. By \thmref{incidences}, we have
     \begin{align*}
         s^3%
-        \leq%
+        &\leq%
         4 \pth[]{ m^{2/3} n^{2/3} + m + n}%
-        =%
+        \\&=%
         4 \pth[]{ \pth{s^2}^{2/3} \pth{s r }^{2/3} + s^2 + s r}%
-        =%
+        \\&=%
         4 \pth[]{ s^2 r^{2/3} + s^2 + s r}.
     \end{align*}
     For $r < s^{3}$, we have that $s r \leq s^{2} r^{2/3}$.  Thus, for

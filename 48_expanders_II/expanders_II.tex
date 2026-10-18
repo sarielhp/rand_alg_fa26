@@ -45,9 +45,10 @@ twice as $\dirEdge{x}{y}$ and $\dirEdge{y}{x}$ in $\DEdges$.
 
 
 
-The proof of the following lemma is similar to the proof of
-\lemref{expansion}. The proof is provided for the sake of
-completeness, but there is little new in it.
+The proof of the following lemma is similar to that of
+\lemref{expansion}.
+The proof is provided for the sake of completeness, but there is
+little new in it.
 
 \begin{fragment}{b_i_expansion}
 \begin{lemma}
@@ -64,10 +65,12 @@ completeness, but there is little new in it.
 \begin{proof}
     We can assume that $\Ex{f(x)}=0$. As such, we have that
     \begin{align}
-        \eqlab{reduction:2} &\hspace{-1cm} \ExExt{x,y \in
-           V}{\cardin{f(x)- g(y)}^2} =%
+        \eqlab{reduction:2} & \ExExt{x,y \in
+           V}{\cardin{f(x)- g(y)}^2} \\
+        &=%
         \ExExt{x,y \in V}{\pth[]{f(x)}^2} -2 \ExExt{x,y \in V}{ f(x)
-           g(y)} + \ExExt{y \in V}{\pth[]{g(y)}^2} =%
+           g(y)} + \ExExt{y \in V}{\pth[]{g(y)}^2} \nonumber \\
+        &=%
         \ExExt{x,y \in V}{\pth[]{f(x)}^2} + \ExExt{y \in
            V}{\pth[]{g(y)}^2}.
     \end{align}
@@ -75,12 +78,12 @@ completeness, but there is little new in it.
     Let $\TMtrx$ be the matrix associated with the random walk on
     $\Graph$ (each entry is either zero or $1/d$), we have
     \begin{align*}
-        \rho = \ExExt{\dirEdge{x}{y} \in \DEdges\;}{
-           \cardin{f(x)-g(y)}^2 } & = \frac{1}{nd}
-        \sum_{\dirEdge{x}{y} \in \DEdges\;}\pth{ f(x) -g(y) }^2 =
-        \frac{1}{n} \sum_{x,y \in V} \TMtrx_{xy} \pth{f(x) - g(y)}^2\\
+        \rho &= \ExExt{\dirEdge{x}{y} \in \DEdges\;}{
+           \cardin{f(x)-g(y)}^2 } \\ & = \frac{1}{nd}
+        \sum_{\dirEdge{x}{y} \in \DEdges\;}\pth{ f(x) -g(y) }^2 \\
+        &= \frac{1}{n} \sum_{x,y \in V} \TMtrx_{xy} \pth{f(x) - g(y)}^2\\
         &= \frac{1}{n}\sum_{x\in V} \pth{\pth{f(x)}^2 +\pth{ g(x)}^2}
-        - \frac{2}{n} \sum_{x,y \in V} \TMtrx_{xy} f(x)g(y).
+        \\ &\quad - \frac{2}{n} \sum_{x,y \in V} \TMtrx_{xy} f(x)g(y).
     \end{align*}
     Let $\Basis(\TMtrx)= \permut{v_1,\ldots, v_n}$ be the orthonormal
     eigenvector basis defined by $\TMtrx$ (see
@@ -92,19 +95,19 @@ completeness, but there is little new in it.
     \begin{align*}
         \sum_{x,y \in V} \TMtrx_{xy} f(x) g(y) &= \sum_{x,y \in V}
         \TMtrx_{yx} \pth{\sum_{i} \alpha_iv_i(x)} \pth{\sum_{j}
-           \beta_jv_j(y)} = \sum_{i,j} \alpha_i \beta_j \sum_{y\in V}
+           \beta_jv_j(y)} \\ &= \sum_{i,j} \alpha_i \beta_j \sum_{y\in V}
         v_j(y) \sum_{x \in V} \TMtrx_{yx} v_i(x) %
         \\ & =%
         \sum_{i,j} \alpha_i \beta_j \sum_{y\in V} v_j(y) \pth{\TEV{i}
-           v_i \pth{y} \MakeBig} =%
+           v_i \pth{y} \MakeBig} \\ &=%
         \sum_{i,j} \alpha_i \beta_j \TEV{i} \DotProd{v_j}{v_i}
         %
-        =%
+        \\ &=%
         \sum_{i=2}^n \alpha_i \beta_i \TEV{i} \sum_{y\in
            V}\pth{v_i(y)}^2 \\%
         &\leq %
         \EVal \sum_{i=2}^n \frac{\alpha_i^2 + \beta_i^2}{2}\sum_{y\in
-           V}\pth{v_i(y)}^2 \leq \frac{\EVal}{2} \sum_{i=1}^n
+           V}\pth{v_i(y)}^2 \\ &\leq \frac{\EVal}{2} \sum_{i=1}^n
         \sum_{y\in V}\pth{ \pth{\alpha_iv_i(y)}^2 +
            \pth{\beta_iv_i(y)}^2 }\\
         %
@@ -118,12 +121,14 @@ completeness, but there is little new in it.
         &= \frac{1}{nd}\sum_{\dirEdge{x}{y} \in \DEdges\;}
         \cardin{f(x)-g(y)}^2 
         %
-        = \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} -
+        \\ &= \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} \\
+        &\quad -
         \frac{1}{n} \sum_{x,y \in V} \frac{2 f(x)g(y)}{d}\\
-        &= \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} -
+        &= \frac{1}{n}\sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} \\
+        &\quad -
         \frac{2}{n} \sum_{x,y \in V} \TMtrx_{xy} f(x)g(y)\\
         & \geq \pth{ \frac{1}{n}- \frac{2}{n} \cdot \frac{\EVal}{2} }
-        \sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} =
+        \sum_{y\in V} \pth{\pth{f(y)}^2 +\pth{ g(y)}^2} \\ &=
         \pth{1-\EVal} \pth{ \ExExt{y \in V}{\pth[]{f(y)}^2} +
            \ExExt{y \in V}{\pth[]{g(y)}^2} }\\
         &=%
@@ -400,11 +405,11 @@ need is that multiplications and addition can be computed in it in
 polynomial time in $t$, and it is a field (i.e., each non-zero element
 has a unique inverse).
 
-\paragraph{Computing multiplication in $\Field_q$.} Consider two
-elements $\alpha, \beta \in \Field_q$. Multiply the two polynomials
+\paragraph{Computing multiplication in $\Field_q$.}
+Let $\alpha, \beta \in \Field_q$ be two elements. Multiply the two polynomials
 $\mathrm{poly}(\alpha)$ by $\mathrm{poly}(\beta)$, let
-$\mathrm{poly}(\gamma)$ be the resulting polynomial (of degree at most
-$2t-2$), and compute the remainder $\mathrm{poly}(\beta)$ when
+$\mathrm{poly}(\gamma)$ be the resulting polynomial (of degree at
+most $2t-2$), and compute the remainder $\mathrm{poly}(\beta)$ when
 dividing it by the irreducible polynomial $p(x)$. For this remainder
 polynomial, normalize the coefficients by computing their modules base
 $2$. The resulting polynomial is the product of $\alpha$ and $\beta$.
@@ -428,18 +433,19 @@ binary string of length $n=t(r+1)$.
 
 For $\alpha  = (\alpha_0,\ldots, \alpha_r) \in \LSpace$, and $x,y \in
 \Field_q$, define the operator
-\[
-\rho(\alpha,x,y) = \alpha + y \cdot\pth{ 1, x, x^2, \ldots, x^r} =
+\begin{align*}
+\rho(\alpha,x,y) &= \alpha + y \cdot\pth{ 1, x, x^2, \ldots, x^r} \\
+&=
 \pth{\alpha_0 + y, \alpha_1 + y x, \alpha_2 + y x^2, \ldots, \alpha_r+
    y x^r} \in \LSpace.
-\]
+\end{align*}
 Since addition over $\Field_q$ is equivalent to a x{o}r operation we
 have that 
 \begin{align*}
-    \rho\pth{\MakeBig \rho(\alpha,x,y), x, y} &= \pth{\alpha_0 + y +
-       y, \alpha_1 + y x + yx, \alpha_2 + y x^2+yx^2, \ldots,
-       \alpha_r+ y
-       x^r+yx^r}\\
+    \rho\pth{\MakeBig \rho(\alpha,x,y), x, y} &= \Bigl(\alpha_0 + y +
+       y, \alpha_1 + y x + yx, \alpha_2 + y x^2+yx^2, \ldots,\\
+       &\qquad \alpha_r+ y
+       x^r+yx^r\Bigr)\\
     &= \pth{\alpha_0, \alpha_1, \alpha_2, \ldots, \alpha_r} = \alpha.
 \end{align*}
 Furthermore, if $(x,y) \ne (x',y')$ then $\rho(\alpha,x,y) \ne
@@ -493,25 +499,28 @@ $\cardin{\Field_q}^2 = q^2$, and $\LD{q}{r}$ has $N = \cardin{\LSpace}
     \]
     Let $V = \brc{v_\alpha \sep{ \alpha \in \LSpace}}$. For $\alpha
     \ne \alpha' \in V$, observe that
-    \[
-    \DotProd{v_{\alpha}}{v_{\alpha'}} = \sum_{\beta\in \LSpace}
+    \begin{align*}
+    \DotProd{v_{\alpha}}{v_{\alpha'}} &= \sum_{\beta\in \LSpace}
     \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i\, \beta_i}} \cdot
-    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i'\, \beta_i}} =
+    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i'\, \beta_i}} \\
+    &=
     \sum_{\beta\in \LSpace} \pth{-1}^{L\pth[]{\sum_{i=0}^r
           \pth{\alpha_i+\alpha_i'}\, \beta_i}}
     = \sum_{\beta \in \LSpace} \Entry{v_{\alpha+\alpha'}}{\beta}.
-    \]
+    \end{align*}
     So, consider $\psi=\alpha+\alpha' \ne 0$. Assume, for the
     simplicity of exposition that all the  coordinates of $\psi$ are
     non-zero. We have, by the linearity of $L$ that 
-    \[
-    \DotProd{v_{\alpha}}{v_{\alpha'}} = \sum_{\beta \in \LSpace}
-    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i\, \beta_i}} =
+    \begin{align*}
+    \DotProd{v_{\alpha}}{v_{\alpha'}} &= \sum_{\beta \in \LSpace}
+    \pth{-1}^{L\pth[]{\sum_{i=0}^r \alpha_i\, \beta_i}} \\
+    &=
     \sum_{\beta_0 \in \Field_q, \ldots, \beta_{r-1} \in \Field_q} \;\;
     \pth{-1}^{L\pth[]{ \psi_0\, \beta_0 + \cdots +
-          \psi_{r-1}\,\beta_{r-1}}} \sum_{\beta_r \in \Field_q}
+          \psi_{r-1}\,\beta_{r-1}}} \\
+    &\qquad\qquad \sum_{\beta_r \in \Field_q}
     \pth{-1}^{L\pth[]{ \psi_r\, \beta_r}}.
-    \]
+    \end{align*}
     However, since $\psi_r \ne 0$, the quantity $\brc{\psi_r
        \beta_r\sep{ \beta_r \in \Field_q}} = \Field_q$.  Thus, the
     summation $\sum_{\beta_r \in \Field_q} \pth{-1}^{L\pth[]{ \psi_r\,
@@ -525,11 +534,11 @@ $\cardin{\Field_q}^2 = q^2$, and $\LD{q}{r}$ has $N = \cardin{\LSpace}
     \Entry{v_\alpha}{\psi}$. For $\alpha \in \LSpace$, consider the
     vector $\Mtrx v_\alpha$. We have, for $\beta \in \LSpace$, that
     \begin{align*}
-        \Entry{\pth{\Mtrx v_\alpha}}{\beta} = \sum_{\psi \in \LSpace}
+        \Entry{\pth{\Mtrx v_\alpha}}{\beta} &= \sum_{\psi \in \LSpace}
         \Mtrx_{\beta \psi} \cdot \Entry{v_\alpha}{\psi} %
-        &=%
+        \\&=%
         \sum_{\substack{x,y\; \in\; \Field_q\\ \psi =\rho(\beta,x,y)}}
-        \Entry{v_\alpha}{\psi} =%
+        \Entry{v_\alpha}{\psi} \\&=%
         \sum_{x,y\; \in\; \Field_q}
         \Entry{v_\alpha}{\beta+ y(1,x,\ldots, x^r)}\\
         &=%

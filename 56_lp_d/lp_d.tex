@@ -36,7 +36,7 @@
 %\maketitle
 
 
-\section{Linear programming in constant dimension ($d>2$)}
+\section[Linear programming in constant dimension ($d>2$)]{Linear programming in constant\\ dimension ($d>2$)}
 
 Let assume that we have a set $H$ of $n$ linear inequalities defined
 over $d$ ($d$ is a small constant) variables. Every inequality in $H$
@@ -71,11 +71,11 @@ for the LP might be unbounded, see \figref{unbounded}.
 
 \begin{figure}[t]
     \begin{tabular}{ccc}
-      \IncludeGraphics[width=5cm]{\File{figs/unbounded}}%
+      \IncludeGraphics[width=0.28\linewidth]{\File{figs/unbounded}}%
       &%
-        \IncludeGraphics[width=5cm]{\File{figs/unbounded_check}}
+        \IncludeGraphics[width=0.28\linewidth]{\File{figs/unbounded_check}}
       &%
-        \IncludeGraphics[width=5cm]{\File{figs/ub_check_2}}
+        \IncludeGraphics[width=0.28\linewidth]{\File{figs/ub_check_2}}
       \\
       (a)
       &
@@ -121,9 +121,9 @@ The new set of constraints $\mu(H)$ is depicted in \figref{unbounded}
 
 \begin{figure}[t]
     \ThreeFiguresExt%
-    {width=5cm} {\File{figs/ub_check_3}} {(a)}%
-    {width=5cm} {\File{figs/bounded}} {(b)}%
-    {width=5cm} {\File{figs/bounded_1}} {(c)}%
+    {width=4.1cm} {\File{figs/ub_check_3}} {(a)}%
+    {width=4.1cm} {\File{figs/bounded}} {(b)}%
+    {width=4.1cm} {\File{figs/bounded_1}} {(c)}%
 
     \caption{(a). (b). (c).}
     \figlab{ub}
@@ -190,9 +190,9 @@ if you go carefully through the details).
 
 
 \begin{figure}[t]
-    \ThreeFiguresExt{width=5cm}{\File{figs/bounded_2}}{(a)}
-    {width=5cm}{\File{figs/opt_changed}}{(b)}
-    {width=5cm}{\File{figs/bounded_1}}{(c)}
+    \ThreeFiguresExt{width=4.1cm}{\File{figs/bounded_2}}{(a)}
+    {width=4.1cm}{\File{figs/opt_changed}}{(b)}
+    {width=4.1cm}{\File{figs/bounded_1}}{(c)}
 
     \caption{(a). (b). (c).}
     \figlab{3}
@@ -212,7 +212,7 @@ boundness check returned).
 
 Let us randomly permute the remaining half spaces of $H$, and let
 $h_{1},h_{2},\ldots,h_{d},h_{d+1},\ldots,h_{n}$ be the resulting
-permutation.~\\
+permutation.
 
 
 Let $v_{i}$ be the vertex realizing the optimal solution for the
@@ -303,7 +303,7 @@ multiplicative factor of $d$. Thus, it is natural, to conjecture that
 $T(n,d)\leq\pth{3d}^{3d}n$.
 
 Which can be verified by tedious substitution into the recurrence,
-and is left as exercise. \\
+and is left as exercise.
 
 
 \begin{theorem}
@@ -331,18 +331,18 @@ in $d$.
 ~~~\If $L'$ has a solution \Then{}\+\\
 ~~~~~ \Return {}``Unbounded''\-\\
 ~~~\\
-~~~Let $g_1,\ldots, g_d$ be the set of constraints of $L'$ that
-testifies that $L'$ is infeasible\\
+~~~Let $g_1,\ldots, g_d$ be the constraints of $L'$ that\\
+~~~~~~testify that $L'$ is infeasible\\
 
-~~~Let $h_{1},\ldots,h_{d}$ be the hyperplanes of $H$ corresponding to
-$g_1, \ldots, g_d$\\
+~~~Let $h_{1},\ldots,h_{d}$ be the hyperplanes of $H$\\
+~~~~~~corresponding to $g_1, \ldots, g_d$\\
 
 
 ~~~Permute $H$ s.t. $h_{1},\ldots,h_{d}$ are first.\\
 
 ~~~$v_{d}= \bd h_1 \cap \bd h_2 \cap \cdots \cap \bd h_d$\\
-~~~/*$v_d$ is a vertex that testifies that $(H,\overrightarrow{c})$ is
-bounded */
+~~~/*$v_d$ is a vertex that testifies that\\
+~~~~~~$(H,\overrightarrow{c})$ is bounded */
 
 ~~~\\
 
@@ -356,8 +356,8 @@ bounded */
 \If $v_{i-1}\in h_{i}$ \Then \+ \\
 $v_{i}\leftarrow v_{i-1}$\-\\
 \Else\+\\
-$v_{i}\leftarrow \SolveLP{}((H_{i-1}\cap\partial h_{i}$,
-$\overrightarrow{c})$) ~~~~~(*)\\
+$v_{i}\leftarrow \SolveLP{}((H_{i-1}\cap\partial h_{i}$,\\
+~~~~$\overrightarrow{c})$) ~~~~~(*)\\
 ~~~~where $H_{i-1}=\brc{h_{1},\ldots,h_{i-1}}$\-\-\-\\
 
 ~~~\\

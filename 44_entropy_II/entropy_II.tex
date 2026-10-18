@@ -226,10 +226,12 @@ building block used by numerous other compression algorithms.
     \begin{align}
         \costX{\TreeOpt} &= \sum_{i=1}^n f[i] \DepthExt{\TreeOpt}{i} \nonumber\\
         &= \sum_{i=3}^{n+1} f[i] \DepthExt{\TreeOpt}{i} + f[1]
-        \DepthExt{\TreeOpt}{1} + f[2] \DepthExt{\TreeOpt}{2} - f[n+1]
+        \DepthExt{\TreeOpt}{1} + f[2] \DepthExt{\TreeOpt}{2} \nonumber\\
+        &\quad - f[n+1]
         \DepthExt{\TreeOpt}{n+1} \nonumber\\
         &= \costX{\TreeOptA} + \pth{\MakeSBig f[1] + f[2] }
-        \depthX{\TreeOpt} - \pth{\MakeSBig f[1] + f[2]
+        \depthX{\TreeOpt} \nonumber\\
+        &\quad - \pth{\MakeSBig f[1] + f[2]
         } \pth{\depthX{\TreeOpt}-1} \nonumber\\
         &= \costX{\TreeOptA} + f[1] + f[2]. %
         \eqlab{huffman:price}
@@ -325,17 +327,17 @@ which is the \emphOnly{entropy}\index{entropy} of $X$.
     ${q_1, \ldots, q_n, q_{n+1}, \ldots, q_{n+\tau}}$. The output
     length to encode the input string using this code, by
     \lemref{huffman:code}, is
-    \begin{equation*}
+    \begin{align*}
         L%
-        =%
+        &=%
         m \sum_{i=1}^n p_i \lg \frac{1}{q_i}
-        \leq %
+        \\&\leq %
         m \sum_{i=1}^n p_i \pth{ 1 + \lg \frac{1}{p_i}}
-        \leq %
+        \\&\leq %
         m + m \sum_{i=1}^n p_i  \lg \frac{1}{p_i}%
-        =%
+        \\&=%
         m + m \EntropyX{X}.
-    \end{equation*}
+    \end{align*}
 
     One can now restrict $\Tree$ to be a prefix tree only for the
     first $n$ symbols. Indeed, delete the $\tau$ ``fake''
@@ -450,15 +452,15 @@ a prefix code, like the Huffman code.
     specific strings with $\alpha < \tau$ ones the probability to
     generate them is $p^\alpha (1-p)^{n-\alpha}$ and $p^\tau
     (1-p)^{n-\tau}$, respectively. Now, observe that
-    \begin{equation*}
+    \begin{align*}
         p^\alpha (1-p)^{n-\alpha}%
-        =%
+        &=%
         p^{\tau}(1-p)^{n-\tau}\cdot\frac{(1-p)^{\tau - \alpha}}{p^{\tau-\alpha}}
-        =% 
+        \\&=% 
         p^{\tau}(1-p)^{n-\tau} \pth{\frac{1-p}{p}}^{\tau-\alpha}
-        <%
+        \\&<%
         p^{\tau}(1-p)^{n-\tau},
-    \end{equation*}
+    \end{align*}
     as $1-p < 1/2 < p$ implies that $(1-p)/p < 1$.
 
     As such, \lemref{monotonicity} implies that all the input strings

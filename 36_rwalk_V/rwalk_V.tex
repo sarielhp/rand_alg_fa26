@@ -242,37 +242,38 @@ construction). We have that
       \norm{\DstrbV{t} - \pi}_1%
       &=%
         \norm{\DstrbV{t} - \alpha_1 v_1}_1%
-        =%
+      \\&=%
         \norm{\sum_{i=2}^n \alpha_i \pth[]{\ts\TEV{i}\ts}^t v_i}_1%
-        \leq%
+      \\&\leq%
         \sqrt{n} \norm{\sum_{i=2}^n \alpha_i \pth[]{\ts \smash{\TEV{i}} \ts
         }^t v_i}_2%
-        =%
+      \\&=%
         \sqrt{n} \sqrt{\sum_{i=2}^n \pth[]{ \alpha_i\, \pth[]{\ts
         \smash{\TEV{i}} \ts }^t}^2}%
       \\&%
       \leq%
       \sqrt{n} \pth[]{\ts\smash{\TEV{2}}\ts}^t \sqrt{\sum_{i=2}^n \pth{
-      \alpha_i}^2} \leq%
+      \alpha_i}^2}
+      \\&\leq%
       \sqrt{n}\, {\ts\TEV{2}\ts}^t \norm{\DstrbV{0}}_2%
-      \leq%
+      \\&\leq%
       \sqrt{n}\, \pth{\bigl.\smash{\TEV{2}}}^t
       \norm{\bigl.\smash{\DstrbV{0}}}_1%
-      =%
+      \\&=%
       \sqrt{n}\, \pth{\ts\bigl.\smash{\TEV{2}}\ts}^t,
     \end{align*}
     since $\DstrbV{0}$ is a distribution. Now, since $\pi_i = 1/n$, we
     have
-    \begin{equation*}
+    \begin{align*}
         \Delta(t)%
-        =%
+        &=%
         \max_i \frac{\bigl| {\DstrbE{t}{i} -\pi_i} \bigr| }{\pi_i}%
-        =%
+      \\&=%
         \max_i \,n \,{\bigl|{\DstrbE{t}{i} - \pi_i}\bigr|}%
-        \leq%
+      \\&\leq%
         n \max_i \norm{\smash{\DstrbV{t}} - \pi}_1 \leq n
         \sqrt{n} \pth{\bigl.\smash{\TEV{2}}}^t.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 
@@ -510,7 +511,8 @@ matrix, that has at least $(99/100)U$ ones on its diagonal.
         \displaybreak[0]%
       \\%
       & \leq %
-        \norm{ \alpha_1 v_1 \NWMtrx} + \Bigl\|  \Bigl( \sum_{i=2}^U
+        \norm{ \alpha_1 v_1 \NWMtrx}
+      \\&\quad + \Bigl\|  \Bigl( \sum_{i=2}^U
         \alpha_i v_i \TEV{i}^\beta \Bigr) \NWMtrx \,\Bigr\|%
         \leq%
         \frac{\cardin{\alpha_1}}{10} + \norm{{\sum_{i=2}^U \alpha_i
@@ -521,10 +523,10 @@ matrix, that has at least $(99/100)U$ ones on its diagonal.
         \leq%
         \frac{\cardin{\alpha_1}}{10} + \sqrt{\sum_{i=2}^U
         \pth{\alpha_i \TEV{i}^\beta}^2}%
-        \leq %
+      \\&\leq %
         \frac{\cardin{\alpha_1}}{10} + \frac{1}{10} \sqrt{\sum_{i=2}^U
         \alpha_i^2}%
-        \leq %
+      \\&\leq %
         \frac{\norm{p}}{10} + \frac{1}{10}\norm{p} \leq
         \frac{\norm{p}}{5},
     \end{align*}
@@ -565,8 +567,11 @@ The above argument implies the following lemma.
 
 
 \begin{theorem}
-    The probability that the majority of the outputs $\Alg(x,r_0),
-    \Alg(x,r_1), \ldots, \Alg(x,r_k)$ is incorrect is at most $1/2^k$.
+    The probability that the majority of the outputs
+    \[
+    \Alg(x,r_0), \Alg(x,r_1), \ldots, \Alg(x,r_k)
+    \]
+    is incorrect is at most $1/2^k$.
 \end{theorem}
 \begin{proof}
     The majority is wrong, only if (at least) half the elements of the
@@ -574,16 +579,17 @@ The above argument implies the following lemma.
     $\NWMtrx$. Fix such a ``bad'' sequence $\Sequence$, and observe
     that the distributions we work with are vectors in $\Re^U$. As
     such, if $p^{0}$ is the initial distribution, then we have that
-    \begin{equation*}
+    \begin{align*}
         \Prob{\bigl. \Sequence}%
-        =%
+        &=%
         \norm{p^{(0)} S_0 \BMtrx S_1 \ldots \BMtrx S_\altK}_{\mathbf{1}
            }%
-        \leq%
+      \\&\leq%
         \sqrt{U} \norm{p^{(0)} S_0 \BMtrx S_1 \ldots \BMtrx
-           S_\altK}_{\mathbf{2}} \leq%
+           S_\altK}_{\mathbf{2}}
+      \\&\leq%
         \sqrt{U}\frac{1}{5^{\altK/2}} \norm{p^{(0)}}_2,
-    \end{equation*}
+    \end{align*}
     by \lemref{L:1:to:L:2} below (i.e., Cauchy-Schwarz inequality) and
     by repeatedly applying \lemref{shrink:preserve}, since half of the
     sequence $\Sequence$ are $\NWMtrx$, and the rest are $\WMtrx$.

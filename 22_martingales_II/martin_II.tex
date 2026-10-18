@@ -302,9 +302,14 @@ X_{i-1}$.
     \end{equation*}
 \end{defn}
 
-Clearly, a Doob martingale $Y_0, \ldots, Y_n$ is a martingale, by
-\thmref{martingale}.  Furthermore, if $\cardin{X_i - X_{i-1}} \leq 1$,
-for $i=1,\ldots, n$, then $\cardin{Y_i - Y_{i-1}} \leq 1$. and we can
+By \thmref{martingale}, a Doob martingale $Y_0, \ldots, Y_n$ is
+clearly a martingale.
+Furthermore, if $\cardin{X_i - X_{i-1}} \leq 1$
+for $i=1,\ldots, n$, then
+\[
+\cardin{Y_i - Y_{i-1}} \leq 1,
+\]
+and we can
 use Azuma's inequality on such a sequence.
 
 
@@ -466,14 +471,14 @@ Consider the case where $m = n \ln n$. Then,
 \end{math}
 And using the ``weak'' Azuma's inequality implies that
 \begin{align*}
-  \Prob{ \Bigl. \cardin{\bigl. Z_{\textrm{end}} - \mu}
-  \geq  \lambda \sqrt{n} }%
-  =%
+  &\Prob{ \Bigl. \cardin{\bigl. Z_{\textrm{end}} - \mu}
+  \geq  \lambda \sqrt{n} }
+  \\&=
   \Prob{ \biggl. \cardin{\bigl. Z_{\textrm{end}} - \mu} \geq \lambda
-  \sqrt{\frac{n}{m}} \sqrt{m} }%
-  \leq%
-  2 \exp \pth{ - \frac{\lambda^2n}{2m}}%
-  =%
+  \sqrt{\frac{n}{m}} \sqrt{m} }
+  \\&\leq
+  2 \exp \pth{ - \frac{\lambda^2n}{2m}}
+  \\&=
   2 \exp \pth{ - \frac{\lambda^2}{2\ln n}},%
 \end{align*}
 which is interesting only if $\lambda > \sqrt{ 2 \ln n}$. On the other
