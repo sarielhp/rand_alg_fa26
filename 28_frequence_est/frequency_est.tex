@@ -382,18 +382,19 @@ of the sequence.
 \begin{proof}
     Observe that for $x\geq 1$, we have that
     $x^k - (x-1)^k \leq kx^{k-1}$. As such, we have
-    \begin{equation*}
+    \begin{align*}
         \sum_{i=1}^n \pth{ i^k - (i-1)^k}^2%
         &\LEQ %
         \sum_{i=1}^n  ki^{k-1}\pth{ i^k - (i-1)^k}%
-        \leq %
+        \\&
+        \LEQ %
         kn^{k-1} \sum_{i=1}^n \pth{ i^k - (i-1)^k}%
         \\&
         \EQ%
         kn^{k-1} n^{k}
         =%
         kn^{2k-1}.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 \remX{S1: Include the immediate equality case at moment order one, which is needed by the subsequent results; see review.md.}
@@ -439,8 +440,12 @@ of the sequence.
 \begin{proof}
     This is immediate from \Holder inequality, but here is a self
     contained proof.  The above is equivalent to proving that
-    $\sum_i \frq_i/n \leq \Bigl( \sum_{i=1}^n \frq_i^k/n \Bigr)^{1/k}
-    $.  Raising both sides to the power $k$, we need to show that
+    \begin{equation*}
+        \sum_i \frq_i/n
+        \LEQ%
+        \Bigl( \sum_{i=1}^n \frq_i^k/n \Bigr)^{1/k}        
+    \end{equation*}
+.  Raising both sides to the power $k$, we need to show that
     $\pth{\sum_i \frq_i/n}^k \leq \sum_{i=1}^n \frq_i^k/n$. Setting
     $g(x)=x^k$, we have
     $g \pth{\sum_i \frq_i/n} \leq \sum_{i=1}^n g(\frq_i)/n$.  The last
@@ -470,16 +475,19 @@ of the sequence.
     and $m = \sum_i f_i$. We have
     \begin{align*}
       \sum_i \frq_i^{2k-1}
-      &\leq
+      &\LEQ%
         M^{k-1}
         \sum_i \frq_i^{k}
-        \leq%
+        \\&
+        \LEQ%
         M^{k(k-1)/k}
         \sum_i \frq_i^{k}
-        \leq%
+        \\&
+        \LEQ%
         \Bigl(\sum_i \frq_i^k\Bigr)^{(k-1)/{k}}
         \sum_i \frq_i^{k}
-        \leq%
+        \\&%
+        \LEQ%
         \Bigl(\sum_i \frq_i^k\Bigr)^{(2k-1)/{k}}.
     \end{align*}
     By \lemref{f:e:silly:4}, we have
@@ -501,20 +509,21 @@ of the sequence.
 \begin{proof}
     Since $m = \sum_i \frq_i$, \lemref{f:e:exp:X} and
     \lemref{f:e:simplify} together imply that
-    \begin{equation*}
+    \begin{align*}
         \Var{X}%
-        =%
+        &\EQ%
         \Ex{X^2} - (\Ex{X})^2 \leq \Ex{X^2}%
         %
         \overbrace{\leq}^{\text{\lemrefshort{f:e:exp:X}}}
         k m \Frq_{2k-2}%
-        =%
+        \\&
+        \EQ%
         k \Bigl({\sum_i \frq_i} \Bigr) \Bigl( \sum_i \frq_i^{2k-1}
         \Bigr) %
         \overbrace{\leq}^{\text{\lemrefshort{f:e:simplify}}}
         % \leq%
         k n^{1-1/k} \Frq_k^2.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 \remX{E4: Correct the moment subscript as specified in review.md.}
@@ -691,19 +700,21 @@ The algorithm returns $X = T^2$ as the desired estimate.
            \Bigr.},%
     \end{math}
     and as such
-    \begin{equation*}
+    \begin{align*}
         \Ex{X}%
-        =%
+        &\EQ%
         \Ex{\Bigr. \smash{  \sum_{i=1}^n (b(i))^2 \frq_i^2 %
               + 2\sum_{i < j} b(i) b(j) \frq_i \frq_j}}%
-        =%
+        \\[0.2cm]&
+        \EQ%
         \sum_{i=1}^m  \frq_i^2 +  2\sum_{i < j}  \frq_i \frq_j \Ex{   %
            b(i) b(j)}%
-        =%
+        \\&
+        \EQ%
         \sum_{i=1}^m  \frq_i^2
-        =%
+        \EQ%
         \Frq_2,
-    \end{equation*}
+    \end{align*}
     since $\Ex{b(i)} = 0$, $\Ex{b(i)^2} =1$, and
     $\Ex{b(i)b(j) } = \Ex{b(i) } \Ex{b(j)} = 0$ (assuming the sequence
     $b(1), \ldots, b(n)$ has not failed), by the $6$-wise independence
@@ -774,41 +785,45 @@ The algorithm returns $X = T^2$ as the desired estimate.
     As such, we have
     \begin{align*}
       \Ex{X^2}
-      &=
+      &\EQ%
         \Ex{\smash{ \Bigl(  \sum_{i=1}^n b(i) \frq_i \Bigr)^4}
         \Bigr.}%
-        =%
+     \\[0.3cm]&
+     \EQ%
         \Ex{\Bigr. \smash{  \sum_{(i,j,k,\ell) \in \Gamma} b(i)b(j)
         b(k) b(\ell)
         \frq_i\frq_j \frq_k \frq_\ell} %
         }
       \\[0.3cm]
       &%
-        =%
+        \EQ%
         \sum_{(i,i,i,i) \in \Gamma_0} \Ex{b(i)^4} \frq_i^4
-        + \sum_{(i,j,k,\ell) \in \Gamma_1} \frq_i\frq_j \frq_k
+        \\&
+        \qquad+ \sum_{(i,j,k,\ell) \in \Gamma_1} \frq_i\frq_j \frq_k
         \frq_\ell \Ex{b(i) b(j) b(k) b(\ell)}
-        + 6 \sum_{i < j }  \Ex{b(i)^2 b(j)^2} \frq_i^2 \frq_j^2
-      \\[0.3cm]
+        \\&
+        \qquad+ 6 \sum_{i < j }  \Ex{b(i)^2 b(j)^2} \frq_i^2 \frq_j^2
+      \\%[0.1cm]
       &%
-        =%
+        \EQ%
         \sum_{i=1}^n  \frq_i^4
         + 6 \sum_{i < j }  \frq_i^2 \frq_j^2.
     \end{align*}
     As such, we have
-    \begin{equation*}
+    \begin{align*}
         \Var{X}%
-        =%
+        &\EQ%
         \Ex{X^2} - \pth{\Ex{X}}^2%
         = %
         \sum_{i=1}^n  \frq_i^4
         + 6 \sum_{i < j }  \frq_i^2 \frq_j^2
         - \Bigl( \sum_{i=1}^m  \frq_i^2 \Bigr)^2
-        =%
+        \\&
+        \EQ%
         4 \sum_{i < j }  \frq_i^2 \frq_j^2 %
-        \leq%
+        \LEQ%
         2 \Frq_2^2.
-    \end{equation*}
+    \end{align*}
 \end{proof}
 
 \remX{S2: A centered expansion avoids the quadruple partition. E6: Correct the sum endpoints. W4: Break long displays into shorter aligned rows. See review.md.}
@@ -823,18 +838,17 @@ parameters.  In the following, let
     \beta = 4 \ln \frac{1}{\BadProb}.%
 \end{equation*}
 
-Let $X_{i,j}$ be a basic estimator for $\Frq_2$, using the estimator
-of \secref{f:e:e:2}, for $i=1,\ldots, \beta$ and
-$j=1, \ldots, \alpha$.  Let
-$Y_i = \sum_{j=1}^{\alpha} X_{i,j} / \alpha$, for
-$i=1, \ldots, \beta$. Let $Z$ be the median of $Y_1, \ldots, Y_\beta$,
-and the algorithm returns $Z$ as the estimator.
+Let $X_{i,j}$ be a basic estimator for $\Frq_2$, using \secref{f:e:e:2},
+for $i=1,\ldots, \beta$ and $j=1, \ldots, \alpha$.  Let
+$Y_i = \sum_{j=1}^{\alpha} X_{i,j} / \alpha$, for $i=1, \ldots, \beta$. Let
+$Z$ be the median of $Y_1, \ldots, Y_\beta$, and the algorithm returns
+$Z$ as the estimator.
 
 \remX{G1 and G2: Round both repetition counts and initialize every sketch independently; see review.md.}
 
 
 \begin{theorem}
-    Given a stream $\STRM = \strm_1, \ldots, \strm_m$ of numbers from
+    Given a stream $\STRM = \strm_1, \ldots, \strm_m$ of numbers from (say)
     $\{1,\ldots, n\}$, and parameters $\eps, \BadProb \in (0,1)$, one
     can compute an estimate $Z$ for $\Frq_2(\STRM)$, such that
     $\Prob{ |Z - \Frq_2| > \eps \Frq_2} \leq \BadProb$. This algorithm
@@ -844,36 +858,39 @@ and the algorithm returns $Z$ as the estimator.
 \begin{proof}
     The scheme is described above. As before, using Chebyshev's
     inequality, we have that
-    \begin{equation*}
+    \begin{align*}
         \Prob{ \cardin{Y_i - \Frq_2} > \eps \Frq_2 }%
-        =%
+        &\EQ%
         \Prob{ \cardin{Y_i - \Frq_2} >
            \frac{\eps \Frq_2}{ \sqrt{\Var{Y_i}}} \sqrt{\Var{Y_i}}}%
-        \leq%
+        \\&
+        \LEQ%
         \frac{\Var{Y_i}}{\eps^2 \Frq_2^2}%
-        =%
+        \EQ%
         \frac{\Var{X} / \alpha}{\eps^2 \Frq_2^2}%
-        \leq %
+        \\&
+        \LEQ %
         \frac{2 \Frq_2^2}{\alpha \eps^2 \Frq_2^2}%
-        =%
+        \EQ%
         \frac{1}{8},
-    \end{equation*}
+    \end{align*}
     by \lemref{f:e:f:2:var}. Let $U$ be the number of estimators in
     $Y_1, \ldots, Y_\beta$ that are outside the acceptable range.
-    Arguing as in \lemref{f:e:using:ch}, we have
-    \begin{equation*}
+    Arguing as above, we have
+    \begin{align*}
         \Prob{Z \text{ is bad}}%
-        \leq%
+        &\LEQ%
         \Prob{U \geq \beta/2} %
-        = %
+        \EQ %
         \Prob{U \geq (1+ 3)\beta/8}%
-        \leq%
+        \\&
+        \LEQ%
         \exp( - (\beta/8) 3^2/4 )%
-        \leq%
+        \LEQ%
         \exp\pth{ - \ln \frac{1}{\BadProb}}
-        =%
+        \EQ%
         \BadProb,
-    \end{equation*}
+    \end{align*}
     by Chernoff inequality (\lemref{chernoff:small:delta}), and
 \end{proof}
 

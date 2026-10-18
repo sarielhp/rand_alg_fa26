@@ -100,25 +100,31 @@ To bound this probability, consider the root $u$ of $T_h$ and its two
 children $u_l$ and $u_r$. The probability that there is a black path
 from $u_l$ to one of its children is $\rho_{h-1}$, and as such, the
 probability that there is a black path from $u$ through $u_l$ to a
-leaf of the subtree of $u_l$ is $\Prob{\text{the edge } \MakeSBig u {}
-   u_l \text{ is colored black}} \cdot \rho_{h-1} = \rho_{h-1}/2$. As
-such, the probability that there is no black path through $u_l$ is
-$1-\rho_{h-1}/2$. As such, the probability of not having a black path
-from $u$ to a leaf (through either children) is
-$(1-\rho_{h-1}/2)^2$. In particular, there desired probability, is the
-complement; that is
+leaf of the subtree of $u_l$ is
 \begin{equation*}
+    \Prob{\text{the edge } \MakeSBig u {}
+       u_l \text{ is colored black}} \cdot \rho_{h-1} = \rho_{h-1}/2.
+\end{equation*}
+As such, the probability that there is no black path through $u_l$ is
+$1-\rho_{h-1}/2$. As such, the probability of not having a black path from
+$u$ to a leaf (through either children) is $(1-\rho_{h-1}/2)^2$. In
+particular, there desired probability, is the complement; that is
+\begin{align*}
     \rho_h%
-    =%
+    &\EQ%
     1 - \pth{1-\frac{\rho_{h-1}}{2}}^2 %
     =%
-    \frac{\rho_{h-1}}{2} \pth{2-\frac{\rho_{h-1}}{2}} = \rho_{h-1} -
+    \frac{\rho_{h-1}}{2} \pth{2-\frac{\rho_{h-1}}{2}}
+    \\&
+    \EQ%
+    \rho_{h-1} -
     \frac{\rho_{h-1}^2}{4} = f \bigl( \rho_{h-1} \bigr)
-    \qquad
+    \\
+    &\qquad
     \text{ for }
     \qquad%
     f(x) = x -x^2/4.
-\end{equation*}
+\end{align*}
 The starting values are $\rho_0 = 1$, and $\rho_1 = 3/4$.
 
 \begin{figure}[h]
@@ -149,12 +155,17 @@ The starting values are $\rho_0 = 1$, and $\rho_1 = 3/4$.
     We need
     to prove that $\rho_h \geq 1/(h+1)$, which is implied by the above
     if
-    \begin{equation*}
-      \frac{1}{h} - \frac{1}{4 h^2} \geq \frac{1}{h+1}
-      \;\;\;\Leftrightarrow \;\;\; 4h(h+1) - (h+1) \geq 4h^2
-      \;\;\;\Leftrightarrow \;\;\; 4h^2 +4h - h- 1 \geq 4h^2
-      \;\;\;\Leftrightarrow \;\;\; 3h \geq 1,
-  \end{equation*}
+    \begin{align*}
+        \frac{1}{h} - \frac{1}{4 h^2}
+        \frac{1}{h+1}
+        &%
+        \;\;\;\Leftrightarrow \;\;\;
+        4h(h+1) - (h+1) \geq 4h^2
+        \\&
+        \;\;\;\Leftrightarrow \;\;\;%
+        4h^2 +4h - h- 1 \geq 4h^2
+        \;\;\;\Leftrightarrow \;\;\; 3h \geq 1,
+    \end{align*}
     which trivially holds.
 \end{proof}
 
@@ -297,9 +308,11 @@ The following is easy to prove by induction using
     necessarily independent. Then,
     \begin{align*}
       \Prob{\bigl. \cap_{i=1}^{n}\Event_{i}} %
-      =%
+      &\EQ%
       \Prob{\bigl. \Event_{1}} * \Prob{\Event_{2}\sep{ \Event_{1}}}
-      * \Prob{\Event_{3}\sep{\Event_{1}\cap\Event_{2}}} * \ldots *
+      * \Prob{\Event_{3}\sep{\Event_{1}\cap\Event_{2}}} *
+      \\&%
+      \qquad\qquad\qquad\ldots\qquad *
       \Prob{\Event_{n} \sep{ \Event_{1}\cap\ldots\cap\Event_{n-1}}}.
     \end{align*}
 \end{lemma}
@@ -309,9 +322,9 @@ The following is easy to prove by induction using
 
 \begin{figure}[t]
    \centering
-   \TwoFiguresBase{\IncGraphPage{figs/}{cut_example}{3}}{(a)}
-                  {\IncGraphPage{figs/}{cut_example}{4}}{(b)}                  
-   \caption{(a) A contraction of the edge $xy$. (b) The resulting graph.}
+   \TwoFiguresBase{\IncGraphPage[scale=0.9]{figs/}{cut_example}{3}}{(a)}%
+   {\IncGraphPage[scale=0.9]{figs/}{cut_example}{4}}{(b)}
+   \caption{(a) A contraction of $xy$. (b) The resulting graph.}
    \figlab{cut}
 \end{figure}
 
@@ -369,25 +382,25 @@ component in the original graph.)
 \begin{figure}[p]
     \begin{center}
         \begin{tabular}{*{4}{c}}
-            \IncGraphPage{figs}{cut_example}{2}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{2}
             &
-            \IncGraphPage{figs}{cut_example}{3}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{3}
             &
-            \IncGraphPage{figs}{cut_example}{7}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{7}
             &
-            \IncGraphPage{figs}{cut_example}{8}\\
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{8}\\
             (a) & (b) & (c) & (d)\\
-            \IncGraphPage{figs}{cut_example}{9}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{9}
             &
-            \IncGraphPage{figs}{cut_example}{10}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{10}
             &
-            \IncGraphPage{figs}{cut_example}{11}
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{11}
             &
-            \IncGraphPage{figs}{cut_example}{12}\\
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{12}\\
             (e) & (f) & (g) & (h)\\
-            &\IncGraphPage{figs}{cut_example}{13}
+            &\IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{13}
             &
-            \IncGraphPage{figs}{cut_example}{14}\\
+            \IncGraphPage[width=0.2\linewidth]{figs}{cut_example}{14}\\
             &(i) & (j)
         \end{tabular}
     \end{center}
@@ -415,9 +428,11 @@ cut.
 \begin{observation}
     Let $e_{1},\ldots,e_{n-2}$ be a sequence of edges in $\Graph$,
     such that none of them is in the minimum cut, and such that
-    $\Graph'=G/\brc{ e_{1},\ldots,e_{n-2}} $ is a single
-    multi-edge. Then, this multi-edge corresponds to a minimum cut in
-    $\Graph$.
+    \begin{equation*}
+        \Graph'=G/\brc{ e_{1},\ldots,e_{n-2}} 
+    \end{equation*}
+    is a single multi-edge. Then, this multi-edge corresponds to a
+    minimum cut in $\Graph$.
     
     \obslab{contract}
 \end{observation}
@@ -535,12 +550,14 @@ reasonable probability.
     Implying that
     \begin{align*}
         \Delta%
-        &=%
+        &\EQ%
         \Prob{\Event_{0}\cap\ldots\cap\Event_{n-3}}%
-        % \\&%
-        =%
+         \\&%
+        \EQ%
         \Prob{\Event_{0}} \cdot \Prob{\Event_{1}\sep{\Event_{0}}}
         \cdot \Prob{\Event_{2}\sep{\Event_{0}\cap\Event_{1}}} \cdot
+        \\&
+        \qquad\qquad\qquad%
         \ldots \cdot \Prob{\Event_{n-3}\sep{
               \Event_{0}\cap\ldots\cap\Event_{n-4}}}.
     \end{align*}
@@ -605,8 +622,13 @@ executions of \MinCut{}.
     independent, as such, the probability to this happen is at most
     \begin{align*}
         \pth{1-\frac{2}{n
-              (n-1)}}^{n(n-1)}\le\exp\pth{-\frac{2}{n(n-1)}\cdot
-           n(n-1)}=\exp(-2)<0.14,
+              (n-1)}}^{n(n-1)}%
+        &\LEQ%
+        \exp\pth{-\frac{2}{n(n-1)}\cdot
+           n(n-1)}
+        \\&
+        \EQ%
+        \exp(-2)<0.14,
     \end{align*}
     since $1-x\leq e^{-x}$ for $0\leq x\leq 1$.
 \end{proof}
@@ -670,9 +692,9 @@ following result.
 \section{A faster algorithm}
 
 The algorithm presented in the previous section is extremely simple.
-Which raises the question of whether we can get a faster
-algorithm\footnote{This would require a more involved algorithm, that
-   is life.}?
+This raises the question of whether we can get a faster
+algorithm\footnote{This would require a more involved algorithm, that is
+   life.}?
 
 So, why \MinCutRep{} needs so many executions? Well, the probability
 of success in the first $\nu$ iterations is
@@ -680,8 +702,12 @@ of success in the first $\nu$ iterations is
   \Prob{\Event_{0}\cap\ldots\cap\Event_{\nu-1}}
   &\geq 
     \prod_{i=0}^{\nu-1}\pth{1-\frac{2}{n-i}}
-    =  \prod_{i=0}^{\nu-1}\frac{n-i-2}{n-i} \nonumber\\
-  &=  \frac{n-2}{n}\ *\ \frac{n-3}{n-1}\ *\ \frac{n-4}{n-2}\ldots =
+    =  \prod_{i=0}^{\nu-1}\frac{n-i-2}{n-i}
+    \nonumber\\&%
+    \EQ%
+    \frac{n-2}{n}\ *\ \frac{n-3}{n-1}\ *\ \frac{n-4}{n-2}\ldots
+    \\&%
+    \EQ%
     \frac{(n-\nu)(n-\nu-1)}{n\cdot(n-1)}.  \eqlab{first}
 \end{align}
 Namely, this probability deteriorates very quickly toward the end of
@@ -786,9 +812,15 @@ The basic new operation we use is \Contract{}, depicted in
     Just plug in $\nu= n -t = n - \ceil{1 + n/\sqrt{2} }$ into
     \Eqref{first}. We have
     \begin{align*}
-        \Prob{\Bigl. \Event_{0}\cap\ldots\cap\Event_{n-t}}\geq &
-        \frac{t(t-1)}{n\cdot(n-1)} = \frac{\ceil{1 + n/\sqrt{2} }
-           \pth{ \ceil{1 + n/\sqrt{2} } - 1}}{n(n-1)} \geq
+        \Prob{\Bigl. \Event_{0}\cap\ldots\cap\Event_{n-t}}
+        &\GEQ%
+        \frac{t(t-1)}{n\cdot(n-1)}
+        \\&
+        \EQ%
+        \frac{\ceil{1 + n/\sqrt{2} }
+           \pth{ \ceil{1 + n/\sqrt{2} } - 1}}{n(n-1)}
+        \\&
+        \GEQ
         \frac{1}{2}.
     \end{align*}
 \end{proof}

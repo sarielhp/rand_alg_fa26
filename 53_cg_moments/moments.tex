@@ -431,22 +431,24 @@ $O(n/i)$.  In particular, assume that we know that
     % \eqlab{conflict:lists:2}
 \end{equation*}
 by \lemref{expected:tau}, implying
-\begin{equation}
+\begin{align}
     \Ex{\bigl. C_i }%
-    =%
+    &=%
     \Ex{  \Bigl. \ExCond{C_i}{ \bigl. \ArrB_i } }%
     \leq%
     \Ex{ \frac{4}{i} W_i}%
     =%
     \frac{4}{i} \Ex{ \bigl. W_i }%
-    =%
+    \nonumber
+    \\
+    &=%
     O \pth{ \frac{4}{i}
        \, \pth{n + \frac{k i}{n} } \, }%
     =%
     O\pth{\frac{n}{i} +
        \frac{k}{n}},
     \eqlab{conflict:lists:3}
-\end{equation}
+\end{align}
 using \lemref{conditional:expectation}.  In particular, the expected
 (amortized) amount of work in the $i$\th iteration is proportional to
 $\Ex{\bigl. C_i}$. Thus, the overall expected running time of the
@@ -520,7 +522,7 @@ general result which can be applied in a lot of other settings.
    }%
 }
 \begin{figure}[t]
-    \begin{tabular}{c|p{0.37\linewidth}|p{0.45\linewidth}}
+    \begin{tabular}{c|p{0.36\linewidth}|p{0.42\linewidth}}
       Notation
       & What it means
       & Example: Vertical decomposition of segments\\
@@ -732,7 +734,7 @@ region, when it is being created by an \RIC algorithm.  The
 \begin{defn}[Framework axioms]
     \deflab{framework:axioms}%
     %
-    Let $\ObjSet, \RegionsSet{\Sample}, \DefSet{\Trap}$, and
+    Let $\ObjSet$, $\RegionsSet{\Sample}$, $\DefSet{\Trap}$, and
     $\KillSet{\Trap}$ be such that for any subset
     $\Sample \subseteq \ObjSet$, the set $\RegionsSet{\Sample}$
     satisfies the following axioms:
@@ -987,7 +989,8 @@ of weight $t\, (n/r)$ has probability
     \pth{1-\frac{r}{n}}^{t\,(n/r)} \pth{\frac{r}{n}}^d %
     \approx %
     \exp\pth{-t} \cdot \pth{\frac{r}{n}}^d %
-    \approx %
+    \\
+    &\approx %
     \exp\pth{\bigl.-t+1} \cdot \pth{1-\frac{r}{n}}^{n/r}
     \pth{\frac{r}{n}}^d%
     \\
@@ -1028,11 +1031,13 @@ of weight $n/r$. We next formalize this argument.
       \RegionsSet{\SampleA}}}%
       &=%
         \frac{\CSProbFull{r}{d}{k}{n}} {\CSProbFull{r'}{d}{k}{n}}
-        % 
+        %
+      \\&%
           \leq \frac{2^{2d}\pth{ 1 - \frac{1}{2} \cdot \frac{r}{n} }^{k}
           \,\pth{\frac{r}{n}}^d}{%
           \frac{1}{2^{2d}} \; \pth{ 1 - 4 \frac{ r'}{n} }^{k}
           \pth{\frac{r'}{n}}^d}
+      \\&%
           \leq%
           2^{4d}\exp \pth{ - \frac{kr}{2n} } \pth{ 1 + 8 \frac{
           r'}{n} }^{k} \pth{\frac{r}{r'}}^d%
@@ -1040,8 +1045,11 @@ of weight $n/r$. We next formalize this argument.
       \leq 2^{4d}\exp
       \pth{ 8 \frac{ kr'}{n}- \frac{kr}{2n} }
       \,\pth{\frac{r}{r'}}^d
+      \\&
       = 2^{4d}\exp \pth{ 8 \frac{ tn \floor{r/t}}{nr}-
-      \frac{tnr}{2nr} } \pth{\frac{r}{\floor{r/t}}}^d = O
+      \frac{tnr}{2nr} } \pth{\frac{r}{\floor{r/t}}}^d
+      \\&
+      = O
       \pth{ \exp\pth{-t/2} t^d },
     \end{align*}
     since $1/(1-x) \leq 1+2x$ for $x \leq 1 /2$ and $1+y \leq \exp
@@ -1110,14 +1118,15 @@ function.
       &=%
         O \Bigl( t^d \exp(-t/2) \sum_{\Trap\in H} \Prob{\Trap\in
         \RegionsSet{\SampleA}} \Bigr)%
-        % 
+        %
+      \\&%
         =%
         O \Bigl( t^d \exp(-t/2) \sum_{\Trap\in \AllRegions}
         \Prob{\Trap\in \RegionsSet{\SampleA}}\Bigr)%
       \\&%
       =%
       O \pth{ t^d \exp(-t/2)\, \NumOfRegionsZero{r'}}%
-      =%
+      \\&=%
       O \pth{ t^d \exp(-t/2)\, \NumOfRegionsZero{r}},
     \end{align*}
     by \lemref{e:x:p:help} and since $\NumOfRegionsZero{r}$ is a
@@ -1177,10 +1186,12 @@ We are now able to bound this quantity.
       W
       &=%      
         \Ex{\Bigl.\smash{\sum_{\Trap \in \RegionsSet{\Sample}}\!\!\! \WeightX{\Trap}^c }}%
+      \\&%
         \leq%
         \Ex{\Bigl. \smash{ \sum_{t \ge 1} \pth{ t \frac{n}{r} }^c \pth{
         \cardin{\RegionsHeavy{t-1}{\Sample}} -
         \cardin{\RegionsHeavy{t}{\Sample} }\, } }}%
+      \\&%
         \leq%
         \Ex{\Bigl. \smash{ \sum_{t \ge 1} \pth{ t \frac{n}{r} }^c {\MakeSBig
         \cardin{\RegionsHeavy{t-1}{\Sample}} }\, }}
@@ -1191,9 +1202,11 @@ We are now able to bound this quantity.
         \leq%
         \pth{\frac{n}{r} }^{c} \sum_{t \ge 0} (t+1)^c 
         \Ex{\bigl. \cardin{\RegionsHeavy{t}{\Sample} } }
+      \\&%
         =%
         \pth{ \frac{n}{r} }^c \sum_{t \ge 0} (t+1)^c \,
         \NumOfRegions{t}{r}%
+      \\&%
         =%
         \pth{ \frac{n}{r} }^c \sum_{t \ge 0}
         O\pth{ \pth{t+1}^{\,c \, + \,d} \, \exp(-t/2) \,
@@ -1203,7 +1216,7 @@ We are now able to bound this quantity.
       O\Bigl( \NumOfRegionsZero{r } \, \pth{ \frac{n}{r} }^c
       \sum_{t \ge 0} \pth{t+1}^{\,c\,+\,d} \, \exp(-t/2)
       \Bigr)%
-      =%
+      \\&=%
       O \pth{ \NumOfRegionsZero{r } 
       \pth{{\frac{n}{r}} }^c },
     \end{align*}
@@ -1223,7 +1236,10 @@ $\ArrX{\bigl.\SegSet}$.
 
 \lemref{expected:tau} shows that the number of vertical trapezoids in
 the randomized incremental construction is in expectation
-$\NumOfRegionsZero{i} = O\pth{ i + k\, (i/n)^2}$.  Thus, by
+\[
+\NumOfRegionsZero{i} = O\pth{ i + k\, (i/n)^2}.
+\]
+Thus, by
 \thmref{cs} (used with $c=1$), we have that the total expected size
 of the conflict lists of the vertical decomposition computed in the
 $i$\th step is
@@ -1284,24 +1300,26 @@ from the exponential decay lemma.
     $t$-heavy.  Let $X$ be the random variable that is the number of
     bad trapezoids in $\ArrVD{\Sample}$. The exponential decay lemma
     (\lemref{exponential:decay}) states that
-    \begin{equation*}
-        \Ex{X} =
+    \begin{align*}
+        \Ex{X} &=
         \NumOfRegions{t}{\ell}  %=
-        =%
+        \\ &=%
         O\bigl( t^2
         \exp\pth{-t/2} \,  \NumOfRegionsZero{ \ell}
         \bigr)
-        =
+        \\
+        &=
         O\bigl( (c \ln r)^2
         \exp\pth{-c\ln r/2} \,  \ell^2
         \bigr)
-        =
+        \\
+        &=
         O\Bigl(  (\ln^2 r)
         r^{-c /2} \,  (r \log r)^2
         \Bigr)
         <%
         \frac{1}{r^{c/4}},
-    \end{equation*}
+    \end{align*}
     if $c$ is sufficiently large.  As such, we have
     $\Prob{X \geq 1} \leq {1}/{r^{c/4}}$ by Markov's inequality.
 \end{proof}
@@ -1397,19 +1415,21 @@ moments technique.
     clearly the required cutting. By \thmref{cs}, the expected size
     of the cutting is
     \begin{align*}
-      O\pth{\biggl. \NumOfRegionsZero{r} + \Ex{\Bigl.\smash{ \sum_{\Trap \in
+      &O\pth{\biggl. \NumOfRegionsZero{r} + \Ex{\Bigl.\smash{ \sum_{\Trap \in
       \RegionsSet{\Sample}}
       \Bigl( 2\frac{\WeightX{\Trap}}{n/r} \Bigr)^4} }}%
+      \\
       &=%
         O \pth{ \NumOfRegionsZero{r} + \pth{\frac{r}{n}}^4 \Ex{\Bigl.
         \smash{\sum_{\Trap \in \RegionsSet{\Sample}}
         \pth{\WeightX{\Trap}}^4} }}
         \displaybreak[0]
       \\[1ex]
-      &\hspace{-1cm} =%
-        O \pth{ \NumOfRegionsZero{r} \, + \, \pth{\frac{r}{n}}^4 
+      &=%
+        O \pth{ \NumOfRegionsZero{r} \, + \, \pth{\frac{r}{n}}^4
         \NumOfRegionsZero{r} \pth{\frac{n}{r}}^4 }%
-        =%
+        \\
+        &=%
         O\pth{ \MakesBig \NumOfRegionsZero{r}}%
         =%
         O\pth{r^2},
@@ -1473,15 +1493,21 @@ random sample from $\ObjSet$ of size $r$ (without repetition).
 \begin{lemma}%
     \lemlab{b:fraction}%
     % 
-    For $M \geq m \geq t\geq 0$, we have $\;\ds
+    For $M \geq m \geq t\geq 0$, we have
+    \[
     \pth{\frac{m-t}{M-t}}^t\leq \frac{\binom{m}{t}}{\binom{M}{t}}
-    \leq \pth{\frac{m}{M}}^t$.
+    \leq \pth{\frac{m}{M}}^t.
+    \]
 \end{lemma}
 \begin{proof}
     % (i)
-    We have that $\ds \alpha = \frac{\binom{m}{t}}{\binom{M}{t}} =
+    We have that
+    \[
+    \alpha = \frac{\binom{m}{t}}{\binom{M}{t}} =
     \frac{m!}{(m-t)!t!}  \frac{(M-t)!t!}{M!} = \frac{m}{M} \cdot
-    \frac{m-1}{M-1} \cdots \frac{m-t+1}{M-t+1} $. Now, since $M \geq
+    \frac{m-1}{M-1} \cdots \frac{m-t+1}{M-t+1}.
+    \]
+    Now, since $M \geq
     m$, we have that $\ds \frac{m-i}{M-i} \leq \frac{m}{M}$, for all
     $i \geq 0$. As such, the maximum (resp. minimum) fraction on the
     right-hand size is $m/M$ (resp. $\frac{m-t+1}{M-t+1}$). As such,
@@ -1532,9 +1558,12 @@ random sample from $\ObjSet$ of size $r$ (without repetition).
       & =%
         \frac{\binom{n-d-k}{r-d}} {\binom{n-d}{r-d}} \cdot
         \frac{\binom{r}{d}} {\binom{n}{d}}%
-        \leq%
+        \\
+        &\leq%
         \pth{ \frac{n-d-k}{n-d} }^{r-d} \pth{\frac{r}{n}}^d \;\leq\;
-        \pth{ 1 - \frac{k}{n} }^{r-d} \pth{\frac{r}{n}}^d \leq 2^{d}
+        \pth{ 1 - \frac{k}{n} }^{r-d} \pth{\frac{r}{n}}^d
+        \\
+        & \leq 2^{d}
         \; \pth{ 1 - \frac{k}{n} }^{r} \,\pth{\frac{r}{n}}^d
         \\
         & \leq 2^{d} \; \pth{ 1 - \frac{r}{2 n} }^{k}
@@ -1547,18 +1576,23 @@ random sample from $\ObjSet$ of size $r$ (without repetition).
         &=%
         \frac{\binom{n-d-k}{r-d}}{\binom{n}{r-d}} \cdot
         \frac{\binom{r}{d}}{\binom{n-(r-d)}{d}}%
-        \;\geq\;
+        \\
+        &\geq\;
         \pth{ \frac{n - d-k - (r-d)}{n-(r-d)} }^{r-d}
         \pth{\frac{r-d}{n-(r-d)-d}}^d\\
         %---------------------------------------------------------
         & =%
         \pth{ 1 - \frac{d+k}{n-(r-d)} }^{r-d}
-        \pth{\frac{r-d}{n-r}}^d \;\geq\; \pth{ 1 - \frac{d+k}{n/2}
-        }^{r} \pth{\frac{r/2}{n}}^d \\%
+        \pth{\frac{r-d}{n-r}}^d
+        \\
+        & \geq\; \pth{ 1 - \frac{d+k}{n/2}
+        }^{r} \pth{\frac{r/2}{n}}^d
+        \\%
         & \geq%
         \frac{1}{2^d} \pth{ 1 - \frac{4 r}{n} }^{d+k}
-        \pth{\frac{r}{n}}^d%
-        \geq%
+        \pth{\frac{r}{n}}^d
+        \\
+        & \geq%
         \frac{1}{2^{2d}} \pth{ 1 - \frac{4 r}{n} }^{k}
         \pth{\frac{r}{n}}^d,
     \end{align*}
@@ -1624,15 +1658,16 @@ Chazelle and Friedman \cite{cf-dvrsi-90}. The work of Agarwal \etal
 analysis was provided by Clarkson \etal \cite{cms-frric-93}.
 
 Another way to reach similar results is using the technique of
-Mulmuley \cite{m-cgitr-94}, which relies on a direct analysis on
-`stoppers' and `triggers'. This technique is somewhat less convenient
+Mulmuley \cite{m-cgitr-94}, which relies on direct analysis of
+`stoppers' and `triggers'. This technique is less convenient
 to use but is applicable to some settings where the moments technique
 does not apply directly.  Also, his concept of the omega function
-might explain why randomized incremental algorithms perform better in
-practice than their worst case analysis \cite{m-eahsr-89}.
+might explain why randomized incremental algorithms perform better
+in practice than their worst case analysis \cite{m-eahsr-89}.
 
-Backwards analysis in geometric settings was first used by Chew
-\cite{c-bvdcp-86} and was formalized by Seidel \cite{s-barga-93}. It
+Backwards analysis was first used in geometry by Chew
+\cite{c-bvdcp-86} and formalized by Seidel
+\cite{s-barga-93}. It
 is similar to the ``leave one out'' argument used in statistics for
 cross validation. The basic idea was probably known to the Greeks (or
 Russians or French) at some point in time.

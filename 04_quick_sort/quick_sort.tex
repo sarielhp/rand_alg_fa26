@@ -1,9 +1,4 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
 
 
 \ChapterNumPage{4}{28}
@@ -351,12 +346,11 @@ shrinks by a constant factor, leading to a linear time algorithm.
 
 The \QuickSort algorithm and the \QuickSelect algorithm (originally named
 \textsc{Find}) were introduced by Hoare \cite{h-a6q-61, h-a6f-61,
-   h-q-62}.  The elegant indicator-variable analysis of \QuickSort
-and \QuickSelect presented here is standard and can be found in the
-textbooks by Motwani and Raghavan \cite{mr-ra-95} and
-Mitzenmacher and Upfal \cite{mu-pcrpt-17}.  The continuous
-perspective using random priorities in $[0,1]$ is closely related to
-Cartesian trees and randomized search trees (treaps) by Seidel and Aragon
+   h-q-62}.  The elegant indicator-variable analysis of \QuickSort and
+\QuickSelect presented here is standard and can be found in the textbooks
+by Motwani and Raghavan \cite{mr-ra-95}.  The continuous perspective
+using random priorities in $[0,1]$ is closely related to Cartesian trees
+and randomized search trees (treaps) by Seidel and Aragon
 \cite{sa-rst-96}.
 
 The first linear-time worst-case deterministic selection algorithm (the ``median-of-medians'' algorithm)

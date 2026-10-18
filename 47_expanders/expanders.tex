@@ -176,12 +176,16 @@ following lemma testifies.
     otherwise. Observe that if $(u,v) \in \pth{S \times \overline{S} }
     \cup \pth{ \overline{S} \times S}$ then $\cardin{f_S(u)-f_S(v)} =
     1$, and $\cardin{f_S(u)-f_S(v)}=0$ otherwise. As such, we have
-    \[
-    \frac{2 \cardin{S}\pth{n-\cardin{S}}}{n^2} = \ExExt{x,y \in
-       V}{\cardin{f_S(x)- f_S(y)}^2} \leq \DialX{\Graph} \ExExt{ xy
-       \in E}{\cardin{f_S(x)- f_S(y)}^2} = \DialX{\Graph}
+    \begin{align*}
+    \frac{2 \cardin{S}\pth{n-\cardin{S}}}{n^2} &= \ExExt{x,y \in
+       V}{\cardin{f_S(x)- f_S(y)}^2}
+    \\
+    &\leq \DialX{\Graph} \ExExt{ xy
+       \in E}{\cardin{f_S(x)- f_S(y)}^2}
+    \\
+    &= \DialX{\Graph}
     \frac{e\pth{S, \overline{S}}}{\cardin{E}},
-    \]
+    \end{align*}
     by \lemref{expansion}. Now, since $\Graph$ is $d$-regular, we have
     that $\cardin{E} = nd/2$. Furthermore, $n- \cardin{S} \geq n/2$,
     which implies that
@@ -238,7 +242,9 @@ expander it is.
     \begin{align}
         \eqlab{reduction:1} &\hspace{-1cm} \ExExt{x,y \in
            V}{\cardin{f(x)- f(y)}^2} = \ExExt{x,y \in V}{\pth[]{f(x)-
-              f(y)}^2} =%
+              f(y)}^2}
+        \\ \nonumber
+        &=%
         %
         \ExExt{x,y \in V}{\pth[]{f(x)}^2 -2 f(x) f(y) + \pth{f(y)}^2}
         %
@@ -253,7 +259,8 @@ expander it is.
         \ExExt{x \in V}{\pth[]{f(x)}^2} -2 \ExExt{x \in V}{ f(x)}
         \ExExt{y \in V}{f(y)}
         + \ExExt{y \in V}{\pth[]{f(y)}^2}    
-        = 2 \ExExt{x \in V}{\pth[]{f(x)}^2}.
+        \\ \nonumber
+        &= 2 \ExExt{x \in V}{\pth[]{f(x)}^2}.
     \end{align}
     
     Now, let $\IMtrx$ be the $n\times n$ identity matrix (i.e., one on
@@ -261,10 +268,10 @@ expander it is.
     \begin{align*}
         \rho & 
         = \frac{1}{d} \sum_{xy \in E}\pth{ f(x) -f(y) }^2
-        =
+        \\ &=
         \frac{1}{d} \pth{ \sum_{x\in V} d \pth{f(x)}^2 -
            2\sum_{xy \in E}f(x) f(y) }
-        =
+        \\ &=
         \sum_{x\in V} \pth{f(x)}^2 - \frac{2}{d} \sum_{xy \in E}f(x)
         f(y) 
         \\        &
@@ -277,18 +284,19 @@ expander it is.
     eigenvector basis defined by $\TMtrx$, with eigenvalues $\TEV{1}
     \geq \TEV{2} \geq \cdots \geq \TEV{n}$, respectively.  Write
     $f=\sum_{i=1}^n \alpha_i v_i$, and observe that
-    \[
-    0 = \Ex{f(x)} = \sum_{i=1}^n \frac{f(i)}{n} =
-    \DotProd{f}{\frac{v_1}{\sqrt{n}}} =
-    \DotProd{\sum_i \alpha_i v_i}{\frac{v_1}{\sqrt{n}}} =
+    \begin{align*}
+    0 &= \Ex{f(x)} = \sum_{i=1}^n \frac{f(i)}{n} =
+    \DotProd{f}{\frac{v_1}{\sqrt{n}}}
+    \\
+    &= \DotProd{\sum_i \alpha_i v_i}{\frac{v_1}{\sqrt{n}}} =
     \frac{1}{\sqrt{n}} \DotProd{\alpha_1v_1}{v_1} =
     \frac{\alpha_1}{\sqrt{n}},
-    \]
+    \end{align*}
     since $v_i \bot v_1$ for $i \geq 2$. Hence $\alpha_1=0$, and we
     have
     \begin{align*}
         \rho &=  \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy} f(x) f(y)
-         = \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy}\sum_{i=2}^n
+        \\ &= \sum_{x,y \in V} \pth{\IMtrx - \TMtrx}_{xy}\sum_{i=2}^n
         \alpha_{i=1}^n \alpha_i v_i (x) \sum_{j=1}^n \alpha_j v_j(y)\\
         &%
         =%
@@ -297,15 +305,15 @@ expander it is.
     \end{align*}
     Now, we have that
     \begin{align*}
-        \sum_{y \in V} \pth{\IMtrx - \TMtrx}_{xy} v_j(y) =
+        \sum_{y \in V} \pth{\IMtrx - \TMtrx}_{xy} v_j(y) &=
         \DotProd{\;\;\pbrc{\begin{array}{l}
                   x\text{th row of }\\
                   \pth{\IMtrx - \TMtrx}
                \end{array}}}{v_j}
-        =%
+        \\&=%
         \pth{\MakeBig
            \pth{\IMtrx - \TMtrx} v_j} ({x})
-        =%        
+        \\&=%        
         \pth{
            \pth{1- \TEV{j}} v_j}(x) =      
            \pth{1- \TEV{j}} v_j(x),
@@ -317,8 +325,8 @@ expander it is.
     \begin{align}
         \nonumber \rho &= \sum_{i,j} \alpha_i \alpha_j \sum_{x \in V} v_i(x)
         \pth{1- \TEV{j}} v_j(x)
-        %
-        =%
+        \\ \nonumber
+        &=%
         \sum_{i,j} \alpha_i \alpha_j \pth{1- \TEV{j}}
         \sum_{x \in V} v_i(x) v_j(x)\\
         &= \sum_{i,j} \alpha_i \alpha_j \pth{1- \TEV{j}}
@@ -329,7 +337,9 @@ expander it is.
            \TEV{2}} \sum_{j=2}^n \alpha_j^2 \sum_{x \in V}
         \pth{v_j(x)}^2 =
         \pth{1-
-           \TEV{2}} \sum_{j=2}^n \alpha_j^2  =         \pth{1-
+           \TEV{2}} \sum_{j=2}^n \alpha_j^2
+        \nonumber \\
+        &= \pth{1-
            \TEV{2}} \norm{f}^2= \pth{1-
            \TEV{2}} \sum_{j=1}^n \pth{f(x) }^2\\
         &= n\pth{1- \TEV{2}} \ExExt{x \in
@@ -342,11 +352,17 @@ expander it is.
     the above, we have that
     \begin{align*}
         \ExExt{x,y \in V}{\cardin{f(x)- f(y)}^2} &=2 \ExExt{x \in
-           V}{\pth[]{f(x)}^2} \; \leq \; \frac{2}{n\pth[]{1-
-              \TEV{2}}} \, \rho = \frac{2}{dn\pth[]{1-
+           V}{\pth[]{f(x)}^2}
+        \\
+        &\leq \; \frac{2}{n\pth[]{1-
+              \TEV{2}}} \, \rho
+        \\
+        &= \frac{2}{dn\pth[]{1-
               \TEV{2}}}  \sum_{xy \in E}\pth{ f(x) -f(y) }^2\\
         &= \frac{1}{1- \TEV{2}} \cdot \frac{1}{\cardin{E}}
-        \sum_{xy \in E}\pth{ f(x) -f(y) }^2 = \frac{1}{1-
+        \sum_{xy \in E}\pth{ f(x) -f(y) }^2
+        \\
+        &= \frac{1}{1-
            \TEV{2}} \ExExt{ xy \in E}{\cardin{f(x)-
               f(y)}^2}.
     \end{align*}

@@ -1,10 +1,6 @@
 
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{styles/prefix}%
+
 \ChapterNumPage{20}{166}
 
 \Chapter{Derandomization using Conditional Expectations}
@@ -39,22 +35,30 @@ input $n$ bits $X_1, \ldots, X_n$, and outputs a solution of quality
 $f(X_1, \ldots, X_n)$. Assume that given values
 $v_1, \ldots, v_k \in \{0,1\}$, one can compute, efficiently and
 deterministicly, the quantity
-\begin{equation*}
+\begin{align*}
     \ExChar f(v_1,\ldots, v_k)
-    =%
+    &EQ%
     \Ex{ f(v_1, \ldots, v_k, X_{k+1}, \ldots, X_n)}
-    =%
+    \\&
+    EQ%
     \ExCond{ f(X_1, \ldots, X_n) }{X_1=v_1, \ldots, X_k=v_k}
-\end{equation*}
+\end{align*}
 by a given procedure \evalEF.  In such settings, one can compute
 efficiently and deterministicly an assignment $v_1, \ldots, v_n$, such
 that
-\begin{equation*}
-    f(v_1, \ldots, v_n) \geq \ExChar f, \qquad \text{where}\qquad%
+\begin{align*}
+    f(v_1, \ldots, v_n)
+    &\GEQ
+    \ExChar f,
+    \qquad \text{where}\qquad%
     \ExChar f = \Ex{f(X_1,\ldots, X_n)}.
-\end{equation*}
+\end{align*}
 Or alternatively, one can find an assignment $u_1, \ldots, u_n$ such
-that $f(u_1, \ldots, u_n) \leq \Ex{f(X_1,\ldots, X_n)}$.
+that 
+\begin{equation*}
+    f(u_1, \ldots, u_n) \leq \Ex{f(X_1,\ldots, X_n)}.
+\end{equation*}
+
 
 
 \paragraph*{The algorithm.}
@@ -69,17 +73,19 @@ algorithm then would compute the two values
     \alpha^{}_{k,1} = \ExChar f (v_1, \ldots, v_k, 1).
 \end{equation*}
 Observe that
-\begin{equation*}
+\begin{align*}
     \alpha^{}_k
-    =%
+    &=%
     \ExChar f (v_1, \ldots, v_k)
     =%
     \Prob{X_{k+1} = 0} \ExChar f (v_1, \ldots, v_k,0)
+    \\&
     +
     \Prob{X_{k+1} = 1} \ExChar f (v_1, \ldots, v_k,1)
+    \\&
     =%
     \frac{\alpha_{k,0} + \alpha_{k,1}}{2}.
-\end{equation*}
+\end{align*}
 As such, there is an $i$, such that $\alpha_{k,i} \geq \alpha_k$. The
 algorithm sets $v_{k+1} = i$, and continues to the next iteration.
 
@@ -110,9 +116,10 @@ The algorithm performs $2n$ invocations of \evalEF{}.
     $\ExChar f(v_1, \ldots v_k) = \ExCond{f(X_1, \ldots, X_n)}{X_1 =
        v_1, \ldots, X_k=v_k}$ in $T(n)$ time. Then, one can compute an
     assignment $v_1, \ldots, v_n$, such that
-    $f(v_1, \ldots, v_n) \geq \ExChar f = \Ex{ f(X_1, \ldots,
-       X_n)}$. The running time of the algorithm is
-    $O\bigl(n + n T(n)\bigr)$.
+    \begin{equation*}
+        f(v_1, \ldots, v_n) \geq \ExChar f = \Ex{ f(X_1, \ldots, X_n)}.
+    \end{equation*}
+     The running time of the algorithm is $O\bigl(n + n T(n)\bigr)$.
 \end{theorem}
 
 \subsection{Applications}
@@ -143,22 +150,9 @@ Using    \thmref{conditional:expectations} we get the following.
     $O( mnk)$ time.
 \end{lemma}
 
+\subsubsection{Other applications}
 
-\subsubsection{Max cut}
-
-\subsubsection{\Turan theorem}
-
-\begin{lemma}[\Turan's theorem]
-    \thmlab{turan:main}%
-    %
-    Let $\G=(\Vertices,\Edges)$ be a graph with $n$ vertices and $m$
-    edges. One can compute determinedly, in $O(n m)$ time, an
-    independent set of size at least $\displaystyle \frac{n}{1+2m/n}$.
-\end{lemma}
-
-\begin{proof}
-    Exercise.
-\end{proof}
+Other examples include \Turan's theorem and max-cut.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

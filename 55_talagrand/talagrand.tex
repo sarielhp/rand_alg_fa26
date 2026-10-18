@@ -285,7 +285,7 @@ claim, at least at first reading.
         &s \in \HSetY{\pnt}{\SetA_\OldOm} \subseteq \brc{0,1}^d
         &\implies&& \quad(s,1) \in \HSetY{\pntE}{\SetA}
       %
-        &\quad\text{\Eqref{t:c:change}}\qquad \\%
+        &\quad\text{\Eqref{t:c:change}}\quad \\%
         &s' \in \HSetY{\pnt}{\SetA(\nu)} & \implies&& \qquad(s',0) \in
         \HSetY{\pntE}{\SetA}.
     \end{align*}
@@ -325,7 +325,8 @@ claim, at least at first reading.
         \Bigl(
         \min_{\pnt \in \CHSetY{\pntE}{\SetA}} \norm{\pnt}^2
         \Bigr)
-        \leq%
+        \\&
+        \LEQ%
         \norm{h(\lambda)}^2 %
         =%
         \norm{ (1-\lambda)s + \lambda s'}^2 + ( 1-\lambda)^2        
@@ -559,13 +560,16 @@ claim, at least at first reading.
     \end{math}
     For $r > e^{-1/2}$, by the above, $\lambda=1-2\ln r$, and thus
     \begin{align*}
-      g(r) = 
+        g(r)
+        &\EQ
       f(\lambda)%
       =%
       \exp\bigl( (1-\lambda)^2/4 -\lambda \ln r )%
-      =%
+      \\&
+      \EQ%
       \exp\bigl( (2 \ln r)^2/4 +(1-2\ln r) \ln r \bigr)
-      =%
+      \\&
+      \EQ%
       \exp\bigl(  \ln r - \ln^2 r)
       \leq%
       1 \leq 2-r,
@@ -604,17 +608,18 @@ Proving Talagrand's inequality is now easy \si{peasy}.
     random variable $X = \distTY{\pnt}{\SetA}$. By definition,
     $\pnt \in \overline{\SetA_t}$ $\iff$ $X \geq t$. As such, by
     Markov's inequality, we have
-    \begin{equation*}
+    \begin{align*}
         \Prob{\overline{\SetA_t}} %
-        =%
+        &\EQ%
         \Prob{X \geq t}%
         =%
         \Prob{\exp\pth{X^2/4} \geq \exp\pth{t^2/4}}%
         \leq%
         \frac{\ExChar [ \exp\pth{X^2/4} ] }{\exp\pth{t^2/4}}%
-        \leq%
+        \\&
+        \LEQ%
         \frac{\exp\pth{-t^2/4}}{\Prob{\SetA}},
-    \end{equation*}
+    \end{align*}
     by \thmref{talagrand:helper}.   
 \end{proof}
 
@@ -830,23 +835,26 @@ increasing subsequence in the associated sequence.
     We have $h(\vecX) =\Theta(\sqrt{n})$ with high
     probability. Furthermore, for some constant $c$ and any $t > 0$,
     we have that
-    \begin{math} 
+    \begin{equation*} 
         \Prob{\bigl. \cardin{ h(\vecX) - \medX{h(\vecX)}} - t
            cn^{1/4}} \leq%
         4 \exp(-t^2/4),
-    \end{math}
+    \end{equation*}
     Namely, the random variable $h(\vecX)$ is strongly concentrated.
 \end{lemma}
 \begin{proof}
-    Let $Y_i$ be an indicator variable that is $1$ $\iff$
-    $\vecX[i] \equiv x_{(i-1)\sqrt{n}+ 1,}, \ldots, x_{i\sqrt{n}}$
+    Let $Y_i$ be an indicator variable that is
+    \begin{equation*}
+        1 \iff
+        \vecX[i] \equiv x_{(i-1)\sqrt{n}+ 1,}, \ldots, x_{i\sqrt{n}}
+    \end{equation*}
     contains a number in the interval
     $J(i) = [(i-1)/\sqrt{n}, i\sqrt{n}]$. We have
-    \begin{math}
+    \begin{equation*}
         \Prob{Y_i=1}%
         =%
         1 - (1-1/\sqrt{n})^{\sqrt{n}} \geq 1-1/e \geq 1/2,
-    \end{math}
+    \end{equation*}
     since $(1-1/m)^m \leq 1/e$. If $Y_i$ happens, then we can take the
     number in $\vecX[i]$ that falls in $J(i)$, and add it to the
     generated sequence. As such, the length of the generated sequence,
@@ -1126,20 +1134,21 @@ readily from Talagrand's inequality.
         \gamma_i = p^{i-1}(1-p)^{\nballs-i} \binom{\nballs-1}{i-1}.
     \end{math}
     As such, a specific ball is $i$-heavy with probability
-    \begin{equation*}
+    \begin{align*}
         \alpha%
-        =%
+        &=%
         \sum_{j=i}^\nballs \gamma_j %
         =%
         \sum_{j=i-1}^{\nballs-1} \binom{\nballs-1}{j}
         p^j(1-p)^{\nballs-j-1}%
         \leq%
         \sum_{j=i-1}^{\nballs-1}  \pth{\frac{e(\nballs-1)}{j \nbins}}^j%
+        \\&
         \leq%
         2 \pth{\frac{e \nballs}{\nbins (i-1)}}^{i-1}
         \leq%
         6 \pth{\frac{e \nballs}{i \nbins}}^{i-1},
-    \end{equation*}
+    \end{align*}
     as $\pth{ n/i}^i \leq \binom{n}{i} \leq \pth{ e n/i}^i$. Since
     \begin{math}
         (1-p)^{\nballs-j-1}%
@@ -1208,16 +1217,19 @@ readily from Talagrand's inequality.
     $c'$, we have that
     $\cardin{\medianC_i - \Ex{\NHX{i}}} \leq c' i \sqrt{\medianC_i}$,
     and
-    \begin{equation*}
-        \Prob{ \cardin{\NHX{i} - \medianC_i } \geq 6i \sqrt{c
-              \medianC_i \ln \nballs}} \leq %
+    \begin{align*}
+        &\Prob{ \cardin{\NHX{i} - \medianC_i } \geq 6i \sqrt{c
+              \medianC_i \ln \nballs}}%
+        \LEQ %
         \frac{1}{\nballs^{c}}%
-        \qquad\text{ and }\qquad%
+        \\
+        \text{ and }\qquad
+        &%
         \Prob{ \cardin{\bigl.\NHX{i}
               - \Ex{\NHX{i}} } \geq c'i \sqrt{\medianC_i} + 6i \sqrt{c
               \medianC_i \ln \nballs}} \leq %
         \frac{1}{\nballs^{c}}.
-  \end{equation*}
+  \end{align*}
 \end{lemma}
 \begin{proof}
     Observe that $\NHX{i}$ is $1$-certifiable -- indeed, the
@@ -1242,26 +1254,31 @@ readily from Talagrand's inequality.
     \end{equation}
 
     Setting $b = \medianC_i + 2 ti\sqrt{\medianC_i}$, we have that
-    \begin{equation*}
+    \begin{align*}
         b- ti\sqrt{b}%
-        \geq%
+        &\GEQ%
         b - ti \sqrt{\medianC_i + 2 ti\sqrt{\medianC_i}} 
         \geq%
         b - ti \sqrt{2 \medianC_i} %
-        =%
+        \\&
+        \EQ%
         \medianC_i + 2 ti\sqrt{\medianC_i} - ti \sqrt{2 \medianC_i}%
-        \geq%
+        \\&
+        \GEQ%
         \medianC_i.        
-    \end{equation*}
+    \end{align*}
     This implies that
-    \begin{math}
+    \begin{align*}
         \Prob{ \NHX{i} \geq b} /2%
-        \leq %
+        &\LEQ %
         \Prob{ \NHX{i} \leq \medianC_i} \Prob{X \geq b}%
-        \leq %
+        \\&
+        \LEQ %
         \Prob{ \NHX{i} \leq b- tk\sqrt{b}}%
-        \!\Prob{\NHX{i} \geq b} \leq \exp(-t^2/4).
-    \end{math}
+        \!\Prob{\NHX{i} \geq b}
+        \leq%
+        \exp(-t^2/4).
+    \end{align*}
     We conclude that
     \begin{equation}
         \Prob{ \NHX{i} \geq \medianC_i + 2 ti\sqrt{\medianC_i}}%
@@ -1288,39 +1305,43 @@ readily from Talagrand's inequality.
     as claimed.
     
     This in turn translates into the requirement that 
-    \begin{math}
+    \begin{equation*}
         3\sqrt{c \ln n} \leq \sqrt{ \medianC_i}/(2i).%
         \implies%
         6i\sqrt{c \ln n} \leq \sqrt{ \medianC_i}.%
         \implies%
         36i^2 c \ln n \leq \medianC_i.%
-    \end{math}    
+    \end{equation*}    
 
     Next, we estimate the expectation. We have that
-    \begin{equation*}
+    \begin{align*}
         \Ex{ \NHX{i}} %
-        \geq%
+        &\GEQ%
         \medianC_i  - \sum_{t=1}^\infty t i \sqrt{ \medianC_i}
         \Prob{ \NHX{i} \leq  \medianC_i - (t-1)i\sqrt{ \medianC_i}}%
-        \geq%
+        \\&
+        \GEQ%
         \medianC_i  - i \sqrt{ \medianC_i} \sum_{t=1}^\infty t 
         2\exp(-(t-1)^2/4)%
-        \geq %
+        \\& 
+        \GEQ %
         \medianC_i  - 10 i \sqrt{ \medianC_i},
-    \end{equation*}
+    \end{align*}
     by \Eqref{lower:end:t:e}. Similarly, by \Eqref{upper:end:t:e}, we
     have
-    \begin{equation*}
+    \begin{align*}
         \Ex{ \NHX{i}} %
-        \leq%
+        &\LEQ%
         \medianC_i  + \sum_{t=1}^\infty 2ti \sqrt{ \medianC_i}
         \Prob{ \NHX{i} \geq  \medianC_i + (t-1)i\sqrt{ \medianC_i}}%
-        \leq%
+        \\&
+        \LEQ%
         \medianC_i  + 4 i \sqrt{ \medianC_i} \sum_{t=1}^\infty t 
         \exp(-(t-1)^2/4)%
-        \leq %
+        \\&
+        \LEQ %
         \medianC_i  + 20 i \sqrt{ \medianC_i},
-    \end{equation*}
+    \end{align*}
     As such, we have that
     \begin{math}
         \cardin{ \Ex{ \NHX{i}} - \medianC_i } \leq 30 i \sqrt{

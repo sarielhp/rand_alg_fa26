@@ -74,7 +74,10 @@ $\distH{\query}{\PntSet} = \min_{\pnt \in \PntSet}
     \deflab{approximate:near:n}%
     %
     For a set $\PntSet$ of points, a data-structure
-    $\DSC = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$ solves the
+    \[
+    \DSC = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)
+    \]
+    solves the
     \emphOnly{approximate near neighbor}\index{approximate near neighbor} problem if, given a query point
     $\query$, the data-structure works as follows.
     \begin{compactitem}
@@ -177,11 +180,11 @@ $\brc{0,1}^d$, and parameters $\rad$ and $\eps$.
 \paragraph{Preprocessing.}
 We set parameters as follows:
 \begin{align*}
-  \cTimes = \frac{1}{1+\eps} \in (0,1),%
+  & \cTimes = \frac{1}{1+\eps} \in (0,1),%
   \quad  %
   \pr = 1 - \exp \pth{ - \frac{1}{\rad}} \approx \frac{1}{\rad},
-  \quad %
-  \tTimes = \cTimes \ln n,
+  \\
+  & \tTimes = \cTimes \ln n,
   \quad
   \text{and}%
   \quad
@@ -317,7 +320,10 @@ $\rad$ from $\query$.
 \subsubsection{Running time}
 
 For each $i$, the query computes $\seq_i \query$ and that takes
-$O(d \tTimes) = O(d\log n)$ time. Repeated $\DSTimes$ times, this takes
+\[
+O(d \tTimes) = O(d\log n)
+\]
+time. Repeated $\DSTimes$ times, this takes
 $O( \DSTimes d \log n)$ time overall.  Let $X$ be the random variable
 that is the number of points in the extracted lists that are in
 distance $\geq (1+\eps)\rad$ from the query point.  The time to scan
@@ -543,9 +549,9 @@ family of functions $\FamilyB$ that concatenates $k$ of the given
 functions. Formally, let
 \begin{align*}
   \FamilyB%
-  =%
+  &=%
   \kFunctions{\Family}{k}%
-  =%
+  \\&=%
   \Set{ g }{ g(\pnt) = \bigl(f^1(\pnt),
   \ldots, f^k(\pnt)\bigr), \text{ for } f^1, \ldots, f^k \in
   \Family}
@@ -569,10 +575,11 @@ be the set of all such functions.
     such, for a random $g \in \FamilyB$, we have that
     \begin{align*}
         \Prob{ \MakesBig g(\pntA) = g(\pntB) }%
+        \\
         &=%
-        \Prob{ f^1(\pntA) = f^1(\pntB) \text{ and } f^2(\pntA)%
-           = f^2(\pntB) \text{ and } \ldots \text{ and } f^k(\pntA) =
-           f^k(\pntB)}%
+        \Prob{ \substack{ f^1(\pntA) = f^1(\pntB) \text{ and } f^2(\pntA)%
+           = f^2(\pntB) \\ \text{and } \ldots \text{ and } f^k(\pntA) =
+           f^k(\pntB)}}%
         \\
         &=%
         \prod_{i=1}^k \Prob{f^i(\pntA) = f^i(\pntB)} \geq \alpha^k.
@@ -607,13 +614,16 @@ original input set, we get the following easy result.
 \begin{lemma}    
     \lemlab{family:B}%
     %
-    Given a function $g \in \FamilyB= \kFunctions{\Family}{k}$ (see
-    \lemref{big:gap}) and a set $\PntSet \subseteq \Hypercube^\hdim$
-    of $n$ points, one can construct a data-structure, in $O(nk)$ time
-    and using $O(nk)$ additional space, such that given a query point
-    $\query$, one can report all the points in $X = \brc{ \pnt \in
-       \PntSet \sep{ g(\pnt) = g(\query)}}$ in $O( k + \cardin{X} )$
-    time.
+    Given a function $g \in \FamilyB$ (see \lemref{big:gap}), where
+    $\FamilyB= \kFunctions{\Family}{k}$, and a set
+    $\PntSet \subseteq \Hypercube^\hdim$ of $n$ points, one can
+    construct a data-structure, in $O(nk)$ time and using $O(nk)$
+    additional space, such that given a query point $\query$, one can
+    report all the points in
+    \[
+    X = \brc{ \pnt \in \PntSet \sep{ g(\pnt) = g(\query)}}
+    \]
+    in $O( k + \cardin{X} )$ time.
 \end{lemma}
 
 
@@ -652,9 +662,10 @@ with the required amplification.
     for a random $h \in \FamilyAmp$, we have that
     \begin{align*}
       \Prob{\MakeSBig \WEqual{h(\pntA)}{ h(\pntB) }}%
-      &= \Prob{ g^1(\pntA) = g^1(\pntB) \text{~ or ~} g^2(\pntA) =
-        g^2(\pntB) \text{~ or ~} \ldots \text{~ or ~} g^\tau(\pntA)
-        = g^\tau(\pntB)}%
+      \\
+      &= \Prob{ \substack{ g^1(\pntA) = g^1(\pntB) \text{~ or ~} g^2(\pntA) =
+        g^2(\pntB) \\ \text{~ or ~} \ldots \text{~ or ~} g^\tau(\pntA)
+        = g^\tau(\pntB)}}%
       \\
       &=%
         1 - \prod_{i=1}^\tau \Prob{g^i(\pntA) \neq g^i(\pntB)}
@@ -692,14 +703,17 @@ data-structures.
 \begin{lemma}    
     \lemlab{family:amplify}%
     %
-    Given a function $h \in \FamilyAmp= \kFunctions{\FamilyB}{\tau}$
-    (see \lemref{big:amplify}) and a set $\PntSet \subseteq
-    \Hypercube^\hdim$ of $n$ points, one can construct a
-    data-structure, in $O(nk\tau)$ time and using $O(nk\tau)$
-    additional space, such that given a query point $\query$, one can
-    report all the points in $X = \brc{ \pnt \in \PntSet \sep{
-          \WEqual{h(\pnt)}{h(\query)}}}$ in $O( k\tau + \cardin{X} )$
-    time.
+    Given a function $h \in \FamilyAmp$ (see \lemref{big:amplify}),
+    where $\FamilyAmp= \kFunctions{\FamilyB}{\tau}$, and a set
+    $\PntSet \subseteq \Hypercube^\hdim$ of $n$ points, one can
+    construct a data-structure, in $O(nk\tau)$ time and using
+    $O(nk\tau)$ additional space, such that given a query point
+    $\query$, one can report all the points in
+    \[
+    X = \brc{ \pnt \in \PntSet \sep{
+          \WEqual{h(\pnt)}{h(\query)}}}
+    \]
+    in $O( k\tau + \cardin{X} )$ time.
 \end{lemma}
 
 
@@ -740,19 +754,21 @@ If there exists $\pnt \in \PntSet$ such that $\distH{\query}{\pnt}
 under the function $h$ is $\phi \geq 1-\pth{1-\alpha^k}^\tau$. Let us
 demand that this data-structure succeeds with probability $\geq
 3/4$. To this end, we set
-\begin{equation}
+\begin{align}
     \tau%
     =%
     4 \ceil{1/\alpha^k} \implies \phi %
-    \geq %
+    &\geq %
     1-\bigl({1-\alpha^k}\bigr)^\tau%
-    \geq
+    \nonumber
+    \\
+    &\geq
     1-\exp\bigl(-\alpha^k\tau \bigr) %
     \geq%
     1 - \exp\pth{-4} \geq 3/4,
     %
     \eqlab{tau:value:3:4}
-\end{equation}
+\end{align}
 since $1-x \leq \exp\pth{-x}$, for $x \geq 0$.
 
 %The problem is that the data-structure might return too many
@@ -797,22 +813,21 @@ since $1-x \leq \exp\pth{-x}$, for $x \geq 0$.
 %         % = 1 - \pth{1 -y +
 %         % \frac{y^2}{2!} - \ldots } \leq y,
 %     \end{align*}
-    \begin{equation*}
-        \leq%
+    \begin{align*}
+        &\leq%
         \psi%
         =%
         1-\bigl(1-\beta^k\bigr)^\tau%
-        =%
+        \\&=%
         \beta^k
         \Bigl( 1 + (1-\beta^k) +
         (1-\beta^k)^2 + \ldots + (1-\beta^k)^{\tau - 1}
         \Bigr)
-     %\\&%
-      \leq%
+      \\&\leq%
       \beta^k \tau%
       \leq%
-      8 \Bigl(\frac{\beta}{\alpha}\Bigr)^k,        
-    \end{equation*}
+      8 \Bigl(\frac{\beta}{\alpha}\Bigr)^k,
+    \end{align*}
     as $\tau = 4\ceil{1/\alpha^k}$ and $\alpha,\beta\in (0,1)$.
 %0 < \alpha \leq
 %    1$.
@@ -837,11 +852,12 @@ requiring the two terms, in the above bound, to be equal (we ignore
 $\hdim$ since, intuitively, it should be small compared to $n$).  We
 get that
 \begin{align*}
-    k \tau = n\pth{\beta/\alpha}^k%
+    & k \tau = n\pth{\beta/\alpha}^k%
     \;\leadsto\;%
     \frac{k}{\alpha^k} \approx n{\frac{\beta^k}{\alpha^k}} \implies k
     \approx n\beta^k
-    % 
+    \\
+    & %
     \;\leadsto\;%
     1/\beta^k \approx n
     % 
@@ -943,8 +959,11 @@ simpler.  In particular, we assume that $\hdim > 2 (1+\eps)r$.
 \end{lemma}
 \begin{proof}
     By \Eqref{tau:value:3:4},
-    $\tau = 4 \ceil{1/\alpha^k} = O\pth{ n^{\rho} } =
-    O(n^{1/(1+\eps)})$, by \lemref{d:s:2}(B).
+    \[
+    \tau = 4 \ceil{1/\alpha^k} = O\pth{ n^{\rho} } =
+    O(n^{1/(1+\eps)}),
+    \]
+    by \lemref{d:s:2}(B).
 
     Now, $\beta = 1 - \nfrac{r(1+\eps)}{\hdim} \leq 1/2$, since we
     assumed that $\hdim > 2 (1+\eps)r$. As such, we have $\ds k =
@@ -974,7 +993,10 @@ O\pth[]{n^{1/(1+\eps)}}$.
     %
     Given a set $\PntSet$ of $n$ points on the hypercube
     $\Hypercube^\hdim$ and parameters $\eps>0$ and $r > 0$, one can
-    build a data-structure $\DS = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)$
+    build a data-structure
+    \[
+    \DS = \DSAprxNearNbr(\PntSet,r,(1+\eps)r)
+    \]
     that solves the approximate near neighbor problem (see
     \defref{approximate:near:n}).  The data-structure answers a query
     successfully with high probability. In addition we have the
@@ -986,11 +1008,15 @@ O\pth[]{n^{1/(1+\eps)}}$.
 
         \smallskip%
         \item The preprocessing time to build this data-structure is
-        $O\bigl(n^{1+1/(1+\eps)} \log^2 n \bigr)$.
+        \[
+        O\bigl(n^{1+1/(1+\eps)} \log^2 n \bigr).
+        \]
 
         \smallskip%
         \item The space required to store this data-structure is
-        $O\bigl(n\hdim + n^{1+1/(1+\eps)} \log^2 n \bigr)$.
+        \[
+        O\bigl(n\hdim + n^{1+1/(1+\eps)} \log^2 n \bigr).
+        \]
     \end{compactenumA}
 \end{theorem}
 \begin{proof}
@@ -1010,10 +1036,10 @@ O\pth[]{n^{1/(1+\eps)}}$.
     data-structures and perform the near neighbor query in each one of
     them.  As such, the query time is
     \begin{align*}
-        O\pth{ \MakesBig \pth{ k \tau + L \hdim} \log n }%
-        =%
+        & O\pth{ \MakesBig \pth{ k \tau + L \hdim} \log n }%
+        \\&=%
         O\pth{n^{1/(1+\eps)} \log^2 n + \hdim n^{1/(1+\eps)} \log n}%
-        =%
+        \\&=%
         O \pth{ \hdim n^{1/(1+\eps)} \log n},
     \end{align*}
     by \lemref{parameters:value} and since $\hdim = \Omega\pth{\lg n
@@ -1030,17 +1056,19 @@ O\pth[]{n^{1/(1+\eps)}}$.
     Finally, this data-structure requires $O(\hdim n)$ space to store
     the input points.  Specifically, by \lemref{family:amplify}, we
     need an additional
-    \begin{math}
+    \[
         O\bigl( nk\tau \log n\bigr)%
         =%
         O\bigl( n^{1+1/(1+\eps)} \log^2 n\bigr)
-    \end{math}
+    \]
     space.
 \end{proof}
 
-In the hypercube case, when $\hdim = n^{O(1)}$, we can build $M =
-O\pth{\log_{1+\eps} \hdim} = O(\eps^{-1} \log \hdim)$ such
-data-structures such that $(1+\eps)$-\ANNbr can be answered using
+In the hypercube case, when $\hdim = n^{O(1)}$, we can build
+\[
+M = O\pth{\log_{1+\eps} \hdim} = O(\eps^{-1} \log \hdim)
+\]
+such data-structures such that $(1+\eps)$-\ANNbr can be answered using
 binary search on those data-structures which correspond to radii
 $r_1,\ldots, r_M$, where $r_i =(1+\eps)^i$, for $i=1,\ldots, M$.
 
