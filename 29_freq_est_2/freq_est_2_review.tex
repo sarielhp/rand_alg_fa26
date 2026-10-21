@@ -1,11 +1,4 @@
-
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
-
+\input{styles/prefix}%
 
        
 \BookMode{\newpage}%
@@ -38,39 +31,42 @@
 
 \section{Counting number of distinct elements}
 
-\chgY{}{We first analyze an idealized estimator based on fully random hash values. We then turn to pairwise independent sampling.}
+We first analyze an idealized estimator based on fully random hash
+values. We then turn to pairwise independent sampling.
 
 \subsection{First order statistic}
 
-Let $X_1, \ldots, X_u$ be $u$ random variables uniformly distributed
-in $[0,1]$. Let $Y = \min (X_1, \ldots, X_u)$. The value $Y$ is the
-\emphOnly{first order statistic}\index{first order statistic} of $X_1,\ldots, X_u$.
+Let $X_1, \ldots, X_u$ be $u$ independent random variables uniformly
+distributed in $[0,1]$. Let $Y = \min (X_1, \ldots, X_u)$. The value $Y$ is
+the \emphOnly{first order statistic}\index{first order statistic} of
+$X_1,\ldots, X_u$.
 
-\remX{E1: Specify independent uniform variables and $u\geq1$. Identical uniform variables contradict the stated minimum law; see review.md.}
 
-\newcommand{\pdf}{\textsf{pdf}\xspace}
-\newcommand{\cdf}{\textsf{cdf}\xspace}
-
+%XXX
 For a continuous variable $X$, the \emphOnly{probability density
-   function}\index{probability density
-   function} (i.e., \emphOnly{\pdf}\index{\pdf}) is the ``probability'' of $X$ having
-this value. Since this is not well defined, one looks on the
-\emphOnly{cumulative distribution function}\index{cumulative distribution function} $F(x) = \Prob{X \leq }$. The
-\pdf is then the derivative of the \cdf.  Somewhat abusing notations,
-the \pdf of the $X_i$s is $\Prob{X_i=x} = 1$.
-
-\remX{W1: Write $F(x)=\Prob{X\leq x}$ and distinguish the density $f_X(x)$ from the point probability $\Prob{X=x}=0$. The CDF argument in S1 avoids the subsequent point-mass abuse.}
-
-The following proof is somewhat dense, check any standard text on
-probability for more details.
+   function}\index{probability density function} (i.e.,
+\emphOnly{\pdf}\index{\pdf}) is the ``probability'' of $X$ having this
+value. Since this is not well defined, one looks on the
+\emphOnly{cumulative distribution function}\index{cumulative distribution
+   function} $F(x) = \Prob{X \leq x}$. The \pdf is then the derivative of
+the \cdf.  Discrete distribution do not have ordinary \pdf{}s. This can
+be simulated by Dirac's $\delta$-functions, but fortunately, this pile of
+amusement and headache is outside our scope. In particular, the
+probability $\Prob{X=\alpha}$, for any specific $\alpha$, is zero.
 
 \begin{lemma}
     The \emph{probability density function} of $Y$ is
-    \begin{math}
+    \begin{equation*}
         f(x) = \binom{u}{1} 1 (1-x)^{u-1}.
-    \end{math}
+    \end{equation*}
 \end{lemma}
 \begin{proof}
+    The minimum exceed $x$ only if all the $u$ numbers are larger than
+    $x$. Thus,
+    $ F(x)=\Prob{Y \leq x } =1 - (1-x)^u$. As such
+    $f(x) = F'(x) = u(1-x)^{u-1}$.
+\end{proof}
+\begin{proof}[Second version: no need to read it.]
     Considering the \pdf of $X_1$ being $x$, and all other $X_i$s
     being bigger. We have that this \pdf is
     \begin{align*}
@@ -94,90 +90,61 @@ probability for more details.
     $\Var{Y}=\frac{u}{(u+1)^2 (u+2)}$.
 \end{lemma}
 \begin{proof}
-    Using integration by guessing, we have
+    Let $A,B$ be two independent uniform samples from $[0,1]$,
+    independent of $X_1,\ldots,X_u$. Conditioned on $Y$, the probability
+    that $A<Y$ is $Y$. On the other hand, $A<Y$ exactly when $A$ is
+    the smallest of $u+1$ samples. Thus, by symmetry,
+    \[
+        \Ex{Y} = \Prob{A<Y} = \frac{1}{u+1}.
+    \]
+    Similarly, conditioned on $Y$, the probability that both $A$ and
+    $B$ are smaller than $Y$ is $Y^2$. This happens exactly when
+    $A,B$ are the two smallest of $u+2$ samples. All pairs are equally
+    likely to be the two smallest, so
+    \[
+        \Ex{Y^2} = \Prob{A<Y,\ B<Y}
+        = \frac{1}{\binom{u+2}{2}}
+        = \frac{2}{(u+1)(u+2)}.
+    \]
+    Consequently,
+    % BEGIN EDIT W5: Split the variance calculation to fit the line.
+    \begingroup\color{blue}
     \begin{align*}
-      \Ex{Y}%
-      &=%
-        \int_{y=0}^1 y \Prob{Y=y} \diffX{y}%
-      \\&=%
-        \int_{y=0}^1 y \cdot \binom{u}{1} 1  (1-y)^{u-1} \diffX{y}%
-      \\&=%
-        \int_{y=0}^{1} u y (1-y)^{u-1} \diffX{y}%
-      \\&%
-      =%
-      \Bigl[ -y(1-y)^{u} - \frac{(1-y)^{u+1}}{u+1} \Bigr]_{y=0}^{1}%
-      =%
-      \frac{1}{u+1}.
+        \Var{Y} &= \Ex{Y^2} - \pth{\Ex{Y}}^2\\
+        &= \frac{2}{(u+1)(u+2)} - \frac{1}{(u+1)^2}
+        = \frac{u}{(u+1)^2(u+2)}.
     \end{align*}
-
-    Using integration by guessing again, we have
-    \begin{align*}
-      \Ex{Y^2}%
-      &=%
-        \int_{y=0}^1 y^2 \Prob{Y=y} \diffX{y}%
-      \\&=%
-        \int_{y=0}^1 y^2 \cdot \binom{u}{1} 1  (1-y)^{u-1} \diffX{y}%
-      \\&=%
-        \int_{y=0}^{1} u y^2 (1-y)^{u-1} \diffX{y}%
-      \\&%
-      =%
-      \Bigl[
-      -y^2(1-y)^{u} - \frac{2y(1-y)^{u+1}}{u+1}
-      - \frac{2(1-y)^{u+2}}{(u+1)(u+2)}
-      \Bigr]_{y=0}^{1}%
-      \\&=%
-      \frac{2}{(u+1)(u+2)}.
-    \end{align*}
-    
-    We conclude that
-    \begin{align*}
-        \Var{Y}%
-        &=%
-        \Ex{X^2} -\pth{\Ex{X}}^2%
-        =%
-        \frac{2}{(u+1)(u+2)} -
-        \frac{1}{(u+1)^2} 
-        \\&=%
-        \frac{1}{u+1} \pth{ \frac{2}{u+2} - \frac{1}{u+1}}
-        =%
-        \frac{u}{(u+1)^2 (u+2)}.        
-    \end{align*}
+    \endgroup
+    % END EDIT W5
 \end{proof}
-
-\remX{N3: In the variance identity, replace both occurrences of $X$ by $Y$. S1: The survival function gives both moments directly; see review.md.}
 
 \subsection{The algorithm}
 
 \paragraph*{A single estimator.}
 
-\remX{N4: Define the stream here as $\STRM=\strm_1,\ldots,\strm_m$, before its first use.}
-Assume that we have a perfectly random hash function $h$ that randomly
-maps $N = \brc{1,\ldots, n}$ to $[0,1]$. Assume that the stream has
-$u$ unique numbers in $N$. Then the set
-$\{h(\strm_1),\ldots, h(\strm_m)\}$ contains $u$ random numbers
-uniformly distributed in $[0.1]$. \chgY{The algorithm as such, would compute}{The algorithm computes}
-$X = \min_i h(\strm_i)$.
 
-\remX{W4: The hash range should be $[0,1]$, not $[0.1]$. This mathematical punctuation correction is left visible.}
+
+Assume that we have a perfectly random hash function $h$ that randomly
+maps $N = \brc{1,\ldots, n}$ to $[0,1]$. Assume that the stream
+$\STRM=\strm_1,\ldots,\strm_m$, has $u$ unique numbers in $N$. Then the set
+$\{h(\strm_1),\ldots, h(\strm_m)\}$ contains $u$ random numbers uniformly
+distributed in $[0,1]$.  The algorithm computes $Y = \min_i h(\strm_i)$.
 
 \paragraph*{Explanation.}
-Note, that $X$ is \emph{not} an estimator for $u$ -- instead, as
-$\Ex{X} = 1/(u+1)$, we are estimating $1/(u+1)$. The key observation
-is that an $1 \pm \eps$ estimator for $1/(u+1)$, is $1 \pm O(\eps)$
-estimator for $u+1$, which is in turn an $1 \pm O(\eps)$ estimator for
-$u$.
-
-\remX{N3: Call the single minimum $Y$ in the preceding definition and explanation (three occurrences), reserving $X$ for the amplified estimate below.}
-
+Note that $Y$ is \emph{not} an estimator for $u$ -- instead, as
+$\Ex{Y} = 1/(u+1)$, we are estimating $1/(u+1)$. The key observation is
+that an $1 \pm \eps$ estimator for $1/(u+1)$, is $1 \pm O(\eps)$ estimator for
+$u+1$, which is in turn an $1 \pm O(\eps)$ estimator for $u$.
 
 \begin{lemma}
     Let $\eps, \BadProb \in (0,1)$ be parameters. Given a stream
     $\STRM$ of items from $\{1,\ldots, n\}$ one can return an estimate
     $X$, such that
-    \[
-    \Prob{ (1-\eps/4)\frac{1}{u+1} \leq X \leq
-       (1+\eps/4)\frac{1}{u+1}} \geq 1-\BadProb,
-    \]
+    \begin{equation}
+        \Prob{ (1-\eps/4)\frac{1}{u+1} \leq X \leq
+           (1+\eps/4)\frac{1}{u+1}} \geq 1-\BadProb,
+        \eqlab{range-est}
+    \end{equation}
     where $u$ is the
     number of unique elements in $\STRM$. This requires
     $O\pth{ \frac{1 }{\eps^2 } \log \frac{1}{\BadProb}}$ space.
@@ -197,30 +164,16 @@ $u$.
     \end{equation*}
 \end{proof}
 
-Observe that if
-$ (1-\eps/4)\frac{1}{u+1} \leq X \leq (1+\eps/4)\frac{1}{u+1}$ then
-\begin{equation*}
-    \frac{u+1}{1-\eps/4} -1  \geq \frac{1}{X} -1  \geq
-    \frac{u+1}{1+\eps/4}     - 1,
-\end{equation*}
-which implies
-\begin{equation*}
-    (1+\eps) u%
-    \geq%
-    \frac{(1+\eps/4)u}{1-\eps/4}
-    \geq
-    \frac{u+\eps/4}{1-\eps/4}
-    \geq%
-    \frac{1}{X} -1
-    \geq
-    \frac{u+1}{1+\eps/4}     - 1
-    \geq
-    (1-\eps)u.
-\end{equation*}
-Namely, $1/X -1$ is a good estimator for the number of distinct
+Assume $X$ is in the desired range, and write it in the form
+$X = (1+\eta)/(u+1)$, where $|\eta|\leq\eps/4$. For a nonempty stream, $u\geq1$, so
+\begin{align*}
+    \frac{|(1/X-1)-u|}{u}
+    &= \frac{u+1}{u}\frac{|\eta|}{|1+\eta|}
+    \leq \frac{2|\eta|}{1-|\eta|}
+    \leq \frac{2\eps}{4-\eps}<\eps.
+\end{align*}
+Thus, $1/X-1$ is a $(1\pm\eps)$-estimate of the number of distinct
 elements.
-
-\remX{S3: Write $X=(1+\eta)/(u+1)$ and bound the relative error directly; see review.md for the shorter reciprocal argument.}
 
 \paragraph*{The algorithm revisited.}
 Compute $X$ as above, and output the quantity $1/X-1$.
@@ -230,16 +183,16 @@ Compute $X$ as above, and output the quantity $1/X-1$.
 This immediately implies the following.
 
 \begin{lemma}
-    Under the unreasonable assumption that we can sample perfectly
-    random functions from $\{1,\ldots, n\}$ to $[0,1]$, and storing
-    such a function requires $O(1)$ words, then one can estimate the
-    number of unique elements in a stream, using
-    $O( \eps^{-2} \log \BadProb^{-1})$ words.
+    Let $\eps,\BadProb\in(0,1)$. Under the unreasonable\footnote{Criminal
+       even!} assumption that we can sample perfectly random functions
+    from $\{1,\ldots,n\}$ to $[0,1]$, and store each function and each hash
+    value in $O(1)$ words, one can process a nonempty stream with $u$
+    distinct elements and return an estimate $\rho$ satisfying
+    \[
+        \Prob{(1-\eps)u\leq\rho\leq(1+\eps)u}\geq1-\BadProb,
+    \]
+    using $O(\eps^{-2}\log(2/\BadProb))$ words.
 \end{lemma}
-
-\remX{W2: State explicitly the parameters, the relative-error guarantee, and success probability for this idealized lemma. See review.md for a complete proposed statement.}
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -247,36 +200,33 @@ This immediately implies the following.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\distinctX}[1]{\mathrm{set}\pth{#1}}
 
-\section{Sampling from a stream with ``low quality'' randomness}
+% BEGIN EDIT W5: Shorten the overfull heading and name the assumption.
+\begingroup\color{blue}
+\section{Sampling with pairwise independent randomness}
+\endgroup
+% END EDIT W5
 
 Assume that we have a stream of elements
 $\STRM = \strm_1, \ldots, \strm_m$, all taken from the set
-$\{1,\ldots, n\}$.  In the following, let $\distinctX{S}$ denote the
-set of values that appear in $S$. That is
+$\{1,\ldots, n\}$.  Let $\distinctX{\STRM}$ denote the set of values that
+appear in $\STRM$, and set $S=\distinctX{\STRM}$. Thus,
 \begin{equation*}
-    \Frq_0 = \Frq_0(\STRM) = \cardin{\distinctX{S}}
+    \Frq_0 = \Frq_0(\STRM) = \cardin{S}
 \end{equation*}
 is the number of distinct values in the stream $\STRM$.
 
-\remX{N1: Define $S=\distinctX{\STRM}$ and write $\Frq_0=\cardin{S}$. All subsequent sums over $S$ must count distinct values, not stream occurrences.}
-
 
 Assume that we have a random sequence of bits
-$\mathcal{B} \equiv B_1, \ldots, B_n$, such that $\Prob{B_i=1} =p$,
-for some $p$. Furthermore, we can compute $B_i$ efficiently. Assume
-that the bits of $\mathcal{B}$ are pairwise independent.
-
-\remX{G2: Efficient bit evaluation does not bound the space needed for its random seed. Give the constant-word affine-hashing implementation and rounded sampling probability described in review.md.}
-
+$\mathcal{B} \equiv B_1, \ldots, B_n$, such that $\Prob{B_i=1} =p$, for some
+$p$. Furthermore, we can compute $B_i$ efficiently. Assume that the bits
+of $\mathcal{B}$ are pairwise independent, and can be computed using
+constant space.
 
 
 \paragraph*{The sampling algorithm.}
-When the $i$\th \chgY{arrives}{item} $\strm_i$\chgY{}{ arrives}, we compute $B_{\strm_i}$. If this
-bit is $1$, then we insert $\strm_i$ into the random sample $\Sample$
-(if it is already in $\Sample$, there is no need to store a second
-copy, naturally).
-
-\remX{N2: Use $R$ in the preceding two occurrences of $\Sample$, consistently with the definition and proofs below.}
+When the $i$\th item $\strm_i$ arrives, we compute $B_{\strm_i}$. If this
+bit is $1$, then we insert $\strm_i$ into the random sample $R$ (if it is
+already in $R$, there is no need to store a second copy, naturally).
 
 
 This defines a natural random sample
@@ -292,51 +242,16 @@ This defines a natural random sample
     $\nu = \Frq_0(\STRM)$ is the number of distinct elements in $S$.
 \end{lemma}
 \begin{proof}
-    Let $X = \cardin{R}$, and we have
-    \begin{equation*}
-        \Ex{X} = \Ex{\smash{\sum_{i \in S}} B_i \Bigr.}%
-        =%
-        \sum_{i \in S} \Ex{B_i} %
-        =%
-        p \nu.
-    \end{equation*}
-    As for the $\Ex{X^2}$, we have
-    \begin{align*}
-        \Ex{X^2}%
-        &=%
-        \Ex{\pth{\smash{\sum_{i \in S}} B_i }^2 \Bigr.}%
-        \\&=%
-        \sum_{i \in S} \Ex{B_i^2} %
-        +
-        2 \sum_{i,j \in S,\, i < j} \Ex{B_i B_j}
-        \\&=%
-        p \nu
-        +
-        2 \sum_{i,j \in S,\, i < j} \Ex{B_i}\Ex{ \smash{B_j}}    
-        \\&=%
-        p \nu + 2p^2 \binom{\nu}{2} .
-    \end{align*}
-    
-    As such, we have
-    \begin{align*}
-      \Var{X}
-      &=%
-        \Var{\cardin{R}} %
-        =%
-        \Ex{X^2} - \pth{\Ex{X}}^2%
-      \\&=%
-        p \nu + 2p^2 \binom{\nu}{2} - p^2 \nu^2
-      \\&=%
-        p \nu + 2p^2 \frac{\nu(\nu-1)}{2} - p^2 \nu^2
-      \\&%
-      =%
-      p \nu + p^2 \nu(\nu-1) - p^2 \nu^2
-      =%
-      p \nu - p^2 \nu.
-    \end{align*}
+    Since $X=\sum_{i\in S}B_i$, linearity of expectation gives
+    \[
+        \Ex{X}=\sum_{i\in S}\Ex{B_i}=p\nu.
+    \]
+    Pairwise independence makes the covariances zero, so
+    \[
+        \Var{X}=\sum_{i\in S}\Var{B_i}
+        =\nu p(1-p)=p\nu-p^2\nu.
+    \]
 \end{proof}
-
-\remX{S2: Sum the individual indicator variances using pairwise independence. This replaces the second-moment expansion; see review.md.}
   
 \begin{lemma}
     \lemlab{estimator}%
@@ -346,25 +261,27 @@ This defines a natural random sample
     $\Frq_0 = \cardin{\distinctX{\STRM}}$, where $\Frq_0 > N/4$.
     Then, the algorithm described below outputs one of the following:
     \begin{compactenumA}
+        \smallskip%
         \item $\Frq_0 > 2N$.
+        \smallskip%
         \item Output a number $\rho$ such that
         $(1-\eps)\Frq_0 \leq \rho \leq (1+\eps)\Frq_0$.
     \end{compactenumA}
+    \smallskip%
     (Note, that the two options are not disjoint.)  The output of this
     algorithm is correct, with probability $\geq 7/8$.
 \end{lemma}
 \begin{proof}
-    We set $p= \frac{c}{N\eps^2}$, where $c$ is a constant to be
-    determined shortly. Let $T = p N = O(1/\eps^2)$. We sample a
-    random sample $R$ from $S$, by scanning the elements of $S$, and
-    adding $i\in S$ to $R$ if $B_i=1$, If the random sample is larger
-    than $8T$, at any point, then the algorithm outputs that
-    $\cardin{S} > 2N$.
+    We set $p= \frac{c}{N\eps^2}$, where $c$ is a constant to be determined
+    shortly\footnote{If $p>1$ call the probability police and set its
+       value to $1$, which makes what follows uninteresting.}. Let
+    $T = p N = O(1/\eps^2)$. We sample a random sample $R$ from $S$, by
+    scanning the elements of $S$, and adding $i\in S$ to $R$ if $B_i=1$, If
+    the random sample is larger than $8T$, at any point, then the
+    algorithm outputs that $\cardin{S} > 2N$.
 
     In all other cases, the algorithm outputs $\cardin{R} /p$ as the
     estimate for the size of $S$, together with $R$.
-
-\remX{E2: The prescribed probability can exceed one. Use $p=\min\{1,32/(N\eps^2)\}$ and handle $p=1$ by exact counting with the same overflow cap; see review.md.}
 
     To bound the failure probability, consider first the case that
     $N/4 < \cardin{\distinctX{\STRM}}$. In this case, we have by the
@@ -376,11 +293,11 @@ This defines a natural random sample
            \frac{\Ex{X}}{\sqrt{\Var{X}}}
            \sqrt{\Var{X}}}%
         \\&\leq%
-        \eps^2 \frac{\Var{X}}{(\Ex{X})^2}
-        \leq \frac{1}{8},
+        \frac{\Var{X}}{\eps^2(\Ex{X})^2}
+        \leq
+        \frac{1}{8},
     \end{align*}
 
-\remX{E3: Move the factor $\eps^2$ to the denominator of the Chebyshev bound. The later choice $c=32$ remains valid; see review.md.}
     if $\frac{\Var{X}}{\eps^2 (\Ex{X})^2} \leq \frac{1}{8}$, For
     $\nu = \Frq_0 \geq N/4$, this happens if
     $\frac{p \nu}{\eps^2 p^2 \nu^2} \leq \frac{1}{8}$. This in turn is
@@ -392,12 +309,11 @@ This defines a natural random sample
     in this case would output a $(1\pm\eps)$-estimate for
     $\cardin{S}$.
 
-    If the sample gets bigger than $8T$, then the above readily implies
-    that with probability at least $7/8$, the size of $S$ is at least
-    $(1-\eps)8T/p > 2N$, Namely, the output of the algorithm is
-    correct in this case.~
-
-\remX{W3: Use one unconditional good event for the final conceptual sample. On it, overflow implies $\nu>8N/(1+\eps)>2N$. This is not a claim conditional on observing overflow.}
+    Thus, assume that $X$ is within the ``good'' range, which happens
+    with probability $\geq 7/8$. If the sample gets bigger than $8T$, then
+    the above readily implies that the size of $S$ is at least
+    $(1-\eps)8T/p > 2N$. Namely, the output of the algorithm is correct in
+    this case.
 \end{proof}
   
 \begin{lemma}
@@ -409,24 +325,27 @@ This defines a natural random sample
     $\Frq_0 > N/4$.  Then, there is an algorithm that would output one
     of the following:
     \begin{compactenumA}
+        \smallskip%
         \item $\Frq_0 > 2N$.
+        \smallskip%
         \item Output a number $\rho$ such that
         $(1-\eps)\Frq_0 \leq \rho \leq (1+\eps)\Frq_0$.
     \end{compactenumA}
+    \smallskip%
     (Note, that the two options are not disjoint.)  The output of this
     algorithm is correct, with probability $\geq 1- \BadProb$.
 \end{lemma}
 
 \begin{proof}
-    We run $O( \log \BadProb^{-1})$ copies of
-    \lemref{estimator}. If half of them returns that $\Frq_0 > 2N$,
-    then the algorithm returns that $\Frq_0 > 2N$. Otherwise, the
-    algorithm returns the median of the estimates returned, and return
-    it as the desired estimate. The correctness readily follows by a
-    repeated application of Chernoff's inequality.
+    We run $O( \log \BadProb^{-1})$ independent copies of
+    \lemref{estimator}. If half of them returns that $\Frq_0 > 2N$, then
+    the algorithm returns that $\Frq_0 > 2N$. Otherwise, the algorithm
+    returns the median of the estimates returned, and return it as the
+    desired estimate. The correctness readily follows by a repeated
+    application of Chernoff's inequality. Indeed, for the result to be
+    wrong, at least a quarter of the estimators have to fail, but the
+    probability of failure per estimator is at most $1/8$.
 \end{proof}
-
-\remX{W3: State that the copies are independent. Chernoff gives fewer than a quarter bad copies; then the numerical outputs, if used, have a good majority. See review.md for the mixed-output argument.}
 
 
 \begin{lemma}
@@ -436,34 +355,35 @@ This defines a natural random sample
     is correct with high probability (i.e., $\geq 1-1/n^{O(1)}$).
 \end{lemma}
 \begin{proof}
-    Let $N_i = 2^i$, for $i=1, \ldots, M$, where $M = \ceil{\lg n}$. Run $M$
-    copies of \lemref{f:e:0:resolution}, for each value of $N_i$, with
-    $\BadProb = 1/n^{O(1)}$. Let $Y_1, \ldots, Y_M$ be the outputs of
-    these algorithms for the stream. A prefix of these outputs, are
-    going to be ``$\Frq_0 > 2N_i$'', Let $j$ be the first $Y_j$ that
-    is a number. Return this number as the desired estimate. The
-    correctness is easy -- the first estimate that is a number, is a
-    correct estimate with high probability. Since $N_M \geq n$, it
-    also follows that $Y_M$ must be a number. As such, there is a
-    first number in the sequence, and the algorithm would output an
-    estimate.
+    Let $N_i = 2^i$, for $i=1, \ldots, M$, where $M = \ceil{\lg n}$. Run
+    $M$ copies of \lemref{f:e:0:resolution}, for each value of $N_i$,
+    with $\BadProb = 1/n^{O(1)}$. Let $Y_1, \ldots, Y_M$ be the outputs of
+    these algorithms for the stream. A prefix of these outputs, are going
+    to be ``$\Frq_0 > 2N_i$'', Let $j$ be the first $Y_j$ that is a
+    number.
 
-    More precisely, there is an index $i$, such that
-    $N_i/4 \leq \Frq_0 \leq 2\Frq_0$, and $Y_i$ is a good estimate,
-    with high probability. If any of the $Y_j$, for $j < i$, is an
-    estimate, then it is correct (again) with high probability.
+  
+    % Return this number as the desired estimate. The correctness
+    % is easy---the first estimate that is a number, is a correct estimate
+    % with high probability. Since $N_M \geq n$, it also follows that $Y_M$
+    % must be a number. As such, there is a first number in the sequence,
+    % and the algorithm would output an estimate.
+
+    More precisely, there is a minimal index $i$, such that
+    $N_i/4 \leq \Frq_0 \leq 2N_i$, and $Y_i$ is a good estimate, with high
+    probability. The algorithm returns $Y_i$ as the desired estimate.
+    Importantly, all earlier estimates are correct with high probability
+    as well.
+    % If any of the $Y_j$, for $j < i$, is an estimate, then
+    % it is correct (again) with high probability.
 \end{proof}
 
-\remX{G1: Choose the first scale with $N_i\geq\Frq_0$ and union-bound only the levels up to that scale. The displayed $\Frq_0\leq2\Frq_0$ does not establish this. Handle the empty stream and $n=1$ separately; see review.md.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Bibliographical notes}
-
-\remX{W5: The baseline build reports ten overfull lines, including several long displays. Split the chains at the locations listed in review.md.}
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
