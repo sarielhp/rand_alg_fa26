@@ -2,6 +2,7 @@
 
        
 \BookMode{\newpage}%
+\BookMode{\endrefsegment\begin{refsection}[\Dir/freq_est_2.bib]}%
 
 \noindent%
 \ChapterNumPage{29}{230}
@@ -25,6 +26,20 @@
 \bigskip%
 
 
+Here, we study two problems:
+\begin{compactenumA}
+    \smallskip%
+    \item The first one is to estimate the number of distinct values in a
+    stream. Surprisingly, this can be done using (essentially)
+    logarithmic space.
+
+    \smallskip%
+    \item Maybe even more surprisingly, not only can we estimate the
+    number of distinct elements from a stream, but we can also pick a
+    random sample from the stream of a desired size (of the distinct
+    elements), while paying little extra space. This yields another way
+    to get
+\end{compactenumA}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -42,7 +57,6 @@ the \emphOnly{first order statistic}\index{first order statistic} of
 $X_1,\ldots, X_u$.
 
 
-%XXX
 For a continuous variable $X$, the \emphOnly{probability density
    function}\index{probability density function} (i.e.,
 \emphOnly{\pdf}\index{\pdf}) is the ``probability'' of $X$ having this
@@ -102,20 +116,20 @@ probability $\Prob{X=\alpha}$, for any specific $\alpha$, is zero.
     $A,B$ are the two smallest of $u+2$ samples. All pairs are equally
     likely to be the two smallest, so
     \[
-        \Ex{Y^2} = \Prob{A<Y,\ B<Y}
-        = \frac{1}{\binom{u+2}{2}}
-        = \frac{2}{(u+1)(u+2)}.
+        \Ex{Y^2}%
+        \EQ%
+        \Prob{A<Y,\ B<Y}%
+        \EQ%
+        \frac{1}{\binom{u+2}{2}}%
+        \EQ%
+        \frac{2}{(u+1)(u+2)}.
     \]
     Consequently,
-    % BEGIN EDIT W5: Split the variance calculation to fit the line.
-    \begingroup\color{blue}
     \begin{align*}
         \Var{Y} &= \Ex{Y^2} - \pth{\Ex{Y}}^2\\
         &= \frac{2}{(u+1)(u+2)} - \frac{1}{(u+1)^2}
         = \frac{u}{(u+1)^2(u+2)}.
     \end{align*}
-    \endgroup
-    % END EDIT W5
 \end{proof}
 
 \subsection{The algorithm}
@@ -194,17 +208,46 @@ This immediately implies the following.
     using $O(\eps^{-2}\log(2/\BadProb))$ words.
 \end{lemma}
 
+\subsection{Implementing the scheme}
+\seclab{distinct:implementation}%
+
+The preceding analysis assumes that a perfectly random hash function
+and its values can be stored in constant space. This is problematic:
+storing an arbitrary random function requires a table with an entry for
+every possible input, and a uniformly random real number has unbounded
+precision. Neither fits our small-space model.
+
+Instead, hash into a sufficiently large finite range using a $k$-wise
+independent family. Such a hash function can be represented by $k$
+coefficients over a finite field, using $O(k)$ words. The same input
+always receives the same hash value, while any $k$ distinct inputs have
+independent uniform hash values. Indyk~\cite{i-samwi-01} showed that
+$k=O(\log(1/\eps))$ suffices for approximate min-wise independence:
+with a sufficiently large range, each value in a fixed set of size $u$
+is its unique minimum-hash value with probability $(1\pm\eps)/u$.
+
+Using this result and limited-independence moment bounds, one can
+implement the minimum estimator above with sufficiently large $k$ and
+a sufficiently fine finite range. The analysis must bound the bias in
+the moments and the error from discretization; the exact identities
+proved above no longer hold. These details are somewhat tedious, and
+we omit them. For our purposes, the following deliberately nonoptimal
+consequence suffices: assuming $n>1$, using $k=O(\log n)$ and independent repetitions,
+one obtains an estimate $\rho\in[u/2,2u]$ with failure probability at
+most $(2n)^{-c}$, for any fixed constant $c>0$, using
+$O(\log^2 n)$ words. Thus, the idealized assumption can be removed
+while keeping the space polylogarithmic.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\distinctX}[1]{\mathrm{set}\pth{#1}}
 
-% BEGIN EDIT W5: Shorten the overfull heading and name the assumption.
-\begingroup\color{blue}
-\section{Sampling with pairwise independent randomness}
-\endgroup
-% END EDIT W5
+\section{Sampling with pairwise independence}
+
+
+
 
 Assume that we have a stream of elements
 $\STRM = \strm_1, \ldots, \strm_m$, all taken from the set
@@ -217,10 +260,10 @@ is the number of distinct values in the stream $\STRM$.
 
 
 Assume that we have a random sequence of bits
-$\mathcal{B} \equiv B_1, \ldots, B_n$, such that $\Prob{B_i=1} =p$, for some
-$p$. Furthermore, we can compute $B_i$ efficiently. Assume that the bits
-of $\mathcal{B}$ are pairwise independent, and can be computed using
-constant space.
+$\mathcal{B} \equiv B_1, \ldots, B_n$, such that $\Prob{B_i=1} =p$, for
+some $p$. Furthermore, we can compute $B_i$ efficiently. Assume that the
+bits of $\mathcal{B}$ are pairwise independent, and can be computed using constant
+space.
 
 
 \paragraph*{The sampling algorithm.}
@@ -303,7 +346,7 @@ This defines a natural random sample
     $\frac{p \nu}{\eps^2 p^2 \nu^2} \leq \frac{1}{8}$. This in turn is
     equivalent to $8/\eps^2 \leq p \nu $. This in turn happens if
     \begin{equation*}
-        \frac{c}{N\eps^2} \cdot \frac{N}{4} \geq \frac{8}{\eps^2},
+        \frac{c}{N\eps^2} \cdot \frac{N}{4} \geq \frac{8}{\eps^2}, \biggr.
     \end{equation*}
     which implies that this holds for $c=32$.  Namely, the algorithm
     in this case would output a $(1\pm\eps)$-estimate for
@@ -379,11 +422,188 @@ This defines a natural random sample
 \end{proof}
 
 
+\subsection{Sampling in detail}
+
+Assume $n>1$ throughout this subsection.
+
+\begin{remark}[Using the scheme twice]
+    A natural approach is to run two independent copies of the preceding
+    scheme: use the first to estimate $u=\cardin{S}$, and use this estimate
+    to choose a resolution in the second with expected sample size
+    $\Theta(t)$. Choosing uniformly among the non-overflowed samples, with
+    a generous $Ct$ cap, preserves inclusion probabilities within constant
+    factors. Repetition makes such a sample available with high
+    probability, but it unfortunately still biased.
+\end{remark}
+
+\paragraph*{One approximately uniform value.}
+Assume for now we know the value $u$ (the scheme would also if we know it
+only approximately).  Choose a sampling probability $p$ with
+\begin{equation*}
+    \frac{1}{32}
+    <
+    pu
+    \leq
+    \frac{1}{4},
+\end{equation*}
+and retain a pairwise independent sample $R$ only when it
+is a singleton, using the above scheme.
+
+% AAA
+Recall that we use pairwise independent bits $B_1, \ldots, B_n$ (which
+can be computed on the fly using constant space), with
+\begin{equation*}
+    \Prob{B_i=1}=p.
+\end{equation*}
+The same bit $B_x$ is used for every occurrence of $x$. The algorithm
+stores the first value $x$ encountered with $B_x=1$, and marks the trial
+as failed permanently if a different value $y$ with $B_y=1$
+arrives. Repeated occurrences of the stored value are ignored. Thus, a
+trial uses constant space and succeeds exactly when
+$R=\Set{x\in S}{B_x=1}$ is a singleton.
+
+Fix $x\in S$ and condition on $B_x=1$. For each $y\neq x$, pairwise
+independence gives $\ProbCond{B_y=1}{B_x=1}=p$. Thus, by the union bound,
+\begin{align*}
+    \ProbCond{R=\{x\}}{B_x=1}
+    &=1-\ProbCond{\bigcup_{y\in S\setminus\{x\}}\{B_y=1\}}{B_x=1}
+    \\
+    &\geq1-\sum_{y\in S\setminus\{x\}}
+                   \ProbCond{B_y=1}{B_x=1}
+    \\
+    &=1-(u-1)p\geq\frac34,
+\end{align*}
+where the last inequality uses $up\leq1/4$. Since $\Prob{B_x=1}=p$,
+we conclude that
+\[
+    \Prob{R=\{x\}}
+    \EQ%
+    p\ProbCond{R=\{x\}}{B_x=1}
+    \GEQ%
+    \frac{3p}{4}.
+\]
+Observe that
+\begin{equation*}
+    \Prob{R=\{x\}}
+    \leq
+    \Prob{B_x = 1}
+    =
+    p
+\end{equation*}
+Since the singleton events are disjoint, a trial succeeds with probability
+\[
+    \Prob{\cardin{R}=1}
+    =\sum_{x\in S}\Prob{R=\{x\}}
+    \geq\frac{3up}{4}>\frac{3}{128}>\frac{1}{64}.
+\]
+Conditional on the success of the sample, its returned value being $x$
+has probabilities $q_x$ satisfying
+\[
+    \frac{3}{4u}\leq q_x\leq\frac{4}{3u}.
+\]
+
+%TTT
+\begin{remark}
+    Pairwise independence does not guarantee that the $q_x$ are equal.
+    Higher independence gives a closer approximation to uniformity, but
+    no fixed level of $k$-wise independence guarantees exact uniformity
+    for arbitrarily large $u$. Fully independent bits give $q_x=1/u$
+    for every $x\in S$.
+\end{remark}
+
+\paragraph*{Choosing the resolution and collecting values.}
+We may assume $1\leq t<u/4$: in parallel, store up to $4t$ distinct values
+and mark this set as overflowed upon encountering a new value when it is
+full. If it never overflows, return a uniformly random $t$-subset of the
+stored values, or all of them if there are fewer than $t$. This handles
+$u\leq4t$, including an empty stream, using $O(t)$ additional words.
+
+Set $\delta=(2n)^{-3}$. Use the preceding counting scheme to obtain
+$\rho\in[u/2,2u]$, except with probability at most $\delta/2$, and clamp
+it to $[1,n]$. Independently, maintain
+$K=\lceil128t\ln(n/\delta)\rceil$ independent singleton trials at each
+resolution $p_j=2^{-j}$, for $j=0,\ldots,\lceil\lg(16n)\rceil$.
+At the end, choose the largest $p_j\leq1/(8\rho)$, using only the estimate.
+For a good estimate, the chosen probability satisfies $1/32<pu\leq1/4$.
+Inspect this level's trials in their predetermined order, and return the
+first $t$ distinct successful values, or all distinct successful values
+if there are fewer.
+
+\begin{theorem}[Sampling distinct values]
+    \thmlab{distinct:sampling}%
+    Let $1\leq t<u/4$, where $u\leq n$. A stream with $u$ distinct values can be
+    processed in one pass using pairwise independent hashing and
+    $O(t\log^2 n)$ words of space. The returned set $T$ satisfies
+    \[
+        \Prob{\cardin{T}=t}\geq1-(2n)^{-3}.
+    \]
+    Every distinct value has inclusion probability
+    $\Theta(t/u)$, regardless of its frequency in the stream.
+\end{theorem}
+\begin{proof}
+    Fix any good estimate, so that the selected level is independent of
+    its trials. Up to a constant factor, collecting $t$ distinct values
+    is no slower than collecting all $t$ types in the standard coupon
+    collector problem. Its concentration bound\BookMode{
+    (\lemref{coupon})} therefore implies that the $K$ trials collect $t$
+    distinct values except with probability at most $\delta/2$. Adding
+    the probability of an estimation error proves the sample-size
+    guarantee.
+
+    Since at most $t<u/4$ values are picked, each new value is
+    approximately uniform among the remaining values, which still form
+    a constant fraction of $S$. Thus, every value has inclusion probability
+    $\Theta(t/u)$; the small failure probability does not affect these
+    constant-factor bounds.
+
+    Finally, there are $O(\log n)$ resolutions, each storing
+    $K=O(t\log n)$ constant-space trials. The counting scheme uses
+    $O(\log^2 n)$ additional words.
+\end{proof}
+
+The conclusion concerns individual inclusion probabilities, not uniformity over all size-$t$
+subsets. Only pairwise independence is needed within each trial; the
+trials and the counting scheme use independent randomness.
+
+
+\subsubsection{Why not ordinary reservoir sampling?}
+
+Reservoir sampling chooses stream positions uniformly, so repeated values
+are favored. For example, a reservoir of size one selects a value of
+frequency $f_x$ with probability $f_x/m$. If the stream contains $m-1$
+copies of $a$ and one copy of $b$, we want probability $1/2$ for each,
+whereas reservoir sampling selects $b$ with probability $1/m$. Removing
+duplicates afterward does not remove this bias.
+
+Applying reservoir sampling only to first occurrences would work, but
+recognizing them by storing all previously seen values costs $O(u)$
+words. Checking only the reservoir does not suffice: a discarded value
+can reappear. Our sampling rule instead reuses the same hash value for
+every occurrence. Reservoir sampling does work once a set of distinct
+values has already been stored.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Bibliographical notes}
+
+The singleton construction above is mainly pedagogical: it obtains a
+sample using only pairwise independence and elementary probability.
+With higher independence, the concentration bounds of Schmidt \etal
+\cite{sss-chbli-95} simplify the direct sampling scheme.
+A sufficiently large $O(t+\log n)$ sample budget lets the appropriate
+resolution retain at least $t$ values without overflowing, with high
+probability. Applying the bounds also after conditioning on a value
+being sampled yields approximately uniform inclusion probabilities
+after choosing a uniform $t$-subset. Another standard approach is
+bottom-$t$ sampling: retain the $t$ distinct values with smallest hash
+values~\cite{t-bkps-13}. Five-wise independence suffices for
+constant-factor inclusion probabilities, by extending the fourth-moment
+argument for min-wise hashing of Knudsen and St\"ockel~\cite{ks-qlbm-15}.
+These approaches give simpler sampling algorithms at the cost of
+stronger probabilistic tools.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -398,9 +618,6 @@ This defines a natural random sample
 
    \IncFragment{Chebyshev}
 
-\remX{E4: The imported standardized Chebyshev statement fails when the variance is zero. Require finite positive variance, or use a positive absolute threshold; see review.md. The shared fragment is unchanged.}
-   \IncFragment{chernoff_small_delta}
-   \IncFragment{k_wise_independent_mod_p}
 
    
 %   \IncFragment{chernoff:small:delta:1}
@@ -415,5 +632,6 @@ This defines a natural random sample
 \nocite{mr-ra-95}
 
 \ChapterEnd{}
+\BookMode{\end{refsection}}%
 
 % -----------
