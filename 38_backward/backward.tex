@@ -134,7 +134,7 @@ We are given a $\Graph = (\Vertices, \Edges)$ be an edge-weighted
 graph with $n$ vertices and $m$ edges. The task is to compute an
 ordering $\pi = \permut{\pi_1, \ldots, \pi_n}$ of the vertices, and
 for every vertex $v \in \Vertices$, the list of vertices $L_v$, such
-that $\pi_i \in \L_v$, if $\pi_i$ is the closet vertex to $v$ in the
+that $\pi_i \in L_v$, if $\pi_i$ is the closet vertex to $v$ in the
 $i$\th prefix $\permut{\pi_1,\ldots, \pi_i}$.  
 
 This situation can arise for example in a streaming scenario, where we
@@ -150,19 +150,18 @@ $\mathcal{L} = \sum_{v \in \Vertices} \cardin{L_v}$.
 
 \subsection{The algorithm}
 
-Take a random permutation $\pi_1,\ldots, \pi_n$ of the vertices
-$\Vertices$ of $\Graph$.  Initially, we set $\delta(v) = +\infty$, for
-all $v \in \Vertices$.
 
-In the $i$\th iteration, set $\delta(\pi_i)$ to $0$, and start
-Dijkstra from the $i$\th vertex $\pi_i$.  The Dijkstra propagates only
-if it improves the current distance associated with a
-vertex. Specifically, in the $i$\th iteration, we update $\delta(u)$
-to $\distG{\pi_i}{u}$ if and only if $\distG{\pi_i}{u} < \delta(u)$
-before this iteration started. If $\delta(u)$ is updated, then we add
-$\pi_i$ to $L_u$. Note, that this Dijkstra propagation process might
-visit only small portions of the graph in some iterations -- since it
-improves the current distance only for few vertices.
+Take a random permutation $\pi_1,\ldots, \pi_n$ of the vertices
+$\Vertices$ of $\Graph$.  Initially, we set $\delta(v) = +\infty$, for all
+$v \in \Vertices$.  In the $i$\th iteration, set $\delta(\pi_i)$ to $0$, and
+start Dijkstra from the $i$\th vertex $\pi_i$.  The Dijkstra propagates
+only if it improves the current distance associated with a
+vertex. Specifically, in the $i$\th iteration, we update $\delta(u)$ to
+$\distG{\pi_i}{u}$ if and only if $\distG{\pi_i}{u} < \delta(u)$ before this
+iteration started. If $\delta(u)$ is updated, then we add $\pi_i$ to
+$L_u$. Note, that this Dijkstra propagation process might visit only
+small portions of the graph in some iterations -- since it improves the
+current distance only for few vertices.
 
 \subsection{Analysis}
 
