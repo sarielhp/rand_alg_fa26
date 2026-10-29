@@ -153,27 +153,22 @@ $\Distor(f) = \max_{x,y} \frac{\dist{x - y}}{\DistChar(x,y)}$.
 %\begin{center}
 %\end{center}
 
-\bigskip%
-\noindent%
-\begin{minipage}{0.83\linewidth}
+
 \paragraph*{Why is distortion necessary?}
 Consider the a graph $\Graph=(\Vertices,\Edges)$ with one vertex $s$
 connected to three other vertices $a, b, c$, where the weights on the
 edges are all one (i.e., $\Graph$ is the star graph with three leafs).
 We claim that $\Graph$ can not be embedded into Euclidean space with
 distortion $\leq \sqrt{2}$.  Indeed, consider the associated metric space
-$(\Vertices,\DistChar_G)$ and an (expansive)
-embedding
-\[
-f: \Vertices \rightarrow \Re^d.
-\]
-\end{minipage}%
-\begin{minipage}{0.17\linewidth}
-    \hfill%
-    {\includegraphics{\File{figs/star}}}
-\end{minipage}
-\smallskip%
+$(\Vertices,\DistChar_G)$ and an (expansive) embedding
+\begin{math}
+    f: \Vertices \rightarrow \Re^d.
+\end{math}
 
+\begin{figure}[h]
+    \centering
+    {\includegraphics{\File{figs/star}}}
+\end{figure}
 Consider the triangle formed by $\triangle = a'b' c'$, where
 $a' = f(a), b'= f(b)$ and $c' =f(c)$. Next, consider the following
 quantity
