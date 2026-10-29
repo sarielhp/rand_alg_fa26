@@ -17,14 +17,15 @@ The codebase is engineered to support **two independent modes of compilation**:
 ```
 notes_test/
 ├── book.tex                 # Master book entrypoint (\InputChap{dir}{file})
+├── book.bib                 # Symlink -> shared/book.bib
 ├── AGENTS.md                # Agent instruction & architecture guide (this file)
 ├── numbering.md             # Detailed design of \ChapterNumPage synchronization
 ├── p.md                     # Proposal & design notes on style isolation
 ├── shared/                  # Shared style files, packages, assets, and fragments
 │   ├── prefix.tex           # Universal LaTeX preamble (handles both book & standalone modes)
 │   ├── qed_duck.pdf         # QED tombstone graphic
+│   ├── book.bib             # Central bibliography for book and standalone chapters
 │   └── fragment/            # Text fragment definitions shared across chapters
-├── refs/                    # Master bibliography database (.bib files)
 ├── tools/                   # Ruby automation & maintenance tool suite
 │   ├── sync_chapters_info   # Symlink -> sync_numbers.rb (syncs chapter/page numbers)
 │   ├── test_chapters_standalone # Symlink -> test_all_chaps.rb (runs l -no-env suite)
@@ -51,6 +52,7 @@ All shared preambles and global assets live under `shared/`. To maintain clean, 
 - **Portability Contract**: Any single chapter directory plus the top-level `shared/` directory can be packaged, emailed, or compiled anywhere on any standard TeX Live installation.
 - **Graphic Assets**: Shared graphics like `qed_duck.pdf` must be loaded from `shared/` (e.g. `\includegraphics{shared/qed_duck.pdf}`).
 - **Fragments**: Shared definitions live in `shared/fragment/`. Both book and standalone builds load them through `shared/fragment/...`; `tools/sync_fragments` regenerates them from chapter sources.
+- **Bibliography**: The only active database is `shared/book.bib`; add and correct citations there. The root and every chapter have a relative `book.bib -> shared/book.bib` symlink, and all preambles load `./book.bib`. These aliases also support `l`, whose bibliography cache flattens resource paths. Preserve these links when packaging chapters. Other chapter-local `.bib` files are legacy copies and are not loaded; builds must not depend on personal bibliography paths.
 
 ---
 

@@ -87,7 +87,7 @@ class MacroDetector
       File.join(ROOT_DIR, "[0-9][0-9]_*/**/*.tex"),
       File.join(ROOT_DIR, "shared/fragment/*.tex"),
       File.join(ROOT_DIR, "book.tex"),
-      File.join(ROOT_DIR, "*.bib")
+      File.join(ROOT_DIR, "shared", "book.bib")
     ]
     @corpus_files = Dir.glob(patterns).reject do |f|
       f.include?("/junk/") || f.include?("/old/") || f.include?("/old_stuff/") ||

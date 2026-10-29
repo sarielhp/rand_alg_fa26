@@ -1527,11 +1527,7 @@ backend=biber]{biblatex}
 % -----------------------------------------------------------------------------
 % Bibliography & Document Begin
 %-----------------------------------------------------------------------------
-\IfFileExists{\jobname.bib}{%
-   \addbibresource{\jobname.bib}%
-}{%
-   \addbibresource{shortcuts.bib}%
-   \addbibresource{geometry.bib}%
-}
+% book.bib is a relative symlink to shared/book.bib in each build directory.
+\addbibresource{./book.bib}%
 \makeindex
 \begin{document}
