@@ -102,7 +102,7 @@ Usage: ./tools/verify_html_rendering [options] [filters...]
 ```
 html_site/
 ├── index.html                   # Central Table of Contents & chapter directory
-├── styles/
+├── shared/
 │   ├── web.css                  # Modern reader styles, typography, math spacing
 │   └── qed_duck-.png            # QED tombstone graphic
 ├── 01_intro/
@@ -115,7 +115,7 @@ html_site/
 ```
 
 ### How Cross-References Work
-1. **Master Label Registry**: Compiling book.tex generates `junk/book.aux` (mirrored to `styles/master_labels.aux`). This provides the single source of truth for all label names, numbering (`Theorem 3.4.1`, `Figure 4.1`), and containing chapters.
+1. **Master Label Registry**: Compiling book.tex generates `junk/book.aux` (mirrored to `shared/master_labels.aux`). This provides the single source of truth for all label names, numbering (`Theorem 3.4.1`, `Figure 4.1`), and containing chapters.
 2. **Automated Anchor Injection**: During post-processing, `tools/gen_html_all_chapters.rb` scans the generated chapter HTML and automatically injects matching anchors (`<a id="theo_Markov"></a>`, `<a id="fig_quick_select"></a>`) directly onto target elements (`Theorem`, `Lemma`, `Figure`, `Definition`, `Tedium`, `Section`).
 3. **Cross-Chapter Links**: References to other chapters (e.g. `\thmrefY{Markov's inequality}{Markov}`) are rewritten as direct inter-chapter hyperlinks (`../03_expectation/index.html#theo_Markov`).
 4. **Fuzzy & Alphanumeric Matching**: Normalizes colons, underscores, and extra braces (e.g. `\thmref{{f:t:algebraic:graph}}` and `\lemlab{dominating:shitfs}`) without requiring edits to the manuscript `.tex` source.

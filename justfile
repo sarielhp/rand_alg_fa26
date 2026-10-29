@@ -66,7 +66,7 @@ book *args:
     @./tools/sync_fragments
     l book.tex {{args}}
 
-# Synchronize LaTeX fragments into fragment/
+# Synchronize LaTeX fragments into shared/fragment/
 fragments *args:
     ./tools/sync_fragments {{args}}
 

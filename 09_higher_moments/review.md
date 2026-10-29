@@ -120,7 +120,7 @@
   `✔ No errors/alerts/warnings.` (0 errors, 0 alerts, 0 warnings).
 - **Environment Sanitization:** Verified under complete TeX environment sanitization (`TEXINPUTS`, `BIBINPUTS`, `BSTINPUTS`, `TEXMFHOME` cleared).
 - **Test Suite Verification:** Ran `./tools/test_chapters_standalone 09` (`test_all_chaps.rb`), verifying that the standalone chapter builds cleanly in the project test suite.
-- **Portability Contract:** All citations are resolved locally via `higher_moments_reviewed.bib` and relative symlink `styles -> ../styles`.
+- **Portability Contract:** All citations are resolved locally via `higher_moments_reviewed.bib` and relative symlink `styles -> ../shared`.
 
 ---
 

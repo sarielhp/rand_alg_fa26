@@ -18,7 +18,7 @@
   $$P_\ind^+ = \sum_{i = \lceil(L+V)/2\rceil}^{\Vertices} \binom{\Vertices}{i} \frac{1}{2^n} = \frac{1}{2^n} \sum_{i = \lceil(L+V)/2\rceil}^{\Vertices} \binom{\Vertices}{i}.$$
   This contains two fatal flaws:
   1. *Denominator $2^n$ instead of $2^V$:* There are only $V \leq n-k$ independent random variables remaining in the sum. Dividing by $2^n$ underestimates the conditional probability by an exponential factor $2^{-(n-V)}$. If all remaining entries are $0$ ($V=0$), the conditional probability is $0$ or $1$, yet this formula would yield numbers scaled by $2^{-n}$.
-  2. *Macro `\Vertices` instead of scalar $V$:* In `styles/prefix_latex.tex`, `\Vertices` is defined as `\VV` ($\mathsf{V}$, the vertex set of a graph). It was typeset as the upper summation limit and the top index of the binomial coefficient: $\binom{\mathsf{V}}{i}$. The correct scalar count is $V$.
+  2. *Macro `\Vertices` instead of scalar $V$:* In `shared/prefix_latex.tex`, `\Vertices` is defined as `\VV` ($\mathsf{V}$, the vertex set of a graph). It was typeset as the upper summation limit and the top index of the binomial coefficient: $\binom{\mathsf{V}}{i}$. The correct scalar count is $V$.
   3. *Strict Inequality vs Ceiling:* The condition is $\sum_{i \geq k+1, \rowc_i=1} \frac{\vecA_i+1}{2} > \frac{L+V}{2}$. For an integer number of heads $H$, $H > x \iff H \geq \lfloor x \rfloor + 1$. When $x = (L+V)/2$ is non-integer (the typical case here since $L$ involves $4\sqrt{n\ln n}$), $\lfloor x \rfloor + 1 = \lceil x \rceil$. If $(L+V)/2 < 0$, all outcomes satisfy the condition and the sum is $1$; if $(L+V)/2 \geq V$, the probability is $0$.
 - **Action Taken:** Corrected the denominator to $2^V$, replaced `\Vertices` with $V$, and added an explanatory reviewer remark (`\remX`).
 

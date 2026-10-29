@@ -34,7 +34,7 @@ class EmphiReplacer
   def collect_files
     patterns = [
       File.join(ROOT_DIR, "[0-9][0-9]_*/*.tex"),
-      File.join(ROOT_DIR, "fragment/*.tex"),
+      File.join(ROOT_DIR, "shared/fragment/*.tex"),
       File.join(ROOT_DIR, "book.tex")
     ]
 

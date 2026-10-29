@@ -1,9 +1,4 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{shared/prefix}%
 \ChapterNumPage{9}{73}
 
 \Chapter{Higher Moments and Some Inequalities}
@@ -172,13 +167,13 @@ interesting example.
 
 Observe, that the above proof did not require all the variables to be
 purely independent---it was enough that they are $k$-wise independent, see
-\defref{k-wise-independent}.  We thus readily get the following.
+\defref{k:wise-independent}.  We thus readily get the following.
 
 
 \begin{lemma}
     \lemlab{lem:k:wise:sum}%
     Let $k > 0 $ be an even integer, and let $X_1, \ldots, X_n$ be $n$
-    \defrefY{$k$-wise independent}{k-wise-independent} random variables,
+    \defrefY{$k$-wise independent}{k:wise-independent} random variables,
     such that $\Prob{X_i=-1} = \Prob{X_i =+1} = 1/2$. Let
     $X = \sum_{i=1}^n X_i$. Then, we have
     \begin{align*}

@@ -4,7 +4,7 @@
 # scan_unhandled_macros.rb
 #
 # Audits generated HTML files to identify LaTeX macros that MathJax cannot render.
-# Cross-references unhandled macros with styles/prefix.tex and individual chapter
+# Cross-references unhandled macros with shared/prefix.tex and individual chapter
 # sources to find their original LaTeX definitions.
 # ==============================================================================
 
@@ -16,9 +16,9 @@ require 'set'
 
 ROOT_DIR    = File.expand_path('..', __dir__)
 BOOK_TEX    = File.join(ROOT_DIR, 'book.tex')
-STYLES_DIR  = File.join(ROOT_DIR, 'styles')
-PREFIX_TEX  = File.join(STYLES_DIR, 'prefix.tex')
-MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.json')
+SHARED_DIR  = File.join(ROOT_DIR, 'shared')
+PREFIX_TEX  = File.join(SHARED_DIR, 'prefix.tex')
+MATH_MACROS = File.join(SHARED_DIR, 'mathjax_macros.json')
 DEFAULT_SITE_DIR = File.join(ROOT_DIR, 'html_site')
 
 # Standard symbols and operators supported natively by MathJax
@@ -62,7 +62,7 @@ class MacroScanner
     @format = options[:format] || :text
 
     @defined_mathjax = load_current_mathjax_macros
-    @prefix_definitions = load_definitions_from_file(PREFIX_TEX, 'styles/prefix.tex')
+    @prefix_definitions = load_definitions_from_file(PREFIX_TEX, 'shared/prefix.tex')
     @chapter_definitions = load_chapter_definitions
   end
 
@@ -279,7 +279,7 @@ class MacroScanner
 
     items.each do |item|
       category = case item[:origin]
-                 when :global  then 'Global (`styles/prefix.tex`)'
+                 when :global  then 'Global (`shared/prefix.tex`)'
                  when :chapter then "Local (`#{item[:source]}`)"
                  else 'Unknown'
                  end

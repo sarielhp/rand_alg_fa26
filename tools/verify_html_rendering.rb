@@ -30,8 +30,8 @@ class HtmlVerifier
   ROOT_DIR = File.expand_path('..', __dir__)
   SITE_DIR = File.join(ROOT_DIR, 'html_site')
   BOOK_TEX = File.join(ROOT_DIR, 'book.tex')
-  MACROS_JSON = File.join(ROOT_DIR, 'styles', 'mathjax_macros.json')
-  PREFIX_TEX = File.join(ROOT_DIR, 'styles', 'prefix.tex')
+  MACROS_JSON = File.join(ROOT_DIR, 'shared', 'mathjax_macros.json')
+  PREFIX_TEX = File.join(ROOT_DIR, 'shared', 'prefix.tex')
 
   # Terminal colors
   RESET  = "\e[0m"
@@ -214,7 +214,7 @@ class HtmlVerifier
     stem = chap[:stem]
 
     # Fix relative paths to shared styles assets
-    content.gsub!(/src=(['"])styles\//, 'src=\1../styles/')
+    content.gsub!(/src=(['"])shared\//, 'src=\1../shared/')
 
     # Fix internal anchor references pointing to stem.html#...
     content.gsub!(/href=(['"])#{Regexp.escape(stem)}\.html#([^'"]*)\1/, 'href=\1#\2\1')
@@ -293,7 +293,7 @@ class HtmlVerifier
     res[:errors] << 'Missing <!DOCTYPE html>' unless content.include?('<!DOCTYPE html>')
     res[:errors] << 'Missing </html> closing tag (truncated)' unless content.include?('</html>')
     res[:errors] << 'Missing </body> closing tag' unless content.include?('</body>')
-    res[:warnings] << 'Missing styles/web.css stylesheet link' unless content.include?('styles/web.css')
+    res[:warnings] << 'Missing shared/web.css stylesheet link' unless content.include?('shared/web.css')
     res[:warnings] << 'Missing top navigation bar' unless content.include?('top-nav')
     res[:warnings] << 'Missing bottom navigation bar' unless content.include?('bottom-nav')
 

@@ -8,7 +8,7 @@ ROOT_DIR = File.expand_path('..', __dir__)
 
 class DeflabelRemover
   DEFAULT_EXCLUDES = [
-    %r{\Astyles/},
+    %r{\Ashared/},
     %r{\bold_stuff/},
     %r{/backup/},
     %r{/disaster/},

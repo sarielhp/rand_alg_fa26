@@ -20,12 +20,11 @@ notes_test/
 ├── AGENTS.md                # Agent instruction & architecture guide (this file)
 ├── numbering.md             # Detailed design of \ChapterNumPage synchronization
 ├── p.md                     # Proposal & design notes on style isolation
-├── styles/                  # Shared style files, packages, and assets
+├── shared/                  # Shared style files, packages, assets, and fragments
 │   ├── prefix.tex           # Universal LaTeX preamble (handles both book & standalone modes)
 │   ├── qed_duck.pdf         # QED tombstone graphic
-│   └── notations.sty        # Notation definitions
+│   └── fragment/            # Text fragment definitions shared across chapters
 ├── refs/                    # Master bibliography database (.bib files)
-├── fragment/                # Text fragment definitions shared across chapters
 ├── tools/                   # Ruby automation & maintenance tool suite
 │   ├── sync_chapters_info   # Symlink -> sync_numbers.rb (syncs chapter/page numbers)
 │   ├── test_chapters_standalone # Symlink -> test_all_chaps.rb (runs l -no-env suite)
@@ -37,25 +36,21 @@ notes_test/
 
 ---
 
-## 2. Chapter Independence & `styles/` Resolution
+## 2. Chapter Independence & `shared/` Resolution
 
-### The `styles/` Pattern
-All shared preambles and global assets live under `styles/`. To maintain clean, standalone portability without cluttering the root directory:
-- Every chapter directory contains a relative symlink: `styles -> ../styles`.
+### The `shared/` Pattern
+All shared preambles and global assets live under `shared/`. To maintain clean, standalone portability without cluttering the root directory:
+- Every chapter directory contains a relative symlink: `shared -> ../shared`.
 - Every chapter `.tex` preamble must begin with:
   ```latex
-  \makeatletter
-  \def\input@path{{styles/}}
-  \makeatother
-  \ifx\bookMode\undefined%
-      \input{prefix}%
-  \fi
+  \input{shared/prefix}%
   ```
 
 ### Rules for Agents
-- **Preserve Relative Symlinks**: Never delete or convert `styles -> ../styles` into absolute links or duplicate copies.
-- **Portability Contract**: Any single chapter directory plus the top-level `styles/` directory can be packaged, emailed, or compiled anywhere on any standard TeX Live installation.
-- **Graphic Assets**: Shared graphics like `qed_duck.pdf` must be loaded from `styles/` (e.g. `\includegraphics{styles/qed_duck.pdf}`).
+- **Preserve Relative Symlinks**: Keep `shared -> ../shared` relative; do not replace it with absolute links or duplicate copies.
+- **Portability Contract**: Any single chapter directory plus the top-level `shared/` directory can be packaged, emailed, or compiled anywhere on any standard TeX Live installation.
+- **Graphic Assets**: Shared graphics like `qed_duck.pdf` must be loaded from `shared/` (e.g. `\includegraphics{shared/qed_duck.pdf}`).
+- **Fragments**: Shared definitions live in `shared/fragment/`. Both book and standalone builds load them through `shared/fragment/...`; `tools/sync_fragments` regenerates them from chapter sources.
 
 ---
 
@@ -74,7 +69,7 @@ Both offsets are unified into a single macro placed immediately above `\Chapter{
 - **Standalone Mode** (`\bookMode` undefined):
   `\ChapterNumPage{C}{P}` initializes `\setcounter{chapter}{C - 1}` and `\setcounter{page}{P}`. When `\Chapter{...}` executes, the chapter counter increments to `C` and the first page starts at `P`.
 - **Book Mode** (`book.tex` defines `\def\bookMode{1}`):
-  `\ChapterNumPage` is defined in `styles/prefix.tex` as a strict no-op:
+  `\ChapterNumPage` is defined in `shared/prefix.tex` as a strict no-op:
   ```latex
   \newcommand{\ChapterNumPage}[2]{}
   ```

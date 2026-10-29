@@ -6,7 +6,7 @@ require "json"
 
 ROOT_DIR = File.expand_path("..", __dir__)
 HTML_DIR = File.join(ROOT_DIR, "html")
-STYLES_DIR = File.join(ROOT_DIR, "styles")
+SHARED_DIR = File.join(ROOT_DIR, "shared")
 
 def extract_macros_from(text)
   macros = {}
@@ -86,7 +86,7 @@ end
 end
 
 # Copy / link lwarp.css
-FileUtils.cp(File.join(STYLES_DIR, "lwarp.css"), File.join(HTML_DIR, "lwarp.css")) if File.exist?(File.join(STYLES_DIR, "lwarp.css"))
+FileUtils.cp(File.join(SHARED_DIR, "lwarp.css"), File.join(HTML_DIR, "lwarp.css")) if File.exist?(File.join(SHARED_DIR, "lwarp.css"))
 FileUtils.rm_f(File.join(ROOT_DIR, "lwarp.css"))
 
 # Clean up cut files in root
@@ -94,8 +94,8 @@ Dir.glob(File.join(ROOT_DIR, "*.cut")).each { |f| FileUtils.rm_f(f) }
 
 # 3. Create symlinks in html/ for assets
 Dir.chdir(HTML_DIR) do
-  # styles -> ../styles
-  FileUtils.ln_sf("../styles", "styles") unless File.exist?("styles")
+  # shared -> ../shared
+  FileUtils.ln_sf("../shared", "shared") unless File.exist?("shared")
 
   # Link all chapter folders: 01_intro -> ../01_intro
   Dir.glob(File.join(ROOT_DIR, "[0-9][0-9]_*")).each do |chap_dir|
@@ -110,7 +110,7 @@ end
 
 # 4. Build macro dictionary
 all_raw_macros = {}
-Dir.glob(File.join(ROOT_DIR, "{styles/*.tex,*/*.tex,fragment/*.tex}")).each do |f|
+Dir.glob(File.join(ROOT_DIR, "{shared/*.tex,*/*.tex,shared/fragment/*.tex}")).each do |f|
   m = extract_macros_from(File.read(f))
   all_raw_macros.merge!(m)
 end
@@ -177,10 +177,10 @@ end
 
 puts "Compiled #{mj_macros.size} MathJax macros."
 json_str = JSON.pretty_generate(mj_macros)
-File.write(File.join(STYLES_DIR, "mathjax_macros.json"), json_str)
+File.write(File.join(SHARED_DIR, "mathjax_macros.json"), json_str)
 
-# 5. Update styles/lwarp_mathjax.txt with the macro block
-mathjax_txt_path = File.join(STYLES_DIR, "lwarp_mathjax.txt")
+# 5. Update shared/lwarp_mathjax.txt with the macro block
+mathjax_txt_path = File.join(SHARED_DIR, "lwarp_mathjax.txt")
 mathjax_txt = File.read(mathjax_txt_path)
 macros_indent = JSON.pretty_generate(mj_macros).lines.map { |l| "    " + l }.join.strip
 

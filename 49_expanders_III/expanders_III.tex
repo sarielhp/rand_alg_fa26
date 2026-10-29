@@ -1,9 +1,4 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{shared/prefix}%
 
 
 
@@ -92,20 +87,21 @@ have ``short'' paths between any pair of vertices).
 \end{figure}
 
 
-Consider a ``large'' $(n,D)$-graph $\Graph$ and a ``small''
-$(D,d)$-graph $\GraphB$. As a first stage, we replace every vertex of
-$\Graph$ by a copy of $\GraphB$.  The new graph $\GraphC$ has
-$\RangeI{n}\times\RangeI{D}$ as a vertex set.  Here, the edge $v u \in
-V(\Graph)$, where $u=v[i]$ and $v=u[j]$, is replaced by the edge
-connecting $(v,i) \in V(\GraphC)$ with $(u,j) \in V(\GraphC)$. We will
-refer to this resulting edge $(v,i)(u,j)$ as a \emphOnly{long}\index{long}
-edge. Also, we copy all the edges of the small graph to each one of
-its copies. That is, for each $i\in \RangeI{n}$, and $uv \in
-E(\GraphB)$, we add the edge $(i,u) (i,v)$ to $\GraphC$, which is a
-\emphOnly{short}\index{short} edge. We will refer to $\GraphC$, which is a $(nD,
-d+1)$-graph, as a \emphOnly{replacement product}\index{replacement product} of $\Graph$ and
-$\GraphB$, denoted by $\RProd{\Graph}{\GraphB}$. See \figref{replacement}
-for an example.
+Consider a ``large'' $(n,D)$-graph $\Graph$ and a ``small'' $(D,d)$-graph
+$\GraphB$. As a first stage, we replace every vertex of $\Graph$ by a
+copy of $\GraphB$.  The new graph $\GraphC$ has
+$\RangeI{n}\times\RangeI{D}$ as a vertex set.  Here, the edge
+$v u \in V(\Graph)$, where $u=v[i]$ and $v=u[j]$, is replaced by the edge
+connecting $(v,i) \in V(\GraphC)$ with $(u,j) \in V(\GraphC)$. We will refer
+to this resulting edge $(v,i)(u,j)$ as a \emphOnly{long}\index{long}
+edge. Also, we copy all the edges of the small graph to each one of its
+copies. That is, for each $i\in \RangeI{n}$, and $uv \in E(\GraphB)$, we add
+the edge $(i,u) (i,v)$ to $\GraphC$, which is a
+\emphOnly{short}\index{short} edge. We will refer to $\GraphC$, which is
+a $(nD, d+1)$-graph, as a \emphOnly{replacement
+   product}\index{replacement product} of $\Graph$ and $\GraphB$, denoted
+by $\RProd{\Graph}{\GraphB}$. See \figref{replacement} for an example.
+
 
 \begin{figure}[t]
     \centering

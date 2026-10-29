@@ -7,7 +7,7 @@ require "csv"
 require "set"
 
 ROOT_DIR = File.expand_path("..", __dir__)
-PREFIX_TEX = File.join(ROOT_DIR, "styles/prefix_latex.tex")
+PREFIX_TEX = File.join(ROOT_DIR, "shared/prefix_latex.tex")
 
 class MacroUsageCounter
   MacroInfo = Struct.new(
@@ -84,7 +84,7 @@ class MacroUsageCounter
   def collect_corpus_files
     patterns = [
       File.join(ROOT_DIR, "[0-9][0-9]_*/**/*.tex"),
-      File.join(ROOT_DIR, "fragment/*.tex"),
+      File.join(ROOT_DIR, "shared/fragment/*.tex"),
       File.join(ROOT_DIR, "book.tex")
     ]
 
@@ -97,7 +97,7 @@ class MacroUsageCounter
 
     files.each do |f|
       rel = f.sub(ROOT_DIR + "/", "")
-      chap = if rel.start_with?("fragment/")
+      chap = if rel.start_with?("shared/fragment/")
                "fragment"
              elsif rel == "book.tex"
                "book"
@@ -148,7 +148,7 @@ class MacroUsageCounter
       cleaned_corpus[chap] = tokens
     end
 
-    # Check usages inside definitions in styles/prefix_latex.tex
+    # Check usages inside definitions in shared/prefix_latex.tex
     prefix_text = File.read(PREFIX_TEX)
     prefix_clean = mask_definitions(strip_comments(prefix_text))
     prefix_tokens = Hash.new(0)

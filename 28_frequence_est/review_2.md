@@ -110,7 +110,7 @@ The earlier sentence at line 193 is tracked as “can fail only if.” The corre
 
 ### E5 and G2. Deterministic distributions must be covered
 
-The imported [Chebyshev fragment](/home/sariel/papers/teach/26/fa26_rand_alg/notes/fragment/def_Chebyshev.tex:1) states a non-strict deviation event at `t*sigma` without excluding `sigma=0`. For deterministic `X`, that event has probability one, contradicting `1/t^2` when `t>1`. Line 851 also explicitly divides by the standard deviation. The initial footnotes recognize the issue, but do not repair the later application or imported statement.
+The imported [Chebyshev fragment](/home/sariel/papers/teach/26/fa26_rand_alg/notes/shared/fragment/def_Chebyshev.tex:1) states a non-strict deviation event at `t*sigma` without excluding `sigma=0`. For deterministic `X`, that event has probability one, contradicting `1/t^2` when `t>1`. Line 851 also explicitly divides by the standard deviation. The initial footnotes recognize the issue, but do not repair the later application or imported statement.
 
 Use the positive-threshold formulation
 
@@ -216,7 +216,7 @@ N1 changes two occurrences only; the sampled variables at 209 stay unchanged. Ap
 
 ### Build and numerical verification record
 
-Build command (executed in a temporary chapter directory with the original relative `styles -> ../styles` layout and shared, unedited dependencies):
+Build command (executed in a temporary chapter directory with the original relative `styles -> ../shared` layout and shared, unedited dependencies):
 
 ```sh
 rtk proxy /home/sariel/bin/l -no-env -e x -a --junk-dir /tmp/frequency-review-20261016-3-gynv07/build-review frequency_est_review_2.tex

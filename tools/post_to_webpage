@@ -32,7 +32,7 @@ PDF_DELIMITER    = ", "
 def collect_chapter_pdfs
   chapter_pdfs = {}
   Dir.glob(File.join(NOTES_DIR, "*", "*.pdf")).each do |pdf|
-    next if pdf.include?("/figs/") || pdf.include?("/refs/") || pdf.include?("/junk/") || pdf.include?("/styles/") || pdf.include?("/ai_notes/")
+    next if pdf.include?("/figs/") || pdf.include?("/refs/") || pdf.include?("/junk/") || pdf.include?("/shared/") || pdf.include?("/ai_notes/")
     base = File.basename(pdf)
     chapter_pdfs[base] = pdf
   end

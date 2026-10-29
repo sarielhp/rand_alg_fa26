@@ -39,9 +39,9 @@ class MhStripper
 
   def collect_target_files
     prefix_files = [
-      File.join(ROOT_DIR, "styles/prefix_latex.tex"),
-      File.join(ROOT_DIR, "styles/prefix_lwarp.tex"),
-      File.join(ROOT_DIR, "styles/mathjax_macros.tex")
+      File.join(ROOT_DIR, "shared/prefix_latex.tex"),
+      File.join(ROOT_DIR, "shared/prefix_lwarp.tex"),
+      File.join(ROOT_DIR, "shared/mathjax_macros.tex")
     ].select { |f| File.exist?(f) }
 
     chapter_files = Dir.glob(File.join(ROOT_DIR, "[0-9][0-9]_*/**/*.tex")).reject do |f|

@@ -123,7 +123,7 @@
 | `martingales.tex` (baseline) | `l --no-env -s martingales.tex` | **PASS** | **0** | 6 | 3 |
 | Standalone Suite | `./tools/test_chapters_standalone 21` | **PASS (clean)** | **0** | — | — |
 
-*\*Note: The single alert in `martingales_reviewed.tex` is located in the external shared fragment `../fragment/def_product_expectation.tex` (50.9pt overfull hbox in shared definition), not in the chapter manuscript itself.*
+*\*Note: The single alert in `martingales_reviewed.tex` is located in the external shared fragment `../shared/fragment/def_product_expectation.tex` (50.9pt overfull hbox in shared definition), not in the chapter manuscript itself.*
 
 ---
 

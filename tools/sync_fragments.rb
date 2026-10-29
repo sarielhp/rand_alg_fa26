@@ -6,7 +6,7 @@ require 'optparse'
 require 'pathname'
 require 'set'
 
-# Synchronizes LaTeX fragments from chapter source files into the fragment/ directory.
+# Synchronizes LaTeX fragments from chapter source files into the shared/fragment/ directory.
 #
 # - Scans chapters for \begin{fragment}{<name>} ... \end{fragment}.
 # - Ignores auxiliary, backup, review, and junk directories and files.
@@ -14,10 +14,10 @@ require 'set'
 #     * Same directory: warns/complains about redundant draft definitions and uses canonical file.
 #     * Different directories: halts immediately with fatal error.
 # - Compares content before writing to preserve file modification times (mtimes).
-# - Automatically prunes obsolete def_*.tex files from fragment/.
+# - Automatically prunes obsolete def_*.tex files from shared/fragment/.
 class FragmentSync
   ROOT_DIR = File.expand_path('..', __dir__).freeze
-  FRAGMENT_DIR = File.join(ROOT_DIR, 'fragment').freeze
+  FRAGMENT_DIR = File.join(ROOT_DIR, 'shared', 'fragment').freeze
   BOOK_TEX = File.join(ROOT_DIR, 'book.tex').freeze
 
   IGNORE_DIR_PATTERNS = %r{/(?:junk|bak|backup|old|orig|disaster|not_done|\.auctex-auto)(?:/|\z)}.freeze
@@ -75,7 +75,7 @@ class FragmentSync
   end
 
   def find_candidate_files
-    all_files = Dir.glob(File.join(ROOT_DIR, '{[0-9]*,styles}/**/*.tex')) + [BOOK_TEX]
+    all_files = Dir.glob(File.join(ROOT_DIR, '{[0-9]*,shared}/**/*.tex')) + [BOOK_TEX]
 
     all_files.select do |path|
       next false if path.start_with?(FRAGMENT_DIR)
@@ -307,7 +307,7 @@ def parse_cli_options
 
   parser = OptionParser.new do |opts|
     opts.banner = 'Usage: tools/sync_fragments [options]'
-    opts.on('-n', '--dry-run', 'Preview changes without modifying fragment/ directory') do
+    opts.on('-n', '--dry-run', 'Preview changes without modifying shared/fragment/ directory') do
       options[:dry_run] = true
     end
     opts.on('-q', '--quiet', 'Suppress unchanged output and redundant warnings') do

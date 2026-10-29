@@ -71,7 +71,7 @@ class SvgFigureGenerator
   end
 
   def discover_figure_pdfs
-    candidates = Dir.glob(File.join(ROOT_DIR, '{[0-9][0-9]_*/figs,styles}', '*.pdf')).sort
+    candidates = Dir.glob(File.join(ROOT_DIR, '{[0-9][0-9]_*/figs,shared}', '*.pdf')).sort
 
     # Exclude non-figure PDFs (like full chapter build PDFs or backup dirs)
     candidates.reject! do |f|

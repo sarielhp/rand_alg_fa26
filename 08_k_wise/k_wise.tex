@@ -1,9 +1,4 @@
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{shared/prefix}%
 \ChapterNumPage{8}{62}
 
 
@@ -246,6 +241,7 @@ are $k$-wise independent.
 
 \subsection{Definition}
 
+\begin{fragment}{k-wise-independent}
 \begin{defn}
     \deflab{k:wise}%
     \deflab{k:wise-independent}%
@@ -260,10 +256,11 @@ are $k$-wise independent.
            X_{i_2} = v_2 \text{ and } \cdots \text{ and }
            X_{i_t} = v_t}%
         =%
-        \prod_{j=1}^t        
+        \prod_{j=1}^t
         \Prob{X_{i_j} = v_j}.
     \end{equation*}
 \end{defn}
+\end{fragment}
 
 Observe that verifying the above property needs to be done only for
 $t=k$.

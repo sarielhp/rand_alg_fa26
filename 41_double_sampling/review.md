@@ -46,7 +46,7 @@ Five meaning-preserving findings: **1 clash, 4 definition issues, 0 splits, 0 co
 - **N2**, lines 110 and 114: both undefined product limits (b) should be (m).
 - **N3**, line 289: replace `\Sample_2` by `\Sample`; the single-set lemma defines only one sample.
 - **N4**, line 499: replace “probability” by “event” when defining `\Event_1` (tracked in the review copy).
-- **N5**, [def_Chernoff_simplified.tex:10](/home/sariel/papers/teach/26/fa26_rand_alg/notes/fragment/def_Chernoff_simplified.tex:10): replace `1-p` by `1-p_i`. The shared original fragment is not edited.
+- **N5**, [def_Chernoff_simplified.tex:10](/home/sariel/papers/teach/26/fa26_rand_alg/notes/shared/fragment/def_Chernoff_simplified.tex:10): replace `1-p` by `1-p_i`. The shared original fragment is not edited.
 
 The audit checked macro expansions, local scopes, definitions and uses, and the included fragments. Legitimate reuse of (m,X,T) in separate proofs is retained. The script growth function and the explicit upper-bound function are distinct, not inconsistent names for one object.
 
@@ -280,7 +280,7 @@ The [review PDF](/home/sariel/papers/teach/26/fa26_rand_alg/notes/41_double_samp
 rtk proxy /home/sariel/bin/l -no-env -f --all --no-color --no-link double_sampling_review.tex
 ```
 
-All builds ran in an isolated directory under `/tmp`, with the existing shared styles/fragments and the chapter's relative `styles` link preserved. No build auxiliaries or local `junk/` directory were created in the repository; the repository-wide cleanup tool was therefore unnecessary. No generated files were committed.
+All builds ran in an isolated directory under `/tmp`, with the existing shared shared/fragments and the chapter's relative `shared` link preserved. No build auxiliaries or local `junk/` directory were created in the repository; the repository-wide cleanup tool was therefore unnecessary. No generated files were committed.
 
 The unmodified original initially failed because `-no-env` could not find its external `shortcuts.bib`. For a diagnostic comparison, the scratch copy of the original was then supplied with the local bibliography under its own job name; the original source remained byte-for-byte identical. That supplemented baseline built with **0 errors, 11 overfull-box alerts, 2 warnings, and 1 minor hyperref diagnostic**.
 

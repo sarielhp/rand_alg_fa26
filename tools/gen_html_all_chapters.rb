@@ -18,11 +18,11 @@ require 'time'
 
 ROOT_DIR    = File.expand_path('..', __dir__)
 BOOK_TEX    = File.join(ROOT_DIR, 'book.tex')
-STYLES_DIR  = File.join(ROOT_DIR, 'styles')
-WEB_CFG     = File.join(STYLES_DIR, 'web.cfg')
-WEB_CSS     = File.join(STYLES_DIR, 'web.css')
-MATH_MACROS = File.join(STYLES_DIR, 'mathjax_macros.json')
-MASTER_AUX  = File.join(STYLES_DIR, 'master_labels.aux')
+SHARED_DIR  = File.join(ROOT_DIR, 'shared')
+WEB_CFG     = File.join(SHARED_DIR, 'web.cfg')
+WEB_CSS     = File.join(SHARED_DIR, 'web.css')
+MATH_MACROS = File.join(SHARED_DIR, 'mathjax_macros.json')
+MASTER_AUX  = File.join(SHARED_DIR, 'master_labels.aux')
 BOOK_AUX    = File.join(ROOT_DIR, 'junk', 'book.aux')
 
 DEFAULT_OUTPUT_DIR = File.join(ROOT_DIR, 'html_site')
@@ -258,14 +258,14 @@ class HtmlBookBuilder
   end
 
   def copy_shared_assets!
-    dest_styles = File.join(@output_dir, 'styles')
-    FileUtils.mkdir_p(dest_styles)
-    FileUtils.cp(WEB_CSS, File.join(dest_styles, 'web.css')) if File.exist?(WEB_CSS)
-    duck_svg = File.join(STYLES_DIR, 'qed_duck.svg')
-    FileUtils.cp(duck_svg, File.join(dest_styles, 'qed_duck.svg')) if File.exist?(duck_svg)
-    duck_png = File.join(STYLES_DIR, 'qed_duck-.png')
+    dest_shared = File.join(@output_dir, 'shared')
+    FileUtils.mkdir_p(dest_shared)
+    FileUtils.cp(WEB_CSS, File.join(dest_shared, 'web.css')) if File.exist?(WEB_CSS)
+    duck_svg = File.join(SHARED_DIR, 'qed_duck.svg')
+    FileUtils.cp(duck_svg, File.join(dest_shared, 'qed_duck.svg')) if File.exist?(duck_svg)
+    duck_png = File.join(SHARED_DIR, 'qed_duck-.png')
     if File.exist?(duck_png)
-      FileUtils.cp(duck_png, File.join(dest_styles, 'qed_duck-.png'))
+      FileUtils.cp(duck_png, File.join(dest_shared, 'qed_duck-.png'))
       FileUtils.rm_f(duck_png)
     end
   end
@@ -320,7 +320,7 @@ class HtmlBookBuilder
     FileUtils.mkdir_p(out_dir)
 
     # Run make4ht inside chapter directory
-    cmd = ['make4ht', '-x', '-c', 'styles/web.cfg', '-f', 'html5', chap[:file], 'mathjax']
+    cmd = ['make4ht', '-x', '-c', 'shared/web.cfg', '-f', 'html5', chap[:file], 'mathjax']
     stdout, stderr, status = Open3.capture3(*cmd, chdir: chap_dir)
     build_output = [stdout, stderr]
 
@@ -548,8 +548,8 @@ class HtmlBookBuilder
     HTML
 
     # Inject web.css stylesheet into head
-    css_link = '<link rel="stylesheet" href="../styles/web.css" />'
-    content.sub!(%r{</head>}, "  #{css_link}\n</head>") unless content.include?('styles/web.css')
+    css_link = '<link rel="stylesheet" href="../shared/web.css" />'
+    content.sub!(%r{</head>}, "  #{css_link}\n</head>") unless content.include?('shared/web.css')
 
     # Fix title tag
     page_title = "<title>#{current_chap[:num]}. #{escape_html(current_chap[:title])} — Randomized Algorithms</title>"
@@ -559,8 +559,8 @@ class HtmlBookBuilder
       content.sub!(%r{<head>}, "<head>\n  #{page_title}")
     end
 
-    # Fix relative references to styles/ assets (e.g. qed_duck-.png)
-    content.gsub!(/src=(['"])styles\//, 'src=\\1../styles/')
+    # Fix relative references to shared/ assets (e.g. qed_duck-.png)
+    content.gsub!(/src=(['"])shared\//, 'src=\\1../shared/')
 
     # Fix internal links pointing to the renamed stem file (stem.html#... -> #...)
     stem = current_chap[:file].sub(/\.tex$/, '')
@@ -729,7 +729,7 @@ class HtmlBookBuilder
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Randomized Algorithms — Class Notes &amp; Book</title>
-        <link rel="stylesheet" href="styles/web.css" />
+        <link rel="stylesheet" href="shared/web.css" />
         <style>
           .toc-header {
             text-align: center;

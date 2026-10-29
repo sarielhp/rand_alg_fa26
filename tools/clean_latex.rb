@@ -37,7 +37,7 @@ PROTECTED_PROJECT_FILES = Set.new(%w[
 
 # Directories containing project tools or assets to keep intact
 PROTECTED_ROOT_DIRS = Set.new(%w[
-  tools scripts styles .git
+  tools scripts shared .git
 ]).freeze
 
 class LatexCleaner
@@ -124,7 +124,7 @@ class LatexCleaner
     end
 
     # Recognize active fragment definitions
-    Dir.glob(File.join(ROOT_DIR, "fragment", "*.tex")).each do |f|
+    Dir.glob(File.join(ROOT_DIR, "shared", "fragment", "*.tex")).each do |f|
       rel = normalize_to_repo_rel(f)
       @useful_fragments << rel if rel
     end
@@ -305,7 +305,7 @@ class LatexCleaner
         FileUtils.rm(entry) unless options[:dry_run]
         return true
       end
-      return true if base == "styles" || target.include?("styles") || rel.start_with?("tools/") || rel == "test_all_chaps.rb"
+      return true if base == "shared" || target.include?("shared") || rel.start_with?("tools/") || rel == "test_all_chaps.rb"
     end
 
     File.directory?(entry) && !File.symlink?(entry)
@@ -413,7 +413,7 @@ class LatexCleaner
       @unsure_files["Broken or stray symlinks"] << rel
     elsif rel.start_with?("old_stuff/")
       @unsure_files["Archived / backup files (old_stuff/)"] << rel
-    elsif rel.start_with?("fragment/")
+    elsif rel.start_with?("shared/fragment/")
       @unsure_files["Stale fragment definitions (not output by book.tex)"] << rel
     elsif ext == ".tex"
       @unsure_files["Unreferenced TeX source files"] << rel

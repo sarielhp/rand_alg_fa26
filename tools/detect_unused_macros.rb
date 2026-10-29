@@ -8,8 +8,8 @@ require "open3"
 require "set"
 
 ROOT_DIR = File.expand_path("..", __dir__)
-PREFIX_TEX = File.join(ROOT_DIR, "styles", "prefix_latex.tex")
-PREFIX_LWARP_TEX = File.join(ROOT_DIR, "styles", "prefix_lwarp.tex")
+PREFIX_TEX = File.join(ROOT_DIR, "shared", "prefix_latex.tex")
+PREFIX_LWARP_TEX = File.join(ROOT_DIR, "shared", "prefix_lwarp.tex")
 
 # Candidates for notation/macro pruning start at the absorbed definitions section.
 START_LINE_PATTERN = /Definitions absorbed from sbook\.sty/
@@ -85,7 +85,7 @@ class MacroDetector
   def collect_corpus_files
     patterns = [
       File.join(ROOT_DIR, "[0-9][0-9]_*/**/*.tex"),
-      File.join(ROOT_DIR, "fragment/*.tex"),
+      File.join(ROOT_DIR, "shared/fragment/*.tex"),
       File.join(ROOT_DIR, "book.tex"),
       File.join(ROOT_DIR, "*.bib")
     ]
@@ -166,7 +166,7 @@ class MacroDetector
         if matches > 0
           cnt += matches
           rel = fname.sub(ROOT_DIR + "/", "")
-          src = if rel.start_with?("fragment/")
+          src = if rel.start_with?("shared/fragment/")
                   "fragment"
                 elsif rel == "book.tex"
                   "book"
@@ -249,7 +249,7 @@ class MacroDetector
   def print_report
     total_single = @single_chap_macros.values.sum(&:size)
     puts "================================================================="
-    puts " Automated LaTeX Macro Audit Report for styles/prefix_latex.tex"
+    puts " Automated LaTeX Macro Audit Report for shared/prefix_latex.tex"
     puts "================================================================="
     puts " Definitions analyzed (lines #{@start_line}+) : #{@definitions.size}"
     puts " Unique macro names defined            : #{@defs_by_name.size}"

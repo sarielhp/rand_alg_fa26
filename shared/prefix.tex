@@ -1,0 +1,36 @@
+%-----------------------------------------------------------------------------
+% Master Prefix Router for Randomized Algorithms Class Notes & Book
+%
+% Dispatches to:
+%   - prefix_lwarp.tex when warping/HTML mode is active (lwarpmk html or \warpMode)
+%   - prefix_4ht.tex when TeX4ht/make4ht defines \HCode
+%   - prefix_latex.tex for standard LaTeX / XeLaTeX / LuaLaTeX PDF builds
+%-----------------------------------------------------------------------------
+
+% Include only once; close the conditional before ending this input.
+\ifdefined\PrefixLoadedAlready\expandafter\endinput\fi
+
+\def\PrefixLoadedAlready{}
+
+
+\makeatletter
+\def\input@path{{shared/}}
+\makeatother
+
+
+\makeatletter
+\def\LWR@isWarp{0}%
+\ifx\warpMode\undefined\else\def\LWR@isWarp{1}\fi
+\expandafter\ifx\csname opt@lwarp.sty\endcsname\relax\else\def\LWR@isWarp{1}\fi
+
+\if1\LWR@isWarp
+  \def\warpMode{1}%
+  \IfFileExists{shared/prefix_lwarp.tex}{\input{shared/prefix_lwarp}}{\input{prefix_lwarp}}%
+\else
+  \ifdefined\HCode
+    \IfFileExists{shared/prefix_4ht.tex}{\input{shared/prefix_4ht}}{\input{prefix_4ht}}%
+  \else
+    \IfFileExists{shared/prefix_latex.tex}{\input{shared/prefix_latex}}{\input{prefix_latex}}%
+  \fi
+\fi
+\makeatother

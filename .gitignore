@@ -74,7 +74,7 @@ Thumbs.db
 # --- Generated Document PDFs (Keep Figures, Assets & References) ---
 *.pdf
 !**/figs/**
-!/styles/**
+!/shared/**
 !**/refs/**
 !**/refs/**/*.pdf
 03_expectation/junk/
@@ -273,8 +273,8 @@ snapshot/
 does_not_work/
 junk/old/
 junk/junk/
-styles/junk/
-styles/junk/old/
-styles/junk/junk/
+shared/junk/
+shared/junk/old/
+shared/junk/junk/
 08_k_wise/julia/junk/
 08_k_wise/julia/junk/junk/

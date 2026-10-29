@@ -3,12 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\makeatletter
-\def\input@path{{styles/}}
-\makeatother
-\ifx\bookMode\undefined%
-    \input{prefix}%
-\fi
+\input{shared/prefix}%
 
 
 % \begin{document}
@@ -991,6 +986,24 @@ Euclidean TSP.
 
 
 \section{Exercises}
+
+\begin{exercise}[Embedding a uniform star]
+    \exelab{star:distortion}%
+    Let $n \geq 2$ and $\hdim \geq 1$ be integers. Consider the
+    shortest-path metric of the uniform star on $n$ vertices: one
+    center and $n-1$ leaves, with every edge of length one. Prove that
+    the minimum distortion of an embedding of this metric into
+    $\Re^\hdim$ is $\Theta\pth{n^{1/\hdim}}$, with constants
+    independent of $n$ and $\hdim$.
+
+    \Hint{Use packing. For the lower bound, scale the embedding so
+       that no distance shrinks, and compare the volumes of disjoint
+       unit balls around the images of the leaves with that of a
+       containing ball. For the upper bound, take a maximal set of
+       points at pairwise distance at least two in a sufficiently
+       large ball, including its center. Maximality gives a covering
+       by balls of radius two.}
+\end{exercise}
 
 \begin{exercise}[Clustering for HST]
     \exelab{k:median:clustering}%
