@@ -288,7 +288,8 @@ $\FMS$. For $x\in \FMS$ and a partition $P\in \mathcal{ P}_\FMS$ we denote by
 $P(x)$ the unique cluster of $P$ containing $x$. Finally, the set of all
 probability distributions on $\mathcal{P}_\FMS$ is denoted $\mathcal{D}_\FMS$.
 
-The following partition scheme is due to \cite{ckr-aazep-04}.
+The following partition scheme is due to \Calinescu \etal
+\cite{ckr-aazep-04}.
 
 \newcommand{\PFigPage}[1]{%
    \IncludeGraphics%
@@ -349,20 +350,28 @@ set of $n$ points.
 
 Let $\Delta = 2^u$ be a prescribed parameter, which is the required
 diameter of the resulting clusters.  Choose, uniformly at random, a
-permutation $\pi$ of $\FMS$ and a random value $\alpha \in
-\pbrcS{\nfrac{1}{4},\nfrac{1}{2}}$. Let $R = \alpha \Delta$, and
-observe that it is uniformly distributed in the interval $[\Delta/4,
-\Delta/2]$.
-
-The partition is now defined as follows: A point $x\in \FMS$ is assigned
-to the cluster $C_y$ of $y$, where $y$ is the first point in the
-permutation in distance $\leq R$ from $x$. Formally,
+permutation $\pi$ of $\FMS$ and a random value
+\[
+    \alpha \in \pbrcS{\nfrac{1}{4},\nfrac{1}{2}},%
+    \qquad\text{with}\qquad%
+    R = \alpha \Delta,
+\]
+and observe that $R$ is uniformly distributed in the interval
+$[\Delta/4, \Delta/2]$. Next, let $\pi$ be a random permutation of
+$\FMS$, with  $\FMS = \{ x_{\pi_1}, \ldots, x_{\pi_n} \}$. The $i$\th
+cluster is
 \begin{equation*}
-C_y = \brc{ x \in \FMS \sep{ \substack{ x \in \Ball(y, R) \textrm { and } \pi(y)
-      \leq \pi(z) \\ \textrm{ for all $z \in \FMS$ with } x \in \Ball(z,
-      R)}}}.
+    C(i)
+    =%
+    \Ball(x_{\pi_i}, R) \cap \bigl(\FMS \setminus \cup_{t=1}^{i-1} C_t \bigr).
 \end{equation*}
-Let $P = \{C_y\}_{y \in \FMS}$ denote the resulting partition.
+This process is described informally as \emphw{ice-cream scooping}.
+
+Thus, a point $x\in \FMS$ is assigned to the cluster $C_y$ of $y$, where
+$y$ is the first point in the permutation in distance $\leq R$ from
+$x$. Formally, $C_y = C(i)$, if $y \in C_y$.  Let
+$P = \{C_y\}_{y \in \FMS}$ denote the resulting partition (this avoids
+the empty clusters in $C(1), \ldots, C(n)$).
 
 Here is a somewhat more intuitive explanation: Once we fix the radius
 of the clusters $R$, we start scooping out balls of radius $R$
@@ -404,8 +413,12 @@ broken.)
     Since $C_y \subseteq \Ball(y, R)$, we have that $\diam(C_y) \leq
     \Delta$, and thus the first claim holds.
         
-    Let $U$ be the set of points of $\Ball(x, \Delta)$, such that $w
-    \in U$ iff $\Ball(w,R) \cap \Ball(x,t) \ne \emptyset$.  Arrange
+    Let $U$ be the set of points of $\Ball(x, \Delta)$, such that    
+    \[
+        w \in U \quad\iff\quad%
+        \Ball(w,R) \cap \Ball(x,t) \ne \emptyset.
+    \]
+    Arrange
     the points of $U$ in increasing distance from $x$, and let $w_1,
     \ldots, w_{b'}$ denote the resulting order, where $b'=
     \cardin{U}$.  Let $I_k = [d(x, w_k)-t, d(x,w_k)+t]$ and write

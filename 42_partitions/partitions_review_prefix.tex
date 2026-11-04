@@ -1,0 +1,15 @@
+% Review-only preamble wrapper. Original shared files are unchanged.
+% Define annotations before shared/prefix begins the document.
+\providecommand{\markX}[2]{%
+  \begingroup\color{purple}%
+  \ifmmode
+    \underbrace{#2}_{\text{\normalfont\scriptsize[#1]}}%
+  \else
+    #2\textsuperscript{\normalfont\scriptsize[#1]}%
+  \fi
+  \endgroup}
+\providecommand{\noteX}[2]{%
+  \par\smallskip\noindent
+  {\color{purple}\textbf{[#1]} #2}\par\smallskip}
+\input{shared/prefix}%
+
