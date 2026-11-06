@@ -52,7 +52,7 @@ All shared preambles and global assets live under `shared/`. To maintain clean, 
 - **Portability Contract**: Any single chapter directory plus the top-level `shared/` directory can be packaged, emailed, or compiled anywhere on any standard TeX Live installation.
 - **Graphic Assets**: Shared graphics like `qed_duck.pdf` must be loaded from `shared/` (e.g. `\includegraphics{shared/qed_duck.pdf}`).
 - **Fragments**: Shared definitions live in `shared/fragment/`. Both book and standalone builds load them through `shared/fragment/...`; `tools/sync_fragments` regenerates them from chapter sources.
-- **Bibliography**: The only active database is `shared/book.bib`; add and correct citations there. The root and every chapter have a relative `book.bib -> shared/book.bib` symlink, and all preambles load `./book.bib`. These aliases also support `l`, whose bibliography cache flattens resource paths. Preserve these links when packaging chapters. Other chapter-local `.bib` files are legacy copies and are not loaded; builds must not depend on personal bibliography paths.
+- **Bibliography**: The only active database is `shared/book.bib`; add and correct citations there. All preambles load `shared/book.bib` through each chapter's `shared -> ../shared` link; chapters have no `book.bib` symlink of their own. Other chapter-local `.bib` files are legacy copies and are not loaded; builds must not depend on personal bibliography paths.
 
 ---
 
