@@ -4,7 +4,7 @@
 # scan_unhandled_macros.rb
 #
 # Audits generated HTML files to identify LaTeX macros that MathJax cannot render.
-# Cross-references unhandled macros with shared/prefix.tex and individual chapter
+# Cross-references unhandled macros with shared prefixes and individual chapter
 # sources to find their original LaTeX definitions.
 # ==============================================================================
 
@@ -17,7 +17,9 @@ require 'set'
 ROOT_DIR    = File.expand_path('..', __dir__)
 BOOK_TEX    = File.join(ROOT_DIR, 'book.tex')
 SHARED_DIR  = File.join(ROOT_DIR, 'shared')
-PREFIX_TEX  = File.join(SHARED_DIR, 'prefix.tex')
+PREFIX_FILES = %w[prefix_common.tex prefix_4ht.tex].map do |name|
+  File.join(SHARED_DIR, name).freeze
+end.freeze
 MATH_MACROS = File.join(SHARED_DIR, 'mathjax_macros.json')
 DEFAULT_SITE_DIR = File.join(ROOT_DIR, 'html_site')
 
@@ -62,7 +64,9 @@ class MacroScanner
     @format = options[:format] || :text
 
     @defined_mathjax = load_current_mathjax_macros
-    @prefix_definitions = load_definitions_from_file(PREFIX_TEX, 'shared/prefix.tex')
+    @prefix_definitions = PREFIX_FILES.each_with_object({}) do |file, definitions|
+      definitions.merge!(load_definitions_from_file(file, "shared/#{File.basename(file)}"))
+    end
     @chapter_definitions = load_chapter_definitions
   end
 

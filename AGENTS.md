@@ -40,6 +40,15 @@ notes_test/
 ## 2. Chapter Independence & `shared/` Resolution
 
 ### The `shared/` Pattern
+`shared/prefix.tex` routes to `prefix_latex.tex` (PDF), `prefix_lwarp.tex`
+(lwarp), or `prefix_4ht.tex` (TeX4ht). Each backend loads
+`shared/prefix_common.tex` after its initial package and layout setup and before
+its theorem definitions. Put backend-independent notation and reference helpers
+in `prefix_common.tex`; keep rendering differences, engine setup, and document
+startup in the backend files. The common file does not begin the document.
+The macro pruning/localization tool targets the common file and treats uses in
+all three backend files as shared dependencies.
+
 All shared preambles and global assets live under `shared/`. To maintain clean, standalone portability without cluttering the root directory:
 - Every chapter directory contains a relative symlink: `shared -> ../shared`.
 - Every chapter `.tex` preamble must begin with:

@@ -8,11 +8,8 @@ require "open3"
 require "set"
 
 ROOT_DIR = File.expand_path("..", __dir__)
-PREFIX_TEX = File.join(ROOT_DIR, "shared", "prefix_latex.tex")
-PREFIX_LWARP_TEX = File.join(ROOT_DIR, "shared", "prefix_lwarp.tex")
-
-# Candidates for notation/macro pruning start at the absorbed definitions section.
-START_LINE_PATTERN = /Definitions absorbed from sbook\.sty/
+# Prune/localize shared notation only; backend rendering stays in its own files.
+PREFIX_TEX = File.join(ROOT_DIR, "shared", "prefix_common.tex")
 
 # Infrastructure macros that should never be removed even if not directly referenced in text
 PROTECTED_MACROS = Set.new(%w[
@@ -40,9 +37,7 @@ class MacroDetector
   def initialize(options = {})
     @options = options
     @prefix_content = File.read(PREFIX_TEX)
-    lines = @prefix_content.lines
-    line_idx = lines.find_index { |l| l =~ START_LINE_PATTERN }
-    @start_line = line_idx ? line_idx + 1 : 602
+    @start_line = 1
     @definitions = []
     @defs_by_name = Hash.new { |h, k| h[k] = [] }
     @corpus_files = []
@@ -86,6 +81,7 @@ class MacroDetector
     patterns = [
       File.join(ROOT_DIR, "[0-9][0-9]_*/**/*.tex"),
       File.join(ROOT_DIR, "shared/fragment/*.tex"),
+      File.join(ROOT_DIR, "shared/prefix_{latex,lwarp,4ht}.tex"),
       File.join(ROOT_DIR, "book.tex"),
       File.join(ROOT_DIR, "shared", "book.bib")
     ]
@@ -168,7 +164,7 @@ class MacroDetector
           rel = fname.sub(ROOT_DIR + "/", "")
           src = if rel.start_with?("shared/fragment/")
                   "fragment"
-                elsif rel == "book.tex"
+                elsif rel.match?(/\A(?:book\.tex\z|shared\/prefix_)/)
                   "book"
                 else
                   rel.split("/").first
@@ -249,7 +245,7 @@ class MacroDetector
   def print_report
     total_single = @single_chap_macros.values.sum(&:size)
     puts "================================================================="
-    puts " Automated LaTeX Macro Audit Report for shared/prefix_latex.tex"
+    puts " Automated LaTeX Macro Audit Report for shared/prefix_common.tex"
     puts "================================================================="
     puts " Definitions analyzed (lines #{@start_line}+) : #{@definitions.size}"
     puts " Unique macro names defined            : #{@defs_by_name.size}"
@@ -335,30 +331,6 @@ class MacroDetector
 
     File.write(PREFIX_TEX, new_lines.join)
     puts "Successfully commented out #{@dead_macros.size} dead macros in #{PREFIX_TEX}"
-
-    if File.exist?(PREFIX_LWARP_TEX)
-      sync_to_lwarp(@dead_macros)
-    end
-  end
-
-  def sync_to_lwarp(macro_names)
-    lwarp_lines = File.readlines(PREFIX_LWARP_TEX)
-    names_set = macro_names.to_set
-    modified = false
-    i = 0
-    while i < lwarp_lines.size
-      line = lwarp_lines[i]
-      if line =~ /\\(?:newcommand\*?|providecommand\*?|def)\s*(?:\{\s*\\([a-zA-Z@]+)\s*\}|\\([a-zA-Z@]+)\b)/
-        name = $1 || $2
-        if names_set.include?(name)
-          lwarp_lines[i] = "% [DEAD-MACRO] #{line}"
-          modified = true
-        end
-      end
-      i += 1
-    end
-    File.write(PREFIX_LWARP_TEX, lwarp_lines.join) if modified
-    puts "Synchronized dead macros in #{PREFIX_LWARP_TEX}"
   end
 
   def apply_localization(chap_dir)
@@ -410,30 +382,27 @@ class MacroDetector
 
   def remove_macros_from_prefix(macro_names)
     names_set = macro_names.to_set
-    [PREFIX_TEX, PREFIX_LWARP_TEX].each do |pfile|
-      next unless File.exist?(pfile)
-      lines = File.readlines(pfile)
-      out = []
-      i = 0
-      while i < lines.size
-        line = lines[i]
-        if line =~ /\\(?:newcommand\*?|providecommand\*?|renewcommand\*?|DeclareMathOperator\*?|def)\s*(?:\{\s*\\([a-zA-Z@]+)\s*\}|\\([a-zA-Z@]+)\b)/
-          name = $1 || $2
-          if names_set.include?(name)
-            open_b = line.count("{") - line.count("}")
-            while open_b > 0 && i + 1 < lines.size
-              i += 1
-              open_b += lines[i].count("{") - lines[i].count("}")
-            end
+    lines = File.readlines(PREFIX_TEX)
+    out = []
+    i = 0
+    while i < lines.size
+      line = lines[i]
+      if line =~ /\\(?:newcommand\*?|providecommand\*?|renewcommand\*?|DeclareMathOperator\*?|def)\s*(?:\{\s*\\([a-zA-Z@]+)\s*\}|\\([a-zA-Z@]+)\b)/
+        name = $1 || $2
+        if names_set.include?(name)
+          open_b = line.count("{") - line.count("}")
+          while open_b > 0 && i + 1 < lines.size
             i += 1
-            next
+            open_b += lines[i].count("{") - lines[i].count("}")
           end
+          i += 1
+          next
         end
-        out << line
-        i += 1
       end
-      File.write(pfile, out.join)
+      out << line
+      i += 1
     end
+    File.write(PREFIX_TEX, out.join)
   end
 
   def apply_localization_all

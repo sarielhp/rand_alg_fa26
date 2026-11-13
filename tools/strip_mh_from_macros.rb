@@ -39,8 +39,10 @@ class MhStripper
 
   def collect_target_files
     prefix_files = [
+      File.join(ROOT_DIR, "shared/prefix_common.tex"),
       File.join(ROOT_DIR, "shared/prefix_latex.tex"),
       File.join(ROOT_DIR, "shared/prefix_lwarp.tex"),
+      File.join(ROOT_DIR, "shared/prefix_4ht.tex"),
       File.join(ROOT_DIR, "shared/mathjax_macros.tex")
     ].select { |f| File.exist?(f) }
 

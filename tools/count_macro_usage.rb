@@ -7,7 +7,9 @@ require "csv"
 require "set"
 
 ROOT_DIR = File.expand_path("..", __dir__)
-PREFIX_TEX = File.join(ROOT_DIR, "shared/prefix_latex.tex")
+PREFIX_FILES = %w[prefix_latex.tex prefix_common.tex].map do |name|
+  File.join(ROOT_DIR, "shared", name).freeze
+end.freeze
 
 class MacroUsageCounter
   MacroInfo = Struct.new(
@@ -46,7 +48,7 @@ class MacroUsageCounter
   private
 
   def collect_defined_macros
-    files_to_scan = [PREFIX_TEX]
+    files_to_scan = PREFIX_FILES.dup
     if @options[:include_chapter_defs]
       files_to_scan += Dir.glob(File.join(ROOT_DIR, "[0-9][0-9]_*/*.tex"))
     end
@@ -148,8 +150,8 @@ class MacroUsageCounter
       cleaned_corpus[chap] = tokens
     end
 
-    # Check usages inside definitions in shared/prefix_latex.tex
-    prefix_text = File.read(PREFIX_TEX)
+    # Include dependencies between backend setup and shared definitions.
+    prefix_text = PREFIX_FILES.map { |file| File.read(file) }.join("\n")
     prefix_clean = mask_definitions(strip_comments(prefix_text))
     prefix_tokens = Hash.new(0)
     prefix_clean.scan(/\\([a-zA-Z@]+)/) do |m|
@@ -265,7 +267,7 @@ OptionParser.new do |opts|
   opts.on("--zero", "Show only macros with 0 usages") { options[:zero_only] = true }
   opts.on("--rare N", Integer, "Show only macros used at most N times") { |n| options[:max_count] = n }
   opts.on("--common N", Integer, "Show only macros used at least N times") { |n| options[:min_count] = n }
-  opts.on("--prefix-only", "Only analyze macros defined in prefix_latex.tex") { options[:include_chapter_defs] = false }
+  opts.on("--prefix-only", "Only analyze macros in the PDF and common prefixes") { options[:include_chapter_defs] = false }
   opts.on("--json", "Output in JSON format") { options[:json] = true }
   opts.on("--csv", "Output in CSV format") { options[:csv] = true }
   opts.on("-h", "--help", "Show help") do
