@@ -1,5 +1,5 @@
 \input{shared/prefix}%
-\ChapterNumPage{57}{490}
+\ChapterNumPage{57}{552}
 
 \Chapter{Algorithmic Version of \Lovasz Local Lemma}
 \ChapterPrefix{}
@@ -7,6 +7,8 @@
 
 
 
+% Leave room for the two-line title above the standalone epigraph.
+\StandAloneMode{\vspace*{1.6cm}}%
 \SaveIndent%
 \QuoteExt{%
    \RestoreIndent%
@@ -17,10 +19,7 @@
 {Gunter Grass}
 
 
-\section{Introduction} 
-
 \newcommand{\Vars}{\EuScript{P}}%
-% \renewcommand{\Event}{\EuScript{E}}%
 \newcommand{\BEvent}{{B}}%
 \newcommand{\BEventA}{{C}}%
 \newcommand{\BEventSet}{\mathcal{B}}%
@@ -28,94 +27,673 @@
 \newcommand{\vblX}[1]{\mathrm{v{b}l}\pth{#1}}%
 \newcommand{\NbrX}[1]{\Gamma\pth{#1}}%
 \newcommand{\NbrCX}[1]{\Gamma_{\!\!+}\pth{#1}}%
+\newcommand{\ELogChar}{L}%
+\newcommand{\ELogX}[1]{\ELogChar\pth{#1}}%
+\newcommand{\WTree}{\tau}%
+\newcommand{\WTreeX}[1]{\WTree\pth{#1}}%
+\newcommand{\LabelX}[1]{\left[ #1 \right]}%
+\newcommand{\nodeDepthX}[1]{\mathrm{depth}\pth{#1}}%
+\newcommand{\WSum}{W}%
+\newcommand{\NResX}[1]{N_{#1}}%
+\newcommand{\FixAlg}{\Algorithm{Fix}\xspace}%
+\newcommand{\SolveAlg}{\Algorithm{SolveSAT}\xspace}%
+\newcommand{\MTAlg}{\Algorithm{MTResample}\xspace}%
 
-Let $\Vars$ be a collection of independent random variables in some
-probability space $\Omega$. We are interested in (bad) events that are
-determined by these variables. Specifically, for an event $\BEvent$,
-there is a set of variables $\SetVars \subseteq \Vars$ that determine
-if $\BEvent$ happens. There minimal such set of variables is denoted
-by $\vblX{\BEvent}$ (note, that it is unique). We assume that the set
-$\vblX{\BEvent}$ is either easily computable or available, for any
-event of interest.
+\section{Introduction}
 
-Consider a (finite) family $\BEventSet$ of such (bad) events. The
-\emphOnly{dependency graph}\index{dependency graph} $\Graph = \Graph(\BEventSet)$, with the
-vertices being the events of $\BEventSet$, and two events
-$\BEvent_1,\BEvent_2 \in \BEventSet$ are connected by an edge $\iff$
+Color the vertices $v_1,\ldots,v_n$ of a cycle independently and
+uniformly from a palette of $q$ colors. Let $B_i$ be the bad event
+that $v_i$ and $v_{i+1}$ have the same color, with indices taken modulo
+$n$. Whenever $B_i$ occurs, give its two endpoints fresh independent
+colors from the same palette. Which other edges can change from
+properly colored to monochromatic in this step?
+
+Only the two edges on either side can change. Thus, if we draw one node
+for each bad event and join events that share a vertex color, we get
+another cycle, as in \figref{mt:cycle}. This is the dependency graph.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=.72\linewidth]{\File{figs/cycle-coloring.pdf}}
+    \caption{The red edge $v_1v_2$ gives the violated event $B_1$.
+       Its neighbors in the dependency graph are $B_5$ and $B_2$.}
+    \figlab{mt:cycle}
+\end{figure}
+
+The \Lovasz local lemma (LLL) shows that if bad events are sufficiently
+unlikely relative to their neighborhoods, then with positive probability
+none occurs. That probability can still be exponentially small. The
+cycle suggests a different algorithm: pick any bad event that occurs,
+resample its variables, and repeat. How many such repairs should we expect?
+
+\subsection{The setting}
+
+Let $\Vars$ be a finite collection of mutually independent random
+variables. We are interested in (bad) events that are determined by
+these variables. Specifically, for an event $\BEvent$, there is a set
+of variables $\SetVars \subseteq \Vars$ that determine if $\BEvent$
+happens. The minimal such set of variables is denoted by
+$\vblX{\BEvent}$ (note that it is unique). We assume that
+$\vblX{\BEvent}$ is available, and that one can check efficiently,
+given an assignment to the variables, whether $\BEvent$ happens.
+
+Consider a finite family $\BEventSet$ of such (bad) events. The
+\emphOnly{dependency graph}\index{dependency graph}
+$\Graph = \Graph(\BEventSet)$ has the events of $\BEventSet$ as
+vertices, and two distinct events $\BEvent_1,\BEvent_2 \in \BEventSet$
+are connected by an edge $\iff$
 $\vblX{\BEvent_1} \cap \vblX{\BEvent_2} \neq \emptyset$. Let
-$\NbrX{\BEvent}$ be all the neighbors $\BEvent$ in $\Graph$, and let
-$\NbrCX{\BEvent} = \brc{\BEvent} \cup \NbrX{\BEvent}$. Observe that
-$\BEvent$ is independent of the events in
-$\BEventSet \setminus \pth{\brc{ \BEvent } \cup \NbrX{\BEvent}}$.
+$\NbrX{\BEvent}$ be the set of neighbors of $\BEvent$ in $\Graph$, and
+let $\NbrCX{\BEvent} = \brc{\BEvent} \cup \NbrX{\BEvent}$. The events
+outside $\NbrCX{\BEvent}$ are jointly determined by variables disjoint
+from $\vblX{\BEvent}$. Hence $\BEvent$ is independent of the entire
+collection of those events, so $\Graph$ is a dependency
+graph in the sense used by the \Lovasz local lemma.
 
-A specific assignment to the variables of
-$\SetVars$ \emphOnly{violates}\index{violates} $\BEvent$, if it causes it to happen
-(remember, it is a bad event). 
+A specific assignment to the variables
+\emphOnly{violates}\index{violates} $\BEvent$ if it causes $\BEvent$
+to happen (remember, it is a bad event).
 
 \paragraph*{Task.}
-Our purpose is to compute an assignment to the variables of $\Vars$,
-such that none of the bad events of $\BEventSet$ happens.
+Compute an assignment to the variables of $\Vars$, such that none of
+the bad events of $\BEventSet$ happens.
 
 \paragraph*{Algorithm.}
 Initially, the algorithm assigns the variables of $\Vars$ random
-values. As long as there is a violated event $\BEvent \in \BEventSet$,
-resample all the variables of $\vblX{\BEvent}$ (independently
-according to their own distributions) -- this is a \emphOnly{resampling}\index{resampling}
-of $\BEvent$. The algorithm repeats this till no event is violated.
+values (each according to its own distribution). As long as there is
+a violated event $\BEvent \in \BEventSet$, the algorithm resamples all
+the variables of $\vblX{\BEvent}$ (independently according to their
+own distributions) --- this is a
+\emphOnly{resampling}\index{resampling} of $\BEvent$. The algorithm
+repeats this till no event is violated. See \figref{m:t:alg}.
+
+\begin{figure}[h]
+    \centerline{%
+       \AlgorithmBox{%
+          \MTAlg{}($\Vars, \BEventSet$) \+\\
+          \For each $P \in \Vars$ \Do\+\\
+          $v_P \leftarrow$ a random sample of $P$ \-\\
+          \While $\exists \BEvent \in \BEventSet$ violated by
+          $\pth{v_P}_{P \in \Vars}$ \Do\+\\
+          pick (any) such violated $\BEvent$\\
+          \For each $P \in \vblX{\BEvent}$ \Do\+\\
+          $v_P \leftarrow$ a fresh random sample of $P$ \-\-\\
+          \Return $\pth{v_P}_{P \in \Vars}$%
+       }%
+    }
+    \caption{The resampling algorithm of Moser and Tardos.}
+    \figlab{m:t:alg}
+\end{figure}
 
 \paragraph*{Finer details.}
 We fix some arbitrary strategy (randomized or deterministic) of how to
-pick the next event. This now fully specify the algorithm.
+pick the next violated event. The analysis below works for any such
+strategy, which can even be adversarial (as long as it does not peek
+into the future random values).
 
-\begin{remark_unnumbered}
-    Of course, it is not clear that the algorithm would always
-    succeeds. Let us just assume, for the time being, that we are in a
-    case where the algorithm always finds a good assignment (which
-    always exists).
-\end{remark_unnumbered}
+\bigskip
 
+Our purpose is to prove the following.
 
-%-----------------------------------------------------------------------
-
-\newcommand{\ELogChar}{L}%
-\newcommand{\ELogX}[1]{\ELogChar\pth{#1}}%
-
-\subsection{Analysis}
-
-Let $\ELogX{i} \in \BEventSet$ be the event that was resampled in the
-$i$\th iteration of the algorithm, for $i > 0$. The sequence formed by
-$\ELogChar$ is the \emphOnly{log}\index{log} of the execution.
-
-
-A \emphOnly{witness tree}\index{witness tree} $\Tree = (T, \sigma_T)$ is a rooted tree $T$
-together with a labeling $\sigma_T$. Here, every node $v \in T$ is
-labeled by an event $\sigma_T(v) \in\BEventSet$. If a node $u$ is a
-child of $v$ in $\Tree$, then $\sigma_T(u) \in \NbrCX{v}$.  Two nodes
-in a tree are \emphOnly{siblings}\index{siblings} if they have a common parent. If all
-siblings have distinct labels then the witness tree is \emphOnly{proper}\index{proper}.
-
-For a vertex $v$ of $\Tree$, let $[v] = \sigma^{}_T(v)$.
-
-\begin{theorem}
-    Let $\Vars$ be a finite set of independent random variables in a
-    probability space, and let $\BEventSet$ be a set of (bad) events
-    determined by these variables. If there is an assignment
+\begin{theorem}[Moser and Tardos \cite{mt-cpgll-10}]
+    \thmlab{m:t}%
+    %
+    Let $\Vars$ be a finite set of independent random variables, and
+    let $\BEventSet$ be a finite set of (bad) events determined by
+    these variables. If there is an assignment
     $x:\BEventSet \rightarrow (0,1)$, such that
-    \begin{equation*}
+    \begin{equation}
         \forall \BEvent \in \BEventSet%
         \qquad %
         \Prob{\BEvent} \leq x(\BEvent) \prod_{\BEventA \in
            \NbrX{\BEvent}} \bigl( 1 - x(\BEventA) \bigr),
-    \end{equation*}
-    then there exists an assignment for the variables of $\Vars$ such
-    that no event in $\BEventSet$ happens. Furthermore, in
-    expectation, the algorithm described above resamples, any event
-    $\BEvent \in \BEventSet$, at most
-    $x(\BEvent)/ \bigl(1-x(\BEvent) \bigr)$ times. Overall, the
-    expected number of resampling steps is at most
-    $\sum_{\BEvent\in\BEventSet} x(\BEvent) / \bigl(1-x(\BEvent)
-    \bigr)$.
+        \eqlab{l:l:l:cond}
+    \end{equation}
+    then \MTAlg resamples any event $\BEvent \in \BEventSet$, in
+    expectation, at most $x(\BEvent)/ \bigl(1-x(\BEvent) \bigr)$
+    times. Overall, the expected number of resampling steps is at
+    most $\sum_{\BEvent\in\BEventSet} x(\BEvent) /
+    \bigl(1-x(\BEvent) \bigr)$. In particular, there exists an
+    assignment for the variables of $\Vars$ such that no event in
+    $\BEventSet$ happens.
 \end{theorem}
 
-\ChapterEnd{}
+Note that the last part is the (variable version of the) \Lovasz
+local lemma itself, so the above gives a new proof of the LLL. Before
+proving the general result, we demonstrate the main idea on the
+special (but important) case of $k$-SAT, where the proof is
+especially short.
 
+
+
+%-----------------------------------------------------------------------
+\section{Warm-up: entropy compression}
+\seclab{entropy:compression}
+
+Let $F$ be a $k$-CNF formula with $n$ variables and $m$ clauses, where
+every clause has exactly $k$ distinct variables. For a clause $C$,
+let $\NbrCX{C}$ be the set of clauses sharing a variable with $C$
+(including $C$ itself). We assume that
+$\cardin{\NbrCX{C}} \leq 2^{k-3}$ for all clauses $C$. In particular,
+one can specify a clause of $\NbrCX{C}$, given $C$, using $k-3$ bits.
+
+A clause $C$ is \emphOnly{violated}\index{violated} by an assignment if
+all its literals are false. The key (trivial) observation is the
+following.
+
+\begin{observation}
+    \obslab{unique:violating}%
+    %
+    There is exactly one assignment to the $k$ variables of a clause
+    $C$ that violates it. As such, if we know that $C$ is violated,
+    then we know the values of its $k$ variables.
+\end{observation}
+
+Consider the recursive algorithm of \figref{fix}.
+
+\begin{figure}[h]
+    \centerline{%
+       \AlgorithmBox{%
+          \SolveAlg{}($F$) \+\\
+          Assign all variables independent fair bits\\
+          \For $C = C_1, \ldots, C_m$ \Do\+\\
+          \If $C$ is violated \Then \FixAlg{}($C$) \-\\
+          \Return the current assignment \-\\
+          \\
+          \FixAlg{}($C$) \+\\
+          Assign the $k$ variables of $C$ fresh independent fair bits\\
+          \While some clause $D \in \NbrCX{C}$ is violated \Do\+\\
+          \FixAlg{}($D$) \quad\CodeComment{// Pick the first such $D$}
+       }%
+    }
+    \caption{Moser's algorithm for $k$-SAT.}
+    \figlab{fix}
+\end{figure}
+
+\begin{lemma}
+    \lemlab{fix:invariant}%
+    %
+    If a call \FixAlg{}($C$) returns, then $C$ is satisfied, and every
+    clause that was satisfied before the call is still satisfied. In
+    particular, if \SolveAlg terminates, it outputs a satisfying
+    assignment.
+\end{lemma}
+
+\begin{proof}
+    Induct on the number of calls in the completed call's subtree.
+    Each recursive call has a smaller subtree. The call returns only
+    when all clauses of $\NbrCX{C}$ are satisfied, and $C$ is one of
+    them. A clause $D' \notin \NbrCX{C}$ does not share variables
+    with $C$, so the resampling of $C$ does not change it, and by
+    induction, the recursive calls do not change a satisfied clause
+    into a violated one.
+
+    As for \SolveAlg, after the iteration handling $C_i$, the clauses
+    $C_1, \ldots, C_i$ are all satisfied.
+\end{proof}
+
+\begin{theorem}
+    \thmlab{moser:k:sat}%
+    %
+    The probability that \SolveAlg performs at least $t$ calls to
+    \FixAlg is at most $2^{m+1-t}$. In particular, the expected number
+    of calls to \FixAlg is at most $m+2$, and $F$ is satisfiable.
+\end{theorem}
+
+\begin{proof}
+    Think about the algorithm as reading its random bits from a string
+    $R$ of $n + tk$ random bits: the first $n$ bits are the initial
+    assignment, and each call to \FixAlg reads the next $k$ bits. We
+    run the algorithm on $R$, and stop it as soon as it either
+    terminates, or the $t$\th call to \FixAlg has resampled its
+    variables. Let
+    $\mathcal{R}$ be the set of strings for which the algorithm is
+    stopped because of the second reason --- the strings where at least
+    $t$ calls are made.
+
+    For $R \in \mathcal{R}$ we record the following
+    \emphOnly{log}\index{log}:
+    \begin{compactenumi}
+        \item An $m$-bit vector indicating which clauses of $F$ were
+        called from the top level loop of \SolveAlg.
+
+        \item The recursive calls and returns, in execution order:
+        a recursive call \FixAlg{}($D$) from inside \FixAlg{}($C$) is
+        written as the bit $1$ followed by the $k-3$ bits specifying
+        $D$ as a member of $\NbrCX{C}$, and a return from a call is
+        written as the bit $0$.
+
+        \item The assignment $A_t$ of the variables at the time the
+        algorithm was stopped.
+    \end{compactenumi}
+    There are at most $t$ calls, and at most $t$ returns, so the
+    second part has at most $t(k-2) + t = t(k-1)$ bits. As such, the
+    number of different possible logs is at most
+    $2^m \cdot 2^{t(k-1)+1} \cdot 2^n$ (the $+1$ is because the second
+    part has variable length).
+
+    \smallskip
+
+    \noindent\textbf{Claim:} The log determines $R$.
+
+    Start with the first marked top-level clause. A $1$ identifies
+    a child of the current clause, and a $0$ returns to its parent.
+    Whenever the stack empties, start the next marked top-level clause.
+    This reconstructs the sequence
+    $C^{(1)}, C^{(2)}, \ldots, C^{(t)}$ of clauses that \FixAlg was
+    called on (in order). Now, just before the $t$\th call, the clause
+    $C^{(t)}$ was violated, and thus, by
+    \obsref{unique:violating}, we know the values of its variables
+    just before the call. Since this call only changed these
+    variables, we recover $A_{t-1}$, the assignment before the $t$\th
+    call. Furthermore, the $k$ random bits read by the $t$\th call are
+    the values of the variables of $C^{(t)}$ in $A_t$. Repeating this
+    backward, we recover all the bits read by all the calls, and the
+    initial assignment $A_0$. Namely, we recovered $R$.
+
+    \smallskip
+
+    The claim implies that the mapping from $\mathcal{R}$ to logs is
+    one-to-one, and thus
+    $\cardin{\mathcal{R}} \leq 2^{n + m + t(k-1) + 1}$. As such,
+    \begin{equation*}
+        \Prob{\text{at least $t$ calls}}%
+        =%
+        \frac{\cardin{\mathcal{R}}}{2^{n+tk}}%
+        \leq%
+        \frac{2^{n + m + t(k-1) + 1}}{2^{n+tk}}%
+        =%
+        2^{m+1-t}.
+    \end{equation*}
+    The expected number of calls is
+    $\sum_{t \geq 1} \Prob{\text{at least $t$ calls}} \leq (m+1) +
+    \sum_{j \geq 1} 2^{-j} = m+2$. In particular, the algorithm
+    terminates with probability one, and by \lemref{fix:invariant} its
+    output is a satisfying assignment.
+\end{proof}
+
+\begin{remark}
+    The intuition is that every call to \FixAlg consumes $k$ fresh
+    random bits, but the log grows only by $\approx k-1$ bits per
+    call. A random string can not be compressed (with any decent
+    probability), so the algorithm must stop quickly. This is known
+    as \emphOnly{entropy compression}\index{entropy compression}.
+
+    The argument used the specific structure of $k$-SAT in a crucial
+    way --- that a violated clause reveals its variables. It also only
+    gives the symmetric version of the LLL, with a weaker constant
+    ($2^{k-3}$ instead of $\approx 2^k/e$). For the general case, we
+    need a different way to account for the history of the algorithm.
+\end{remark}
+
+
+%-----------------------------------------------------------------------
+\section{Analysis of the general algorithm}
+
+\subsection{The resampling table}
+
+It would be convenient to fix all the randomness used by \MTAlg in
+advance. For every variable $P \in \Vars$, let
+$P^{(0)}, P^{(1)}, P^{(2)}, \ldots$ be an infinite sequence of
+independent samples of $P$, with independent sequences for different
+variables. This is the
+\emphOnly{resampling table}\index{resampling table}. The algorithm
+uses $P^{(0)}$ as the initial value of $P$, and the $j$\th time it
+resamples $P$, it sets it to $P^{(j)}$. Clearly, the algorithm
+behaves exactly as before. Once the table is fixed (and the random
+choices of the selection strategy), the execution of the algorithm is
+deterministic.
+
+Let $\ELogX{i} \in \BEventSet$ be the event that was resampled in the
+$i$\th iteration of the algorithm, for $i \geq 1$. The sequence
+$\ELogX{1}, \ELogX{2}, \ldots$ is the \emphOnly{log}\index{log} of the
+execution. It is finite if the algorithm terminates.
+
+By construction, the value of a variable $P$ at the time of the
+$i$\th resampling (just before it is performed) is $P^{(a)}$, where
+\begin{equation}
+    a = \cardin{\brc{ j < i \sep{ P \in \vblX{\ELogX{j}}}}}.
+    \eqlab{table:index}
+\end{equation}
+
+\subsection{Witness trees}
+
+\begin{defn}
+    A \emphOnly{witness tree}\index{witness tree} $\WTree$ is a finite
+    rooted tree, where each node $v$ is labeled by an event
+    $\LabelX{v} \in \BEventSet$, such that if $u$ is a child of $v$,
+    then $\LabelX{u} \in \NbrCX{\LabelX{v}}$. The witness tree is
+    \emphOnly{proper}\index{witness tree!proper} if the children of
+    every node have distinct labels.
+\end{defn}
+
+We identify witness trees up to root- and label-preserving isomorphism.
+The order of siblings is immaterial.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=.83\linewidth]{\File{figs/witness-tree.pdf}}
+    \caption{Subscripts mark resampling times. The backward scan skips $D$,
+       which uses only $Z$. At time~2, $A$ shares $X$ with both $C_5$ and
+       $A_4$, so it attaches to the deeper node $A_4$.}
+    \figlab{mt:witness:example}
+\end{figure}
+
+\paragraph*{The witness tree of a resampling.}
+Construct $\WTreeX{t}$ by scanning backward from time $t$
+(\figref{mt:witness:example}).
+\begin{compactenumI}
+    \item Create a root labeled $\ELogX{t}$ with time $t$.
+
+    \item For $i=t-1,\ldots,1$, find a deepest node $v$ with
+    $\ELogX{i}\in\NbrCX{\LabelX{v}}$, breaking ties by a fixed rule.
+    Give $v$ a child labeled $\ELogX{i}$ with time $i$.
+    If no such $v$ exists, skip $i$.
+\end{compactenumI}
+A witness tree $\WTree$
+\emphOnly{appears in the log}\index{witness tree!appears in log} if
+$\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
+
+\begin{lemma}
+    \lemlab{deeper}%
+    %
+    Let $u$ and $w$ be two nodes of $\WTreeX{t}$, associated with times
+    $i<j$, such that $\ELogX{i} \in \NbrCX{\ELogX{j}}$. Then
+    $\nodeDepthX{u} > \nodeDepthX{w}$. In particular:
+    \begin{compactenumi}
+        \item Two distinct nodes at the same depth have distinct
+        labels that share no variable. Hence $\WTreeX{t}$ is proper.
+
+        \item If $w \in \WTreeX{t}$ is associated with time $j$, and
+        $i < j$ is such that $\ELogX{i} \in \NbrCX{\ELogX{j}}$, then $i$
+        is associated with some node of $\WTreeX{t}$.
+    \end{compactenumi}
+\end{lemma}
+
+\begin{proof}
+    The nodes are added to the tree in decreasing order of time. When
+    the algorithm handles time $i$, the node $w$ is already in the
+    tree, and $\ELogX{i} \in \NbrCX{\LabelX{w}}$. As such, $i$ is
+    added to the tree (this implies (ii)), as a child of a node of
+    depth at least $\nodeDepthX{w}$. Hence
+    $\nodeDepthX{u} \geq \nodeDepthX{w}+1$.
+
+    (i) If $u, w$ are at the same depth and their labels are equal
+    or share a variable, then the labels are in each other's
+    $\NbrCX{\cdot}$, which contradicts the above. Siblings are at the
+    same depth, so $\WTreeX{t}$ is proper.
+\end{proof}
+
+\begin{lemma}
+    \lemlab{distinct:trees}%
+    %
+    For any event $\BEvent$, let $\NResX{\BEvent}$ be the number of
+    times $\BEvent$ is resampled by the algorithm. Then
+    $\NResX{\BEvent}$ is equal to the number of distinct proper
+    witness trees with root label $\BEvent$ that appear in the log.
+\end{lemma}
+
+\begin{proof}
+    Let $t_1 < t_2 < \cdots$ be the times at which $\BEvent$ was
+    resampled. Since $\BEvent \in \NbrCX{\BEvent}$, by
+    \lemref{deeper} (ii) applied to the root, every time
+    $t_\ell < t_r$ is associated with a node of $\WTreeX{t_r}$. Thus,
+    $\WTreeX{t_r}$ has exactly $r$ nodes labeled $\BEvent$. As such,
+    the trees $\WTreeX{t_1}, \WTreeX{t_2}, \ldots$ are all distinct.
+\end{proof}
+
+\subsection{The probability that a witness tree appears}
+
+\begin{lemma}[Coupling lemma]
+    \lemlab{coupling}%
+    %
+    Let $\WTree$ be a fixed proper witness tree. Then
+    \begin{math}
+        \ds \Prob{\WTree \text{ appears in the log}}%
+        \leq%
+        \prod_{v \in \WTree} \Prob{\LabelX{v}}.
+    \end{math}
+\end{lemma}
+
+\begin{proof}
+    Consider the following \emphOnly{$\WTree$-check} procedure, which
+    uses the same resampling table as the algorithm. Order the nodes
+    of $\WTree$ by decreasing depth (breaking ties arbitrarily), as
+    $v_1, \ldots, v_s$. For each variable $P$, maintain a counter
+    $c(P)$, initially zero. Now, for $\ell = 1, \ldots, s$:
+    \begin{compactitem}
+        \item Check that $\LabelX{v_\ell}$ is violated by the assignment
+        $P \mapsto P^{(c(P))}$, for $P \in \vblX{\LabelX{v_\ell}}$.
+
+        \item Increase $c(P)$ by one, for all
+        $P \in \vblX{\LabelX{v_\ell}}$.
+    \end{compactitem}
+    The $\WTree$-check \emphOnly{passes} if all these checks succeed.
+
+    \smallskip
+
+    \noindent\textbf{Probability of passing.} Every check inspects
+    only table entries that no previous check inspected (since the
+    counters only go up). As such, the checks are determined by
+    disjoint sets of independent random values, and they are
+    independent. The $\ell$\th check succeeds with probability
+    exactly $\Prob{\LabelX{v_\ell}}$. Thus, the $\WTree$-check passes
+    with probability $\prod_{v \in \WTree} \Prob{\LabelX{v}}$.
+
+    \smallskip
+
+    \noindent\textbf{If $\WTree$ appears in the log, then the
+       $\WTree$-check passes.} So, assume $\WTree = \WTreeX{t}$. Let
+    $v$ be a node of $\WTree$, associated with time $i$, and let
+    $P \in \vblX{\LabelX{v}}$. When the check handles $v$, the
+    counter $c(P)$ is the number of nodes $w$ handled before $v$, such
+    that $P \in \vblX{\LabelX{w}}$. We claim that these nodes are
+    exactly the nodes associated with the times
+    $\brc{j < i \sep{ P \in \vblX{\ELogX{j}}}}$:
+    \begin{compactitem}
+        \item For every time $j < i$ with
+        $P \in \vblX{\ELogX{j}}$, we have
+        $\ELogX{j} \in \NbrCX{\ELogX{i}}$, so by \lemref{deeper},
+        $j$ is associated with a node of $\WTree$ which is deeper than
+        $v$, and is thus handled before $v$.
+
+        \item Conversely, let $w$ be a node handled before $v$, with
+        $P \in \vblX{\LabelX{w}}$. The labels of $v$ and $w$ share
+        the variable $P$, so by \lemref{deeper} (i), $w$ is not at
+        the same depth as $v$, and it is thus strictly deeper. By
+        \lemref{deeper}, the time $j$ associated with $w$ can not be
+        larger than $i$ (otherwise, $v$ would be deeper than $w$).
+        Hence $j < i$.
+    \end{compactitem}
+    As such, by \Eqref{table:index}, the check of $v$ inspects
+    exactly the values the variables of $\vblX{\LabelX{v}}$ had at time
+    $i$ in the execution of the algorithm. But $\ELogX{i}$ was
+    violated at time $i$ (that is why it was resampled), and the check
+    succeeds.
+
+    \smallskip
+
+    We conclude that
+    $\Prob{\WTree \text{ appears}} \leq \Prob{\WTree\text{-check
+          passes}} = \prod_{v \in \WTree} \Prob{\LabelX{v}}$.
+\end{proof}
+
+\subsection{Summing over all witness trees}
+
+\begin{lemma}
+    \lemlab{tree:sum}%
+    %
+    Assume the conditions of \thmref{m:t} hold. For an event
+    $\BEvent \in \BEventSet$, let
+    \begin{equation*}
+        \WSum(\BEvent)%
+        =%
+        \sum_{\WTree} \prod_{v \in \WTree} \Prob{\LabelX{v}},
+    \end{equation*}
+    where the summation is over all proper witness trees $\WTree$ with
+    root label $\BEvent$. Then
+    $\WSum(\BEvent) \leq x(\BEvent)/\pth{1 - x(\BEvent)}$.
+\end{lemma}
+
+\begin{proof}
+    Let $y(\BEvent) = \frac{x(\BEvent)}{1 - x(\BEvent)}$, and observe
+    that $1 + y(\BEvent) = \frac{1}{1 - x(\BEvent)}$.
+
+    For $h \geq 0$, let $\WSum_h(\BEvent)$ be the same sum, restricted
+    to trees of depth at most $h$. We prove by induction on $h$ that
+    $\WSum_h(\BEvent) \leq y(\BEvent)$. Since $\WSum(\BEvent) =
+    \lim_{h \to \infty} \WSum_h(\BEvent)$, this implies the claim.
+
+    For the base case, set $\WSum_{-1}(\BEvent)=0$, the sum over
+    the empty family of trees. The claimed bound holds at $h=-1$.
+
+    For $h \geq 0$, a proper witness tree of depth at most $h$ with root
+    label $\BEvent$ is specified by a set
+    $S \subseteq \NbrCX{\BEvent}$ of labels of the children of the root,
+    and for each $\BEventA \in S$, a proper witness tree of depth at
+    most $h-1$ with root label $\BEventA$. As such
+    \begin{align*}
+        \WSum_h(\BEvent)%
+        &=%
+        \Prob{\BEvent} \sum_{S \subseteq \NbrCX{\BEvent}} \;
+        \prod_{\BEventA \in S} \WSum_{h-1}(\BEventA)%
+        =%
+        \Prob{\BEvent} \prod_{\BEventA \in \NbrCX{\BEvent}} \pth{1 +
+           \WSum_{h-1}(\BEventA)}%
+        \\&%
+        \leq%
+        \Prob{\BEvent} \prod_{\BEventA \in \NbrCX{\BEvent}} \pth{1 +
+           y(\BEventA)}%
+        =%
+        \frac{\Prob{\BEvent}}{\prod_{\BEventA \in \NbrCX{\BEvent}} \pth{1 -
+              x(\BEventA)}}%
+        \\&%
+        \leq%
+        \frac{x(\BEvent) \prod_{\BEventA \in \NbrX{\BEvent}} \pth{1 -
+              x(\BEventA)}}{\pth{1 - x(\BEvent)} \prod_{\BEventA \in
+              \NbrX{\BEvent}} \pth{1 - x(\BEventA)}}%
+        =%
+        y(\BEvent),
+    \end{align*}
+    by induction, and by \Eqref{l:l:l:cond}.
+\end{proof}
+
+\begin{remark}
+    The second equality above uses the identity
+    \begin{equation*}
+        \sum_{S \subseteq U} \prod_{u \in S} a_u = \prod_{u \in U} (1 +
+        a_u).
+    \end{equation*}
+    The last step is the only place where the LLL condition
+    \Eqref{l:l:l:cond} is used, and it ``explains'' the strange form
+    of this condition: it is exactly what is needed to make the
+    induction go through.
+\end{remark}
+
+\subsection{Putting things together}
+
+\begin{proof}[Proof of \thmref{m:t}]
+    By \lemref{distinct:trees}, \lemref{coupling}, and
+    \lemref{tree:sum}, we have
+    \begin{equation*}
+        \Ex{\NResX{\BEvent}}%
+        =%
+        \sum_{\WTree} \Prob{ \WTree \text{ appears in the log}}%
+        \leq%
+        \sum_{\WTree} \prod_{v \in \WTree} \Prob{\LabelX{v}}%
+        =%
+        \WSum(\BEvent)%
+        \leq%
+        \frac{x(\BEvent)}{1 - x(\BEvent)},
+    \end{equation*}
+    where the summation is over all proper witness trees with root
+    label $\BEvent$. The total number of resamplings is
+    $\sum_{\BEvent} \NResX{\BEvent}$, and the bound on its
+    expectation follows by linearity of expectation. In particular,
+    the number of resamplings is finite with probability one. Namely,
+    the algorithm terminates with probability one, and when it
+    terminates, it outputs an assignment that violates no event of
+    $\BEventSet$.
+\end{proof}
+
+\begin{corollary}
+    \corlab{m:t:symmetric}%
+    %
+    If every event of $\BEventSet$ has probability at most $p$, and
+    shares variables with at most $d \geq 1$ other events of
+    $\BEventSet$, and $e p (d+1) \leq 1$, then \MTAlg performs, in
+    expectation, at most $\cardin{\BEventSet}/d$ resamplings.
+\end{corollary}
+
+\begin{proof}
+    Set $x(\BEvent) = 1/(d+1)$ for all $\BEvent$. As in the
+    non-constructive proof, we have
+    $x(\BEvent) \prod_{\BEventA \in \NbrX{\BEvent}} \pth{1 -
+       x(\BEventA)} \geq \frac{1}{d+1}\pth{1 - \frac{1}{d+1}}^d >
+    \frac{1}{e(d+1)} \geq p$. Now
+    $x(\BEvent)/\pth{1-x(\BEvent)} = 1/d$, and the claim follows from
+    \thmref{m:t}.
+\end{proof}
+
+\begin{example}
+    Extend the cycle example to a simple $\Delta$-regular graph with $m$
+    edges and $\Delta\ge 2$. Its dependency graph is the line graph:
+    each edge gives one bad event, and two events are neighbors when their
+    edges share an endpoint.
+    For a fixed edge $uv$, once the color of $u$ is exposed, $v$ matches
+    it with probability $p=1/q$. Exactly $\Delta-1$ other edges use the
+    color of $u$, and another $\Delta-1$ use the color of $v$. Thus the
+    variable-overlap dependency graph has degree $d=2(\Delta-1)$.
+    By \corref{m:t:symmetric}, if $q\ge e(2\Delta-1)$, the algorithm
+    finds a proper coloring after at most $m/[2(\Delta-1)]$ edge
+    resamplings in expectation.
+\end{example}
+
+
+%-----------------------------------------------------------------------
+\section{Bibliographical notes}
+
+The local lemma is due to Erd\H{o}s and \Lovasz \cite{el-prthr-75}.
+The first algorithmic version is due to Beck \cite{b-aallll-91}, who
+used a two-phase approach (freeze variables in dangerous clauses, and solve the
+remaining small components by brute force), with significant loss in
+the parameters --- this is the algorithm described in the chapter on
+the probabilistic method. Moser \cite{m-cplll-09} discovered the
+resampling algorithm for $k$-SAT and analyzed it via entropy
+compression; the presentation in \secref{entropy:compression} follows
+expositions by Fortnow and Tao of Moser's argument. Moser and Tardos
+\cite{mt-cpgll-10} extended this to the general (asymmetric) LLL,
+using witness trees. They also gave a parallel version, and a
+derandomization in some cases.
+
+The original paper of Moser and Tardos bounds the sum over witness
+trees (\lemref{tree:sum}) by bounding each tree's weight by
+$x(\BEvent)/(1-x(\BEvent))$ times the probability that a Galton--Watson
+process rooted at $\BEvent$ produces that tree. The
+direct induction on the depth used here avoids this, and is shorter.
+
+Kolipaka and Szegedy \cite{ks-mtml-11} showed that the same algorithm
+works all the way up to Shearer's bound (the best possible condition
+on the dependency graph), and introduced the analysis via stable set
+sequences. Harvey and Vondr\'ak \cite{hv-aplll-20} extended the
+algorithm beyond independent variables, using
+\emphOnly{resampling oracles}\index{resampling oracle}; see also
+Achlioptas and Iliopoulos \cite{ai-rwfpo-16}. Haeupler, Saha, and
+Srinivasan \cite{hss-ncall-11} bounded the probability of an event
+in the output using its original probability and the bad events
+sharing its variables. With slack in the LLL condition, they also
+gave efficient algorithms for applications with exponentially many events. Giotis \etal
+\cite{gkpt-aeclll-17} analyzed a resampling algorithm for acyclic
+edge coloring. Knuth's treatment
+\cite{k-taocp4b-22} develops the subject via the theory of traces.
+
+
+%-----------------------------------------------------------------------
+\section*{Credits}
+
+This chapter was written by Gemini (November 2026), expanding on an
+initial draft by Sariel Har-Peled. OpenAI Astra 6.2 reviewed the proofs
+and illustrated the cycle coloring and witness-tree construction.
+
+
+\ChapterEnd{}
