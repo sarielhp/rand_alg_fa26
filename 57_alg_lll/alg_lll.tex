@@ -66,6 +66,9 @@ none occurs. That probability can still be exponentially small. The
 cycle suggests a different algorithm: pick any bad event that occurs,
 resample its variables, and repeat. How many such repairs should we expect?
 
+We avoid stating the \Lovasz local lemma explicitly here, because we
+derive an algorithmic version of it here.
+
 \subsection{The setting}
 
 Let $\Vars$ be a finite collection of mutually independent random
@@ -84,7 +87,11 @@ vertices, and two distinct events $\BEvent_1,\BEvent_2 \in \BEventSet$
 are connected by an edge $\iff$
 $\vblX{\BEvent_1} \cap \vblX{\BEvent_2} \neq \emptyset$. Let
 $\NbrX{\BEvent}$ be the set of neighbors of $\BEvent$ in $\Graph$, and
-let $\NbrCX{\BEvent} = \brc{\BEvent} \cup \NbrX{\BEvent}$. The events
+let
+\begin{equation*}
+    \NbrCX{\BEvent} = \brc{\BEvent} \cup \NbrX{\BEvent}.
+\end{equation*}
+The events
 outside $\NbrCX{\BEvent}$ are jointly determined by variables disjoint
 from $\vblX{\BEvent}$. Hence $\BEvent$ is independent of the entire
 collection of those events, so $\Graph$ is a dependency
@@ -152,10 +159,12 @@ Our purpose is to prove the following.
     then \MTAlg resamples any event $\BEvent \in \BEventSet$, in
     expectation, at most $x(\BEvent)/ \bigl(1-x(\BEvent) \bigr)$
     times. Overall, the expected number of resampling steps is at
-    most $\sum_{\BEvent\in\BEventSet} x(\BEvent) /
-    \bigl(1-x(\BEvent) \bigr)$. In particular, there exists an
-    assignment for the variables of $\Vars$ such that no event in
-    $\BEventSet$ happens.
+    most 
+    \[
+        \sum_{\BEvent\in\BEventSet} \frac{x(\BEvent)}{ 1-x(\BEvent) }.
+    \]
+     In particular, there exists an assignment for the variables of
+    $\Vars$ such that no event in $\BEventSet$ happens.
 \end{theorem}
 
 Note that the last part is the (variable version of the) \Lovasz
@@ -383,13 +392,16 @@ The order of siblings is immaterial.
 Construct $\WTreeX{t}$ by scanning backward from time $t$
 (\figref{mt:witness:example}).
 \begin{compactenumI}
+    \smallskip%
     \item Create a root labeled $\ELogX{t}$ with time $t$.
 
+    \smallskip%
     \item For $i=t-1,\ldots,1$, find a deepest node $v$ with
     $\ELogX{i}\in\NbrCX{\LabelX{v}}$, breaking ties by a fixed rule.
     Give $v$ a child labeled $\ELogX{i}$ with time $i$.
     If no such $v$ exists, skip $i$.
 \end{compactenumI}
+    \smallskip%
 A witness tree $\WTree$
 \emphOnly{appears in the log}\index{witness tree!appears in log} if
 $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
@@ -444,6 +456,12 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
 
 \subsection{The probability that a witness tree appears}
 
+Recall that a node $v$ of a fixed witness tree has a bad event
+$\BEvent = \LabelX{v}$ as its label. Then $\Prob{\Bigl.\LabelX{v}}$
+is the probability that $\BEvent$ occurs when each variable in
+$\vblX{\BEvent}$ is drawn independently from its original distribution.
+
+%%%
 \begin{lemma}[Coupling lemma]
     \lemlab{coupling}%
     %
@@ -451,7 +469,7 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
     \begin{math}
         \ds \Prob{\WTree \text{ appears in the log}}%
         \leq%
-        \prod_{v \in \WTree} \Prob{\LabelX{v}}.
+        \prod_{v \in \WTree} \Prob{\Bigl.\LabelX{v}}.
     \end{math}
 \end{lemma}
 
@@ -470,17 +488,17 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
     \end{compactitem}
     The $\WTree$-check \emphOnly{passes} if all these checks succeed.
 
-    \smallskip
+    \bigskip
 
     \noindent\textbf{Probability of passing.} Every check inspects
     only table entries that no previous check inspected (since the
     counters only go up). As such, the checks are determined by
     disjoint sets of independent random values, and they are
     independent. The $\ell$\th check succeeds with probability
-    exactly $\Prob{\LabelX{v_\ell}}$. Thus, the $\WTree$-check passes
-    with probability $\prod_{v \in \WTree} \Prob{\LabelX{v}}$.
+    exactly $\Prob{\Bigl.\LabelX{v_\ell}}$. Thus, the $\WTree$-check passes
+    with probability $\prod_{v \in \WTree} \Prob{\Bigl.\LabelX{v}}$.
 
-    \smallskip
+    \bigskip
 
     \noindent\textbf{If $\WTree$ appears in the log, then the
        $\WTree$-check passes.} So, assume $\WTree = \WTreeX{t}$. Let
@@ -491,12 +509,14 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
     exactly the nodes associated with the times
     $\brc{j < i \sep{ P \in \vblX{\ELogX{j}}}}$:
     \begin{compactitem}
+        \smallskip%
         \item For every time $j < i$ with
         $P \in \vblX{\ELogX{j}}$, we have
         $\ELogX{j} \in \NbrCX{\ELogX{i}}$, so by \lemref{deeper},
         $j$ is associated with a node of $\WTree$ which is deeper than
         $v$, and is thus handled before $v$.
 
+        \smallskip%
         \item Conversely, let $w$ be a node handled before $v$, with
         $P \in \vblX{\LabelX{w}}$. The labels of $v$ and $w$ share
         the variable $P$, so by \lemref{deeper} (i), $w$ is not at
@@ -505,6 +525,7 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
         larger than $i$ (otherwise, $v$ would be deeper than $w$).
         Hence $j < i$.
     \end{compactitem}
+    \smallskip%
     As such, by \Eqref{table:index}, the check of $v$ inspects
     exactly the values the variables of $\vblX{\LabelX{v}}$ had at time
     $i$ in the execution of the algorithm. But $\ELogX{i}$ was
@@ -528,7 +549,7 @@ $\WTree=\WTreeX{t}$ for some $t$, after erasing the times.
     \begin{equation*}
         \WSum(\BEvent)%
         =%
-        \sum_{\WTree} \prod_{v \in \WTree} \Prob{\LabelX{v}},
+        \sum_{\WTree} \prod_{v \in \WTree} \Prob{\Bigl.\LabelX{v}},
     \end{equation*}
     where the summation is over all proper witness trees $\WTree$ with
     root label $\BEvent$. Then
